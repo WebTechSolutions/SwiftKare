@@ -1,0 +1,276 @@
+﻿@model IEnumerable<DataAccess.SP_ConsultationReport_Result>
+ 
+@{
+    ViewBag.Title = "ConsultationReport";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+  
+            <div class="page-title">
+              <div class="title_left">
+                <h3> Consultation Report</h3>
+              </div>
+
+             </div>
+
+            <div class="clearfix"></div>
+  <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                 
+                  <div class="x_content">
+                   
+                      
+                <div class="DateRange">
+                    @using (Html.BeginForm("ConsultationReport", "Consultation_Admin",
+                       FormMethod.Post, new { @class = "form-horizontal form-label-left" }))
+                    {
+                         <input type="text" name="datefrom" id="datefrom" style="display:none" />
+                         <input type="text" name="dateto" id="dateto" style="display:none" />
+                       <div class="form-group">
+                        <label class="control-label col-sm-2, col-md-2, col-lg-2">Date Range<span class="required">*</span>
+                        </label>
+                        <div class="col-sm-3, col-md-3 col-lg-3">
+                        
+                          <input type="text" name="daterange" class="date-picker form-control col-md-6 col-xs-6" required="required"/>
+                        </div>
+                                          
+                       </div>
+                      <div class="ln_solid"></div>
+                      <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <button id="send" type="submit" class="btn btn-success">Submit</button>
+                          <button type="reset" class="btn btn-primary">Cancel</button>
+                          
+
+                        </div>
+                      </div>
+                    }
+                     
+                     </div>
+
+              
+                 
+                </div>
+              </div>
+            </div>
+     
+          </div>
+             <!--Datagrid-->
+                <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+           <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                           
+                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                           
+                            <th>Doctor</th>
+                            <th>Patient</th>
+                            <th>Consultation Date</th>
+                            <th>Consultation Time</th>
+                             <th>Duration</th>
+                             <th>Status</th>
+                             <th>CD</th>
+                           
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @if (Model != null)
+                        {
+
+                            foreach (var item in Model)
+                            {
+
+                                 
+                                <tr>
+                                    <td class="DName" style="word-break: break-all; width: 300px">@item.DName</td>
+                                    <td class="PName" style="word-break: break-all; width: 300px">@item.PName</td>
+                                    <td class="appDate" style="word-break: break-all; width: 300px">@item.conDate</td>
+                                    <td class="appTime" style="word-break: break-all; width: 300px">@item.conTime</td>
+                                    <td class="appTime" style="word-break: break-all; width: 300px">@item.duration</td>
+                                    
+                                        
+                                            @if(item.consultationStatus=="A"){<td class="consultationStatus">Approved</td>}
+                                            @if (item.consultationStatus == "P"){<td class="consultationStatus">Pending</td>}
+                                            @if(item.consultationStatus=="R"){<td class="consultationStatus">Reschedule</td>}
+                                            @if(item.consultationStatus=="C"){<td class="consultationStatus">Cancelled</td>}
+                                        
+
+                                   
+                                      <td class="cd" style="width: 100px">@item.cd</td>
+                               </tr>
+                                
+                        }
+                            }
+
+
+
+
+                    </tbody>
+                </table>
+            
+            </div>
+        </div>
+
+    </div>
+</div>
+  
+      
+<!-- Data table Scripts -->
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/dataTables.buttons.min.js"></script>
+    <script src="~/Scripts/buttons.bootstrap.min.js"></script>
+    <script src="~/Scripts/buttons.flash.min.js"></script>
+    <script src="~/Scripts/buttons.html5.min.js"></script>
+    <script src="~/Scripts/buttons.print.min.js"></script>
+    <script src="~/Scripts/dataTables.fixedHeader.min.js"></script>
+    <script src="~/Scripts/dataTables.keyTable.min.js"></script>
+    <script src="~/Scripts/dataTables.responsive.min.js"></script>
+    <script src="~/Scripts/responsive.bootstrap.js"></script>
+    <script src="~/Scripts/dataTables.scroller.min.js"></script>
+    <script src="~/Scripts/validator.js"></script>
+     <script src="~/Scripts/daterangepiker/moment.min.js"></script>
+    <script src="~/Scripts/daterangepiker/daterangepicker.js"></script> 
+    <!-- Data table Scripts -->
+      <!-- validator -->
+    <script>
+            <!-- bootstrap-daterangepicker -->
+
+
+    $(document).ready(function () {
+        $(function () {
+            $('input[name="daterange"]').daterangepicker({
+                "showDropdowns": true,
+                "startDate": "10/09/2016",
+                "endDate": "10/15/2016"
+            }, function (start, end, label) {
+                console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
+            });
+        });
+        $('input[name="daterange"]').on('apply.daterangepicker', function (ev, picker) {
+            $('#datefrom').val(picker.startDate.format('MM/DD/YYYY'));
+            $('#dateto').val(picker.endDate.format('MM/DD/YYYY'));
+          
+        });
+
+        
+    });
+    
+
+    //<!-- /bootstrap-daterangepicker -->   
+        //<!-- /Datatables -->
+        var handleDataTableButtons = function () {
+            if ($("#datatable-buttons").length) {
+                $("#datatable-buttons").DataTable({
+                    dom: "Bfrtip",
+                    buttons: [
+                      {
+                          extend: "copy",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "csv",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "excel",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "pdfHtml5",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "print",
+                          className: "btn-sm"
+                      },
+                    ],
+                    responsive: true
+                });
+            }
+        };
+
+        TableManageButtons = function () {
+            "use strict";
+            return {
+                init: function () {
+                    handleDataTableButtons();
+                }
+            };
+        }();
+
+        $('#datatable').dataTable();
+
+        $('#datatable-keytable').DataTable({
+            keys: true
+        });
+
+        $('#datatable-responsive').DataTable({
+            'order': [[0, 'desc']]
+        });
+
+        $('#datatable-scroller').DataTable({
+            ajax: "js/datatables/json/scroller-demo.json",
+            deferRender: true,
+            scrollY: 380,
+            scrollCollapse: true,
+            scroller: true
+        });
+
+        $('#datatable-fixed-header').DataTable({
+            fixedHeader: true
+        });
+
+        var $datatable = $('#datatable-checkbox');
+
+        $datatable.dataTable({
+            'order': [[1, 'asc']],
+            'columnDefs': [
+              { orderable: false, targets: [0] }
+            ]
+        });
+        $datatable.on('draw.dt', function () {
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_flat-green'
+            });
+        });
+
+        TableManageButtons.init();
+        //<!-- /Datatables -->
+      // initialize the validator function
+      //validator.message.date = 'not a real date';
+
+      // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
+      $('form')
+        .on('blur', 'input[required], input.optional, select.required', validator.checkField)
+        .on('change', 'select.required', validator.checkField)
+        .on('keypress', 'input[required][pattern]', validator.keypress);
+
+      //$('.multi.required').on('keyup blur', 'input', function() {
+      //  validator.checkField.apply($(this).siblings().last()[0]);
+      //});
+
+     
+     
+      $('form').submit(function(e) {
+        e.preventDefault();
+        var submit = true;
+
+        // evaluate the form using generic validaing
+        if (!validator.checkAll($(this))) {
+          submit = false;
+        }
+
+        if (submit)
+          this.submit();
+
+        return false;
+      });
+    </script>
+    <!-- /validator -->
+

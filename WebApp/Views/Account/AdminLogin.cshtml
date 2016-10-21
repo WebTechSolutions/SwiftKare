@@ -1,0 +1,77 @@
+﻿@model WebApp.Models.LoginRegisterViewModel
+
+@{
+    ViewBag.Title = "Log in";
+    Layout = "~/Views/Shared/_AccountsLayout.cshtml";
+    ViewBag.IsPatient = false;
+}
+
+
+
+
+<a class="hiddenanchor" id="signup"></a>
+<a class="hiddenanchor" id="signin"></a>
+<div class="login_wrapper">
+
+    <div class="animate form login_form">
+        <section id="loginForm" class="login_content">
+            <img src="~/Content/images/Logos.png" />
+            @using (Html.BeginForm("AdminLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+            @Html.AntiForgeryToken()
+
+            <h1>Login</h1>
+            <br />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div>
+                @Html.TextBoxFor(m => m.LoginViewModel.Email, new { @class = "form-control", @placeholder = "Email Address" })
+                @Html.ValidationMessageFor(m => m.LoginViewModel.Email, "", new { @class = "text-danger" })
+            </div>
+            <div>
+                @Html.PasswordFor(m => m.LoginViewModel.Password, new { @class = "form-control" , @placeholder= "Password" })
+                @Html.ValidationMessageFor(m => m.LoginViewModel.Password, "", new { @class = "text-danger" })
+            </div>
+            <div>
+                @Html.CheckBoxFor(m => m.LoginViewModel.RememberMe)
+                @Html.LabelFor(m => m.LoginViewModel.RememberMe)
+            </div>
+
+
+            <div>
+                <input type="submit" value="Log in" class="btn btn-primary submit" />
+
+                <br />
+                @Html.ActionLink("Lost your password?", "ForgotPassword")
+            </div>
+
+            <div class="clearfix"></div>
+            @*<div class="separator">
+                <p class="change_link">
+                    <a href="#signup" class="to_register"> Create Account </a>
+                </p>
+                <div class="clearfix"></div>
+            </div>*@
+
+            }
+
+
+        </section>
+    </div>
+
+   
+</div>
+
+
+
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+    <script language="javascript">
+        function chkChange() {
+            if ($("#chkIsPatient").prop("checked")) {
+                $("label[id$='lblIsPatient']").html("Register as a Patient");
+            } else {
+                $("label[id$='lblIsPatient']").html("Register as a Doctor");
+            }
+        }
+    </script>*@

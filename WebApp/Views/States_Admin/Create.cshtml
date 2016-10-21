@@ -1,0 +1,356 @@
+﻿@model IEnumerable<DataAccess.State>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+ <div class="page-title">
+              <div class="title_left">
+                <h3> Create State</h3>
+              </div>
+
+             </div>
+
+            <div class="clearfix"></div>
+
+              <!--Forms-->
+            @if (ViewBag.errorMessage == "")
+{
+    <script>
+        $(function () {
+            new PNotify({
+                title: 'Success',
+                text: "@ViewBag.successMessage",
+                type: 'success',
+                styling: 'bootstrap3'
+            });
+        });
+
+    </script>
+}
+@if (ViewBag.successMessage == "")
+{
+
+    <script>
+        $(function () {
+            new PNotify({
+                title: 'Error',
+                text: "@ViewBag.errorMessage",
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        });
+    </script>
+}
+              <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                 
+                  <div class="x_content">
+                   
+                       <div class="x_title">
+                    <h2>State Info</h2>
+                    
+                    <div class="clearfix"></div>
+                  </div>
+                <div class="Create" id="create">
+                    @using (Html.BeginForm("Create", "States_Admin",
+                       FormMethod.Post, new { novalidate = "novalidate", @class = "form-horizontal form-label-left" }))
+                    {
+                        <input name="action" type="text" value="create" style="display: none">   
+                                              
+                       <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">State Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-3 col-sm-3 col-xs-3">
+                          <input maxlength="50"  class="form-control col-md-7 col-xs-12" data-validate-length-range="6" name="statename" placeholder="State Name" required="required" style="width: 228px;" type="text">
+                        </div>
+                      </div>
+                      
+                                            
+                      <div class="ln_solid"></div>
+                      <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                              <button id="csend" type="submit" class="btn btn-success">Submit</button>
+                          <button type="reset" class="btn btn-primary" id="create_cancel">Cancel</button>
+                        
+
+                        </div>
+                      </div>
+                    }
+                     
+                     </div>
+
+                <div class="Edit" style="display:none" id="edit">
+                     @using (Html.BeginForm("Create", "States_Admin",
+                       FormMethod.Post, new { novalidate = "novalidate", @class = "form-horizontal form-label-left" }))
+                     {
+                        <input name="action" type="text" value="edit" style="display: none"> 
+                        <input id="eid" name="id" type="number" style="display:none">                                                
+                       <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">State Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-3 col-sm-3 col-xs-3">
+                          <input maxlength="50" id="ename" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" name="statename" placeholder="State Name" required="required" style="width: 228px;" type="text">
+                        </div>
+                      </div>
+                                                                
+                      <div class="ln_solid"></div>
+                      <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                             <button id="esend" type="submit" class="btn btn-success">Submit</button>
+                          <button type="reset" class="btn btn-primary" id="edit_cancel">Cancel</button>
+                         
+
+                        </div>
+                      </div>
+                     }
+                                    
+                                    
+                    </div>
+                 
+                </div>
+              </div>
+            </div>
+     
+          </div>
+
+
+              <!--Datagrid-->
+                <div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        @*<div class="x_panel">*@
+        @* <div class="x_title">
+              <h2>Registered Doctors</h2>
+
+              <div class="clearfix"></div>
+            </div>*@
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                @* <div class="x_content">*@
+
+                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>State Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @if (Model != null)
+                        {
+
+                            foreach (var item in Model)
+                            {
+
+
+                                <tr>
+                                    <td class="eid">@item.stateID</td>
+                                    <td class="ename" style="word-break: break-all; width: 700px">@item.stateName</td>
+                                    
+                                    <td>  @using (Html.BeginForm("Create", "States_Admin",
+                       FormMethod.Post, new { novalidate = "novalidate", @class = "form-horizontal form-label-left" }))
+                                    {
+                                        <input name="action" type="text" value="delete" style="display: none"> 
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary">Action</button>
+                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                <span class="caret"></span>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li>
+                                                    <a class="editbtn">Edit</a>
+                                                </li>
+                                               <li> <input name="id" type="number" style="display:none" value="@item.stateID"></li>
+                                               <li> <button id="delete" type="submit" onclick="return confirm('Are you sure you want to delete this item?');">Delete</button></li>
+                                            </ul>
+                                        </div>
+                                         }
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+
+
+
+                    </tbody>
+                </table>
+
+                @* </div>*@
+            </div>
+        </div>
+
+        @* </div>*@
+    </div>
+</div>
+
+
+  
+      
+<!-- Data table Scripts -->
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/dataTables.buttons.min.js"></script>
+    <script src="~/Scripts/buttons.bootstrap.min.js"></script>
+    <script src="~/Scripts/buttons.flash.min.js"></script>
+    <script src="~/Scripts/buttons.html5.min.js"></script>
+    <script src="~/Scripts/buttons.print.min.js"></script>
+    <script src="~/Scripts/dataTables.fixedHeader.min.js"></script>
+    <script src="~/Scripts/dataTables.keyTable.min.js"></script>
+    <script src="~/Scripts/dataTables.responsive.min.js"></script>
+    <script src="~/Scripts/responsive.bootstrap.js"></script>
+    <script src="~/Scripts/dataTables.scroller.min.js"></script>
+    <script src="~/Scripts/validator.js"></script>
+    
+    <!-- Data table Scripts -->
+      <!-- validator -->
+    <script>
+       
+        $(document).ready(function () {
+            $('.editbtn').click(function () {
+               
+               var table = $('#datatable-responsive').DataTable();
+                $('#datatable-responsive tbody').on('click', 'tr', function () {
+                    $("#eid").val(table.row(this).data()[0]);
+                    $("#ename").val(table.row(this).data()[1]);
+
+                });
+                $('.Edit').css('display', 'block');
+                $('.Create').css('display', 'none');
+
+            });
+            $('#create_cancel').click(function () {
+
+                $('#edit').css('display', 'none');
+                $('#create').css('display', 'block');
+
+
+            });
+            $('#edit_cancel').click(function () {
+
+
+                $('#edit').css('display', 'none');
+                $('#create').css('display', 'block');
+
+
+            });
+        });
+        //<!-- /Datatables -->
+        var handleDataTableButtons = function () {
+            if ($("#datatable-buttons").length) {
+                $("#datatable-buttons").DataTable({
+                    dom: "Bfrtip",
+                    buttons: [
+                      {
+                          extend: "copy",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "csv",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "excel",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "pdfHtml5",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "print",
+                          className: "btn-sm"
+                      },
+                    ],
+                    responsive: true
+                });
+            }
+        };
+
+        TableManageButtons = function () {
+            "use strict";
+            return {
+                init: function () {
+                    handleDataTableButtons();
+                }
+            };
+        }();
+
+        $('#datatable').dataTable();
+
+        $('#datatable-keytable').DataTable({
+            keys: true
+        });
+
+        $('#datatable-responsive').DataTable({
+            'order': [[0, 'desc']],
+            'columnDefs': [
+               { visible: false, targets: [0] }
+            ]
+        });
+
+        $('#datatable-scroller').DataTable({
+            ajax: "js/datatables/json/scroller-demo.json",
+            deferRender: true,
+            scrollY: 380,
+            scrollCollapse: true,
+            scroller: true
+        });
+
+        $('#datatable-fixed-header').DataTable({
+            fixedHeader: true
+        });
+
+        var $datatable = $('#datatable-checkbox');
+
+        $datatable.dataTable({
+            'order': [[1, 'asc']],
+            'columnDefs': [
+              { orderable: false, targets: [0] }
+            ]
+        });
+        $datatable.on('draw.dt', function () {
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_flat-green'
+            });
+        });
+
+        TableManageButtons.init();
+        //<!-- /Datatables -->
+      // initialize the validator function
+      //validator.message.date = 'not a real date';
+
+      // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
+      $('form')
+        .on('blur', 'input[required], input.optional, select.required', validator.checkField)
+        .on('change', 'select.required', validator.checkField)
+        .on('keypress', 'input[required][pattern]', validator.keypress);
+
+      //$('.multi.required').on('keyup blur', 'input', function() {
+      //  validator.checkField.apply($(this).siblings().last()[0]);
+      //});
+
+     
+     
+      $('form').submit(function(e) {
+        e.preventDefault();
+        var submit = true;
+
+        // evaluate the form using generic validaing
+        if (!validator.checkAll($(this))) {
+          submit = false;
+        }
+
+        if (submit)
+          this.submit();
+
+        return false;
+      });
+    </script>
+    
+

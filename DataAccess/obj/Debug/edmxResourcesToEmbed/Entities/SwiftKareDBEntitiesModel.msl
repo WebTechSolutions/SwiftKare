@@ -1,0 +1,607 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="SwiftKareDBModelStoreContainer" CdmEntityContainer="SwiftKareDBEntities">
+    <EntitySetMapping Name="C__MigrationHistory">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.C__MigrationHistory">
+        <MappingFragment StoreEntitySet="__MigrationHistory">
+          <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
+          <ScalarProperty Name="ContextKey" ColumnName="ContextKey" />
+          <ScalarProperty Name="Model" ColumnName="Model" />
+          <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AdminUsers">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.AdminUser">
+        <MappingFragment StoreEntitySet="AdminUsers">
+          <ScalarProperty Name="adminID" ColumnName="adminID" />
+          <ScalarProperty Name="userName" ColumnName="userName" />
+          <ScalarProperty Name="lastName" ColumnName="lastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="roleID" ColumnName="roleID" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="userId" ColumnName="userId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Alerts">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Alert">
+        <MappingFragment StoreEntitySet="Alerts">
+          <ScalarProperty Name="alertID" ColumnName="alertID" />
+          <ScalarProperty Name="alertText" ColumnName="alertText" />
+          <ScalarProperty Name="alertFor" ColumnName="alertFor" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="read" ColumnName="read" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Allergies">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Allergy">
+        <MappingFragment StoreEntitySet="Allergy">
+          <ScalarProperty Name="allergyID" ColumnName="allergyID" />
+          <ScalarProperty Name="allergyName" ColumnName="allergyName" />
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AppAttachments">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.AppAttachment">
+        <MappingFragment StoreEntitySet="AppAttachment">
+          <ScalarProperty Name="appAttachmentID" ColumnName="appAttachmentID" />
+          <ScalarProperty Name="appID" ColumnName="appID" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="fileContent" ColumnName="fileContent" />
+          <ScalarProperty Name="fileurl" ColumnName="fileurl" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Appointments">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Appointment">
+        <MappingFragment StoreEntitySet="Appointments">
+          <ScalarProperty Name="appID" ColumnName="appID" />
+          <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+          <ScalarProperty Name="patientID" ColumnName="patientID" />
+          <ScalarProperty Name="appDate" ColumnName="appDate" />
+          <ScalarProperty Name="appTime" ColumnName="appTime" />
+          <ScalarProperty Name="notes" ColumnName="notes" />
+          <ScalarProperty Name="paymentID" ColumnName="paymentID" />
+          <ScalarProperty Name="paymentAmt" ColumnName="paymentAmt" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="appTypeAV" ColumnName="appTypeAV" />
+          <ScalarProperty Name="chiefComplaints" ColumnName="chiefComplaints" />
+          <ScalarProperty Name="OtherComplaints" ColumnName="OtherComplaints" />
+          <ScalarProperty Name="consultationType" ColumnName="consultationType" />
+          <ScalarProperty Name="consultationStatus" ColumnName="consultationStatus" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AspNetRoles">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.AspNetRole">
+        <MappingFragment StoreEntitySet="AspNetRoles">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Discriminator" ColumnName="Discriminator" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AspNetUserClaims">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.AspNetUserClaim">
+        <MappingFragment StoreEntitySet="AspNetUserClaims">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+          <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AspNetUserLogins">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.AspNetUserLogin">
+        <MappingFragment StoreEntitySet="AspNetUserLogins">
+          <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+          <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AspNetUsers">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.AspNetUser">
+        <MappingFragment StoreEntitySet="AspNetUsers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+          <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+          <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+          <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+          <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+          <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+          <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+          <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Cities">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.City">
+        <MappingFragment StoreEntitySet="City">
+          <ScalarProperty Name="cityID" ColumnName="cityID" />
+          <ScalarProperty Name="cityName" ColumnName="cityName" />
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Conditions">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Condition">
+        <MappingFragment StoreEntitySet="Conditions">
+          <ScalarProperty Name="conditionID" ColumnName="conditionID" />
+          <ScalarProperty Name="conditionName" ColumnName="conditionName" />
+          <ScalarProperty Name="Source" ColumnName="Source" />
+          <ScalarProperty Name="patientID" ColumnName="patientID" />
+          <ScalarProperty Name="ft" ColumnName="ft" />
+          <ScalarProperty Name="inch" ColumnName="inch" />
+          <ScalarProperty Name="weight" ColumnName="weight" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Consultations">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Consultation">
+        <MappingFragment StoreEntitySet="Consultation">
+          <ScalarProperty Name="consultID" ColumnName="consultID" />
+          <ScalarProperty Name="appID" ColumnName="appID" />
+          <ScalarProperty Name="duration" ColumnName="duration" />
+          <ScalarProperty Name="review" ColumnName="review" />
+          <ScalarProperty Name="reviewStar" ColumnName="reviewStar" />
+          <ScalarProperty Name="reviewStatus" ColumnName="reviewStatus" />
+          <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+          <ScalarProperty Name="patientID" ColumnName="patientID" />
+          <ScalarProperty Name="startTime" ColumnName="startTime" />
+          <ScalarProperty Name="endTime" ColumnName="endTime" />
+          <ScalarProperty Name="consultationRosID" ColumnName="consultationRosID" />
+          <ScalarProperty Name="subjective" ColumnName="subjective" />
+          <ScalarProperty Name="objective" ColumnName="objective" />
+          <ScalarProperty Name="assessment" ColumnName="assessment" />
+          <ScalarProperty Name="plans" ColumnName="plans" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ConsultationROS">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.ConsultationRO">
+        <MappingFragment StoreEntitySet="ConsultationROS">
+          <ScalarProperty Name="consultationRosID" ColumnName="consultationRosID" />
+          <ScalarProperty Name="patientID" ColumnName="patientID" />
+          <ScalarProperty Name="systemItemID" ColumnName="systemItemID" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Doctors">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Doctor">
+        <MappingFragment StoreEntitySet="Doctor">
+          <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+          <ScalarProperty Name="lastName" ColumnName="lastName" />
+          <ScalarProperty Name="firstName" ColumnName="firstName" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="secretQuestion1" ColumnName="secretQuestion1" />
+          <ScalarProperty Name="secretQuestion2" ColumnName="secretQuestion2" />
+          <ScalarProperty Name="secretQuestion3" ColumnName="secretQuestion3" />
+          <ScalarProperty Name="secretAnswer1" ColumnName="secretAnswer1" />
+          <ScalarProperty Name="secretAnswer2" ColumnName="secretAnswer2" />
+          <ScalarProperty Name="secretAnswer3" ColumnName="secretAnswer3" />
+          <ScalarProperty Name="gender" ColumnName="gender" />
+          <ScalarProperty Name="address1" ColumnName="address1" />
+          <ScalarProperty Name="address2" ColumnName="address2" />
+          <ScalarProperty Name="homePhone" ColumnName="homePhone" />
+          <ScalarProperty Name="cellPhone" ColumnName="cellPhone" />
+          <ScalarProperty Name="zip" ColumnName="zip" />
+          <ScalarProperty Name="dob" ColumnName="dob" />
+          <ScalarProperty Name="licenseNumber" ColumnName="licenseNumber" />
+          <ScalarProperty Name="npiNumber" ColumnName="npiNumber" />
+          <ScalarProperty Name="additionalInfo" ColumnName="additionalInfo" />
+          <ScalarProperty Name="picture" ColumnName="picture" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="lat" ColumnName="lat" />
+          <ScalarProperty Name="lon" ColumnName="lon" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="publication" ColumnName="publication" />
+          <ScalarProperty Name="aboutMe" ColumnName="aboutMe" />
+          <ScalarProperty Name="userId" ColumnName="userId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DoctorLanguages">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.DoctorLanguage">
+        <MappingFragment StoreEntitySet="DoctorLanguages">
+          <ScalarProperty Name="doctorLanguageID" ColumnName="doctorLanguageID" />
+          <ScalarProperty Name="languageName" ColumnName="languageName" />
+          <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DoctorLicenseStates">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.DoctorLicenseState">
+        <MappingFragment StoreEntitySet="DoctorLicenseStates">
+          <ScalarProperty Name="doctorLicenseStateID" ColumnName="doctorLicenseStateID" />
+          <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+          <ScalarProperty Name="stateName" ColumnName="stateName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DoctorSpecialities">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.DoctorSpeciality">
+        <MappingFragment StoreEntitySet="DoctorSpeciality">
+          <ScalarProperty Name="doctorSpecialityID" ColumnName="doctorSpecialityID" />
+          <ScalarProperty Name="specialityName" ColumnName="specialityName" />
+          <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DoctorTimings">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.DoctorTiming">
+        <MappingFragment StoreEntitySet="DoctorTimings">
+          <ScalarProperty Name="doctorTimingsID" ColumnName="doctorTimingsID" />
+          <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+          <ScalarProperty Name="day" ColumnName="day" />
+          <ScalarProperty Name="from" ColumnName="from" />
+          <ScalarProperty Name="to" ColumnName="to" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="repeatTimings" ColumnName="repeatTimings" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocumentTypes">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.DocumentType">
+        <MappingFragment StoreEntitySet="DocumentType">
+          <ScalarProperty Name="docTypeID" ColumnName="docTypeID" />
+          <ScalarProperty Name="typeName" ColumnName="typeName" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FamilyHXes">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.FamilyHX">
+        <MappingFragment StoreEntitySet="FamilyHX">
+          <ScalarProperty Name="fhxid" ColumnName="fhxid" />
+          <ScalarProperty Name="questionID" ColumnName="questionID" />
+          <ScalarProperty Name="answer" ColumnName="answer" />
+          <ScalarProperty Name="patientID" ColumnName="patientID" />
+          <ScalarProperty Name="customQuestion" ColumnName="customQuestion" />
+          <ScalarProperty Name="customAnswer" ColumnName="customAnswer" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Languages">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Language">
+        <MappingFragment StoreEntitySet="Languages">
+          <ScalarProperty Name="languageID" ColumnName="languageID" />
+          <ScalarProperty Name="languageName" ColumnName="languageName" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LifeStyles">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.LifeStyle">
+        <MappingFragment StoreEntitySet="LifeStyle">
+          <ScalarProperty Name="liftStyleID" ColumnName="liftStyleID" />
+          <ScalarProperty Name="questionID" ColumnName="questionID" />
+          <ScalarProperty Name="answer" ColumnName="answer" />
+          <ScalarProperty Name="patientID" ColumnName="patientID" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Medications">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Medication">
+        <MappingFragment StoreEntitySet="Medications">
+          <ScalarProperty Name="medicationID" ColumnName="medicationID" />
+          <ScalarProperty Name="medicineName" ColumnName="medicineName" />
+          <ScalarProperty Name="frequency" ColumnName="frequency" />
+          <ScalarProperty Name="source" ColumnName="source" />
+          <ScalarProperty Name="patientId" ColumnName="patientId" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Medicines">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Medicine">
+        <MappingFragment StoreEntitySet="Medicine">
+          <ScalarProperty Name="medicineID" ColumnName="medicineID" />
+          <ScalarProperty Name="medicineName" ColumnName="medicineName" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Modules">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Module">
+        <MappingFragment StoreEntitySet="Modules">
+          <ScalarProperty Name="moduleID" ColumnName="moduleID" />
+          <ScalarProperty Name="moduleName" ColumnName="moduleName" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Patients">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Patient">
+        <MappingFragment StoreEntitySet="Patient">
+          <ScalarProperty Name="patientID" ColumnName="patientID" />
+          <ScalarProperty Name="firstName" ColumnName="firstName" />
+          <ScalarProperty Name="lastName" ColumnName="lastName" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="secretQuestion1" ColumnName="secretQuestion1" />
+          <ScalarProperty Name="secretQuestion2" ColumnName="secretQuestion2" />
+          <ScalarProperty Name="secretQuestion3" ColumnName="secretQuestion3" />
+          <ScalarProperty Name="secretAnswer1" ColumnName="secretAnswer1" />
+          <ScalarProperty Name="secretAnswer2" ColumnName="secretAnswer2" />
+          <ScalarProperty Name="secretAnswer3" ColumnName="secretAnswer3" />
+          <ScalarProperty Name="gender" ColumnName="gender" />
+          <ScalarProperty Name="address1" ColumnName="address1" />
+          <ScalarProperty Name="address2" ColumnName="address2" />
+          <ScalarProperty Name="homePhone" ColumnName="homePhone" />
+          <ScalarProperty Name="cellPhone" ColumnName="cellPhone" />
+          <ScalarProperty Name="zip" ColumnName="zip" />
+          <ScalarProperty Name="dob" ColumnName="dob" />
+          <ScalarProperty Name="languages" ColumnName="languages" />
+          <ScalarProperty Name="picture" ColumnName="picture" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="userId" ColumnName="userId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PatientAllergies">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.PatientAllergy">
+        <MappingFragment StoreEntitySet="PatientAllergies">
+          <ScalarProperty Name="allergiesID" ColumnName="allergiesID" />
+          <ScalarProperty Name="allergyName" ColumnName="allergyName" />
+          <ScalarProperty Name="severity" ColumnName="severity" />
+          <ScalarProperty Name="reaction" ColumnName="reaction" />
+          <ScalarProperty Name="source" ColumnName="source" />
+          <ScalarProperty Name="patientID" ColumnName="patientID" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PatientSystems">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.PatientSystem">
+        <MappingFragment StoreEntitySet="PatientSystems">
+          <ScalarProperty Name="systemID" ColumnName="systemID" />
+          <ScalarProperty Name="systemName" ColumnName="systemName" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Questions">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Question">
+        <MappingFragment StoreEntitySet="Questions">
+          <ScalarProperty Name="questionID" ColumnName="questionID" />
+          <ScalarProperty Name="question1" ColumnName="question" />
+          <ScalarProperty Name="category" ColumnName="category" />
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RoleModules">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.RoleModule">
+        <MappingFragment StoreEntitySet="RoleModules">
+          <ScalarProperty Name="roleModuleID" ColumnName="roleModuleID" />
+          <ScalarProperty Name="moduleID" ColumnName="moduleID" />
+          <ScalarProperty Name="roleID" ColumnName="roleID" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Roles">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Role">
+        <MappingFragment StoreEntitySet="Roles">
+          <ScalarProperty Name="roleID" ColumnName="roleID" />
+          <ScalarProperty Name="roleName" ColumnName="roleName" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Speciallities">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Speciallity">
+        <MappingFragment StoreEntitySet="Speciallity">
+          <ScalarProperty Name="speciallityID" ColumnName="speciallityID" />
+          <ScalarProperty Name="specialityName" ColumnName="specialityName" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="States">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.State">
+        <MappingFragment StoreEntitySet="States">
+          <ScalarProperty Name="stateID" ColumnName="stateID" />
+          <ScalarProperty Name="stateName" ColumnName="stateName" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Surgeries">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Surgery">
+        <MappingFragment StoreEntitySet="Surgeries">
+          <ScalarProperty Name="surgeryID" ColumnName="surgeryID" />
+          <ScalarProperty Name="bodyPartID" ColumnName="bodyPartID" />
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="patientID" ColumnName="patientID" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sysdiagrams">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.sysdiagram">
+        <MappingFragment StoreEntitySet="sysdiagrams">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SystemItemsses">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.SystemItemss">
+        <MappingFragment StoreEntitySet="SystemItemss">
+          <ScalarProperty Name="systemItemID" ColumnName="systemItemID" />
+          <ScalarProperty Name="systemItemName" ColumnName="systemItemName" />
+          <ScalarProperty Name="systemID" ColumnName="systemID" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserFiles">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.UserFile">
+        <MappingFragment StoreEntitySet="UserFiles">
+          <ScalarProperty Name="fileID" ColumnName="fileID" />
+          <ScalarProperty Name="documentType" ColumnName="documentType" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="fileContent" ColumnName="fileContent" />
+          <ScalarProperty Name="fileurl" ColumnName="fileurl" />
+          <ScalarProperty Name="patientID" ColumnName="patientID" />
+          <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Zips">
+      <EntityTypeMapping TypeName="SwiftKareDBModel.Zip">
+        <MappingFragment StoreEntitySet="Zips">
+          <ScalarProperty Name="zipID" ColumnName="zipID" />
+          <ScalarProperty Name="zipName" ColumnName="zipName" />
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="cb" ColumnName="cb" />
+          <ScalarProperty Name="cd" ColumnName="cd" />
+          <ScalarProperty Name="mb" ColumnName="mb" />
+          <ScalarProperty Name="md" ColumnName="md" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="AspNetUserRoles" TypeName="SwiftKareDBModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+      <EndProperty Name="AspNetRoles">
+        <ScalarProperty Name="Id" ColumnName="RoleId" />
+      </EndProperty>
+      <EndProperty Name="AspNetUsers">
+        <ScalarProperty Name="Id" ColumnName="UserId" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>

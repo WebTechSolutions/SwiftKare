@@ -1,0 +1,529 @@
+﻿@model IEnumerable<DataAccess.News>
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div class="page-title">
+    <div class="title_left">
+        <h3>Add News</h3>
+    </div>
+
+</div>
+
+<div class="clearfix"></div>
+
+<!--Forms-->
+@if (ViewBag.errorMessage == "")
+{
+    <script>
+        $(function () {
+            new PNotify({
+                title: 'Success',
+                text: "@ViewBag.successMessage",
+                type: 'success',
+                styling: 'bootstrap3'
+            });
+        });
+
+    </script>
+}
+@if (ViewBag.successMessage == "")
+{
+
+    <script>
+        $(function () {
+            new PNotify({
+                title: 'Error',
+                text: "@ViewBag.errorMessage",
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        });
+    </script>
+}
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+
+            <div class="x_content">
+
+                <div class="x_title">
+                    <h2>News Info</h2>
+
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_panel" id="create">
+                    @using (Html.BeginForm("Create", "News_Admin",
+                       FormMethod.Post, new
+                       {
+                           novalidate = "novalidate",
+                           @class = "form-horizontal form-label-left",
+                           enctype = "multipart/form-data"
+                       }))
+                    {
+                        <input name="action" type="text" value="create" style="display: none">                       
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="thumbnail">
+                                Select  Thumbnail(130x130)<span class="required">*</span>
+                            </label>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <input accept=".png,.gif,.jpeg,.jpg" type="file" data-role="magic-overlay" required="required" name="thumbnailimage" />
+                                @* <input class="form-control col-md-7 col-xs-12" name="allergyname" required="required" style="width: 228px;" type="file">*@
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                                Select  Detail Image(500x500)<span class="required">*</span>
+                            </label>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <input type="file" data-role="magic-overlay" required="required" name="detailimage" />
+                                @*<input class="form-control col-md-7 col-xs-12" name="detailimage" required="required" style="width: 228px;" type="file">*@
+                            </div>
+                        </div>
+                        
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">News Title</label>
+                            <div class="col-md-6 col-sm-6 col-xs-9">
+                                <textarea class="resizable_textarea form-control" placeholder="News Title" required="required" name="newstitle"></textarea>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <div class="x_title">
+                                <h2>News Detail</h2>
+                                <span class="required">*</span>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+
+                                <textarea style="width: 100%; height: 100%" class="resizable_textarea form-control" name="newsdetail" id="newddetail" required="required"></textarea>
+
+                            </div>
+                        </div>
+                                            
+                        <div class="ln_solid"></div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <button id="csend" type="submit" class="btn btn-success">Submit</button>
+                                <button type="reset" class="btn btn-primary" id="create_cancel">Cancel</button>
+
+
+                            </div>
+                        </div>
+                    }
+
+                </div>
+
+                 <div class="x_panel" id="edit" style="display:none">
+                    @using (Html.BeginForm("Create", "News_Admin",
+                       FormMethod.Post, new
+                       {
+                           novalidate = "novalidate",
+                           @class = "form-horizontal form-label-left",
+                           enctype = "multipart/form-data"
+                       }))
+                    {
+                        <input name="action" type="text" value="edit" style="display: none"> 
+                         <input id="enewsid" type="text" name="newsid" style="display: none">                       
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="thumbnail">
+                                Select  Thumbnail(130x130)<span class="required">*</span>
+                            </label>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <input type="file" data-role="magic-overlay" required="required" name="thumbnailimage" />
+                                @* <input class="form-control col-md-7 col-xs-12" name="allergyname" required="required" style="width: 228px;" type="file">*@
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                                Select  Detail Image(500x500)<span class="required">*</span>
+                            </label>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <input type="file" data-role="magic-overlay" required="required" name="detailimage" />
+                                @*<input class="form-control col-md-7 col-xs-12" name="detailimage" required="required" style="width: 228px;" type="file">*@
+                            </div>
+                        </div>
+                        
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">News Title</label>
+                            <div class="col-md-6 col-sm-6 col-xs-9">
+                                <textarea id="enewstitle"  class="resizable_textarea form-control" placeholder="News Title" required="required" name="newstitle"></textarea>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <div class="x_title">
+                                <h2>News Detail</h2>
+                                <span class="required">*</span>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+
+                                <textarea id="enewsdetail" style="width: 100%; height: 100%" class="resizable_textarea form-control" name="newsdetail" required="required"></textarea>
+
+                            </div>
+                        </div>
+                                            
+                        <div class="ln_solid"></div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <button id="esend" type="submit" class="btn btn-success">Submit</button>
+                                <button type="reset" class="btn btn-primary" id="edit_cancel">Cancel</button>
+
+
+                            </div>
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!--Datagrid-->
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        @*<div class="x_panel">*@
+        @* <div class="x_title">
+              <h2>Registered Doctors</h2>
+
+              <div class="clearfix"></div>
+            </div>*@
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                @* <div class="x_content">*@
+
+                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th></th> @*thumbnail*@
+                            <th></th> @*detailimage*@
+                            <th></th>  @*title*@
+                            <th></th>  @*detail*@
+                              <th></th> @*title and detail*@
+                            <th></th>  @*cd*@
+                            <th></th>  @*action*@
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @if (Model != null)
+                        {
+                            var j = 0;
+
+                            foreach (var item in Model)
+                            {
+
+                                j = j + 1;
+                            <tr data-id=@j>
+                                <td id="id" class="newsid">@item.newsID</td>
+                                <td>
+                                    <img src="/News_Admin/RetrieveImage/@item.newsID?type=thumbnail" alt="" height=130 width=130 /></td>
+                                <td>
+                                    <img src="/News_Admin/RetrieveImage/@item.newsID?type=detailimage" alt="" height=500 width=500 /></td>
+                                <td style="word-break: break-all; width: 700px">@item.newsTitle</td>
+                                 <td style="word-break: break-all; width: 700px">@item.newsDetail</td>
+                                <td data-toggle="modal" data-target="#newsmodal" class="readmore" style="word-break: break-all; width: 700px"><b>@item.newsTitle</b><br />
+                                    @{ 
+                                var count = item.newsDetail.Length;
+                                string detail = "";
+                                if (count > 250)
+                                {
+                                    detail = item.newsDetail.Substring(0, 250) + "...";
+                                }
+                                else
+                                {
+                                    detail = item.newsDetail.Substring(0, count);
+                                }
+                                    }
+                                        <div style="text-align:justify">@detail</div>
+                                        @*<textarea disabled="disabled" style="width: 100%; height: 100%" class="resizable_textarea form-control" name="newddetail">@detail</textarea>*@
+                                 
+                                </td>
+                                <td style="width: 170px">@item.cd</td>
+                                <td style="width: 100px">
+                                    @using (Html.BeginForm("Create", "News_Admin",
+                                    FormMethod.Post, new {id="editform", novalidate = "novalidate", @class = "form-horizontal form-label-left" }))
+                                    {
+                                        <input name="action" type="text" value="delete" style="display: none"> 
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary" OnClick="event.preventDefault();">Action</button>
+                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                <span class="caret"></span>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li>
+                                                    <a class="editbtn" id="btn_edit">Edit</a>
+                                                </li>
+                                                <li>
+                                                    <input name="newsid" type="number" style="display:none" value="@item.newsID"></li>
+                                                <li>
+                                                    <button id="delete" type="submit" onclick="return confirm('Are you sure you want to delete this item?');">Delete</button></li>
+                                            </ul>
+                                        </div>
+                                    }
+                                </td>
+
+                            </tr>
+                            }
+                        }
+
+
+
+
+                    </tbody>
+                </table>
+
+                @* </div>*@
+            </div>
+        </div>
+
+        @* </div>*@
+    </div>
+     <div id=newsmodal class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+
+                                                <div id="modal-header" class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                     
+                                                    <h4 class="modal-title" id="myModalLabel"></h4>
+                                                </div>
+                                                <div id="modal-body" class="modal-body" style="height:300px">
+                                                   
+                                                  
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+</div>
+
+
+
+
+<!-- Data table Scripts -->
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/buttons.bootstrap.min.js"></script>
+<script src="~/Scripts/buttons.flash.min.js"></script>
+<script src="~/Scripts/buttons.html5.min.js"></script>
+<script src="~/Scripts/buttons.print.min.js"></script>
+<script src="~/Scripts/dataTables.fixedHeader.min.js"></script>
+<script src="~/Scripts/dataTables.keyTable.min.js"></script>
+<script src="~/Scripts/dataTables.responsive.min.js"></script>
+<script src="~/Scripts/responsive.bootstrap.js"></script>
+<script src="~/Scripts/dataTables.scroller.min.js"></script>
+<script src="~/Scripts/validator.js"></script>
+
+<!-- Data table Scripts -->
+
+<!--News Modal Dialog-->
+<script>
+    $(function () {
+        $('#newsmodal').modal({
+            keyboard: true,
+            backdrop: "static",
+            show: false,
+
+        }).on('show', function () {
+            //var getIdFromRow = $(this).data('orderid');
+            ////make your ajax call populate items or what even you need
+            //$(this).find('#orderDetails').html($('<b> Order Id selected: ' + getIdFromRow + '</b>'))
+        });
+
+        $("#datatable-responsive").find('tr').on('click', function () {
+            //debugger;
+       
+            //do all your operation populate the modal and open the modal now. DOnt need to use show event of modal again
+            var table = $('#datatable-responsive').DataTable();
+            var id = $("#id").val(table.row(this).data()[0]);
+            $('#myModalLabel').html($('<center>' + table.row(this).data()[2] + '<br/><br/>' + table.row(this).data()[3] + '</center>'));
+            $('#modal-body').html($(' <textarea disabled="disabled" style="width: 100%; height: 100%" class="resizable_textarea form-control" name="newddetail">'+table.row(this).data()[4]+'</textarea>' ));
+            $('#orderModal').modal('show');
+           
+        });
+
+    });
+</script>
+<!--News Modal Dialog-->
+
+<!-- bootstrap-wysiwyg -->
+
+<script src="~/Scripts/bootstrap-wysiwyg.min.js"></script>
+<script src="~/Scripts/jquery.hotkeys.js"></script>
+<script src="~/Scripts/prettify.js"></script>
+<!-- bootstrap-wysiwyg -->
+<!-- Autosize -->
+<script src="~/Scripts/autosize.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        $('#btn_edit').click(function () {
+            $('#edit').css('display', 'block');
+            $('#create').css('display', 'none');
+            var table = $('#datatable-responsive').DataTable();
+            $('#datatable-responsive tbody').on('click', 'tr', function () {
+                $("#enewsid").val(table.row(this).data()[0]);
+                $("#enewstitle").val(table.row(this).data()[3]);
+                $("#enewsdetail").val(table.row(this).data()[4]);
+
+            });
+        });
+        $('#create_cancel').click(function () {
+          
+            $('#edit').css('display', 'none');
+            $('#create').css('display', 'block');
+
+
+        });
+        $('#edit_cancel').click(function () {
+
+            
+            $('#edit').css('display', 'none');
+            $('#create').css('display', 'block');
+
+
+        });
+    });
+    //<!-- /Datatables -->
+    var handleDataTableButtons = function () {
+        if ($("#datatable-buttons").length) {
+            $("#datatable-buttons").DataTable({
+                dom: "Bfrtip",
+                buttons: [
+                  {
+                      extend: "copy",
+                      className: "btn-sm"
+                  },
+                  {
+                      extend: "csv",
+                      className: "btn-sm"
+                  },
+                  {
+                      extend: "excel",
+                      className: "btn-sm"
+                  },
+                  {
+                      extend: "pdfHtml5",
+                      className: "btn-sm"
+                  },
+                  {
+                      extend: "print",
+                      className: "btn-sm"
+                  },
+                ],
+                responsive: true
+            });
+        }
+    };
+
+    TableManageButtons = function () {
+        "use strict";
+        return {
+            init: function () {
+                handleDataTableButtons();
+            }
+        };
+    }();
+
+    $('#datatable').dataTable();
+
+    $('#datatable-keytable').DataTable({
+        keys: true
+    });
+
+    $('#datatable-responsive').DataTable({
+        'order': [[0, 'desc']],
+        "ordering": false,
+        'columnDefs': [
+           { visible: false, targets: [0] },
+           { visible: false, targets: [2] },
+            { visible: false, targets: [3] },
+             { visible: false, targets: [4] }
+        ]
+    });
+
+    $('#datatable-scroller').DataTable({
+        ajax: "js/datatables/json/scroller-demo.json",
+        deferRender: true,
+        scrollY: 380,
+        scrollCollapse: true,
+        scroller: true
+    });
+
+    $('#datatable-fixed-header').DataTable({
+        fixedHeader: true
+    });
+
+    var $datatable = $('#datatable-checkbox');
+
+    $datatable.dataTable({
+        'order': [[1, 'asc']],
+        'columnDefs': [
+          { orderable: false, targets: [0] }
+        ]
+    });
+    $datatable.on('draw.dt', function () {
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+        });
+    });
+
+    TableManageButtons.init();
+    //<!-- /Datatables -->
+    // initialize the validator function
+    //validator.message.date = 'not a real date';
+
+    // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
+    $('form')
+      .on('blur', 'input[required], input.optional, select.required', validator.checkField)
+      .on('change', 'select.required', validator.checkField)
+      .on('keypress', 'input[required][pattern]', validator.keypress);
+
+    //$('.multi.required').on('keyup blur', 'input', function() {
+    //  validator.checkField.apply($(this).siblings().last()[0]);
+    //});
+
+
+
+    $('form').submit(function (e) {
+        e.preventDefault();
+        var submit = true;
+
+        // evaluate the form using generic validaing
+        if (!validator.checkAll($(this))) {
+            submit = false;
+        }
+
+        if (submit)
+            this.submit();
+
+        return false;
+    });
+</script>
+<!-- Autosize -->
+<script>
+    $(document).ready(function () {
+        autosize($('.resizable_textarea'));
+    });
+    </script>
+<!-- /Autosize -->
+
+

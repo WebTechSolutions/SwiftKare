@@ -1,0 +1,69 @@
+﻿@*@model IEnumerable<WebApp.Models.ApplicationUser>*@
+@model Identity.Membership.Models.UserViewModel
+@using Microsoft.AspNet.Identity.EntityFramework
+@using WebApp.Models
+@using Identity.Membership.Models
+
+
+
+@{
+    ViewBag.Title = "Users";
+}
+
+<h2>Users</h2>
+
+<p>
+    @Html.ActionLink("Create New User", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            User Name
+
+            @*@Html.DisplayNameFor(model => model.UserName)*@
+        </th>
+        @*Add a table header for the Address info:*@
+        <th>
+            @*@Html.DisplayNameFor(model => model.DisplayAddress)*@
+            Display Address
+        </th>
+        <th>
+
+        </th>
+    </tr>
+
+    @foreach (var item in Model.ApplicationUsers)
+    {
+        List<IdentityUserRole> UserRoles = new List<IdentityUserRole>();
+        UserRoles = item.Roles.ToList<IdentityUserRole>();
+        bool IsAdminUserInItem = false;
+        foreach (var userroles in UserRoles)
+        {
+            var matchedList = Model.ApplicationRoles.Where(a => a.Id == userroles.RoleId);
+            if (matchedList.Count() > 0)
+            {
+                IsAdminUserInItem = true;
+                break;
+            }
+        }
+
+        if (User.IsInRole("Admin") && !IsAdminUserInItem)
+        {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @*Add table data for the Address info:*@
+                        @Html.DisplayFor(modelItem => item.DisplayAddress)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                     </td>
+                </tr>
+        }
+    }
+
+</table>
