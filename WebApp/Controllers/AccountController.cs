@@ -13,6 +13,7 @@ using WebApp.Helper;
 using Newtonsoft.Json;
 using Identity.Membership;
 using Identity.Membership.Models;
+using DataAccess;
 
 namespace WebApp.Controllers
 {
@@ -64,50 +65,6 @@ namespace WebApp.Controllers
             return View();
         }
 
-        //
-        // GET: /Account/Login
-        [AllowAnonymous]
-        public ActionResult AdminLogin(string returnUrl)
-        {
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
-        }
-        //
-        // POST: /Account/Login
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AdminLogin(LoginRegisterViewModel model, string returnUrl)
-        {
-            //var IsPatient = (bool)ViewBag.IsPatient;
-
-
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            //var strContent = JsonConvert.SerializeObject(model);
-            //var response = ApiConsumerHelper.PostData("api/Account/Login", strContent);
-            //var resultTest = JsonConvert.DeserializeObject<SignInStatus>(response);
-
-            // This doen't count login failures towards lockout only two factor authentication
-            // To enable password failures to trigger lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.LoginViewModel.Email, model.LoginViewModel.Password, model.LoginViewModel.RememberMe, shouldLockout: false);
-
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    this.Session["LogedUserID"] = model.LoginViewModel.Email;
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
-            }
-        }
         private ApplicationSignInManager _signInManager;
 
         public ApplicationSignInManager SignInManager
@@ -176,7 +133,6 @@ namespace WebApp.Controllers
             {
                 var user = new ApplicationUser
                 {
-
                     UserName = model.RegisterViewModel.Email,
                     Email = model.RegisterViewModel.Email,
                     FirstName = model.RegisterViewModel.FirstName,
@@ -185,54 +141,68 @@ namespace WebApp.Controllers
                     City = model.RegisterViewModel.City,
                     State = model.RegisterViewModel.State,
                     PostalCode = model.RegisterViewModel.PostalCode
-
                 };
 
                 // Add the Address properties:
 
 
-                
+
                 var result = await UserManager.CreateAsync(user, model.RegisterViewModel.Password);
 
                 if (result.Succeeded)
                 {
-                    var IsPatient = ViewBag.IsPatient != null ? (bool)ViewBag.IsPatient : false;
 
-                    var requestUri = IsPatient ? "api/Patients" : "api/Doctors";
-
-                    requestUri = "api/Patients";//testing
-
-                    var patient = new DataAccess.Patient();
-                    patient.userId = user.Id;
-                    patient.lastName = user.LastName;
-                    patient.firstName = user.FirstName;
-                    patient.email = user.Email;
-                    var strContent = JsonConvert.SerializeObject(patient);
-                    var response = ApiConsumerHelper.PostData(requestUri, strContent);
-                    dynamic resultAdd = JsonConvert.DeserializeObject(response);
-
-
-
+                    var requestUri = "";
                     var userAssignRole = new UserAssignRoleModel();
-                    userAssignRole.UserId =  user.Id;//"8466ba63-b903-4d0a-8633-ce399ed1b542";//
-                    userAssignRole.Role = "Patient";
+                    userAssignRole.UserId = user.Id;//"8466ba63-b903-4d0a-8633-ce399ed1b542";//
+                    var strContent = "";
+                    var response = "";
 
+                    if (model.IsPatient)
+                    {
+                        requestUri = "api/Patients";
+                        var obj = new Patient();
+                        obj.userId = user.Id;
+                        obj.lastName = user.LastName;
+                        obj.firstName = user.FirstName;
+                        obj.email = user.Email;
+                        strContent = JsonConvert.SerializeObject(obj);
+                        response = ApiConsumerHelper.PostData(requestUri, strContent);
+                        dynamic resultPatient = JsonConvert.DeserializeObject(response);
 
+                        userAssignRole.Role = "Patient";
 
+                    }
+                    else
+                    {
+                        requestUri = "api/Doctors";
+                        var obj = new Doctor();
+                        obj.userId = user.Id;
+                        obj.lastName = user.LastName;
+                        obj.firstName = user.FirstName;
+                        obj.email = user.Email;
+                        strContent = JsonConvert.SerializeObject(obj);
+                        response = ApiConsumerHelper.PostData(requestUri, strContent);
+                        dynamic resultDoctor = JsonConvert.DeserializeObject(response);
+
+                        userAssignRole.Role = "Doctor";
+                    }
 
                     strContent = JsonConvert.SerializeObject(userAssignRole);
                     response = ApiConsumerHelper.PostData("api/Roles/AssignRole", strContent);
-                    resultAdd = JsonConvert.DeserializeObject(response);
+                    var resultAssignRole = JsonConvert.DeserializeObject(response);
 
-                    var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account",
-                        new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id,
-                        "Confirm your account",
-                        "Please confirm your account by clicking this link: <a href=\""
-                        + callbackUrl + "\">link</a>");
-                    ViewBag.Link = callbackUrl;
-                    return View("DisplayEmail");
+                    //var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    //var callbackUrl = Url.Action("ConfirmEmail", "Account",
+                    //    new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    //await UserManager.SendEmailAsync(user.Id,
+                    //    "Confirm your account",
+                    //    "Please confirm your account by clicking this link: <a href=\""
+                    //    + callbackUrl + "\">link</a>");
+                    //ViewBag.Link = callbackUrl;
+
+                    ViewBag.SuccessMessage = "Your Account has been created, please login";
+                    return View("Login");
                 }
                 AddErrors(result);
             }
@@ -275,17 +245,51 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
+                if (user != null)
+                    user.EmailConfirmed = true;
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
+                    ViewBag.ErrorMessage = "Your Account does't exist, please try again.";
+                    return View("ForgotPassword");
                 }
 
                 var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
-                ViewBag.Link = callbackUrl;
-                return View("ForgotPasswordConfirmation");
+                ForgotPasswordCodeModel.Token = code;
+
+
+                //var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                //await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+                //ViewBag.Link = callbackUrl;
+                var objModel = new SecretQuestionModel();
+                objModel.Email = user.UserName;
+                var roles = UserManager.GetRoles(user.Id);
+                Random rnd = new Random();
+                int caseSwitch = rnd.Next(1, 4);
+                if (roles.Contains("Patient"))
+                {
+                    var response = ApiConsumerHelper.GetResponseString("api/Patients?userId=" + user.Id);
+                    var resultAdd = JsonConvert.DeserializeObject<DataAccess.Patient>(response);
+                    switch (caseSwitch)
+                    {
+                        case 1:
+                            objModel.SecretQuestion = resultAdd.secretQuestion1;
+                            objModel.SecretAnswerHidden = resultAdd.secretAnswer1;
+                            break;
+                        case 2:
+                            objModel.SecretQuestion = resultAdd.secretQuestion2;
+                            objModel.SecretAnswerHidden = resultAdd.secretAnswer2;
+                            break;
+                        default:
+                            objModel.SecretQuestion = resultAdd.secretQuestion3;
+                            objModel.SecretAnswerHidden = resultAdd.secretAnswer3;
+                            break;
+                    }
+
+                }
+
+
+                return View("ForgotPasswordConfirmation", objModel);
             }
 
             // If we got this far, something failed, redisplay form
@@ -299,6 +303,40 @@ namespace WebApp.Controllers
         {
             return View();
         }
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ForgotPasswordConfirmation(SecretQuestionModel model)
+        {
+            var token = ForgotPasswordCodeModel.Token;
+            if (model.SecretAnswerHidden.Trim().ToLower() == model.SecretAnswer.Trim().ToLower())
+            {
+                var newPassword = System.Web.Security.Membership.GeneratePassword(10, 4);
+                var user = await UserManager.FindByNameAsync(model.Email);
+                if (user == null)
+                {
+                    // Don't reveal that the user does not exist
+                    return RedirectToAction("ForgotPasswordConfirmation");
+                }
+                newPassword = "Admin@123";//comment when on live
+                var result = await UserManager.ResetPasswordAsync(user.Id, token, newPassword);
+                if (result.Succeeded)
+                {
+                    //send email there...
+                    return RedirectToAction("ResetPasswordConfirmation", "Account");
+                }
+                AddErrors(result);
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "Your Answer does't match, please try again.";
+            }
+            //ModelState.AddModelError("", "Please enter valid answer!");
+
+            return View("ForgotPasswordConfirmation", model);
+        }
+
+
 
         //
         // GET: /Account/ResetPassword
@@ -326,6 +364,7 @@ namespace WebApp.Controllers
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
             var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+
             if (result.Succeeded)
             {
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
@@ -385,7 +424,7 @@ namespace WebApp.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Default", "AdminLogin");
+            return RedirectToAction("Index", "Home");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult
