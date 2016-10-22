@@ -40,6 +40,82 @@ namespace WebApp
                       ));
 
 
+            bundles.Add(new ScriptBundle("~/bundles/js").Include(
+                     "~/Scripts/js/jquery.min.js",
+
+                     "~/Scripts/js/bootstrap.min.js",
+                     "~/Scripts/js/fastclick.js",
+                     "~/Scripts/js/nprogress.js",
+                     "~/Scripts/js/Chart.min.js",
+                     "~/Scripts/js/gauge.min.js",
+                     "~/Scripts/js/bootstrap-progressbar.min.js",
+                     "~/Scripts/js/icheck.min.js",
+                     "~/Scripts/js/skycons.js",
+                    
+
+                     "~/Scripts/js/jquery.flot.js",
+                     "~/Scripts/js/jquery.flot.pie.js",
+                     "~/Scripts/js/jquery.flot.time.js",
+                     "~/Scripts/js/jquery.flot.stack.js",
+                     "~/Scripts/js/jquery.flot.resize.js",
+
+
+                     "~/Scripts/js/jquery.flot.orderBars.js",
+
+                     "~/Scripts/js/jquery.flot.spline.js",
+
+                     "~/Scripts/js/curvedLines.js",
+
+                     "~/Scripts/js/date.js",
+                     "~/Scripts/js/jquery.vmap.js",
+                     "~/Scripts/js/jquery.vmap.world.js",
+                     "~/Scripts/js/jquery.vmap.sampledata.js",
+                     "~/Scripts/js/moment/moment.min.js",
+                     "~/Scripts/js/datepicker/daterangepicker.js",
+                     
+                     "~/Scripts/js/custom.min.js"));
+
+
+
+
+            //-----------------------
+            bundles.Add(new ScriptBundle("~/bundles/content/js").Include(
+                    "~/Content/js/jquery.min.js",
+
+                    "~/Content/js/bootstrap.min.js",
+                    "~/Content/js/fastclick.js",
+                    "~/Content/js/nprogress.js",
+                    "~/Content/js/Chart.min.js",
+                    "~/Content/js/gauge.min.js",
+                    "~/Content/js/bootstrap-progressbar.min.js",
+                    "~/Content/js/icheck.min.js",
+                    "~/Content/js/skycons.js",
+
+
+                    "~/Content/js/jquery.flot.js",
+                    "~/Content/js/jquery.flot.pie.js",
+                    "~/Content/js/jquery.flot.time.js",
+                    "~/Content/js/jquery.flot.stack.js",
+                    "~/Content/js/jquery.flot.resize.js",
+
+
+                    "~/Content/js/jquery.flot.orderBars.js",
+
+                    "~/Content/js/jquery.flot.spline.js",
+
+                    "~/Content/js/curvedLines.js",
+
+                    "~/Content/js/date.js",
+                    "~/Content/js/jquery.vmap.js",
+                    "~/Content/js/jquery.vmap.world.js",
+                    "~/Content/js/jquery.vmap.sampledata.js",
+                    "~/Content/js/moment/moment.min.js",
+                    "~/Content/js/datepicker/daterangepicker.js",
+
+                    "~/Content/js/custom.min.js"));
+
+
+
 
         }
     }
