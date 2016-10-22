@@ -37,6 +37,19 @@ namespace RestAPIs.Controllers
             return Ok(doctor);
         }
 
+        // GET: api/Doctors/afafaf
+        [ResponseType(typeof(Doctor))]
+        public async Task<IHttpActionResult> GetDoctorByUserId(string userId)
+        {
+            Doctor doctor = await db.Doctors.SingleOrDefaultAsync(o => o.userId == userId);
+            if (doctor == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(doctor);
+        }
+
         // PUT: api/Doctors/5
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutDoctor(long id, Doctor doctor)

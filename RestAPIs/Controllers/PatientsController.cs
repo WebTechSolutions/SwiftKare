@@ -37,6 +37,18 @@ namespace RestAPIs.Controllers
             return Ok(patient);
         }
 
+        [ResponseType(typeof(Patient))]
+        public async Task<IHttpActionResult> GetPatientByUserId(string userId)
+        {
+            Patient patient = await db.Patients.SingleOrDefaultAsync(o => o.userId == userId);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(patient);
+        }
+
         // PUT: api/Patients/5
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutPatient(long id, Patient patient)
