@@ -5,5 +5,6 @@ namespace WebApp.Models
     {
         public LoginViewModel LoginViewModel { get; set; }
         public RegisterViewModel RegisterViewModel { get; set; }
+        public bool IsPatient { get; set; }
     }
 }
