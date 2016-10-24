@@ -14,6 +14,8 @@ using Newtonsoft.Json;
 using Identity.Membership;
 using Identity.Membership.Models;
 using DataAccess;
+using WebApp.Repositories.DoctorRepositories;
+using WebApp.Repositories.PatientRepositories;
 
 namespace WebApp.Controllers
 {
@@ -148,61 +150,38 @@ namespace WebApp.Controllers
 
 
                 var result = await UserManager.CreateAsync(user, model.RegisterViewModel.Password);
-
+                dynamic addedResult;
                 if (result.Succeeded)
                 {
-
-                    var requestUri = "";
-                    var userAssignRole = new UserAssignRoleModel();
-                    userAssignRole.UserId = user.Id;//"8466ba63-b903-4d0a-8633-ce399ed1b542";//
-                    var strContent = "";
-                    var response = "";
-
                     if (model.IsPatient)
                     {
-                        requestUri = "api/Patients";
-                        var obj = new Patient();
-                        obj.userId = user.Id;
-                        obj.lastName = user.LastName;
-                        obj.firstName = user.FirstName;
-                        obj.email = user.Email;
-                        strContent = JsonConvert.SerializeObject(obj);
-                        response = ApiConsumerHelper.PostData(requestUri, strContent);
-                        dynamic resultPatient = JsonConvert.DeserializeObject(response);
-
-                        userAssignRole.Role = "Patient";
-
+                        PatientRepository objRepo = new PatientRepository();
+                        Patient obj = new Patient
+                        {
+                            userId = user.Id,
+                            lastName = user.LastName,
+                            firstName = user.FirstName,
+                            email = user.Email
+                        };
+                        addedResult = objRepo.Add(obj);
                     }
                     else
                     {
-                        requestUri = "api/Doctors";
-                        var obj = new Doctor();
-                        obj.userId = user.Id;
-                        obj.lastName = user.LastName;
-                        obj.firstName = user.FirstName;
-                        obj.email = user.Email;
-                        strContent = JsonConvert.SerializeObject(obj);
-                        response = ApiConsumerHelper.PostData(requestUri, strContent);
-                        dynamic resultDoctor = JsonConvert.DeserializeObject(response);
-
-                        userAssignRole.Role = "Doctor";
+                        DoctorRepository objRepo = new DoctorRepository();
+                        Doctor obj = new Doctor
+                        {
+                            userId = user.Id,
+                            lastName = user.LastName,
+                            firstName = user.FirstName,
+                            email = user.Email
+                        };
+                        addedResult = objRepo.Add(obj);
                     }
-
-                    strContent = JsonConvert.SerializeObject(userAssignRole);
-                    response = ApiConsumerHelper.PostData("api/Roles/AssignRole", strContent);
-                    var resultAssignRole = JsonConvert.DeserializeObject(response);
-
-                    //var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    //var callbackUrl = Url.Action("ConfirmEmail", "Account",
-                    //    new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    //await UserManager.SendEmailAsync(user.Id,
-                    //    "Confirm your account",
-                    //    "Please confirm your account by clicking this link: <a href=\""
-                    //    + callbackUrl + "\">link</a>");
-                    //ViewBag.Link = callbackUrl;
-
-                    ViewBag.SuccessMessage = "Your Account has been created, please login";
-                    return View("Login");
+                    if (addedResult != null)
+                    {
+                        ViewBag.SuccessMessage = "Your Account has been created, please login";
+                        return View("Login");
+                    }
                 }
                 AddErrors(result);
             }
@@ -268,8 +247,8 @@ namespace WebApp.Controllers
                 int caseSwitch = rnd.Next(1, 4);
                 if (roles.Contains("Patient"))
                 {
-                    var response = ApiConsumerHelper.GetResponseString("api/Patients?userId=" + user.Id);
-                    var resultAdd = JsonConvert.DeserializeObject<DataAccess.Patient>(response);
+                    PatientRepository objRepo = new PatientRepository();
+                    var resultAdd = objRepo.GetByUserId(user.Id);
                     switch (caseSwitch)
                     {
                         case 1:
@@ -285,7 +264,26 @@ namespace WebApp.Controllers
                             objModel.SecretAnswerHidden = resultAdd.secretAnswer3;
                             break;
                     }
-
+                }
+                else if(roles.Contains("Doctor"))
+                {
+                    DoctorRepository objRepo = new DoctorRepository();
+                    var resultAdd = objRepo.GetByUserId(user.Id);
+                    switch (caseSwitch)
+                    {
+                        case 1:
+                            objModel.SecretQuestion = resultAdd.secretQuestion1;
+                            objModel.SecretAnswerHidden = resultAdd.secretAnswer1;
+                            break;
+                        case 2:
+                            objModel.SecretQuestion = resultAdd.secretQuestion2;
+                            objModel.SecretAnswerHidden = resultAdd.secretAnswer2;
+                            break;
+                        default:
+                            objModel.SecretQuestion = resultAdd.secretQuestion3;
+                            objModel.SecretAnswerHidden = resultAdd.secretAnswer3;
+                            break;
+                    }
                 }
 
 
