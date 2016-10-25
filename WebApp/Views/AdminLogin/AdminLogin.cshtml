@@ -1,22 +1,18 @@
 ﻿@model WebApp.Models.LoginRegisterViewModel
 
 @{
-    ViewBag.Title = "Log in";
+    ViewBag.Title = "Admin Log in";
     Layout = "~/Views/Shared/_AccountsLayout.cshtml";
     ViewBag.IsPatient = false;
+    ViewBag.IsDoctor = false;
 }
 
-
-
-
-<a class="hiddenanchor" id="signup"></a>
-<a class="hiddenanchor" id="signin"></a>
 <div class="login_wrapper">
 
     <div class="animate form login_form">
         <section id="loginForm" class="login_content">
             <img src="~/Content/images/Logos.png" />
-            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            @using (Html.BeginForm("AdminLogin", "AdminLogin",  FormMethod.Post, new { ReturnUrl = ViewBag.ReturnUrl , @class = "form-horizontal", role = "form" }))
             {
             @Html.AntiForgeryToken()
 
@@ -60,18 +56,3 @@
 
    
 </div>
-
-
-
-@*@section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-    }
-    <script language="javascript">
-        function chkChange() {
-            if ($("#chkIsPatient").prop("checked")) {
-                $("label[id$='lblIsPatient']").html("Register as a Patient");
-            } else {
-                $("label[id$='lblIsPatient']").html("Register as a Doctor");
-            }
-        }
-    </script>*@

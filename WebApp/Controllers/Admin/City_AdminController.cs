@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebApp;
 
 namespace SwiftKare.Controllers
 {
+    [CustomAuthorize]
     public class City_AdminController : Controller
     {
         //
@@ -14,6 +16,7 @@ namespace SwiftKare.Controllers
         //
         // GET: /Doctor/
         SwiftKareDBEntities db = new SwiftKareDBEntities();
+       
         public ActionResult Create()
         {
             if (Session["LogedUserID"] != null)
@@ -35,7 +38,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
 
 
@@ -123,7 +126,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
 
 

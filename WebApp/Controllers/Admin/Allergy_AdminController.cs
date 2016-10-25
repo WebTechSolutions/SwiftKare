@@ -4,19 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebApp;
 
 namespace SwiftKare.Controllers
 {
+    [CustomAuthorize]
     public class Allergy_AdminController : Controller
     {
         //
         // GET: /Doctor/
         SwiftKareDBEntities db = new SwiftKareDBEntities();
-        
+       
         public ActionResult Create()
         {
-            if (Session["LogedUserID"] != null)
-            {
+            //if (Session["LogedUserID"] != null)
+            //{
 
 
                 try
@@ -30,12 +32,12 @@ namespace SwiftKare.Controllers
                     ViewBag.errorMessage = "Error occurred while loading data.";
                     return View();
                 }
-            }
-            else
-            {
+            //}
+           // else
+            //{
 
-                return RedirectToAction("../Account/AdminLogin");
-            }
+            //    return RedirectToAction("../AdminLogin/AdminLogin");
+           // }
 
 
 
@@ -122,7 +124,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
 
 

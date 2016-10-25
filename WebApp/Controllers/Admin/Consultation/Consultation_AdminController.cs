@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebApp;
 
 namespace SwiftKare.Controllers.Consultation
 {
+    [CustomAuthorize]
     public class Consultation_AdminController : Controller
     {
         SwiftKareDBEntities db = new SwiftKareDBEntities();
@@ -30,7 +32,7 @@ namespace SwiftKare.Controllers.Consultation
             }
             else
             {
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
         }
         [HttpPost]
@@ -52,7 +54,7 @@ namespace SwiftKare.Controllers.Consultation
             }
             else
             {
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
 
         }
@@ -74,7 +76,7 @@ namespace SwiftKare.Controllers.Consultation
             }
             else
             {
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
         }
 
@@ -99,7 +101,7 @@ namespace SwiftKare.Controllers.Consultation
             }
             else
             {
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
         }
 
@@ -119,7 +121,7 @@ namespace SwiftKare.Controllers.Consultation
             }
             else
             {
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
         }
         [HttpPost]
@@ -151,7 +153,7 @@ namespace SwiftKare.Controllers.Consultation
             }
             else
             {
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
         }
     }

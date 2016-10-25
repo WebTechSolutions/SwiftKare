@@ -967,6 +967,13 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Function Name="SP_AddAdmin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="lastName" Type="varchar" Mode="In" />
+    <Parameter Name="FirstName" Type="varchar" Mode="In" />
+    <Parameter Name="email" Type="varchar" Mode="In" />
+    <Parameter Name="UserId" Type="nvarchar" Mode="In" />
+    <Parameter Name="CB" Type="varchar" Mode="In" />
+  </Function>
   <Function Name="SP_AddAlerts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="alertText" Type="varchar" Mode="In" />
     <Parameter Name="alertFor" Type="varchar" Mode="In" />
@@ -984,6 +991,7 @@
     <Parameter Name="FirstName" Type="varchar" Mode="In" />
     <Parameter Name="LastName" Type="varchar" Mode="In" />
     <Parameter Name="Email" Type="varchar" Mode="In" />
+    <Parameter Name="userId" Type="nvarchar" Mode="In" />
     <Parameter Name="CB" Type="varchar" Mode="In" />
   </Function>
   <Function Name="SP_AddDocumentType" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -1009,6 +1017,7 @@
     <Parameter Name="FirstName" Type="varchar" Mode="In" />
     <Parameter Name="LastName" Type="varchar" Mode="In" />
     <Parameter Name="Email" Type="varchar" Mode="In" />
+    <Parameter Name="userId" Type="nvarchar" Mode="In" />
     <Parameter Name="CB" Type="varchar" Mode="In" />
   </Function>
   <Function Name="SP_AddRoles" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">

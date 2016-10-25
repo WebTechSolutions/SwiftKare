@@ -633,7 +633,6 @@
     <FunctionImportMapping FunctionImportName="SP_AddLanguage" FunctionName="SwiftKareDBModel.Store.SP_AddLanguage" />
     <FunctionImportMapping FunctionImportName="SP_AddMedicine" FunctionName="SwiftKareDBModel.Store.SP_AddMedicine" />
     <FunctionImportMapping FunctionImportName="SP_AddNewss" FunctionName="SwiftKareDBModel.Store.SP_AddNewss" />
-    <FunctionImportMapping FunctionImportName="SP_AddPatient" FunctionName="SwiftKareDBModel.Store.SP_AddPatient" />
     <FunctionImportMapping FunctionImportName="SP_AddRoles" FunctionName="SwiftKareDBModel.Store.SP_AddRoles" />
     <FunctionImportMapping FunctionImportName="SP_AddSpeciality" FunctionName="SwiftKareDBModel.Store.SP_AddSpeciality" />
     <FunctionImportMapping FunctionImportName="SP_AddStates" FunctionName="SwiftKareDBModel.Store.SP_AddStates" />
@@ -829,5 +828,7 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SP_AddAdmin1" FunctionName="SwiftKareDBModel.Store.SP_AddAdmin" />
+    <FunctionImportMapping FunctionImportName="SP_AddPatient" FunctionName="SwiftKareDBModel.Store.SP_AddPatient" />
   </EntityContainerMapping>
 </Mapping>

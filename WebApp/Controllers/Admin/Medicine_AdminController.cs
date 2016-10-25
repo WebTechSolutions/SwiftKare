@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebApp;
 
 namespace SwiftKare.Controllers
 {
+    [CustomAuthorize]
     public class Medicine_AdminController : Controller
     {
+      
         //
         // GET: /Doctor/
         SwiftKareDBEntities db = new SwiftKareDBEntities();
@@ -34,7 +37,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
 
 
@@ -121,7 +124,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
 
 

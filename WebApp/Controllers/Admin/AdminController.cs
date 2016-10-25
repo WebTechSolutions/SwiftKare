@@ -4,15 +4,37 @@ using System.Web.Mvc;
 using System.Text.RegularExpressions;
 using DataAccess;
 using SwiftKare.Models.Utilities;
+using Identity.Membership.Models;
+using Microsoft.AspNet.Identity;
+using Identity.Membership;
+using System.Web;
+using Microsoft.AspNet.Identity.Owin;
+using Newtonsoft.Json;
+using WebApp.Helper;
+using System.Data.Entity;
+using WebApp;
 
 namespace SwiftKare.Controllers
 {
+    [CustomAuthorize]
     public class AdminController : Controller
     {
         //
         // GET: /Doctor/
         SwiftKareDBEntities db = new SwiftKareDBEntities();
-        
+        private ApplicationUserManager _userManager;
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
         public ActionResult Create()
         {
             if (Session["LogedUserID"] != null)
@@ -37,7 +59,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
 
         }
@@ -45,44 +67,44 @@ namespace SwiftKare.Controllers
 
 
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public async System.Threading.Tasks.Task<ActionResult> Create(FormCollection collection)
         {
             if (Session["LogedUserID"] != null)
             {
 
                 ViewBag.successMessage = "";
-            ViewBag.errorMessage = "";
+                ViewBag.errorMessage = "";
                 var id = "";
                 var firstName = "";
                 var lastName = "";
                 var email = "";
                 var password = "";
                 var roleID = "";
-                
+               
 
                 try
                 {
                     var action = Request.Form["action"].ToString();
                     if (action == "create")
                     {
-                         
-                         firstName = Request.Form["firstname"].ToString();
-                         lastName = Request.Form["lastname"].ToString();
-                         email = Request.Form["email"].ToString();
-                         password = Request.Form["password"].ToString();
-                         roleID = Request.Form["sltRole"].ToString();
+
+                        firstName = Request.Form["firstname"].ToString();
+                        lastName = Request.Form["lastname"].ToString();
+                        email = Request.Form["email"].ToString();
+                        password = Request.Form["password"].ToString();
+                        //roleID = Request.Form["sltRole"].ToString();
                         var roles = db.AspNetRoles.ToList();
-                        if (roleID == "")
-                         {
-                             ViewBag.successMessage = "";
-                             ViewBag.errorMessage = "Select valid Role";
-                             var _existingadminList = db.SP_SelectAdmin();
-                            //var roles = db.Roles
-                            //  .Where(a => a.active == true).ToList();
-                          
-                            ViewBag.Roles = roles;
-                             return View(_existingadminList);
-                         }
+                        //if (roleID == "")
+                        //{
+                        //    ViewBag.successMessage = "";
+                        //    ViewBag.errorMessage = "Select valid Role";
+                        //    var _existingadminList = db.SP_SelectAdmin();
+                        //    //var roles = db.Roles
+                        //    //  .Where(a => a.active == true).ToList();
+
+                        //    ViewBag.Roles = roles;
+                        //    return View(_existingadminList);
+                        //}
                         if (!Regex.IsMatch(firstName, @"^[a-zA-Z\s]+$"))
                         {
                             ViewBag.successMessage = "";
@@ -90,7 +112,7 @@ namespace SwiftKare.Controllers
                             var _existingadminList = db.SP_SelectAdmin();
                             //var roles = db.Roles
                             //.Where(a => a.active == true).ToList();
-                           
+
                             ViewBag.Roles = roles;
                             return View(_existingadminList);
                         }
@@ -102,7 +124,7 @@ namespace SwiftKare.Controllers
                             //var roles = db.Roles
                             //.Where(a => a.active == true).ToList();
                             ViewBag.Roles = roles;
-                           
+
                             return View(_existingadminList);
                         }
                         Utility util = new Utility();
@@ -113,7 +135,7 @@ namespace SwiftKare.Controllers
                             var _existingadminList = db.SP_SelectAdmin();
                             //var roles = db.Roles
                             //.Where(a => a.active == true).ToList();
-                          
+
                             ViewBag.Roles = roles;
                             return View(_existingadminList);
                         }
@@ -124,10 +146,43 @@ namespace SwiftKare.Controllers
                                ).FirstOrDefault();
                         if (checkemail == null)
                         {
-                            //db.SP_AddAdmin(password, lastName, firstName, email, Convert.ToInt64(roleID), Session["LogedUserID"].ToString());
-                           //db.SaveChanges();
-                            ViewBag.successMessage = "Record has been saved successfully";
-                            ViewBag.errorMessage = "";
+                            var user = new ApplicationUser
+                            {
+
+                                UserName = email,
+                                Email = email,
+                                FirstName = firstName,
+                                LastName = lastName,
+
+                            };
+                            var result = await UserManager.CreateAsync(user, password);
+
+                            if (result.Succeeded)
+                            {
+                                db.SP_AddAdmin(firstName, lastName, email, user.Id, Session["LogedUserID"].ToString());
+                                db.SaveChanges();
+
+                                var userAssignRole = new UserAssignRoleModel();
+                                userAssignRole.UserId = user.Id;//"8466ba63-b903-4d0a-8633-ce399ed1b542";//
+                                userAssignRole.Role = "Admin";
+                                var strContent = JsonConvert.SerializeObject(userAssignRole);
+                                var response = ApiConsumerHelper.PostData("api/Roles/AssignRole", strContent);
+                                dynamic resultAdd = JsonConvert.DeserializeObject(response);
+
+                                ViewBag.successMessage = "Record has been saved successfully";
+                                ViewBag.errorMessage = "";
+                            }
+                            else
+                            {
+                                ViewBag.successMessage = "";
+                                foreach (var error in result.Errors)
+                                {
+                                    ViewBag.errorMessage = error;
+                                }
+
+                                var _existingadminList = db.SP_SelectAdmin();
+                                return View(_existingadminList);
+                            }
                         }
                         else
                         {
@@ -136,98 +191,150 @@ namespace SwiftKare.Controllers
                             var _existingadminList = db.SP_SelectAdmin();
                             //var roles = db.Roles
                             //.Where(a => a.active == true).ToList();
-                           
+
                             ViewBag.Roles = roles;
                             return View(_existingadminList);
                         }
-                           
-                                
-                        
+
+
+
                     }
                     if (action == "edit")
                     {
 
-                         id = Request.Form["id"].ToString();
-                         firstName = Request.Form["firstName"].ToString();
-                         lastName = Request.Form["lastName"].ToString();
-                         email = Request.Form["email"].ToString();
-                         password = Request.Form["password"].ToString();
-                         roleID = Request.Form["sltRole"].ToString();
+                        id = Request.Form["id"].ToString();
+                        firstName = Request.Form["firstName"].ToString();
+                        lastName = Request.Form["lastName"].ToString();
+                        email = Request.Form["email"].ToString();
+                        password = Request.Form["password"].ToString();
+                        //roleID = Request.Form["sltRole"].ToString();
                         var rroles = db.AspNetRoles.ToList();
-                        if (roleID == "")
-                         {
-                             ViewBag.successMessage = "";
-                             ViewBag.errorMessage = "Select valid Role";
-                             var _existingadminList = db.SP_SelectAdmin();
+                        //if (roleID == "")
+                        //{
+                        //    ViewBag.successMessage = "";
+                        //    ViewBag.errorMessage = "Select valid Role";
+                        //    var _existingadminList = db.SP_SelectAdmin();
+                        //    //var roles = db.Roles
+                        //    //  .Where(a => a.active == true).ToList();
+
+                        //    ViewBag.Roles = rroles;
+                        //    return View(_existingadminList);
+                        //}
+                        if (!Regex.IsMatch(firstName, @"^[a-zA-Z\s]+$"))
+                        {
+                            ViewBag.successMessage = "";
+                            ViewBag.errorMessage = "Provide valid First Name";
+                            var _existingadminList = db.SP_SelectAdmin();
                             //var roles = db.Roles
                             //  .Where(a => a.active == true).ToList();
-                           
+
                             ViewBag.Roles = rroles;
-                             return View(_existingadminList);
-                         }
-                         if (!Regex.IsMatch(firstName,@"^[a-zA-Z\s]+$"))
-                         {
-                             ViewBag.successMessage = "";
-                             ViewBag.errorMessage = "Provide valid First Name";
-                             var _existingadminList = db.SP_SelectAdmin();
-                            //var roles = db.Roles
-                            //  .Where(a => a.active == true).ToList();
-                           
-                            ViewBag.Roles = rroles;
-                             return View(_existingadminList);
-                         }
-                         if (!Regex.IsMatch(lastName, @"^[a-zA-Z\s]+$"))
-                         {
-                             ViewBag.successMessage = "";
-                             ViewBag.errorMessage = "Provide valid Last Name";
-                             var _existingadminList = db.SP_SelectAdmin();
+                            return View(_existingadminList);
+                        }
+                        if (!Regex.IsMatch(lastName, @"^[a-zA-Z\s]+$"))
+                        {
+                            ViewBag.successMessage = "";
+                            ViewBag.errorMessage = "Provide valid Last Name";
+                            var _existingadminList = db.SP_SelectAdmin();
                             // var roles = db.Roles
                             //.Where(a => a.active == true).ToList();
-                           
+
                             ViewBag.Roles = rroles;
-                             return View(_existingadminList);
-                         }
-                         Utility util = new Utility();
-                         if (!(util.IsValid(email)))
-                         {
-                             ViewBag.successMessage = "";
-                             ViewBag.errorMessage = "Provide valid Email Address";
-                             var _existingadminList = db.SP_SelectAdmin();
+                            return View(_existingadminList);
+                        }
+                        Utility util = new Utility();
+                        if (!(util.IsValid(email)))
+                        {
+                            ViewBag.successMessage = "";
+                            ViewBag.errorMessage = "Provide valid Email Address";
+                            var _existingadminList = db.SP_SelectAdmin();
                             // var roles = db.Roles
                             //.Where(a => a.active == true).ToList();
-                          
+
                             ViewBag.Roles = rroles;
-                             return View(_existingadminList);
-                         }
-                         var checkemail = (
-                                from p in db.AdminUsers
-                                where (p.email == email && p.active == true)
-                                select p
-                            ).FirstOrDefault();
-                         if (checkemail == null)
-                         {
-                             //db.sp_UpdateAdmin(Convert.ToInt64(id), password, lastName, firstName, email, Convert.ToInt64(roleID), Session["LogedUserID"].ToString(), System.DateTime.Now);
-                             db.SaveChanges();
-                             ViewBag.successMessage = "Record has been saved successfully";
-                             ViewBag.errorMessage = "";
-                         }
-                         else
-                         {
-                             ViewBag.successMessage = "";
-                             ViewBag.errorMessage = "User with this Email Address already exists";
-                             var _existingadminList = db.SP_SelectAdmin();
+                            return View(_existingadminList);
+                        }
+                      
+                      
+                        var checkemail = (
+                               from p in db.AspNetUsers
+                               where (p.Email == email && p.Id!=id )
+                               select p
+                           ).FirstOrDefault();
+                        if (checkemail == null )
+                        {
+                           
+                            
+                            string token = await UserManager.GeneratePasswordResetTokenAsync(id);
+                            var result = await UserManager.ResetPasswordAsync(id, token, password);
+                            
+                            if (result.Succeeded)
+                            {
+                                AdminUser adminUser = db.AdminUsers.Where(a=>a.userId==id).FirstOrDefault();
+                                if (adminUser != null)
+                                {
+                                    //Update AdminUsers table
+                                    adminUser.lastName = lastName;
+                                    adminUser.FirstName = firstName;
+                                    adminUser.email = email;
+                                    adminUser.mb = Session["LogedUserID"].ToString();
+                                    adminUser.md = DateTime.Now;
+                                    db.AdminUsers.Add(adminUser);
+                                    db.Entry(adminUser).State = EntityState.Modified;
+                                }
+                                //Update AspNetUsers table
+                                AspNetUser aspnetUser = await db.AspNetUsers.FindAsync(id);
+                                if (aspnetUser == null)
+                                {
+                                    ViewBag.successMessage = "";
+                                    ViewBag.errorMessage = "Admin user not found.";
+                                    return View();
+                                }
+                                aspnetUser.LastName = lastName;
+                                aspnetUser.FirstName = firstName;
+                                aspnetUser.Email = email;
+                                db.AspNetUsers.Add(aspnetUser);
+                                db.Entry(aspnetUser).State = EntityState.Modified;
+                               
+                                await db.SaveChangesAsync();
+                                ViewBag.successMessage = "Record has been saved successfully";
+                                ViewBag.errorMessage = "";
+                               
+                            }
+                            else
+                            {
+                                ViewBag.successMessage = "";
+                                foreach (var error in result.Errors)
+                                {
+                                    ViewBag.errorMessage = error;
+                                }
+                                var _existingadminList = db.SP_SelectAdmin();
+                                return View(_existingadminList);
+                            }
+                           
+                        }
+                        else
+                        {
+                            ViewBag.successMessage = "";
+                            ViewBag.errorMessage = "User with this Email Address already exists";
+                            var _existingadminList = db.SP_SelectAdmin();
                             //var roles = db.Roles
                             //.Where(a => a.active == true).ToList();
-                           
+
                             ViewBag.Roles = rroles;
-                             return View(_existingadminList);
-                         }
+                            return View(_existingadminList);
+                        }
                     }
                     if (action == "delete")
                     {
 
                         id = Request.Form["id"].ToString();
+                        var userid = Request.Form["userid"].ToString();
                         db.sp_DeleteAdmin(Convert.ToInt64(id), Session["LogedUserID"].ToString(), System.DateTime.Now);
+                        //AspNetUser admin = db.AspNetUsers.Find(userid);
+                        //db.AspNetUsers.Remove(admin);
+                        //AspNet admin = db.AspNetUsers.Find(userid);
+                       // db.AspNetUsers.Remove(admin);
                         db.SaveChanges();
                         ViewBag.successMessage = "Record has been deleted successfully";
                         ViewBag.errorMessage = "";
@@ -237,7 +344,7 @@ namespace SwiftKare.Controllers
 
 
                     //Send Email//
-                     var __existingadminList = db.SP_SelectAdmin();
+                    var __existingadminList = db.SP_SelectAdmin();
                     // var _roles = db.Roles
                     //.Where(a => a.active == true).ToList();
                     var _roles = db.AspNetRoles.ToList();
@@ -249,7 +356,7 @@ namespace SwiftKare.Controllers
                 {
                     ViewBag.errorMessage = "Error occurred while processing your request.";
                     var _existingadminList = db.SP_SelectAdmin();
-                    var roles = db.Roles.ToList();
+                    var roles = db.AspNetRoles.ToList();
                     ViewBag.Roles = roles;
                     return View(_existingadminList);
                 }
@@ -257,7 +364,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
 
         }
@@ -311,6 +418,11 @@ namespace SwiftKare.Controllers
         // POST: /Doctor/Edit/5
 
        
+        public ActionResult Default()
+        {
+            return View();
+
+        }
 
     }
 }

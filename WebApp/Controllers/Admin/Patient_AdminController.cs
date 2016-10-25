@@ -11,10 +11,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using WebApp;
 using WebApp.Helper;
 
 namespace SwiftKare.Controllers
 {
+    [CustomAuthorize]
     public class Patient_AdminController : Controller
     {
         //
@@ -53,7 +55,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
 
 
@@ -110,8 +112,7 @@ namespace SwiftKare.Controllers
                             return View(_existingpList);
                         }
 
-                        //db.SP_AddPatient(firstName, lastName, email, password, Session["LogedUserID"].ToString());
-                        //db.SaveChanges();
+                        
                         var user = new ApplicationUser
                         {
 
@@ -125,14 +126,16 @@ namespace SwiftKare.Controllers
 
                         if (result.Succeeded)
                         {
-                            var patient = new DataAccess.Patient();
-                            patient.userId = user.Id;
-                            patient.lastName = user.LastName;
-                            patient.firstName = user.FirstName;
-                            patient.email = user.Email;
-                            patient.cb = Session["LogedUserID"].ToString();
-                            patient.active = true;
-                            db.Patients.Add(patient);
+                            //var patient = new DataAccess.Patient();
+                            //patient.userId = user.Id;
+                            //patient.lastName = user.LastName;
+                            //patient.firstName = user.FirstName;
+                            //patient.email = user.Email;
+                            //patient.cb = Session["LogedUserID"].ToString();
+                            //patient.active = true;
+                            //db.Patients.Add(patient);
+                            //db.SaveChanges();
+                            db.SP_AddPatient(firstName, lastName, email, Session["LogedUserID"].ToString(), user.Id);
                             db.SaveChanges();
 
                             var userAssignRole = new UserAssignRoleModel();
@@ -155,9 +158,8 @@ namespace SwiftKare.Controllers
                             {
                                 ViewBag.errorMessage = error;
                             }
-
-
-                            return View();
+                            var _existingpList = db.SP_SelectPatient();
+                            return View(_existingpList);
                         }
 
                     }
@@ -187,14 +189,18 @@ namespace SwiftKare.Controllers
                             {
                                 ViewBag.errorMessage = error;
                             }
-                            return View();
+                            var _existingpList = db.SP_SelectPatient();
+                            return View(_existingpList);
                         }
 
                     }
                     if (action == "delete")
                     {
                         id = Request.Form["id"].ToString();
+                        userid = Request.Form["userid"].ToString();
                         db.sp_DeletePatient(Convert.ToInt64(id), Session["LogedUserID"].ToString(), System.DateTime.Now);
+                        AspNetUser patient = db.AspNetUsers.Find(userid);
+                        db.AspNetUsers.Remove(patient);
                         db.SaveChanges();
                         ViewBag.successMessage = "Record has been deleted successfully";
                         ViewBag.errorMessage = "";
@@ -215,7 +221,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
 
 

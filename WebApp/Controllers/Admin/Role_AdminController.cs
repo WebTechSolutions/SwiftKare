@@ -1,4 +1,8 @@
 ﻿using DataAccess;
+using Identity.Membership;
+using Identity.Membership.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +14,18 @@ namespace SwiftKare.Controllers
     public class Role_AdminController : Controller
     {
         SwiftKareDBEntities db = new SwiftKareDBEntities();
+        private ApplicationRoleManager _roleManager;
+        public ApplicationRoleManager RoleManager
+        {
+            get
+            {
+                return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+            }
+            private set
+            {
+                _roleManager = value;
+            }
+        }
 
         public ActionResult Create()
         {
@@ -31,18 +47,19 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
 
 
         }
 
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public async System.Threading.Tasks.Task<ActionResult> Create(FormCollection collection)
         {
             if (Session["LogedUserID"] != null)
             {
                 var rolename = "";
+                var desc = "";
                 var roleid = "";
                 ViewBag.successMessage = "";
                 ViewBag.errorMessage = "";
@@ -52,53 +69,28 @@ namespace SwiftKare.Controllers
                     if (action == "create")
                     {
                         rolename = Request.Form["rolename"].ToString();
-                        var role = (
-                                       from p in db.Roles
-                                       where (p.roleName == rolename && p.active == true)
-                                       select p
-                                   ).FirstOrDefault();
-                        if (role != null)
-                        {
-                            ViewBag.successMessage = "";
-                            ViewBag.errorMessage = "Role already exists";
+                        desc = Request.Form["desc"].ToString();
 
-                        }
-                        if (role == null)
-                        {
-                            db.SP_AddRoles(rolename, Session["LogedUserID"].ToString());
-                            db.SaveChanges();
-                            ViewBag.successMessage = "Record has been saved successfully";
-                            ViewBag.errorMessage = "";
-                        }
+                        
+                        ViewBag.successMessage = "Record has been saved successfully";
+                        ViewBag.errorMessage = "";
+
                     }
                     if (action == "edit")
                     {
                         roleid = Request.Form["id"].ToString();
                         rolename = Request.Form["rolename"].ToString();
-                        //var role = (
-                        //               from p in db.Roles
-                        //               where (p.roleName == rolename && p.active == true)
-                        //               select p
-                        //           ).FirstOrDefault();
-                        //if (role != null)
-                        //{
-                        //    ViewBag.successMessage = "";
-                        //    ViewBag.errorMessage = "Role already exists";
-
-                        //}
-                        //if (role == null)
-                        //{
-                        //db.sp_UpdateRole(Convert.ToInt64(roleid), rolename, Session["LogedUserID"].ToString(), System.DateTime.Now);
-                        //db.SaveChanges();
+                        
+                       
                         ViewBag.successMessage = "Record has been saved successfully";
                         ViewBag.errorMessage = "";
-                        // }
+                        var _existingroleList = db.AspNetRoles.ToList();
+                        return View(_existingroleList);
                     }
                     if (action == "delete")
                     {
                         roleid = Request.Form["id"].ToString();
-                        db.sp_DeleteRole(Convert.ToInt64(roleid), Session["LogedUserID"].ToString(), System.DateTime.Now);
-                        db.SaveChanges();
+                       
                         ViewBag.successMessage = "Record has been deleted successfully";
                         ViewBag.errorMessage = "";
                     }
@@ -115,7 +107,7 @@ namespace SwiftKare.Controllers
             }
             else
             {
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
         }
 

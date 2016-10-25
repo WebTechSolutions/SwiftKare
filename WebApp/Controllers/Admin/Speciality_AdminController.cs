@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebApp;
 
 namespace SwiftKare.Controllers
 {
+    [CustomAuthorize]
     public class Speciality_AdminController : Controller
     {
 
@@ -33,7 +35,7 @@ namespace SwiftKare.Controllers
                 else
                 {
 
-                    return RedirectToAction("../Account/AdminLogin");
+                    return RedirectToAction("../AdminLogin/AdminLogin");
                 }
 
 
@@ -117,7 +119,7 @@ namespace SwiftKare.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("../Account/AdminLogin");
+                    return RedirectToAction("../AdminLogin/AdminLogin");
                 }
             }
 

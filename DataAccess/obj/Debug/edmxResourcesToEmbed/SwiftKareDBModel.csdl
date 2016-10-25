@@ -1158,6 +1158,7 @@
       <Parameter Name="FirstName" Mode="In" Type="String" />
       <Parameter Name="LastName" Mode="In" Type="String" />
       <Parameter Name="Email" Mode="In" Type="String" />
+      <Parameter Name="userId" Mode="In" Type="String" />
       <Parameter Name="CB" Mode="In" Type="String" />
     </FunctionImport>
     <FunctionImport Name="SP_AddDocumentType">
@@ -1177,12 +1178,6 @@
       <Parameter Name="newsdetail" Mode="In" Type="String" />
       <Parameter Name="newsthumbnail" Mode="In" Type="Binary" />
       <Parameter Name="newsImage" Mode="In" Type="Binary" />
-      <Parameter Name="CB" Mode="In" Type="String" />
-    </FunctionImport>
-    <FunctionImport Name="SP_AddPatient">
-      <Parameter Name="FirstName" Mode="In" Type="String" />
-      <Parameter Name="LastName" Mode="In" Type="String" />
-      <Parameter Name="Email" Mode="In" Type="String" />
       <Parameter Name="CB" Mode="In" Type="String" />
     </FunctionImport>
     <FunctionImport Name="SP_AddRoles">
@@ -1447,6 +1442,27 @@
     <FunctionImport Name="SP_PatientReport" ReturnType="Collection(SwiftKareDBModel.SP_PatientReport_Result)">
       <Parameter Name="datefrom" Mode="In" Type="DateTime" />
       <Parameter Name="dateto" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="SP_AddAdmin">
+      <Parameter Name="lastName" Mode="In" Type="String" />
+      <Parameter Name="FirstName" Mode="In" Type="String" />
+      <Parameter Name="email" Mode="In" Type="String" />
+      <Parameter Name="UserId" Mode="In" Type="String" />
+      <Parameter Name="CB" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="SP_AddAdmin1">
+      <Parameter Name="lastName" Mode="In" Type="String" />
+      <Parameter Name="FirstName" Mode="In" Type="String" />
+      <Parameter Name="email" Mode="In" Type="String" />
+      <Parameter Name="UserId" Mode="In" Type="String" />
+      <Parameter Name="CB" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="SP_AddPatient">
+      <Parameter Name="FirstName" Mode="In" Type="String" />
+      <Parameter Name="LastName" Mode="In" Type="String" />
+      <Parameter Name="Email" Mode="In" Type="String" />
+      <Parameter Name="userId" Mode="In" Type="String" />
+      <Parameter Name="CB" Mode="In" Type="String" />
     </FunctionImport>
   </EntityContainer>
   <EntityType Name="News">

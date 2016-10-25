@@ -1,214 +1,221 @@
 ﻿@model IEnumerable<DataAccess.SP_SelectAdmin_Result>
- 
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutPage.cshtml";
     var roles = (List<DataAccess.AspNetRole>)ViewBag.Roles;
 }
 
-  
-            <div class="page-title">
-              <div class="title_left">
-                <h3> Create Admin User</h3>
-              </div>
 
-             </div>
+<div class="page-title">
+    <div class="title_left">
+        <h3> Create Admin User</h3>
+    </div>
 
-            <div class="clearfix"></div>
+</div>
 
-              <!--Forms-->
-             @if (ViewBag.errorMessage=="")
-             {
-                   <script>
-                       $(function () {
-                           new PNotify({
-                               title: 'Success',
-                               text: "@ViewBag.successMessage",
-                             type: 'success',
-                             styling: 'bootstrap3'
-                         });
-                     });
+<div class="clearfix"></div>
 
-                 </script>
-             }
-            @if (ViewBag.successMessage == "")
-             {
+<!--Forms-->
+@if (ViewBag.errorMessage == "")
+{
+    <script>
+        $(function () {
+            new PNotify({
+                title: 'Success',
+                text: "@ViewBag.successMessage",
+                type: 'success',
+                styling: 'bootstrap3'
+            });
+        });
 
-                 <script>
-                     $(function () {
-                         new PNotify({
-                             title: 'Error',
-                             text: "@ViewBag.errorMessage",
-                             type: 'error',
-                             styling: 'bootstrap3'
-                         });
-                     });
-                 </script>
-             }
-              <div class="row">
-              <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="x_panel">
-                 
-                  <div class="x_content">
-                   
-                       <div class="x_title">
+    </script>
+}
+@if (ViewBag.successMessage == "")
+{
+
+    <script>
+        $(function () {
+            new PNotify({
+                title: 'Error',
+                text: "@ViewBag.errorMessage",
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        });
+    </script>
+}
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+
+            <div class="x_content">
+
+                <div class="x_title">
                     <h2>Personal Info</h2>
-                    
-                    <div class="clearfix"></div>
-                  </div>
-                <div class="Create" id="create">
-                     @using (Html.BeginForm("Create", "Admin",
-                       FormMethod.Post, new { novalidate = "novalidate", @class = "form-horizontal form-label-left" }))
-                    {
-                       <input name="action" type="text" value="create" style="display:none">
-                        
-                     <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name" >First Name <span class="required">*</span>
-                        </label>
-                        <div class="col-md-3 col-sm-3 col-xs-3">
-                          <input class="form-control has-feedback-left" maxlength="50" name="firstname" placeholder="First Name" required="required" style="width: 228px;" type="text">
-                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
-                        </div>
-                      </div>
-                       <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Last Name <span class="required">*</span>
-                        </label>
-                        <div class="col-md-3 col-sm-3 col-xs-3">
-                          <input id="clastname" class="form-control has-feedback-left" maxlength="50" name="lastname" placeholder="Last Name" required="required" style="width: 228px;" type="text">
-                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
-                        </div>
-                      </div>
-                      <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email <span class="required">*</span>
-                        </label>
-                        <div class="col-md-3 col-sm-3 col-xs-3">
-                          <input type="email" id="cemail" name="email" required="required" class="form-control has-feedback-left" placeholder="Email" style="width: 228px;">
-                             <span class="fa fa-envelope form-control-feedback left" aria-hidden="true"></span>
-                        </div>
-                      </div>
-                         <div class="item form-group">
-                           <label class="control-label col-md-3 col-sm-3 col-xs-12">Select Role</label><span class="required">*</span>
-                           <div  class="col-md-3 col-sm-3 col-xs-3">
-                                        @*<select id="csltRole" name="sltRole" class="select2_single form-control" tabindex="-1">*@
-                                           <select id="csltRole" name="sltRole" class="form-control" required="required">
-                                            <option value="">Choose Role</option>
-                                            
-                                            @if (roles!=null)
-                                            {
-                                             foreach (var item in roles)
-                                                {
-                                                <option value="@item.Id">
-                                                 @item.Name
-                                                </option>
-                                             }
-                                           }
-                                            
-                                        </select>
-                                    </div>
-                    </div>
-                                            
-                      <div class="item form-group">
-                        <label for="password" class="control-label col-md-3">Password</label>
-                        <div class="col-md-3 col-sm-3 col-xs-3">
-                          <input maxlength="30" id="cpassword" type="password" name="password" class="form-control col-md-7 col-xs-12" required="required" style="width: 228px;">
-                        </div>
-                      </div>
-                      
-                      <div class="ln_solid"></div>
-                      <div class="form-group">
-                        <div class="col-md-6 col-md-offset-3">
-                             <button id="send" type="submit" class="btn btn-success">Submit</button>
-                          <button type="reset" class="btn btn-primary" id="create_cancel">Cancel</button>
-                         
 
+                    <div class="clearfix"></div>
+                </div>
+                <div class="Create" id="create">
+                    @using (Html.BeginForm("Create", "Admin",
+               FormMethod.Post, new { novalidate = "novalidate", @class = "form-horizontal form-label-left" }))
+                    {
+                        <input name="action" type="text" value="create" style="display:none">
+
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                                First Name <span class="required">*</span>
+                            </label>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <input class="form-control has-feedback-left" maxlength="50" name="firstname" placeholder="First Name" required="required" style="width: 228px;" type="text">
+                                <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            </div>
                         </div>
-                      </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                                Last Name <span class="required">*</span>
+                            </label>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <input id="clastname" class="form-control has-feedback-left" maxlength="50" name="lastname" placeholder="Last Name" required="required" style="width: 228px;" type="text">
+                                <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">
+                                Email <span class="required">*</span>
+                            </label>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <input type="email" id="cemail" name="email" required="required" class="form-control has-feedback-left" placeholder="Email" style="width: 228px;">
+                                <span class="fa fa-envelope form-control-feedback left" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        @*<<div class="item form-group">
+                                                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Select Role</label><span class="required">*</span>
+                                                   <div  class="col-md-3 col-sm-3 col-xs-3" style="display:none">
+                                                                @*<select id="csltRole" name="sltRole" class="select2_single form-control" tabindex="-1">
+                                                   <select id="csltRole" name="sltRole" class="form-control">
+                                                    <option value="">Choose Role</option>
+
+                                                    @if (roles!=null)
+                                                    {
+                                                     foreach (var item in roles)
+                                                        {
+                                                        <option value="@item.Id">
+                                                         @item.Name
+                                                        </option>
+                                                     }
+                                                   }
+
+                                                </select>
+                                            </div>
+                            </div>*@
+
+                        <div class="item form-group">
+                            <label for="password" class="control-label col-md-3">Password</label>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <input maxlength="30" id="cpassword" type="password" name="password" class="form-control col-md-7 col-xs-12" required="required" style="width: 228px;">
+                            </div>
+                        </div>
+
+                        <div class="ln_solid"></div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <button id="send" type="submit" class="btn btn-success">Submit</button>
+                                <button type="reset" class="btn btn-primary" id="create_cancel">Cancel</button>
+
+
+                            </div>
+                        </div>
                     }
-                     
-                     </div>
+
+                </div>
 
                 <div class="Edit" style="display:none" id="edit">
                     @using (Html.BeginForm("Create", "Admin",
-                       FormMethod.Post, new { novalidate = "novalidate", @class = "form-horizontal form-label-left" }))
+               FormMethod.Post, new { novalidate = "novalidate", @class = "form-horizontal form-label-left" }))
                     {
-                        <input id="id" name="id" type="number" style="display:none">
-                         <input name="action" type="text" value="edit" style="display:none">
-                        
-                      <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name" >First Name <span class="required">*</span>
-                        </label>
-                        <div class="col-md-3 col-sm-3 col-xs-3">
-                          <input id="efirstname" class="form-control has-feedback-left" maxlength="50" name="firstname" placeholder="First Name" required="required" style="width: 228px;" type="text">
-                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
-                        </div>
-                      </div>
+                        <input id="id" name="id" type="text" style="display:none">
+
+                        <input name="action" type="text" value="edit" style="display:none">
+
                         <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Last Name <span class="required">*</span>
-                        </label>
-                        <div class="col-md-3 col-sm-3 col-xs-3">
-                          <input id="elastname" class="form-control has-feedback-left" maxlength="50" name="lastname" placeholder="Last Name" required="required" style="width: 228px;" type="text">
-                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                                First Name <span class="required">*</span>
+                            </label>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <input id="efirstname" class="form-control has-feedback-left" maxlength="50" name="firstname" placeholder="First Name" required="required" style="width: 228px;" type="text">
+                                <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            </div>
                         </div>
-                      </div>
-                      <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email <span class="required">*</span>
-                        </label>
-                        <div class="col-md-3 col-sm-3 col-xs-3">
-                          <input type="email" id="eemail" name="email" required="required" class="form-control has-feedback-left" placeholder="Email">
-                             <span class="fa fa-envelope form-control-feedback left" aria-hidden="true"></span>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                                Last Name <span class="required">*</span>
+                            </label>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <input id="elastname" class="form-control has-feedback-left" maxlength="50" name="lastname" placeholder="Last Name" required="required" style="width: 228px;" type="text">
+                                <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            </div>
                         </div>
-                      </div>
-                       <div id="edsltRole" class="item form-group">
-                           <label class="control-label col-md-3 col-sm-3 col-xs-12">Select Role</label><span class="required">*</span>
-                           <div class="col-md-3 col-sm-3 col-xs-3">
-                                        @*<select id="esltRole" name="sltRole" class="select2_single form-control" >*@
-                                            <select id="esltRole" name="sltRole" class="form-control" required="required">
-                                            <option value="">Choose role</option>
-                                            @if (roles != null)
-                                            {
-                                                foreach (var item in roles)
-                                                {
-                                                 <option value="@item.Id">
-                                                     @item.Name
-                                                 </option>
-                                                }
-                                            }
-                                            
-                                        </select>
-                                    </div>
-                    </div> 
-                                              
-                       <div class="item form-group">
-                        <label for="password" class="control-label col-md-3">Password</label>
-                        <div class="col-md-3 col-sm-3 col-xs-3">
-                          <input maxlength="30" id="epassword" type="password" name="password" class="form-control col-md-7 col-xs-12" required="required" style="width: 228px;">
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">
+                                Email <span class="required">*</span>
+                            </label>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <input type="email" id="eemail" name="email" required="required" class="form-control has-feedback-left" placeholder="Email">
+                                <span class="fa fa-envelope form-control-feedback left" aria-hidden="true"></span>
+                            </div>
                         </div>
-                      </div>
-                      
-                      <div class="ln_solid"></div>
-                      <div class="form-group">
-                        <div class="col-md-6 col-md-offset-3">
-                             <button id="editsend" type="submit" class="btn btn-success">Submit</button>
-                          <button id="edit_cancel" type="reset" class="btn btn-primary">Cancel</button>
-                         
+                        @*<div id="edsltRole" class="item form-group" style="display:none">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Select Role</label><span class="required">*</span>
+                                <div class="col-md-3 col-sm-3 col-xs-3">
+                                            @*<select id="esltRole" name="sltRole" class="select2_single form-control" >
+                                                    <select id="esltRole" name="sltRole" class="form-control" >
+                                                    <option value="">Choose role</option>
+                                                    @if (roles != null)
+                                                    {
+                                                        foreach (var item in roles)
+                                                        {
+                                                         <option value="@item.Id">
+                                                             @item.Name
+                                                         </option>
+                                                        }
+                                                    }
 
+                                                </select>
+                                            </div>
+                            </div> *@
+
+                        <div class="item form-group">
+                            <label for="password" class="control-label col-md-3">Password</label>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <input maxlength="30" id="epassword" type="password" name="password" class="form-control col-md-7 col-xs-12" required="required" style="width: 228px;">
+                            </div>
                         </div>
-                      </div>
-                       
+
+                        <div class="ln_solid"></div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <button id="editsend" type="submit" class="btn btn-success">Submit</button>
+                                <button id="edit_cancel" type="reset" class="btn btn-primary">Cancel</button>
+
+
+                            </div>
+                        </div>
+
                     }
-                     
-                      
-                    </div>
-                 
+
+
                 </div>
-              </div>
+
             </div>
-     
-          </div>
+        </div>
+    </div>
+
+</div>
 
 
-              <!--Datagrid-->
-                <div class="row">
+<!--Datagrid-->
+<div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
         @*<div class="x_panel">*@
         @* <div class="x_title">
@@ -219,11 +226,12 @@
         <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
                 @* <div class="x_content">*@
-                
-                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive" cellspacing="0" width="100%">
+
+                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive" cellspacing="0">
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>UID</th>
                             <th>RoleID</th>
                             <th>First name</th>
                             <th>Last name</th>
@@ -241,9 +249,10 @@
                             foreach (var item in Model)
                             {
 
-                                 
+
                                 <tr>
-                                    <td id="adminid">@item.Id</td>
+                                    <td id="adminid" >@item.Id</td>
+                                    <td id="userid" class="userid">@item.Id</td>
                                     <td id="roleid"></td>
                                     <td class="firstname" style="word-break:break-all;width:300px">@item.FirstName</td>
                                     <td class="lastname" style="word-break:break-all;width:300px">@item.LastName</td>
@@ -251,39 +260,40 @@
                                     <td class="rolename" style="word-break:break-all;width:300px">@item.Name</td>
                                     @*<td class="password">@item.password</td>*@
                                     <td style="width:150px">
-                                         @using (Html.BeginForm("Create", "Admin",
-                                        FormMethod.Post, new {@class = "form-horizontal form-label-left" }))
-                                         {
-                                             <input name="action" type="text" value="delete" style="display:none">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-primary">Action</button>
-                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                <span class="caret"></span>
-                                                <span class="sr-only">Toggle Dropdown</span>
-                                            </button>
-                                            <ul class="dropdown-menu" role="menu">
-                                                <li>
-                                                    <a class="editbtn">Edit</a>
-                                                </li>
-                                               @*<li><a class="editbtn">Delete</a> </li>*@
-                                                <li> <input name="id" type="number" style="display:none" value="@item.Id"></li>
-                                               <li> <button id="delete" type="submit" class="btn btn-link submit" onclick="return confirm('Are you sure you want to delete this item?');">Delete</button></li>
-                                            </ul>
-                                        </div>
-                                         }
+                                        @using (Html.BeginForm("Create", "Admin",
+                    FormMethod.Post, new { @class = "form-horizontal form-label-left" }))
+                                        {
+                                            <input name="action" type="text" value="delete" style="display:none">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary">Action</button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                    <span class="caret"></span>
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li>
+                                                        <a class="editbtn">Edit</a>
+                                                    </li>
+                                                    @*<li><a class="editbtn">Delete</a> </li>*@
+                                                    <li> <input name="id" type="number" style="display:none" value="@item.Id"></li>
+                                                    <li> <input name="userid" type="text" style="display:none" value="@item.Id"></li>
+                                                    <li> <button id="delete" type="submit" class="btn btn-link submit" onclick="return confirm('Are you sure you want to delete this item?');">Delete</button></li>
+                                                </ul>
+                                            </div>
+                                        }
                                     </td>
-                                       
+
                                 </tr>
-                                
-                        }
+
                             }
+                        }
 
 
 
 
                     </tbody>
                 </table>
-                       
+
 
                 @* </div>*@
             </div>
@@ -292,196 +302,198 @@
         @* </div>*@
     </div>
 </div>
-  
- <link href="~/Content/css/select2.min.css" rel="stylesheet" />     
+
+<link href="~/Content/css/select2.min.css" rel="stylesheet" />
 <!-- Data table Scripts -->
-    <script src="~/Scripts/jquery.dataTables.min.js"></script>
-    <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
-    <script src="~/Scripts/dataTables.buttons.min.js"></script>
-    <script src="~/Scripts/buttons.bootstrap.min.js"></script>
-    <script src="~/Scripts/buttons.flash.min.js"></script>
-    <script src="~/Scripts/buttons.html5.min.js"></script>
-    <script src="~/Scripts/buttons.print.min.js"></script>
-    <script src="~/Scripts/dataTables.fixedHeader.min.js"></script>
-    <script src="~/Scripts/dataTables.keyTable.min.js"></script>
-    <script src="~/Scripts/dataTables.responsive.min.js"></script>
-    <script src="~/Scripts/responsive.bootstrap.js"></script>
-    <script src="~/Scripts/dataTables.scroller.min.js"></script>
-     <script src="~/Scripts/select2.min.js"></script>
-    <script src="~/Scripts/select2.full.min.js"></script>
-    <script src="~/Scripts/validator.js"></script>
-    
-    
-    <script>$(document).ready(function () { $('.select2_single').select2(); }); </script>
-    <!-- Data table Scripts -->
-      <!-- validator -->
-    <script>
-
-        $(document).ready(function () {
-           
-            $('.editbtn').click(function () {
-
-                //var id = $(this).parent().parent().parent().parent().parent().siblings('#adminid').text();
-                var password = $(this).parent().parent().parent().parent().parent().siblings('.password').text();
-                var firstName = $(this).parent().parent().parent().parent().parent().siblings('.firstname').text();
-                var lastName = $(this).parent().parent().parent().parent().parent().siblings('.lastname').text();
-                var email = $(this).parent().parent().parent().parent().parent().siblings('.email').text();
-                //var rolename = $(this).parent().parent().parent().parent().parent().siblings('.rolename').text();
-
-                //alert(rolename);
-                //$('select option:contains("Select Role")').text('Select Role');
-                //$('select option:contains("rolename")').text('rolename');
-               
-                var table = $('#datatable-responsive').DataTable();
-                $('#datatable-responsive tbody').on('click', 'tr', function () {
-                    $("#id").val(table.row(this).data()[0]);
-                    var rolename = table.row(this).data()[1];
-                    $("#esltRole").val(rolename);
-                  
-
-                });
-                
-                $("#efirstname").val(firstName);
-                $("#elastname").val(lastName);
-                $("#eemail").val(email);
-               //$("#epassword").val(password);
-                $('.Edit').css('display', 'block');
-                $('.Create').css('display', 'none');
-
-            });
-            $('#create_cancel').click(function () {
-
-                $('#edit').css('display', 'none');
-                $('#create').css('display', 'block');
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/buttons.bootstrap.min.js"></script>
+<script src="~/Scripts/buttons.flash.min.js"></script>
+<script src="~/Scripts/buttons.html5.min.js"></script>
+<script src="~/Scripts/buttons.print.min.js"></script>
+<script src="~/Scripts/dataTables.fixedHeader.min.js"></script>
+<script src="~/Scripts/dataTables.keyTable.min.js"></script>
+<script src="~/Scripts/dataTables.responsive.min.js"></script>
+<script src="~/Scripts/responsive.bootstrap.js"></script>
+<script src="~/Scripts/dataTables.scroller.min.js"></script>
+<script src="~/Scripts/select2.min.js"></script>
+<script src="~/Scripts/select2.full.min.js"></script>
+<script src="~/Scripts/validator.js"></script>
 
 
-            });
-            $('#edit_cancel').click(function () {
-                $("#esltRole").val('');
-                $('#edit').css('display', 'none');
-                $('#create').css('display', 'block');
+<script>$(document).ready(function () { $('.select2_single').select2(); }); </script>
+<!-- Data table Scripts -->
+<!-- validator -->
+<script>
 
-
-            });
-        });
-        //<!-- /Datatables -->
-        var handleDataTableButtons = function () {
-            if ($("#datatable-buttons").length) {
-                $("#datatable-buttons").DataTable({
-                    dom: "Bfrtip",
-                    buttons: [
-                      {
-                          extend: "copy",
-                          className: "btn-sm"
-                      },
-                      {
-                          extend: "csv",
-                          className: "btn-sm"
-                      },
-                      {
-                          extend: "excel",
-                          className: "btn-sm"
-                      },
-                      {
-                          extend: "pdfHtml5",
-                          className: "btn-sm"
-                      },
-                      {
-                          extend: "print",
-                          className: "btn-sm"
-                      },
-                    ],
-                    responsive: true
-                });
-            }
-        };
-
-        TableManageButtons = function () {
-            "use strict";
-            return {
-                init: function () {
-                    handleDataTableButtons();
-                }
-            };
-        }();
-
-        $('#datatable').dataTable();
-
-        $('#datatable-keytable').DataTable({
-            keys: true
-        });
-
+    $(document).ready(function () {
         $('#datatable-responsive').DataTable({
             'order': [[0, 'desc']],
             'columnDefs': [
                { visible: false, targets: [0] },
-               { visible: false, targets: [1] }
+               { visible: false, targets: [1] },
+                { visible: false, targets: [2] },
+                { data: "adminid", className: "never" },//does not show on load
+                { data: "userid", className: "never" } //does not show on load
             ]
         });
+        $('.editbtn').click(function () {
 
-        $('#datatable-scroller').DataTable({
-            ajax: "js/datatables/json/scroller-demo.json",
-            deferRender: true,
-            scrollY: 380,
-            scrollCollapse: true,
-            scroller: true
-        });
+            //var id = $(this).parent().parent().parent().parent().parent().siblings('#adminid').text();
+            var password = $(this).parent().parent().parent().parent().parent().siblings('.password').text();
+            var firstName = $(this).parent().parent().parent().parent().parent().siblings('.firstname').text();
+            var lastName = $(this).parent().parent().parent().parent().parent().siblings('.lastname').text();
+            var email = $(this).parent().parent().parent().parent().parent().siblings('.email').text();
+            //var rolename = $(this).parent().parent().parent().parent().parent().siblings('.rolename').text();
 
-        $('#datatable-fixed-header').DataTable({
-            fixedHeader: true
-        });
+            //alert(rolename);
+            //$('select option:contains("Select Role")').text('Select Role');
+            //$('select option:contains("rolename")').text('rolename');
 
-        var $datatable = $('#datatable-checkbox');
+            var table = $('#datatable-responsive').DataTable();
+            $('#datatable-responsive tbody').on('click', 'tr', function () {
+                $("#id").val(table.row(this).data()[0]);
+                //var rolename = table.row(this).data()[1];
+                // $("#esltRole").val(rolename);
 
-        $datatable.dataTable({
-            'order': [[1, 'asc']],
-            'columnDefs': [
-              { orderable: false, targets: [0] }
-            ]
-        });
-        $datatable.on('draw.dt', function () {
-            $('input').iCheck({
-                checkboxClass: 'icheckbox_flat-green'
+
             });
+
+            $("#efirstname").val(firstName);
+            $("#elastname").val(lastName);
+            $("#eemail").val(email);
+            //$("#epassword").val(password);
+            $('.Edit').css('display', 'block');
+            $('.Create').css('display', 'none');
+
         });
+        $('#create_cancel').click(function () {
 
-        TableManageButtons.init();
-        //<!-- /Datatables -->
-        // initialize the validator function
-        //validator.message.date = 'not a real date';
-
-        // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
-        $('form')
-          .on('blur', 'input[required], input.optional, select.required', validator.checkField)
-          .on('change', 'select.required', validator.checkField)
-          .on('keypress', 'input[required][pattern]', validator.keypress);
-
-        //$('.multi.required').on('keyup blur', 'input', function() {
-        //  validator.checkField.apply($(this).siblings().last()[0]);
-        //});
+            $('#edit').css('display', 'none');
+            $('#create').css('display', 'block');
 
 
+        });
+        $('#edit_cancel').click(function () {
+            $("#esltRole").val('');
+            $('#edit').css('display', 'none');
+            $('#create').css('display', 'block');
 
-        $('form').submit(function (e) {
-            e.preventDefault();
-            var submit = true;
 
-            // evaluate the form using generic validaing
-            if (!validator.checkAll($(this))) {
-                submit = false;
+        });
+    });
+    //<!-- /Datatables -->
+    var handleDataTableButtons = function () {
+        if ($("#datatable-buttons").length) {
+            $("#datatable-buttons").DataTable({
+                dom: "Bfrtip",
+                buttons: [
+                  {
+                      extend: "copy",
+                      className: "btn-sm"
+                  },
+                  {
+                      extend: "csv",
+                      className: "btn-sm"
+                  },
+                  {
+                      extend: "excel",
+                      className: "btn-sm"
+                  },
+                  {
+                      extend: "pdfHtml5",
+                      className: "btn-sm"
+                  },
+                  {
+                      extend: "print",
+                      className: "btn-sm"
+                  },
+                ],
+                responsive: true
+            });
+        }
+    };
+
+    TableManageButtons = function () {
+        "use strict";
+        return {
+            init: function () {
+                handleDataTableButtons();
             }
+        };
+    }();
 
-            if (submit)
-                this.submit();
+    $('#datatable').dataTable();
 
-            return false;
-        });
-    </script>
+    $('#datatable-keytable').DataTable({
+        keys: true
+    });
+
     
-     <!-- Select2 -->
-    <script>
-        
-    </script>
-    <!-- /Select2 -->
-    <!-- /validator -->
 
+    $('#datatable-scroller').DataTable({
+        ajax: "js/datatables/json/scroller-demo.json",
+        deferRender: true,
+        scrollY: 380,
+        scrollCollapse: true,
+        scroller: true
+    });
+
+    $('#datatable-fixed-header').DataTable({
+        fixedHeader: true
+    });
+
+    var $datatable = $('#datatable-checkbox');
+
+    $datatable.dataTable({
+        'order': [[1, 'asc']],
+        'columnDefs': [
+          { orderable: false, targets: [0] }
+        ]
+    });
+    $datatable.on('draw.dt', function () {
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+        });
+    });
+
+    TableManageButtons.init();
+    //<!-- /Datatables -->
+    // initialize the validator function
+    //validator.message.date = 'not a real date';
+
+    // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
+    $('form')
+      .on('blur', 'input[required], input.optional, select.required', validator.checkField)
+      .on('change', 'select.required', validator.checkField)
+      .on('keypress', 'input[required][pattern]', validator.keypress);
+
+    //$('.multi.required').on('keyup blur', 'input', function() {
+    //  validator.checkField.apply($(this).siblings().last()[0]);
+    //});
+
+
+
+    $('form').submit(function (e) {
+        e.preventDefault();
+        var submit = true;
+
+        // evaluate the form using generic validaing
+        if (!validator.checkAll($(this))) {
+            submit = false;
+        }
+
+        if (submit)
+            this.submit();
+
+        return false;
+    });
+</script>
+
+<!-- Select2 -->
+<script>
+
+</script>
+<!-- /Select2 -->
+<!-- /validator -->

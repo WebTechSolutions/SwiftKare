@@ -186,7 +186,7 @@
             <div class="x_panel">
                 @* <div class="x_content">*@
 
-                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive" cellspacing="0" width="100%">
+                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive" cellspacing="0">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -209,7 +209,7 @@
                                  
                             <tr>
                                 <td id="docid" class="docid">@item.doctorID</td>
-                                <td id="userid" class="docid">@item.userId</td>
+                                <td id="userid" class="docid" style="word-break:break-all;width:100px">@item.userId</td>
                                 <td class="firstName" style="word-break: break-all; width: 300px">@item.firstName</td>
                                 <td class="lastName" style="word-break: break-all; width: 300px">@item.lastName</td>
                                 <td class="email" style="word-break: break-all; width: 300px">@item.email</td>
@@ -283,7 +283,13 @@
 <script>
 
     $(document).ready(function () {
-
+        $('#datatable-responsive').DataTable({
+            'order': [[0, 'desc']],
+            'columnDefs': [
+               { visible: false, targets: [0] },
+               { visible: false, targets: [1] }
+            ]
+        });
         $('.editbtn').click(function () {
 
 
@@ -371,13 +377,7 @@
         keys: true
     });
 
-    $('#datatable-responsive').DataTable({
-        'order': [[0, 'desc']],
-        'columnDefs': [
-           { visible: false, targets: [0] },
-           { visible: false, targets: [1] }
-        ]
-    });
+   
 
     $('#datatable-scroller').DataTable({
         ajax: "js/datatables/json/scroller-demo.json",

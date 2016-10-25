@@ -111,7 +111,7 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddCity", cityNameParameter, cBParameter);
         }
     
-        public virtual int SP_AddDoctor(string firstName, string lastName, string email, string cB)
+        public virtual int SP_AddDoctor(string firstName, string lastName, string email, string userId, string cB)
         {
             var firstNameParameter = firstName != null ?
                 new ObjectParameter("FirstName", firstName) :
@@ -125,11 +125,15 @@ namespace DataAccess
                 new ObjectParameter("Email", email) :
                 new ObjectParameter("Email", typeof(string));
     
+            var userIdParameter = userId != null ?
+                new ObjectParameter("userId", userId) :
+                new ObjectParameter("userId", typeof(string));
+    
             var cBParameter = cB != null ?
                 new ObjectParameter("CB", cB) :
                 new ObjectParameter("CB", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddDoctor", firstNameParameter, lastNameParameter, emailParameter, cBParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddDoctor", firstNameParameter, lastNameParameter, emailParameter, userIdParameter, cBParameter);
         }
     
         public virtual int SP_AddDocumentType(string typeName, string cB)
@@ -194,27 +198,6 @@ namespace DataAccess
                 new ObjectParameter("CB", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddNewss", newstitleParameter, newsdetailParameter, newsthumbnailParameter, newsImageParameter, cBParameter);
-        }
-    
-        public virtual int SP_AddPatient(string firstName, string lastName, string email, string cB)
-        {
-            var firstNameParameter = firstName != null ?
-                new ObjectParameter("FirstName", firstName) :
-                new ObjectParameter("FirstName", typeof(string));
-    
-            var lastNameParameter = lastName != null ?
-                new ObjectParameter("LastName", lastName) :
-                new ObjectParameter("LastName", typeof(string));
-    
-            var emailParameter = email != null ?
-                new ObjectParameter("Email", email) :
-                new ObjectParameter("Email", typeof(string));
-    
-            var cBParameter = cB != null ?
-                new ObjectParameter("CB", cB) :
-                new ObjectParameter("CB", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddPatient", firstNameParameter, lastNameParameter, emailParameter, cBParameter);
         }
     
         public virtual int SP_AddRoles(string roleName, string cB)
@@ -1217,6 +1200,81 @@ namespace DataAccess
                 new ObjectParameter("dateto", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PatientReport_Result>("SP_PatientReport", datefromParameter, datetoParameter);
+        }
+    
+        public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
+        {
+            var lastNameParameter = lastName != null ?
+                new ObjectParameter("lastName", lastName) :
+                new ObjectParameter("lastName", typeof(string));
+    
+            var firstNameParameter = firstName != null ?
+                new ObjectParameter("FirstName", firstName) :
+                new ObjectParameter("FirstName", typeof(string));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("email", email) :
+                new ObjectParameter("email", typeof(string));
+    
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            var cBParameter = cB != null ?
+                new ObjectParameter("CB", cB) :
+                new ObjectParameter("CB", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddAdmin", lastNameParameter, firstNameParameter, emailParameter, userIdParameter, cBParameter);
+        }
+    
+        public virtual int SP_AddAdmin1(string lastName, string firstName, string email, string userId, string cB)
+        {
+            var lastNameParameter = lastName != null ?
+                new ObjectParameter("lastName", lastName) :
+                new ObjectParameter("lastName", typeof(string));
+    
+            var firstNameParameter = firstName != null ?
+                new ObjectParameter("FirstName", firstName) :
+                new ObjectParameter("FirstName", typeof(string));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("email", email) :
+                new ObjectParameter("email", typeof(string));
+    
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            var cBParameter = cB != null ?
+                new ObjectParameter("CB", cB) :
+                new ObjectParameter("CB", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddAdmin1", lastNameParameter, firstNameParameter, emailParameter, userIdParameter, cBParameter);
+        }
+    
+        public virtual int SP_AddPatient(string firstName, string lastName, string email, string userId, string cB)
+        {
+            var firstNameParameter = firstName != null ?
+                new ObjectParameter("FirstName", firstName) :
+                new ObjectParameter("FirstName", typeof(string));
+    
+            var lastNameParameter = lastName != null ?
+                new ObjectParameter("LastName", lastName) :
+                new ObjectParameter("LastName", typeof(string));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("Email", email) :
+                new ObjectParameter("Email", typeof(string));
+    
+            var userIdParameter = userId != null ?
+                new ObjectParameter("userId", userId) :
+                new ObjectParameter("userId", typeof(string));
+    
+            var cBParameter = cB != null ?
+                new ObjectParameter("CB", cB) :
+                new ObjectParameter("CB", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddPatient", firstNameParameter, lastNameParameter, emailParameter, userIdParameter, cBParameter);
         }
     }
 }

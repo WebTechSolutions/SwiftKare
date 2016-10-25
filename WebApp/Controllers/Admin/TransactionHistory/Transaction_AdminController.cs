@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebApp;
 
 namespace SwiftKare.Controllers.TransactionHistory
 {
+    [CustomAuthorize]
     public class Transaction_AdminController : Controller
     {
         //
@@ -29,7 +31,7 @@ namespace SwiftKare.Controllers.TransactionHistory
             }
             else
             {
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
         }
 

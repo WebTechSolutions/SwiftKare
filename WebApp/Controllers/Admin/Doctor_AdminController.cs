@@ -10,9 +10,11 @@ using Identity.Membership;
 using System.Web;
 using Microsoft.AspNet.Identity.Owin;
 using System.Linq;
+using WebApp;
 
 namespace SwiftKare.Controllers
 {
+    [CustomAuthorize]
     public class Doctor_AdminController : Controller
     {
         //
@@ -52,7 +54,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
 
 
@@ -105,8 +107,8 @@ namespace SwiftKare.Controllers
                         {
                             ViewBag.successMessage = "";
                             ViewBag.errorMessage = "Provide valid Email Address";
-                            var _existingpList = db.SP_SelectPatient();
-                            return View(_existingpList);
+                            var _existingdList = db.SP_SelectDoctor();
+                            return View(_existingdList);
                         }
 
                         //db.SP_AddDoctor(firstName, lastName, email, password, Session["LogedUserID"].ToString());
@@ -140,8 +142,6 @@ namespace SwiftKare.Controllers
                             userAssignRole.Role = "Doctor";
 
 
-
-
                             var strContent = JsonConvert.SerializeObject(userAssignRole);
                             var response = ApiConsumerHelper.PostData("api/Roles/AssignRole", strContent);
                             dynamic resultAdd = JsonConvert.DeserializeObject(response);
@@ -155,9 +155,8 @@ namespace SwiftKare.Controllers
                             {
                                 ViewBag.errorMessage = error;
                             }
-                           
-                           
-                            return View();
+                            var _existingdList = db.SP_SelectDoctor();
+                            return View(_existingdList);
                         }
 
                     }
@@ -187,14 +186,18 @@ namespace SwiftKare.Controllers
                             {
                                 ViewBag.errorMessage = error;
                             }
-                            return View();
+                            var _existingdList = db.SP_SelectDoctor();
+                            return View(_existingdList);
                         }
 
                     }
                     if (action == "delete")
                     {
                         id = Request.Form["id"].ToString();
+                        userid = Request.Form["userid"].ToString();
                         db.sp_DeleteDoctor(Convert.ToInt64(id), Session["LogedUserID"].ToString(), System.DateTime.Now);
+                        AspNetUser doctor = db.AspNetUsers.Find(userid);
+                        db.AspNetUsers.Remove(doctor);
                         db.SaveChanges();
                         ViewBag.successMessage = "Record has been deleted successfully";
                         ViewBag.errorMessage = "";
@@ -215,7 +218,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
 
         }
@@ -244,7 +247,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
     }
 
 
@@ -273,7 +276,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
             
 
@@ -297,7 +300,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
          }
          [CustomAuthorizationAttribute]
@@ -324,7 +327,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../Account/AdminLogin");
+                return RedirectToAction("../AdminLogin/AdminLogin");
             }
             
          }
