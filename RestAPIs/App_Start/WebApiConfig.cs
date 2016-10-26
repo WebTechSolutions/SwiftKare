@@ -8,6 +8,7 @@ namespace RestAPIs
     {
         public static void Register(HttpConfiguration config)
         {
+            config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.All;
             // Web API configuration and services
             // Configure Web API to use only bearer token authentication.
             //config.SuppressDefaultHostAuthentication();
@@ -26,24 +27,6 @@ namespace RestAPIs
             //if (ApplicationGlobalVariables.Instance.ApplyIPsAuthorizationFilter)
             //    config.Filters.Add(new IPHostValidationAttribute());
 
-        }
-        public static HttpConfiguration Register()
-        {
-            // Web API configuration and services
-            var config = new HttpConfiguration();
-
-            
-
-            // Web API routes
-            config.MapHttpAttributeRoutes();
-
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
-
-            return config;
         }
     }
 }
