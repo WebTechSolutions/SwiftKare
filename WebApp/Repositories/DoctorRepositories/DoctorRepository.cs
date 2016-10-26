@@ -24,7 +24,7 @@ namespace WebApp.Repositories.DoctorRepositories
             return result;
         }
 
-        public void Delete(int id)
+        public void Delete(long id)
         {
             throw new NotImplementedException();
         }
@@ -47,6 +47,13 @@ namespace WebApp.Repositories.DoctorRepositories
         {
             var response = ApiConsumerHelper.GetResponseString("api/Doctors?userId=" + userId);
             var result = JsonConvert.DeserializeObject<Doctor>(response);
+            return result;
+        }
+
+        public long GetId(string userId)
+        {
+            var response = ApiConsumerHelper.GetResponseString("api/Doctors/Id?userId=" + userId);
+            var result = JsonConvert.DeserializeObject<long>(response);
             return result;
         }
 
