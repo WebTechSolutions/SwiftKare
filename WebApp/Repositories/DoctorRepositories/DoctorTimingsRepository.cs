@@ -14,12 +14,16 @@ namespace WebApp.Repositories.DoctorRepositories
     {
         public DoctorTiming Add(DoctorTiming t)
         {
-            throw new NotImplementedException();
+            var strContent = JsonConvert.SerializeObject(t);
+            var response = ApiConsumerHelper.PostData("api/DoctorTimings", strContent);
+            var result = JsonConvert.DeserializeObject<DoctorTiming>(response);
+            return result;
         }
 
-        public void Delete(int id)
+        public void Delete(long id)
         {
-            throw new NotImplementedException();
+            var response = ApiConsumerHelper.DeleteData("api/DoctorTimings/"+id);
+            var result = JsonConvert.DeserializeObject<DoctorTiming>(response);
         }
 
         public bool Exists(object id)
@@ -34,7 +38,9 @@ namespace WebApp.Repositories.DoctorRepositories
 
         public DoctorTiming GetById(long id)
         {
-            throw new NotImplementedException();
+            var response = ApiConsumerHelper.GetResponseString("api/DoctorTimings/" + id);
+            var result = JsonConvert.DeserializeObject<DoctorTiming>(response);
+            return result;
         }
 
         public IQueryable<DoctorTiming> GetList()
@@ -50,7 +56,11 @@ namespace WebApp.Repositories.DoctorRepositories
 
         public DoctorTiming Put(long id, DoctorTiming t)
         {
-            throw new NotImplementedException();
+            var strContent = JsonConvert.SerializeObject(t);
+            var response = ApiConsumerHelper.PutData("api/DoctorTimings/" + id, strContent);
+            var result = JsonConvert.DeserializeObject<DoctorTiming>(response);
+            return result;
+            
         }
     }
 }
