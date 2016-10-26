@@ -15,6 +15,7 @@ namespace WebApp.Repositories.PatientRepositories
     {
         public Patient Add(Patient t)
         {
+            t.active = true;
             var strContent = JsonConvert.SerializeObject(t);
             var response = ApiConsumerHelper.PostData("api/Patients", strContent);
             var result = JsonConvert.DeserializeObject<Patient>(response);
