@@ -27,7 +27,7 @@ namespace WebApp.Repositories.PatientRepositories
             return result;
         }
 
-        public void Delete(int id)
+        public void Delete(long id)
         {
             throw new NotImplementedException();
         }
