@@ -51,7 +51,7 @@ namespace WebApp
                      "~/Scripts/js/bootstrap-progressbar.min.js",
                      "~/Scripts/js/icheck.min.js",
                      "~/Scripts/js/skycons.js",
-                    
+
 
                      "~/Scripts/js/jquery.flot.js",
                      "~/Scripts/js/jquery.flot.pie.js",
@@ -72,7 +72,7 @@ namespace WebApp
                      "~/Scripts/js/jquery.vmap.sampledata.js",
                      "~/Scripts/js/moment/moment.min.js",
                      "~/Scripts/js/datepicker/daterangepicker.js",
-                     
+
                      "~/Scripts/js/custom.min.js"));
 
 
