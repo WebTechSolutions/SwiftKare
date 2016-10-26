@@ -27,6 +27,23 @@ namespace RestAPIs
             //    config.Filters.Add(new IPHostValidationAttribute());
 
         }
-        
+        public static HttpConfiguration Register()
+        {
+            // Web API configuration and services
+            var config = new HttpConfiguration();
+
+            
+
+            // Web API routes
+            config.MapHttpAttributeRoutes();
+
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
+
+            return config;
+        }
     }
 }
