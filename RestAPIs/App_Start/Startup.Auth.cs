@@ -48,7 +48,6 @@ namespace RestAPIs
 
             // token consumption
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
-            app.UseWebApi(WebApiConfig.Register());
         }
     }
 }
