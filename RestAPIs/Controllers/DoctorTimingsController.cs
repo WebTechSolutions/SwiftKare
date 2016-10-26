@@ -13,7 +13,7 @@ using DataAccess;
 
 namespace RestAPIs.Controllers
 {
-    [Authorize]
+   [Authorize]
     public class DoctorTimingsController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
@@ -38,9 +38,13 @@ namespace RestAPIs.Controllers
         }
 
         //api/DoctorTimings? doctorId = { doctorId }
-        public IQueryable<DoctorTiming> GetDoctorTimingByDoctorId(long doctorId)
+        public List<DoctorTiming> GetDoctorTimingByDoctorId(long doctorId)
         {
-            return db.DoctorTimings.Where(o=>o.doctorID==doctorId);
+            var timings = new List<DoctorTiming>();
+            timings = db.DoctorTimings.ToList();
+            var doctorTiming=timings.Where(o => o.doctorID == doctorId).ToList();
+
+            return doctorTiming;
         }
 
         // PUT: api/DoctorTimings/5
