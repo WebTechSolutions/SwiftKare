@@ -104,6 +104,22 @@ namespace WebApp.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    {
+                        var userId = HttpContext.User.Identity.GetUserId();
+                        var roles = UserManager.GetRoles(userId);
+                        if(roles.Contains("Doctor"))
+                        {
+                            return RedirectToAction("DoctorTimings", "Doctor");
+                        }
+                        else if(roles.Contains("Patient"))
+                        {
+                            return RedirectToAction("Index", "Patient");
+                        }
+                        else if(roles.Contains("Admin"))
+                        {
+                            return RedirectToAction("AdminLogin", "AdminLogin");
+                        }
+                    }
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
