@@ -38,17 +38,21 @@ namespace RestAPIs.Controllers
         }
 
         // GET: api/Doctors/afafaf
-        [ResponseType(typeof(Doctor))]
-        public async Task<IHttpActionResult> GetDoctorByUserId(string userId)
+        public Doctor GetDoctorByUserId(string userId)
         {
-            Doctor doctor = await db.Doctors.SingleOrDefaultAsync(o => o.userId == userId);
-            if (doctor == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(doctor);
+            
+            Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
+            return doctor;
         }
+
+        // GET: api/Doctors/afafaf
+        [Route("api/Doctors/Id")]
+        public long GetDoctorId(string userId)
+        {
+            Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
+            return doctor.doctorID;
+        }
+
 
         // PUT: api/Doctors/5
         [ResponseType(typeof(void))]
