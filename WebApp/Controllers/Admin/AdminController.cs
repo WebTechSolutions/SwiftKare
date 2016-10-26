@@ -16,7 +16,7 @@ using WebApp;
 
 namespace SwiftKare.Controllers
 {
-    [CustomAuthorize]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         //
