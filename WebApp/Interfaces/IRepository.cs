@@ -9,7 +9,7 @@ namespace WebApp.Interfaces
         T GetById(long id);
         T Put(long id, T t);
         T Add(T t);
-        void Delete(int id);
+        void Delete(long id);
         T Find(object id);
         bool Exists(object id);
     }
