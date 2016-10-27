@@ -29,51 +29,63 @@ namespace WebApp
 
             bundles.Add(new StyleBundle("~/Content/NewCss").Include(
                       "~/Content/css/bootstrap.min.css",
+                       "~/Scripts/font-awesome/css/font-awesome.min.css",
                       "~/Content/css/nprogress.css",
                       "~/Content/css/green.css",
                       "~/Content/css/bootstrap-progressbar-3.3.4.min.css",
                       "~/Content/css/jqvmap.min.css",
                       "~/Content/css/animate.min.css",
+                      "~/Content/css/dataTables.bootstrap.min.css",
+                      "~/Content/css/switchery.min.css",
+                      "~/Content/css/responsive.bootstrap.min.css",
+                      "~/Content/css/buttons.bootstrap.min.css",
+                      "~/Content/css/scroller.bootstrap.min.css",
+                      "~/Content/css/select2.min.css",
+                     "~/Content/css/starrr.css",
+                      "~/Content/css/dropzone.min.css",
                       "~/Content/css/custom.min.css",
                       "~/Content/css/style.css"
+                                          
 
                       ));
 
 
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
-                     "~/Scripts/js/jquery.min.js",
-
-                     "~/Scripts/js/bootstrap.min.js",
-                     "~/Scripts/js/fastclick.js",
-                     "~/Scripts/js/nprogress.js",
-                     "~/Scripts/js/Chart.min.js",
-                     "~/Scripts/js/gauge.min.js",
-                     "~/Scripts/js/bootstrap-progressbar.min.js",
-                     "~/Scripts/js/icheck.min.js",
-                     "~/Scripts/js/skycons.js",
-
-
-                     "~/Scripts/js/jquery.flot.js",
-                     "~/Scripts/js/jquery.flot.pie.js",
-                     "~/Scripts/js/jquery.flot.time.js",
-                     "~/Scripts/js/jquery.flot.stack.js",
-                     "~/Scripts/js/jquery.flot.resize.js",
-
-
-                     "~/Scripts/js/jquery.flot.orderBars.js",
-
-                     "~/Scripts/js/jquery.flot.spline.js",
-
-                     "~/Scripts/js/curvedLines.js",
-
-                     "~/Scripts/js/date.js",
-                     "~/Scripts/js/jquery.vmap.js",
-                     "~/Scripts/js/jquery.vmap.world.js",
-                     "~/Scripts/js/jquery.vmap.sampledata.js",
-                     "~/Scripts/js/moment/moment.min.js",
-                     "~/Scripts/js/datepicker/daterangepicker.js",
-
-                     "~/Scripts/js/custom.min.js"));
+                     "~/Scripts/jquery.min.js",
+                     "~/Scripts/bootstrap.min.js",
+                     "~/Scripts/fastclick.js",
+                     "~/Scripts/nprogress.js",
+                     "~/Scripts/Chart.min.js",
+                     "~/Scripts/gauge.min.js",
+                     "~/Scripts/bootstrap-progressbar.min.js",
+                     "~/Scripts/icheck.min.js",
+                    "~/Scripts/jquery.dataTables.min.js",
+                     "~/Scripts/dataTables.bootstrap.min.js",
+                       "~/Scripts/dataTables.buttons.min.js",
+                     "~/Scripts/dataTables.responsive.min.js",
+                      "~/Scripts/responsive.bootstrap.js",
+                    "~/Scripts/dataTables.fixedHeader.min.js",
+                      "~/Scripts/dataTables.keyTable.min.js",
+                    "~/Scripts/jquery.flot.js",
+                     "~/Scripts/jquery.flot.pie.js",
+                     "~/Scripts/jquery.flot.time.js",
+                     "~/Scripts/jquery.flot.stack.js",
+                     "~/Scripts/jquery.flot.resize.js",
+                     "~/Scripts/jquery.flot.orderBars.js",
+                    "~/Scripts/jquery.flot.spline.js",
+                    "~/Scripts/curvedLines.js",
+                    "~/Scripts/date.js",
+                    "~/Scripts/moment.min.js",
+                     "~/Scripts/select2.full.min.js",
+                     "~/Scripts/daterangepiker/daterangepicker.js",
+                     "~/Scripts/switchery.min.js",
+                    "~/Scripts/toggle.js",
+                     "~/Scripts/validator.js",
+                     "~/Scripts/jquery.smartWizard.js",
+                       "~/Scripts/dropzone.min.js",
+                   "~/Scripts/jquery.autocomplete.min.js",
+                   "~/Scripts/jquery.starrr.js",
+                   "~/Scripts/custom.min.js"));
 
 
 
