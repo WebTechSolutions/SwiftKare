@@ -8,7 +8,7 @@ using WebApp;
 
 namespace SwiftKare.Controllers.TransactionHistory
 {
-    [CustomAuthorize]
+    [Authorize(Roles = "Admin")]
     public class Transaction_AdminController : Controller
     {
         //
