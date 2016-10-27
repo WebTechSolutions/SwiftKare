@@ -8,7 +8,7 @@ using WebApp;
 
 namespace SwiftKare.Controllers.Consultation
 {
-    [CustomAuthorize]
+    [Authorize(Roles = "Admin")]
     public class Consultation_AdminController : Controller
     {
         SwiftKareDBEntities db = new SwiftKareDBEntities();
