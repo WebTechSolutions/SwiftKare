@@ -8,7 +8,7 @@ using WebApp;
 
 namespace SwiftKare.Controllers
 {
-    [CustomAuthorize]
+    [Authorize(Roles = "Admin")]
     public class ZipCode_AdminController : Controller
     {
         //

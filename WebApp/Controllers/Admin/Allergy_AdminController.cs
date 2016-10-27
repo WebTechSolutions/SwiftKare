@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using WebApp;
+
 
 namespace SwiftKare.Controllers
 {
-    [CustomAuthorize]
+    [Authorize(Roles ="Admin")]
     public class Allergy_AdminController : Controller
     {
         //

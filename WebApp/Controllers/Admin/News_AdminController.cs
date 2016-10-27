@@ -10,7 +10,7 @@ using WebApp;
 
 namespace SwiftKare.Controllers
 {
-    [CustomAuthorize]
+    [Authorize(Roles = "Admin")]
     public class News_AdminController : Controller
     {
         //

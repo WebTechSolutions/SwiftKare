@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace SwiftKare.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class Role_AdminController : Controller
     {
         SwiftKareDBEntities db = new SwiftKareDBEntities();

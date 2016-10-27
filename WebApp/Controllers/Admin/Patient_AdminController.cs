@@ -16,7 +16,7 @@ using WebApp.Helper;
 
 namespace SwiftKare.Controllers
 {
-    [CustomAuthorize]
+    [Authorize(Roles = "Admin")]
     public class Patient_AdminController : Controller
     {
         //
