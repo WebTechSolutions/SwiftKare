@@ -13,5 +13,11 @@ namespace WebApp.Controllers
         {
             return View();
         }
+
+        // GET: SeeDoctor
+        public ActionResult SeeDoctor()
+        {
+            return View();
+        }
     }
 }
