@@ -114,8 +114,24 @@ namespace RestAPIs.Controllers
                 return NotFound();
             }
 
-            db.Doctors.Remove(doctor);
-            await db.SaveChangesAsync();
+            doctor.active = false;//Delete Operation changed
+            db.Entry(doctor).State = EntityState.Modified;
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!DoctorExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return Ok(doctor);
         }
