@@ -60,7 +60,7 @@ namespace WebApp.Repositories.DoctorRepositories
             return result;
         }
 
-        public IQueryable<Doctor> GetList()
+        public IQueryable<Doctor> GetLanguagesList()
         {
             throw new NotImplementedException();
         }
