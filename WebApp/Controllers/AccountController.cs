@@ -123,7 +123,10 @@ namespace WebApp.Controllers
                         }
                         else if(roles.Contains("Admin"))
                         {
-                            return RedirectToAction("AdminLogin", "AdminLogin");
+                            var user = await UserManager.FindAsync(model.LoginViewModel.Email, model.LoginViewModel.Password);
+                            Session["LogedUserID"] = model.LoginViewModel.Email;
+                            Session["LogedUserFullname"] = user.FirstName+ " " + user.LastName;
+                            return RedirectToAction("Default", "Admin");
                         }
                     }
                     return RedirectToLocal(returnUrl);
