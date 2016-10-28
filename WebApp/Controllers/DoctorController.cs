@@ -29,7 +29,7 @@ namespace WebApp.Controllers
             var objRepo = new DoctorRepository();
             var userId = HttpContext.User.Identity.GetUserId();
             var doctor = objRepo.GetByUserId(userId);
-            Model.DoctorTimingsList = doctor.DoctorTimings;
+            Model.DoctorTimingsList = doctor.DoctorTimings.Where(o=>o.active== true);
             Model.DoctorTiming = new DoctorTiming();
             Model.DoctorTiming.doctorID = doctor.doctorID;
             Model.DoctorTiming.doctorTimingsID = 0;
@@ -63,7 +63,7 @@ namespace WebApp.Controllers
             DateTime timeTo = DateTime.Today.Add((TimeSpan)Model.DoctorTiming.to);
             Model.Timing.From = timeFrom.ToString("hh:mm tt");
             Model.Timing.To = timeTo.ToString("hh:mm tt");
-            Model.DoctorTimingsList = Model.DoctorTiming.Doctor.DoctorTimings;
+            Model.DoctorTimingsList = Model.DoctorTiming.Doctor.DoctorTimings.Where(o=>o.active==true);
             Model.Days = GetSelectListItems(
                 new List<string>
             {
