@@ -55,7 +55,7 @@ namespace WebApp.Repositories.PatientRepositories
             return result;
         }
 
-        public IQueryable<Patient> GetList()
+        public IQueryable<Patient> GetLanguagesList()
         {
             throw new NotImplementedException();
         }
