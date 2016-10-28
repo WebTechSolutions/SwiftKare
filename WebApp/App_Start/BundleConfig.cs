@@ -44,8 +44,12 @@ namespace WebApp
                      "~/Content/css/starrr.css",
                       "~/Content/css/dropzone.min.css",
                       "~/Content/css/custom.min.css",
-                      "~/Content/css/style.css"
-                                          
+                      "~/Content/css/style.css",
+                      "~/Content/css/bootstrap-material-datetimepicker.css"
+
+
+
+
 
                       ));
 
@@ -85,13 +89,14 @@ namespace WebApp
                        "~/Scripts/dropzone.min.js",
                    "~/Scripts/jquery.autocomplete.min.js",
                    "~/Scripts/jquery.starrr.js",
-                   "~/Scripts/custom.min.js"));
+                    "~/Scripts/bootstrap-material-datetimepicker.js",
+                     "~/Scripts/material.min.js",
+                       "~/Scripts/moment-with-locales.min.js",
+                    "~/Scripts/custom.min.js"));
+            
 
-
-
-
-            //-----------------------
-            bundles.Add(new ScriptBundle("~/bundles/content/js").Include(
+                             //-----------------------
+                             bundles.Add(new ScriptBundle("~/bundles/content/js").Include(
                     "~/Content/js/jquery.min.js",
 
                     "~/Content/js/bootstrap.min.js",
