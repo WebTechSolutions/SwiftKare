@@ -62,6 +62,7 @@ namespace WebApp.Repositories.DoctorRepositories
         public IQueryable<Speciallity> GetList()
         {
             throw new NotImplementedException();
+            //Deom test
         }
     }
 }
