@@ -8,7 +8,6 @@ namespace WebApp
     {
         public void Configuration(IAppBuilder app)
         {
-            //Jam changes demo more new
             ConfigureAuth(app);
         }
     }
