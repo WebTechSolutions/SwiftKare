@@ -105,20 +105,21 @@ namespace WebApp.Controllers
             {
                 case SignInStatus.Success:
                     {
-                        var userId = HttpContext.User.Identity.GetUserId();
+                        //var userId = HttpContext.User.Identity.GetUserId();
+                        string userId = UserManager.FindByName(model.LoginViewModel.Email)?.Id;
                         var roles = UserManager.GetRoles(userId);
                         if(roles.Contains("Doctor"))
                         {
                             var objRepo = new DoctorRepository();
                             var doctor = objRepo.GetByUserId(userId);
-                            if((bool)doctor.active)
+                            if(doctor.active==null||(bool)doctor.active)
                                 return RedirectToAction("DoctorTimings", "Doctor");
                         }
                         else if(roles.Contains("Patient"))
                         {
                             var objRepo = new PatientRepository();
                             var patient = objRepo.GetByUserId(userId);
-                            if ((bool)patient.active)
+                            if (patient.active == null || (bool)patient.active)
                                 return RedirectToAction("Index", "Patient");
                         }
                         else if(roles.Contains("Admin"))

@@ -38,6 +38,11 @@ namespace WebApp.Repositories.DoctorRepositories
            // var result = JsonConvert.DeserializeObject<Language>(response);
             return result;
         }
+
+        public IQueryable<Language> GetList()
+        {
+            throw new NotImplementedException();
+        }
         public IQueryable<Language> GetLanguages()
         {
             throw new NotImplementedException();

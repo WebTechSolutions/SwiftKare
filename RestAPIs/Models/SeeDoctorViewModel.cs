@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace WebApp.Models
+namespace RestAPIs.Models
 {
     public class SeeDoctorViewModel
     {
@@ -33,7 +33,7 @@ namespace WebApp.Models
         //        }
         //    }
 
-        }
+    }
         //public class DocTime
         //{
         //    public TimeSpan seacrhTime { get; set; }

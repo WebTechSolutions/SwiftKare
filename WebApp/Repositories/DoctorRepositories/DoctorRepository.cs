@@ -5,6 +5,11 @@ using WebApp.Interfaces;
 using Newtonsoft.Json;
 using WebApp.Helper;
 using Identity.Membership.Models;
+using WebApp.Models;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Web.Http;
+using System.Net;
 
 namespace WebApp.Repositories.DoctorRepositories
 {
@@ -41,7 +46,10 @@ namespace WebApp.Repositories.DoctorRepositories
         {
             throw new NotImplementedException();
         }
-
+        public IQueryable<Doctor> GetList()
+        {
+            throw new NotImplementedException();
+        }
         public Doctor GetById(long id)
         {
             throw new NotImplementedException();
@@ -69,5 +77,34 @@ namespace WebApp.Repositories.DoctorRepositories
         {
             throw new NotImplementedException();
         }
+        //public IEnumerable<SeeDoctorDTO> SeeDoctor(string docName, string gender, string langName, string specName, string day, TimeSpan time)
+        //{
+        //    var response = ApiConsumerHelper.GetResponseString("api/searchDoctor/docName/?docName=" + docName);// + "&gender=" + gender + "&langName=" + langName + "&specName=" + specName +
+        //        //"&day=" + day + "&time=" + time);
+
+        //    var result = JsonConvert.DeserializeObject<IEnumerable<SeeDoctorDTO>>(response);
+        //    return result;
+        //}
+        public IEnumerable<Doctor> SeeDoctor(SearchModel searchModel)
+        {
+
+            //var response = ApiConsumerHelper.GetResponseString("api/searchDoctor/searchModel/?searchModel=" + searchModel);
+            //var result = JsonConvert.DeserializeObject<IList<SeeDoctorDTO>>(response);
+            try
+            {
+                var strContent = JsonConvert.SerializeObject(searchModel);
+                var response = ApiConsumerHelper.PostData("api/searchDoctor/searchModel/?searchModel", strContent);
+                var result = JsonConvert.DeserializeObject<IEnumerable<Doctor>>(response);
+                return result;
+            }
+            catch(Exception ex)
+            {
+                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                httpResponseMessage.Content = new StringContent(ex.Message);
+                throw new HttpResponseException(httpResponseMessage);
+            }
+           
+        }
     }
+   
 }

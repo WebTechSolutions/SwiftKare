@@ -9,6 +9,11 @@ namespace RestAPIs
         public static void Register(HttpConfiguration config)
         {
             config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.All;
+            //var json = config.Formatters.JsonFormatter;
+            //json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.All;
+            //config.Formatters.Remove(config.Formatters.XmlFormatter);
+            //json.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+
             // Web API configuration and services
             // Configure Web API to use only bearer token authentication.
             //config.SuppressDefaultHostAuthentication();

@@ -14,12 +14,16 @@ namespace WebApp.Repositories.DoctorRepositories
     {
         public DoctorTiming Add(DoctorTiming t)
         {
+            t.active = true;
             var strContent = JsonConvert.SerializeObject(t);
             var response = ApiConsumerHelper.PostData("api/DoctorTimings", strContent);
             var result = JsonConvert.DeserializeObject<DoctorTiming>(response);
             return result;
         }
-
+        public IQueryable<DoctorTiming> GetList()
+        {
+            throw new NotImplementedException();
+        }
         public void Delete(long id)
         {
             var response = ApiConsumerHelper.DeleteData("api/DoctorTimings/"+id);

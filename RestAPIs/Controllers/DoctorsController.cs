@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using DataAccess;
+using RestAPIs.Models;
 
 namespace RestAPIs.Controllers
 {
@@ -17,7 +18,7 @@ namespace RestAPIs.Controllers
     public class DoctorsController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
-
+       
         // GET: api/Doctors
         public IQueryable<Doctor> GetDoctors()
         {
@@ -149,5 +150,111 @@ namespace RestAPIs.Controllers
         {
             return db.Doctors.Count(e => e.doctorID == id) > 0;
         }
+
+        [HttpGet]
+        [Route("api/searchDoctor/docName/")]
+        //  public IEnumerable<SeeDoctorDTO> SeeDoctor(string docName)//, string gender, string langName, string specName, string weekday, TimeSpan time)
+        public IEnumerable<SeeDoctorDTO> SeeDoctor(string docName)//, string gender, string langName, string specName, string weekday, TimeSpan time)
+        {
+            //try
+            //{
+            //    System.Diagnostics.Debugger.Break();
+            //    var result = from doclist in db.Doctors
+            //                 select new SeeDoctorDTO
+            //                 {
+
+            //                     firstName = doclist.firstName,
+            //                     lastName = doclist.lastName,
+            //                     gender = doclist.gender,
+            //                     DoctorTimings = doclist.DoctorTimings,
+            //                     DoctorLanguages = doclist.DoctorLanguages,
+            //                     DoctorSpecialities = doclist.DoctorSpecialities
+            //                 };
+
+            //    if (!string.IsNullOrEmpty(docName))
+            //        result = result.Where(x => x.firstName.Contains(docName));
+            //    if (!string.IsNullOrEmpty(docName))
+            //        result = result.Where(x => x.lastName.Contains(docName));
+            //    if (gender != "All")
+            //        result = result.Where(x => x.gender == gender);
+            //    if (!string.IsNullOrEmpty(weekday))
+            //        result = result.Include(p => p.DoctorTimings.Any(c => c.day == weekday));
+            //    if (!string.IsNullOrEmpty(time.ToString()))
+            //        result = result.Include(p => p.DoctorTimings.Any(c => c.@from <= time
+            //        && c.to >= time));
+            //    if (langName != "All")
+            //        result = result.Include(p => p.DoctorLanguages.Any(c => c.languageName == langName));
+            //    if (specName != "All")
+            //        result = result.Where(p => p.DoctorSpecialities.Any(c => c.specialityName == specName));
+            //    return result.ToList();
+            //}
+            //catch(Exception ex)
+            //{
+            //    return null;
+            //}
+            return null;
+
+        }
+        // POST: api/searchDoctor/SeeDoctorViewModel
+       // [Route("api/searchDoctor/searchModel/")]
+        //[ResponseType(typeof(Doctor))]
+        //public IEnumerable<SeeDoctorDTO> SeeDoctor(SeeDoctorViewModel searchModel)
+        //{
+        //    try
+        //    {
+
+
+        //        var result = from doclist in db.Doctors
+        //                     select new SeeDoctorDTO
+        //                     {
+
+        //                         firstName = doclist.firstName,
+        //                         lastName = doclist.lastName,
+        //                         gender = doclist.gender,
+        //                         DoctorTimings = doclist.DoctorTimings,
+        //                         DoctorLanguages = doclist.DoctorLanguages,
+        //                         DoctorSpecialities = doclist.DoctorSpecialities
+        //                     };
+
+        //        if (searchModel != null)
+        //        {
+        //            if (!string.IsNullOrEmpty(searchModel.Doctor.firstName))
+        //                result = result.Where(x => x.firstName.Contains(searchModel.Doctor.firstName));
+        //            if (!string.IsNullOrEmpty(searchModel.Doctor.firstName))
+        //                result = result.Where(x => x.lastName.Contains(searchModel.Doctor.firstName));
+        //            if (searchModel.Gender != "ALL")
+        //                result = result.Where(x => x.gender == searchModel.Gender);
+        //            if (searchModel.AppDate != null)
+        //                result = result.Where(p => p.DoctorTimings.Any(c => c.day.ToString() == searchModel.AppDate.DayOfWeek.ToString()));
+        //            if (searchModel.Timing.searchTime != null)
+        //                result = result.Where(p => p.DoctorTimings.Any(c => c.@from <= searchModel.Timing.searchTime
+        //                && c.to >= searchModel.Timing.searchTime));
+        //            if (searchModel.Language != "ALL")
+        //                result = result.Where(p => p.DoctorLanguages.Any(c => c.languageName == searchModel.Language));
+        //            if (searchModel.Speciallity != "ALL")
+        //                result = result.Where(p => p.DoctorSpecialities.Any(c => c.specialityName == searchModel.Speciallity));
+
+
+        //        }
+        //        if (!result.Any())
+        //        {
+        //            return null;
+        //        }
+        //        else
+        //        {
+        //             return result.ToList();
+        //        }
+        //    }
+        //    catch(Exception ex)
+        //    {
+               
+        //        HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+        //        httpResponseMessage.Content = new StringContent(ex.Message);
+        //        throw new HttpResponseException(httpResponseMessage);
+        //    }
+          
+
+        //}
     }
+  
 }

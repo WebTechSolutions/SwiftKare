@@ -13,7 +13,7 @@ using DataAccess;
 
 namespace RestAPIs.Controllers
 {
-   [Authorize]
+   
     public class DoctorTimingsController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();

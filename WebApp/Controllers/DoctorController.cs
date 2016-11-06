@@ -29,7 +29,7 @@ namespace WebApp.Controllers
             var objRepo = new DoctorRepository();
             var userId = HttpContext.User.Identity.GetUserId();
             var doctor = objRepo.GetByUserId(userId);
-            Model.DoctorTimingsList = doctor.DoctorTimings.Where(o=>o.active== true);
+            Model.DoctorTimingsList = doctor.DoctorTimings;
             Model.DoctorTiming = new DoctorTiming();
             Model.DoctorTiming.doctorID = doctor.doctorID;
             Model.DoctorTiming.doctorTimingsID = 0;

@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using WebApp.Models;
 using System.Net.Http;
+using System.Web.Http;
 
 namespace WebApp.Helper
 {
@@ -57,7 +58,9 @@ namespace WebApp.Helper
             }
             catch (Exception ex)
             {
-                throw ex;
+                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                httpResponseMessage.Content = new StringContent(ex.Message);
+                throw new HttpResponseException(httpResponseMessage);
             }
         }
 

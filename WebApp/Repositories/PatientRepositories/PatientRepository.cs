@@ -27,7 +27,10 @@ namespace WebApp.Repositories.PatientRepositories
             var resultAssignRole = JsonConvert.DeserializeObject(response);
             return result;
         }
-
+        public IQueryable<Patient> GetList()
+        {
+            throw new NotImplementedException();
+        }
         public void Delete(long id)
         {
             throw new NotImplementedException();

@@ -45,12 +45,9 @@ namespace WebApp
                       "~/Content/css/dropzone.min.css",
                       "~/Content/css/custom.min.css",
                       "~/Content/css/style.css",
-                      "~/Content/css/bootstrap-material-datetimepicker.css"
-
-
-
-
-
+                      "~/Content/css/bootstrap-material-datetimepicker.css",
+                       "~/Content/css/pnotify.css"
+                     
                       ));
 
 
@@ -92,7 +89,8 @@ namespace WebApp
                     "~/Scripts/bootstrap-material-datetimepicker.js",
                      "~/Scripts/material.min.js",
                        "~/Scripts/moment-with-locales.min.js",
-                    "~/Scripts/custom.min.js"));
+                       "~/Scripts/pnotify.js",
+                      "~/Scripts/custom.min.js"));
             
 
                              //-----------------------

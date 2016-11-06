@@ -23,7 +23,10 @@ namespace WebApp.Repositories.DoctorRepositories
 
             return result;
         }
-      
+        public IQueryable<Speciallity> GetList()
+        {
+            throw new NotImplementedException();
+        }
         public IQueryable<Speciallity> GetSpeciallities()
         {
             throw new NotImplementedException();
