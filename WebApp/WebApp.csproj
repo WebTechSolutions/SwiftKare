@@ -61,6 +61,10 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\RestAPIs\bin\System.Web.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -181,9 +185,12 @@
     <Compile Include="Controllers\Admin\TransactionHistory\Transaction_AdminController.cs" />
     <Compile Include="Controllers\Admin\ZipCode_AdminController.cs" />
     <Compile Include="Controllers\AllergiesController.cs" />
+    <Compile Include="Controllers\DoctorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PatientController.cs" />
     <Compile Include="Controllers\RolesSuperAdminController.cs" />
+    <Compile Include="Controllers\SeeDoctorController.cs" />
     <Compile Include="Controllers\UsersAdminController.cs" />
     <Compile Include="Controllers\UsersSuperAdminController.cs" />
     <Compile Include="CustomAuthorizationAttribute.cs" />
@@ -193,13 +200,26 @@
     <Compile Include="Helper\ApiConsumerHelper.cs" />
     <Compile Include="Helper\Extensions.cs" />
     <Compile Include="Helper\OauthHelper.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Models\Admin\ComplexModel\AdminRole.cs" />
     <Compile Include="Models\Admin\Utilities\Utility.cs" />
     <Compile Include="Models\ApiConsumerModels.cs" />
     <Compile Include="Models\ApplicationGlobalVariables.cs" />
     <Compile Include="Models\AppSettings.cs" />
+    <Compile Include="Models\BookAppointment.cs" />
+    <Compile Include="Models\DoctorTimingsViewModel.cs" />
+    <Compile Include="Models\ForgotPasswordCodeModel.cs" />
     <Compile Include="Models\LoginRegisterViewModel.cs" />
+    <Compile Include="Models\SearchModel.cs" />
+    <Compile Include="Models\SeeDoctorDTO.cs" />
+    <Compile Include="Models\SeeDoctorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\DoctorRepositories\DoctorRepository.cs" />
+    <Compile Include="Repositories\DoctorRepositories\DoctorTimingsRepository.cs" />
+    <Compile Include="Repositories\DoctorRepositories\LanguageRepository.cs" />
+    <Compile Include="Repositories\PatientRepositories\SeeDoctorRepository.cs" />
+    <Compile Include="Repositories\DoctorRepositories\SpecialityRepository.cs" />
+    <Compile Include="Repositories\PatientRepositories\PatientRepository.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +234,7 @@
     <Content Include="Content\css\dataTables.bootstrap.min.css" />
     <Content Include="Content\css\dropzone.min.css" />
     <Content Include="Content\css\fixedHeader.bootstrap.min.css" />
+    <Content Include="Content\css\font-awesome.min.css" />
     <Content Include="Content\css\green.css" />
     <Content Include="Content\css\jqvmap.min.css" />
     <Content Include="Content\css\maps\jquery-jvectormap-2.0.3.css" />
@@ -274,6 +295,10 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\autosize.min.js" />
+    <Content Include="Content\css\bootstrap-material-datetimepicker.css" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\font\Material-Design-Icons.svg" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\index.html" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-wysiwyg.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -285,6 +310,22 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Scripts\date.js" />
+    <Content Include="Scripts\font-awesome\css\font-awesome.css.map" />
+    <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Scripts\font-awesome\fonts\FontAwesome.otf" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\.gitignore" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\bower.json" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\font\Material-Design-Icons.eot" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\font\Material-Design-Icons.ttf" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\font\Material-Design-Icons.woff" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\font\Material-Design-Icons.woff2" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\LICENSE.md" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\package.json" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\README.md" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\buttons.bootstrap.min.js" />
     <Content Include="Scripts\buttons.flash.min.js" />
@@ -297,19 +338,29 @@
     <Content Include="Scripts\dataTables.keyTable.min.js" />
     <Content Include="Scripts\dataTables.responsive.min.js" />
     <Content Include="Scripts\dataTables.scroller.min.js" />
+    <Content Include="Scripts\daterangepiker\daterangepicker.js" />
+    <Content Include="Scripts\daterangepiker\moment.min.js" />
     <Content Include="Scripts\fastclick.js" />
+    <Content Include="Scripts\font-awesome\css\font-awesome.css" />
+    <Content Include="Scripts\font-awesome\css\font-awesome.min.css" />
+    <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="Scripts\icheck.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.autocomplete.min.js" />
     <Content Include="Scripts\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery.hotkeys.js" />
     <Content Include="Scripts\jquery.min.js" />
+    <Content Include="Scripts\jquery.smartWizard.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jquery.vmap.sampledata.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\nprogress.js" />
     <Content Include="Scripts\pnotify.js" />
     <Content Include="Scripts\prettify.js" />
@@ -319,6 +370,8 @@
     <Content Include="Scripts\select2.full.min.js" />
     <Content Include="Scripts\select2.min.js" />
     <Content Include="Scripts\starrr.js" />
+    <Content Include="Scripts\switchery.min.js" />
+    <Content Include="Scripts\toggle.js" />
     <Content Include="Scripts\ValidationMessages.js" />
     <Content Include="Scripts\validator.js" />
     <Content Include="Scripts\_references.js" />
@@ -405,6 +458,15 @@
     <Content Include="Views\AdminLogin\Default.cshtml" />
     <Content Include="Views\AdminLogin\AdminLogin.cshtml" />
     <Content Include="Views\Account\AdminLogin.cshtml" />
+    <Content Include="Views\Doctor\DoctorTimings.cshtml" />
+    <Content Include="Views\Doctor\Index.cshtml" />
+    <Content Include="Views\Patient\Index.cshtml" />
+    <Content Include="Views\Shared\_PatientLayout.cshtml" />
+    <Content Include="Views\Shared\_DoctorLayout.cshtml" />
+    <Content Include="Views\Patient\SeeDoctor.cshtml" />
+    <Content Include="Scripts\material.min" />
+    <Content Include="Scripts\moment-with-locales.min" />
+    <Content Include="Views\SeeDoctor\SeeDoctor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -412,8 +474,6 @@
     <Folder Include="Scripts\bootstrap\" />
     <Folder Include="Scripts\build\" />
     <Folder Include="Scripts\charts\" />
-    <Folder Include="Scripts\daterangepiker\" />
-    <Folder Include="Scripts\font-awesome\" />
     <Folder Include="Scripts\jquery\" />
   </ItemGroup>
   <ItemGroup>

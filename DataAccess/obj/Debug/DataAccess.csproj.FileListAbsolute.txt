@@ -37,3 +37,4 @@ F:\GitHub\SwiftKare\DataAccess\bin\Debug\EntityFramework.xml
 F:\GitHub\SwiftKare\DataAccess\bin\Debug\EntityFramework.SqlServer.xml
 F:\GitHub\SwiftKare\DataAccess\obj\Debug\DataAccess.dll
 F:\GitHub\SwiftKare\DataAccess\obj\Debug\DataAccess.pdb
+F:\GitHub\SwiftKare\DataAccess\obj\Debug\DataAccess.csprojResolveAssemblyReference.cache

@@ -24,6 +24,7 @@ namespace DataAccess
         public string mb { get; set; }
         public Nullable<System.DateTime> md { get; set; }
         public Nullable<bool> active { get; set; }
+        public Nullable<System.DateTime> reportedDate { get; set; }
     
         public virtual Patient Patient { get; set; }
     }

@@ -103,10 +103,10 @@ F:\GitHub\SwiftKare\Identity.Membership\bin\Debug\Microsoft.Web.Infrastructure.d
 F:\GitHub\SwiftKare\Identity.Membership\bin\Debug\EntityFramework.xml
 F:\GitHub\SwiftKare\Identity.Membership\bin\Debug\EntityFramework.SqlServer.xml
 F:\GitHub\SwiftKare\Identity.Membership\bin\Debug\Microsoft.Web.Infrastructure.xml
-F:\GitHub\SwiftKare\Identity.Membership\obj\Debug\Identity.Membership.csprojResolveAssemblyReference.cache
 F:\GitHub\SwiftKare\Identity.Membership\obj\Debug\Identity.Membership.Migrations.InitialCreate.resources
 F:\GitHub\SwiftKare\Identity.Membership\obj\Debug\Identity.Membership.Migrations.First.resources
 F:\GitHub\SwiftKare\Identity.Membership\obj\Debug\Identity.Membership.Migrations.Second.resources
 F:\GitHub\SwiftKare\Identity.Membership\obj\Debug\Identity.Membership.csproj.GenerateResource.Cache
 F:\GitHub\SwiftKare\Identity.Membership\obj\Debug\Identity.Membership.dll
 F:\GitHub\SwiftKare\Identity.Membership\obj\Debug\Identity.Membership.pdb
+F:\GitHub\SwiftKare\Identity.Membership\obj\Debug\Identity.Membership.csprojResolveAssemblyReference.cache

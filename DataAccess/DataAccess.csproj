@@ -91,6 +91,13 @@
     <Compile Include="ConsultationRO.cs">
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="CustomModels\PatientAllergies_Custom.cs" />
+    <Compile Include="CustomModels\PatientMedication_Custom.cs" />
+    <Compile Include="CustomModels\PatientConditions_Custom.cs" />
+    <Compile Include="CustomModels\PatientPharmacy_Custom.cs" />
+    <Compile Include="CustomModels\PatientROV_Custom.cs" />
+    <Compile Include="CustomModels\PatientSurgery_Custom.cs" />
+    <Compile Include="CustomModels\PatientUserFile_Custom.cs" />
     <Compile Include="C__MigrationHistory.cs">
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>
@@ -165,6 +172,21 @@
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="SP_DoctorReport_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetPatientAllergies_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetPatientConditions_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetPatientMedication_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetPatientSurgeries_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_helpdiagrams_Result.cs">
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="SP_PatientReport_Result.cs">
@@ -274,6 +296,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="SwiftKareDBModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

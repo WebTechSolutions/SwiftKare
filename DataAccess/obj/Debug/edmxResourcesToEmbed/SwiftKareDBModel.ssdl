@@ -81,7 +81,7 @@
     <Property Name="active" Type="bit" />
     <Property Name="appTypeAV" Type="varchar" MaxLength="50" />
     <Property Name="chiefComplaints" Type="varchar" MaxLength="500" />
-    <Property Name="OtherComplaints" Type="varchar" MaxLength="500" />
+    <Property Name="rov" Type="varchar" MaxLength="500" />
     <Property Name="consultationType" Type="varchar" MaxLength="50" />
     <Property Name="consultationStatus" Type="varchar" MaxLength="10" />
   </EntityType>
@@ -164,14 +164,12 @@
     <Property Name="conditionName" Type="varchar" MaxLength="50" />
     <Property Name="Source" Type="varchar" MaxLength="50" />
     <Property Name="patientID" Type="bigint" />
-    <Property Name="ft" Type="int" />
-    <Property Name="inch" Type="int" />
-    <Property Name="weight" Type="int" />
     <Property Name="cb" Type="varchar" MaxLength="50" />
     <Property Name="cd" Type="datetime" />
     <Property Name="mb" Type="varchar" MaxLength="50" />
     <Property Name="md" Type="datetime" />
     <Property Name="active" Type="bit" />
+    <Property Name="reportedDate" Type="datetime" />
   </EntityType>
   <EntityType Name="Consultation">
     <Key>
@@ -361,6 +359,7 @@
     <Property Name="mb" Type="varchar" MaxLength="50" />
     <Property Name="md" Type="datetime" />
     <Property Name="active" Type="bit" />
+    <Property Name="reportedDate" Type="datetime" />
   </EntityType>
   <EntityType Name="Medicine">
     <Key>
@@ -430,6 +429,8 @@
     <Property Name="md" Type="datetime" />
     <Property Name="active" Type="bit" />
     <Property Name="userId" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="pharmacy" Type="varchar" MaxLength="1000" />
+    <Property Name="pharmacyid" Type="bigint" />
   </EntityType>
   <EntityType Name="PatientAllergies">
     <Key>
@@ -447,6 +448,7 @@
     <Property Name="mb" Type="varchar" MaxLength="50" />
     <Property Name="md" Type="datetime" />
     <Property Name="active" Type="bit" />
+    <Property Name="reportedDate" Type="datetime" />
   </EntityType>
   <EntityType Name="PatientSystems">
     <Key>
@@ -527,13 +529,14 @@
       <PropertyRef Name="surgeryID" />
     </Key>
     <Property Name="surgeryID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="bodyPartID" Type="bigint" />
+    <Property Name="bodyPart" Type="varchar" MaxLength="100" />
     <Property Name="active" Type="bit" />
     <Property Name="patientID" Type="bigint" />
     <Property Name="cb" Type="varchar" MaxLength="50" />
     <Property Name="cd" Type="datetime" />
     <Property Name="mb" Type="varchar" MaxLength="50" />
     <Property Name="md" Type="datetime" />
+    <Property Name="reportedDate" Type="datetime" />
   </EntityType>
   <EntityType Name="sysdiagrams">
     <Key>
@@ -983,6 +986,13 @@
     <Parameter Name="allergyName" Type="varchar" Mode="In" />
     <Parameter Name="CB" Type="varchar" Mode="In" />
   </Function>
+  <Function Name="SP_AddAppointment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="doctorID" Type="bigint" Mode="In" />
+    <Parameter Name="patientID" Type="bigint" Mode="In" />
+    <Parameter Name="appDate" Type="date" Mode="In" />
+    <Parameter Name="appTime" Type="time" Mode="In" />
+    <Parameter Name="cb" Type="varchar" Mode="In" />
+  </Function>
   <Function Name="SP_AddCity" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="cityName" Type="varchar" Mode="In" />
     <Parameter Name="CB" Type="varchar" Mode="In" />
@@ -1041,9 +1051,24 @@
     <Parameter Name="systemName" Type="varchar" Mode="In" />
     <Parameter Name="CB" Type="varchar" Mode="In" />
   </Function>
+  <Function Name="SP_AddUSerFiles" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="documentType" Type="varchar" Mode="In" />
+    <Parameter Name="patientID" Type="bigint" Mode="In" />
+    <Parameter Name="doctorID" Type="bigint" Mode="In" />
+    <Parameter Name="cb" Type="varchar" Mode="In" />
+    <Parameter Name="FileName" Type="varchar" Mode="In" />
+    <Parameter Name="fileContent" Type="varbinary(max)" Mode="In" />
+    <Parameter Name="fileurl" Type="varchar" Mode="In" />
+  </Function>
   <Function Name="SP_AddZipCode" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="zipName" Type="varchar" Mode="In" />
     <Parameter Name="CB" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
   </Function>
   <Function Name="SP_AppointmentReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="datefrom" Type="datetime" Mode="In" />
@@ -1067,6 +1092,12 @@
   <Function Name="SP_ConsultationReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="datefrom" Type="datetime" Mode="In" />
     <Parameter Name="dateto" Type="datetime" Mode="In" />
+  </Function>
+  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
   </Function>
   <Function Name="sp_DeleteAdmin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="adminID" Type="bigint" Mode="In" />
@@ -1151,6 +1182,22 @@
   <Function Name="SP_DoctorReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="datefrom" Type="datetime" Mode="In" />
     <Parameter Name="dateto" Type="datetime" Mode="In" />
+  </Function>
+  <Function Name="SP_GetPatientAllergies" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="patientID" Type="bigint" Mode="In" />
+  </Function>
+  <Function Name="SP_GetPatientConditions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="patientID" Type="bigint" Mode="In" />
+  </Function>
+  <Function Name="SP_GetPatientMedication" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="patientID" Type="bigint" Mode="In" />
+  </Function>
+  <Function Name="SP_GetPatientSurgeries" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="patientID" Type="bigint" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
   </Function>
   <Function Name="SP_PatientReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="datefrom" Type="datetime" Mode="In" />
@@ -1282,7 +1329,6 @@
     <Parameter Name="MB" Type="varchar" Mode="In" />
     <Parameter Name="MD" Type="datetime" Mode="In" />
   </Function>
-  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <EntityContainer Name="SwiftKareDBModelStoreContainer">
     <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="AdminUsers" EntityType="Self.AdminUsers" Schema="dbo" store:Type="Tables" />

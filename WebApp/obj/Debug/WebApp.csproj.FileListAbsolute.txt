@@ -229,9 +229,6 @@ F:\SwiftKareAppProject\WebApp\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 F:\SwiftKareAppProject\WebApp\obj\Debug\WebApp.csprojResolveAssemblyReference.cache
 F:\SwiftKareAppProject\WebApp\obj\Debug\WebApp.dll
 F:\SwiftKareAppProject\WebApp\obj\Debug\WebApp.pdb
-F:\GitHub\SwiftKare\WebApp\obj\Debug\WebApp.csprojResolveAssemblyReference.cache
-F:\GitHub\SwiftKare\WebApp\obj\Debug\WebApp.dll
-F:\GitHub\SwiftKare\WebApp\obj\Debug\WebApp.pdb
 F:\GitHub\SwiftKare\WebApp\bin\WebApp.dll.config
 F:\GitHub\SwiftKare\WebApp\bin\WebApp.dll
 F:\GitHub\SwiftKare\WebApp\bin\WebApp.pdb
@@ -288,3 +285,8 @@ F:\GitHub\SwiftKare\WebApp\bin\Microsoft.Owin.Security.OAuth.xml
 F:\GitHub\SwiftKare\WebApp\bin\Microsoft.Owin.Security.Google.xml
 F:\GitHub\SwiftKare\WebApp\bin\Microsoft.Owin.Security.Twitter.xml
 F:\GitHub\SwiftKare\WebApp\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
+F:\GitHub\SwiftKare\WebApp\obj\Debug\WebApp.csprojResolveAssemblyReference.cache
+F:\GitHub\SwiftKare\WebApp\obj\Debug\WebApp.dll
+F:\GitHub\SwiftKare\WebApp\obj\Debug\WebApp.pdb
+F:\GitHub\SwiftKare\WebApp\bin\System.Web.Http.dll
+F:\GitHub\SwiftKare\WebApp\bin\System.Net.Http.Formatting.dll

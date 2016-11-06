@@ -38,5 +38,7 @@ namespace DataAccess
         public Nullable<System.DateTime> md { get; set; }
         public Nullable<bool> active { get; set; }
         public string userId { get; set; }
+        public string pharmacy { get; set; }
+        public Nullable<long> pharmacyid { get; set; }
     }
 }

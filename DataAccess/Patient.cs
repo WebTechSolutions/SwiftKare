@@ -25,8 +25,8 @@ namespace DataAccess
             this.LifeStyles = new HashSet<LifeStyle>();
             this.Medications = new HashSet<Medication>();
             this.PatientAllergies = new HashSet<PatientAllergy>();
-            this.Surgeries = new HashSet<Surgery>();
             this.UserFiles = new HashSet<UserFile>();
+            this.Surgeries = new HashSet<Surgery>();
         }
     
         public long patientID { get; set; }
@@ -54,6 +54,8 @@ namespace DataAccess
         public Nullable<System.DateTime> md { get; set; }
         public Nullable<bool> active { get; set; }
         public string userId { get; set; }
+        public string pharmacy { get; set; }
+        public Nullable<long> pharmacyid { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }
@@ -72,8 +74,8 @@ namespace DataAccess
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PatientAllergy> PatientAllergies { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Surgery> Surgeries { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserFile> UserFiles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Surgery> Surgeries { get; set; }
     }
 }

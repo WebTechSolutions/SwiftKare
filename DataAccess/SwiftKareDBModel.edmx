@@ -86,7 +86,7 @@
           <Property Name="active" Type="bit" />
           <Property Name="appTypeAV" Type="varchar" MaxLength="50" />
           <Property Name="chiefComplaints" Type="varchar" MaxLength="500" />
-          <Property Name="OtherComplaints" Type="varchar" MaxLength="500" />
+          <Property Name="rov" Type="varchar" MaxLength="500" />
           <Property Name="consultationType" Type="varchar" MaxLength="50" />
           <Property Name="consultationStatus" Type="varchar" MaxLength="10" />
         </EntityType>
@@ -169,14 +169,12 @@
           <Property Name="conditionName" Type="varchar" MaxLength="50" />
           <Property Name="Source" Type="varchar" MaxLength="50" />
           <Property Name="patientID" Type="bigint" />
-          <Property Name="ft" Type="int" />
-          <Property Name="inch" Type="int" />
-          <Property Name="weight" Type="int" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
+          <Property Name="reportedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="Consultation">
           <Key>
@@ -366,6 +364,7 @@
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
+          <Property Name="reportedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="Medicine">
           <Key>
@@ -435,6 +434,8 @@
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
           <Property Name="userId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="pharmacy" Type="varchar" MaxLength="1000" />
+          <Property Name="pharmacyid" Type="bigint" />
         </EntityType>
         <EntityType Name="PatientAllergies">
           <Key>
@@ -452,6 +453,7 @@
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
+          <Property Name="reportedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="PatientSystems">
           <Key>
@@ -532,13 +534,14 @@
             <PropertyRef Name="surgeryID" />
           </Key>
           <Property Name="surgeryID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="bodyPartID" Type="bigint" />
+          <Property Name="bodyPart" Type="varchar" MaxLength="100" />
           <Property Name="active" Type="bit" />
           <Property Name="patientID" Type="bigint" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
+          <Property Name="reportedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -988,6 +991,13 @@
           <Parameter Name="allergyName" Type="varchar" Mode="In" />
           <Parameter Name="CB" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="SP_AddAppointment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="doctorID" Type="bigint" Mode="In" />
+          <Parameter Name="patientID" Type="bigint" Mode="In" />
+          <Parameter Name="appDate" Type="date" Mode="In" />
+          <Parameter Name="appTime" Type="time" Mode="In" />
+          <Parameter Name="cb" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="SP_AddCity" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="cityName" Type="varchar" Mode="In" />
           <Parameter Name="CB" Type="varchar" Mode="In" />
@@ -1046,9 +1056,24 @@
           <Parameter Name="systemName" Type="varchar" Mode="In" />
           <Parameter Name="CB" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="SP_AddUSerFiles" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="documentType" Type="varchar" Mode="In" />
+          <Parameter Name="patientID" Type="bigint" Mode="In" />
+          <Parameter Name="doctorID" Type="bigint" Mode="In" />
+          <Parameter Name="cb" Type="varchar" Mode="In" />
+          <Parameter Name="FileName" Type="varchar" Mode="In" />
+          <Parameter Name="fileContent" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="fileurl" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="SP_AddZipCode" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="zipName" Type="varchar" Mode="In" />
           <Parameter Name="CB" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
         </Function>
         <Function Name="SP_AppointmentReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="datefrom" Type="datetime" Mode="In" />
@@ -1072,6 +1097,12 @@
         <Function Name="SP_ConsultationReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="datefrom" Type="datetime" Mode="In" />
           <Parameter Name="dateto" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
         </Function>
         <Function Name="sp_DeleteAdmin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="adminID" Type="bigint" Mode="In" />
@@ -1156,6 +1187,22 @@
         <Function Name="SP_DoctorReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="datefrom" Type="datetime" Mode="In" />
           <Parameter Name="dateto" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="SP_GetPatientAllergies" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="patientID" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="SP_GetPatientConditions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="patientID" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="SP_GetPatientMedication" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="patientID" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="SP_GetPatientSurgeries" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="patientID" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
         </Function>
         <Function Name="SP_PatientReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="datefrom" Type="datetime" Mode="In" />
@@ -1287,7 +1334,6 @@
           <Parameter Name="MB" Type="varchar" Mode="In" />
           <Parameter Name="MD" Type="datetime" Mode="In" />
         </Function>
-        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="SwiftKareDBModelStoreContainer">
           <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AdminUsers" EntityType="Self.AdminUsers" Schema="dbo" store:Type="Tables" />
@@ -1542,7 +1588,7 @@
           <Property Name="active" Type="Boolean" />
           <Property Name="appTypeAV" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="chiefComplaints" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="OtherComplaints" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="rov" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="consultationType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="consultationStatus" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="AppAttachments" Relationship="Self.FK_AppAttachment_Appointments" FromRole="Appointments" ToRole="AppAttachment" />
@@ -1601,11 +1647,11 @@
           <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
           <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
           <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
-          <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="LastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="City">
           <Key>
@@ -1627,14 +1673,12 @@
           <Property Name="conditionName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Source" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="patientID" Type="Int64" />
-          <Property Name="ft" Type="Int32" />
-          <Property Name="inch" Type="Int32" />
-          <Property Name="weight" Type="Int32" />
           <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="cd" Type="DateTime" Precision="3" />
           <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
+          <Property Name="reportedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Patient" Relationship="Self.FK_Conditions_Patient" FromRole="Conditions" ToRole="Patient" />
         </EntityType>
         <EntityType Name="Consultation">
@@ -1751,12 +1795,12 @@
           <Property Name="doctorSpecialityID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="specialityName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="doctorID" Type="Int64" />
-          <NavigationProperty Name="Doctor" Relationship="Self.FK_DoctorSpeciality_Doctor" FromRole="DoctorSpeciality" ToRole="Doctor" />
           <Property Name="CB" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="MB" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="CD" Type="DateTime" Precision="3" />
           <Property Name="MD" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
+          <NavigationProperty Name="Doctor" Relationship="Self.FK_DoctorSpeciality_Doctor" FromRole="DoctorSpeciality" ToRole="Doctor" />
         </EntityType>
         <EntityType Name="DoctorTiming">
           <Key>
@@ -1847,6 +1891,7 @@
           <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
+          <Property Name="reportedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Patient" Relationship="Self.FK_Medications_Patient" FromRole="Medications" ToRole="Patient" />
         </EntityType>
         <EntityType Name="Medicine">
@@ -1873,6 +1918,21 @@
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
           <NavigationProperty Name="RoleModules" Relationship="Self.FK_RoleModules_Modules" FromRole="Modules" ToRole="RoleModules" />
+        </EntityType>
+        <EntityType Name="News">
+          <Key>
+            <PropertyRef Name="newsID" />
+          </Key>
+          <Property Name="newsID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="newsTitle" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="newsDetail" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="newsThumbnail" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="newsImage" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="cb" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
         </EntityType>
         <EntityType Name="Patient">
           <Key>
@@ -1903,6 +1963,8 @@
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
           <Property Name="userId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="pharmacy" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="pharmacyid" Type="Int64" />
           <NavigationProperty Name="Appointments" Relationship="Self.FK_Appointments_Patient" FromRole="Patient" ToRole="Appointments" />
           <NavigationProperty Name="Conditions" Relationship="Self.FK_Conditions_Patient" FromRole="Patient" ToRole="Conditions" />
           <NavigationProperty Name="Consultations" Relationship="Self.FK_Consultation_Patient" FromRole="Patient" ToRole="Consultation" />
@@ -1911,8 +1973,8 @@
           <NavigationProperty Name="LifeStyles" Relationship="Self.FK_LifeStyle_Patient" FromRole="Patient" ToRole="LifeStyle" />
           <NavigationProperty Name="Medications" Relationship="Self.FK_Medications_Patient" FromRole="Patient" ToRole="Medications" />
           <NavigationProperty Name="PatientAllergies" Relationship="Self.FK_Allergies_Patient" FromRole="Patient" ToRole="PatientAllergies" />
-          <NavigationProperty Name="Surgeries" Relationship="Self.FK_Surgeries_Patient" FromRole="Patient" ToRole="Surgeries" />
           <NavigationProperty Name="UserFiles" Relationship="Self.FK_UserFiles_Patient" FromRole="Patient" ToRole="UserFiles" />
+          <NavigationProperty Name="Surgeries" Relationship="SwiftKareDBModel.FK_Surgeries_Patient" FromRole="Patient" ToRole="Surgeries" />
         </EntityType>
         <EntityType Name="PatientAllergy">
           <Key>
@@ -1930,6 +1992,7 @@
           <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
+          <Property Name="reportedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Patient" Relationship="Self.FK_Allergies_Patient" FromRole="PatientAllergies" ToRole="Patient" />
         </EntityType>
         <EntityType Name="PatientSystem">
@@ -2012,20 +2075,6 @@
           <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
-        </EntityType>
-        <EntityType Name="Surgery">
-          <Key>
-            <PropertyRef Name="surgeryID" />
-          </Key>
-          <Property Name="surgeryID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="bodyPartID" Type="Int64" />
-          <Property Name="active" Type="Boolean" />
-          <Property Name="patientID" Type="Int64" />
-          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cd" Type="DateTime" Precision="3" />
-          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="md" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Patient" Relationship="Self.FK_Surgeries_Patient" FromRole="Surgeries" ToRole="Patient" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -2387,18 +2436,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Surgeries_Patient">
-          <End Role="Patient" Type="Self.Patient" Multiplicity="0..1" />
-          <End Role="Surgeries" Type="Self.Surgery" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="patientID" />
-            </Principal>
-            <Dependent Role="Surgeries">
-              <PropertyRef Name="patientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_UserFiles_Patient">
           <End Role="Patient" Type="Self.Patient" Multiplicity="0..1" />
           <End Role="UserFiles" Type="Self.UserFile" Multiplicity="*" />
@@ -2466,6 +2503,7 @@
           <EntitySet Name="Medications" EntityType="Self.Medication" />
           <EntitySet Name="Medicines" EntityType="Self.Medicine" />
           <EntitySet Name="Modules" EntityType="Self.Module" />
+          <EntitySet Name="News" EntityType="Self.News" />
           <EntitySet Name="Patients" EntityType="Self.Patient" />
           <EntitySet Name="PatientAllergies" EntityType="Self.PatientAllergy" />
           <EntitySet Name="PatientSystems" EntityType="Self.PatientSystem" />
@@ -2474,7 +2512,6 @@
           <EntitySet Name="Roles" EntityType="Self.Role" />
           <EntitySet Name="Speciallities" EntityType="Self.Speciallity" />
           <EntitySet Name="States" EntityType="Self.State" />
-          <EntitySet Name="Surgeries" EntityType="Self.Surgery" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <EntitySet Name="SystemItemsses" EntityType="Self.SystemItemss" />
           <EntitySet Name="UserFiles" EntityType="Self.UserFile" />
@@ -2579,10 +2616,6 @@
             <End Role="Patient" EntitySet="Patients" />
             <End Role="PatientAllergies" EntitySet="PatientAllergies" />
           </AssociationSet>
-          <AssociationSet Name="FK_Surgeries_Patient" Association="Self.FK_Surgeries_Patient">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="Surgeries" EntitySet="Surgeries" />
-          </AssociationSet>
           <AssociationSet Name="FK_UserFiles_Patient" Association="Self.FK_UserFiles_Patient">
             <End Role="Patient" EntitySet="Patients" />
             <End Role="UserFiles" EntitySet="UserFiles" />
@@ -2599,7 +2632,13 @@
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
-          <EntitySet Name="News" EntityType="SwiftKareDBModel.News" />
+          <FunctionImport Name="SP_AddAdmin">
+            <Parameter Name="lastName" Mode="In" Type="String" />
+            <Parameter Name="FirstName" Mode="In" Type="String" />
+            <Parameter Name="email" Mode="In" Type="String" />
+            <Parameter Name="UserId" Mode="In" Type="String" />
+            <Parameter Name="CB" Mode="In" Type="String" />
+          </FunctionImport>
           <FunctionImport Name="SP_AddAlerts">
             <Parameter Name="alertText" Mode="In" Type="String" />
             <Parameter Name="alertFor" Mode="In" Type="String" />
@@ -2608,6 +2647,13 @@
           <FunctionImport Name="SP_AddAllergy">
             <Parameter Name="allergyName" Mode="In" Type="String" />
             <Parameter Name="CB" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_AddAppointment">
+            <Parameter Name="doctorID" Mode="In" Type="Int64" />
+            <Parameter Name="patientID" Mode="In" Type="Int64" />
+            <Parameter Name="appDate" Mode="In" Type="DateTime" />
+            <Parameter Name="appTime" Mode="In" Type="Time" />
+            <Parameter Name="cb" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_AddCity">
             <Parameter Name="cityName" Mode="In" Type="String" />
@@ -2639,6 +2685,13 @@
             <Parameter Name="newsImage" Mode="In" Type="Binary" />
             <Parameter Name="CB" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="SP_AddPatient">
+            <Parameter Name="FirstName" Mode="In" Type="String" />
+            <Parameter Name="LastName" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="userId" Mode="In" Type="String" />
+            <Parameter Name="CB" Mode="In" Type="String" />
+          </FunctionImport>
           <FunctionImport Name="SP_AddRoles">
             <Parameter Name="roleName" Mode="In" Type="String" />
             <Parameter Name="CB" Mode="In" Type="String" />
@@ -2660,9 +2713,24 @@
             <Parameter Name="systemName" Mode="In" Type="String" />
             <Parameter Name="CB" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="SP_AddUSerFiles">
+            <Parameter Name="documentType" Mode="In" Type="String" />
+            <Parameter Name="patientID" Mode="In" Type="Int64" />
+            <Parameter Name="doctorID" Mode="In" Type="Int64" />
+            <Parameter Name="cb" Mode="In" Type="String" />
+            <Parameter Name="FileName" Mode="In" Type="String" />
+            <Parameter Name="fileContent" Mode="In" Type="Binary" />
+            <Parameter Name="fileurl" Mode="In" Type="String" />
+          </FunctionImport>
           <FunctionImport Name="SP_AddZipCode">
             <Parameter Name="zipName" Mode="In" Type="String" />
             <Parameter Name="CB" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
           </FunctionImport>
           <FunctionImport Name="SP_AppointmentReport" ReturnType="Collection(SwiftKareDBModel.SP_AppointmentReport_Result)">
             <Parameter Name="datefrom" Mode="In" Type="DateTime" />
@@ -2682,6 +2750,16 @@
           <FunctionImport Name="SP_CheckForDuplicatePatient" ReturnType="Collection(SwiftKareDBModel.SP_CheckForDuplicatePatient_Result)">
             <Parameter Name="firstname" Mode="In" Type="String" />
             <Parameter Name="lastname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_ConsultationReport" ReturnType="Collection(SwiftKareDBModel.SP_ConsultationReport_Result)">
+            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateto" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
           </FunctionImport>
           <FunctionImport Name="sp_DeleteAdmin">
             <Parameter Name="adminID" Mode="In" Type="Int64" />
@@ -2763,6 +2841,18 @@
             <Parameter Name="MB" Mode="In" Type="String" />
             <Parameter Name="MD" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <FunctionImport Name="SP_DoctorReport" ReturnType="Collection(SwiftKareDBModel.SP_DoctorReport_Result)">
+            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateto" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(SwiftKareDBModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SP_PatientReport" ReturnType="Collection(SwiftKareDBModel.SP_PatientReport_Result)">
+            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateto" Mode="In" Type="DateTime" />
+          </FunctionImport>
           <FunctionImport Name="sp_ResetDoctorPassword">
             <Parameter Name="ID" Mode="In" Type="Int64" />
             <Parameter Name="Password" Mode="In" Type="String" />
@@ -2775,24 +2865,25 @@
             <Parameter Name="MB" Mode="In" Type="String" />
             <Parameter Name="MD" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <FunctionImport Name="SP_SelectAdmin" ReturnType="Collection(SwiftKareDBModel.SP_SelectAdmin_Result)" />
           <FunctionImport Name="SP_SelectAlerts" ReturnType="Collection(SwiftKareDBModel.SP_SelectAlerts_Result)" />
-          <FunctionImport Name="SP_SelectAllergy" EntitySet="Allergies" ReturnType="Collection(SwiftKareDBModel.Allergy)" />
-          <FunctionImport Name="SP_SelectCity" EntitySet="Cities" ReturnType="Collection(SwiftKareDBModel.City)" />
+          <FunctionImport Name="SP_SelectAllergy" ReturnType="Collection(SwiftKareDBModel.SP_SelectAllergy_Result)" />
+          <FunctionImport Name="SP_SelectCity" ReturnType="Collection(SwiftKareDBModel.SP_SelectCity_Result)" />
           <FunctionImport Name="SP_SelectConsultation" ReturnType="Collection(SwiftKareDBModel.SP_SelectConsultation_Result)" />
           <FunctionImport Name="SP_SelectDoctor" EntitySet="Doctors" ReturnType="Collection(SwiftKareDBModel.Doctor)" />
-          <FunctionImport Name="SP_SelectDoctorsForApproval" EntitySet="Doctors" ReturnType="Collection(SwiftKareDBModel.Doctor)" />
-          <FunctionImport Name="SP_SelectDocType" EntitySet="DocumentTypes" ReturnType="Collection(SwiftKareDBModel.DocumentType)" />
-          <FunctionImport Name="SP_SelectLanguages" EntitySet="Languages" ReturnType="Collection(SwiftKareDBModel.Language)" />
-          <FunctionImport Name="SP_SelectMedicine" EntitySet="Medicines" ReturnType="Collection(SwiftKareDBModel.Medicine)" />
-          <FunctionImport Name="SP_SelectNewss" EntitySet="News" ReturnType="Collection(SwiftKareDBModel.News)" />
-          <FunctionImport Name="SP_SelectPatient" EntitySet="Patients" ReturnType="Collection(SwiftKareDBModel.Patient)" />
+          <FunctionImport Name="SP_SelectDoctorsForApproval" ReturnType="Collection(SwiftKareDBModel.SP_SelectDoctorsForApproval_Result)" />
+          <FunctionImport Name="SP_SelectDocType" ReturnType="Collection(SwiftKareDBModel.SP_SelectDocType_Result)" />
+          <FunctionImport Name="SP_SelectLanguages" ReturnType="Collection(SwiftKareDBModel.SP_SelectLanguages_Result)" />
+          <FunctionImport Name="SP_SelectMedicine" ReturnType="Collection(SwiftKareDBModel.SP_SelectMedicine_Result)" />
+          <FunctionImport Name="SP_SelectNewss" ReturnType="Collection(SwiftKareDBModel.SP_SelectNewss_Result)" />
+          <FunctionImport Name="SP_SelectPatient" ReturnType="Collection(SwiftKareDBModel.SP_SelectPatient_Result)" />
           <FunctionImport Name="SP_SelectRole" ReturnType="Collection(SwiftKareDBModel.SP_SelectRole_Result)" />
-          <FunctionImport Name="SP_SelectSpeciality" EntitySet="Speciallities" ReturnType="Collection(SwiftKareDBModel.Speciallity)" />
-          <FunctionImport Name="SP_SelectStates" EntitySet="States" ReturnType="Collection(SwiftKareDBModel.State)" />
+          <FunctionImport Name="SP_SelectSpeciality" ReturnType="Collection(SwiftKareDBModel.SP_SelectSpeciality_Result)" />
+          <FunctionImport Name="SP_SelectStates" ReturnType="Collection(SwiftKareDBModel.SP_SelectStates_Result)" />
           <FunctionImport Name="SP_SelectSystemItems" ReturnType="Collection(SwiftKareDBModel.SP_SelectSystemItems_Result)" />
-          <FunctionImport Name="SP_SelectSystems" EntitySet="PatientSystems" ReturnType="Collection(SwiftKareDBModel.PatientSystem)" />
+          <FunctionImport Name="SP_SelectSystems" />
           <FunctionImport Name="SP_selectTransactionHistory" ReturnType="Collection(SwiftKareDBModel.SP_selectTransactionHistory_Result)" />
-          <FunctionImport Name="SP_SelectZipCode" EntitySet="Zips" ReturnType="Collection(SwiftKareDBModel.Zip)" />
+          <FunctionImport Name="SP_SelectZipCode" ReturnType="Collection(SwiftKareDBModel.SP_SelectZipCode_Result)" />
           <FunctionImport Name="sp_UpdateAlerts">
             <Parameter Name="alertID" Mode="In" Type="Int64" />
             <Parameter Name="alertText" Mode="In" Type="String" />
@@ -2888,57 +2979,24 @@
             <Parameter Name="MB" Mode="In" Type="String" />
             <Parameter Name="MD" Mode="In" Type="DateTime" />
           </FunctionImport>
-          <FunctionImport Name="sp_upgraddiagrams" />
-          <FunctionImport Name="SP_SelectAdmin" ReturnType="Collection(SwiftKareDBModel.SP_SelectAdmin_Result)" />
-          <FunctionImport Name="SP_ConsultationReport" ReturnType="Collection(SwiftKareDBModel.SP_ConsultationReport_Result)">
-            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
-            <Parameter Name="dateto" Mode="In" Type="DateTime" />
+          <FunctionImport Name="SP_GetPatientMedication" ReturnType="Collection(SwiftKareDBModel.SP_GetPatientMedication_Result)" >
+          <Parameter Name="patientID" Mode="In" Type="Int64" />
           </FunctionImport>
-          <FunctionImport Name="SP_DoctorReport" ReturnType="Collection(SwiftKareDBModel.SP_DoctorReport_Result)">
-            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
-            <Parameter Name="dateto" Mode="In" Type="DateTime" />
+          <FunctionImport Name="SP_GetPatientAllergies" ReturnType="Collection(SwiftKareDBModel.SP_GetPatientAllergies_Result)">
+          <Parameter Name="patientID" Mode="In" Type="Int64" />
           </FunctionImport>
-          <FunctionImport Name="SP_PatientReport" ReturnType="Collection(SwiftKareDBModel.SP_PatientReport_Result)">
-            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
-            <Parameter Name="dateto" Mode="In" Type="DateTime" />
+          <FunctionImport Name="SP_GetPatientConditions" ReturnType="Collection(SwiftKareDBModel.SP_GetPatientConditions_Result)">
+          <Parameter Name="patientID" Mode="In" Type="Int64" />
           </FunctionImport>
-          <FunctionImport Name="SP_AddAdmin">
-            <Parameter Name="lastName" Mode="In" Type="String" />
-            <Parameter Name="FirstName" Mode="In" Type="String" />
-            <Parameter Name="email" Mode="In" Type="String" />
-            <Parameter Name="UserId" Mode="In" Type="String" />
-            <Parameter Name="CB" Mode="In" Type="String" />
+          <FunctionImport Name="SP_GetPatientSurgeries" ReturnType="Collection(SwiftKareDBModel.SP_GetPatientSurgeries_Result)">
+          <Parameter Name="patientID" Mode="In" Type="Int64" />
           </FunctionImport>
-          <FunctionImport Name="SP_AddAdmin1">
-            <Parameter Name="lastName" Mode="In" Type="String" />
-            <Parameter Name="FirstName" Mode="In" Type="String" />
-            <Parameter Name="email" Mode="In" Type="String" />
-            <Parameter Name="UserId" Mode="In" Type="String" />
-            <Parameter Name="CB" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="SP_AddPatient">
-            <Parameter Name="FirstName" Mode="In" Type="String" />
-            <Parameter Name="LastName" Mode="In" Type="String" />
-            <Parameter Name="Email" Mode="In" Type="String" />
-            <Parameter Name="userId" Mode="In" Type="String" />
-            <Parameter Name="CB" Mode="In" Type="String" />
-          </FunctionImport>
+          <EntitySet Name="Surgeries" EntityType="SwiftKareDBModel.Surgery" />
+          <AssociationSet Name="FK_Surgeries_Patient" Association="SwiftKareDBModel.FK_Surgeries_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="Surgeries" EntitySet="Surgeries" />
+          </AssociationSet>
         </EntityContainer>
-        <EntityType Name="News">
-          <Key>
-            <PropertyRef Name="newsID" />
-          </Key>
-          <Property Name="newsID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="newsTitle" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="newsDetail" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="newsThumbnail" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="newsImage" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="cb" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="cd" Type="DateTime" Precision="3" />
-          <Property Name="mb" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="md" Type="DateTime" Precision="3" />
-          <Property Name="active" Type="Boolean" />
-        </EntityType>
         <ComplexType Name="SP_AppointmentReport_Result">
           <Property Type="Int64" Name="appID" Nullable="false" />
           <Property Type="String" Name="DName" Nullable="true" MaxLength="201" />
@@ -2951,6 +3009,48 @@
         <ComplexType Name="SP_CheckForDuplicatePatient_Result">
           <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="lastName" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="SP_ConsultationReport_Result">
+          <Property Type="String" Name="DName" Nullable="true" MaxLength="201" />
+          <Property Type="String" Name="PName" Nullable="true" MaxLength="201" />
+          <Property Type="String" Name="conDate" Nullable="true" MaxLength="8" />
+          <Property Type="Time" Name="conTime" Nullable="true" />
+          <Property Type="String" Name="duration" Nullable="false" MaxLength="7" />
+          <Property Type="String" Name="consultationStatus" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="cd" Nullable="true" MaxLength="8" />
+        </ComplexType>
+        <ComplexType Name="SP_DoctorReport_Result">
+          <Property Type="Int64" Name="doctorID" Nullable="false" />
+          <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="lastName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="email" Nullable="true" MaxLength="100" />
+          <Property Type="DateTime" Name="cd" Nullable="true" Precision="23" />
+          <Property Type="String" Name="specialityName" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="SP_PatientReport_Result">
+          <Property Type="Int64" Name="patientID" Nullable="false" />
+          <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="lastName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="email" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="gender" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="age" Nullable="true" />
+          <Property Type="DateTime" Name="cd" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="SP_SelectAdmin_Result">
+          <Property Type="String" Name="Id" Nullable="false" MaxLength="128" />
+          <Property Type="String" Name="Address" Nullable="true" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="256" />
+          <Property Type="String" Name="FirstName" Nullable="true" />
+          <Property Type="String" Name="LastName" Nullable="true" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="256" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="256" />
         </ComplexType>
         <ComplexType Name="SP_SelectAlerts_Result">
           <Property Type="Int64" Name="alertID" Nullable="false" />
@@ -3126,6 +3226,8 @@
           <Property Type="DateTime" Name="md" Nullable="true" Precision="23" />
           <Property Type="Boolean" Name="active" Nullable="true" />
           <Property Type="String" Name="userId" Nullable="false" MaxLength="128" />
+          <Property Type="String" Name="pharmacy" Nullable="true" MaxLength="1000" />
+          <Property Type="Int64" Name="pharmacyid" Nullable="true" />
         </ComplexType>
         <ComplexType Name="SP_SelectRole_Result">
           <Property Type="Int64" Name="roleID" Nullable="false" />
@@ -3180,41 +3282,84 @@
           <Property Type="String" Name="mb" Nullable="true" MaxLength="50" />
           <Property Type="DateTime" Name="md" Nullable="true" Precision="23" />
         </ComplexType>
-        <ComplexType Name="SP_SelectAdmin_Result">
-          <Property Type="String" Name="Id" Nullable="false" MaxLength="128" />
-          <Property Type="String" Name="Address" Nullable="true" />
-          <Property Type="String" Name="Email" Nullable="true" MaxLength="256" />
-          <Property Type="String" Name="FirstName" Nullable="true" />
-          <Property Type="String" Name="LastName" Nullable="true" />
-          <Property Type="String" Name="UserName" Nullable="false" MaxLength="256" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="256" />
-        </ComplexType>
-        <ComplexType Name="SP_ConsultationReport_Result">
-          <Property Type="String" Name="DName" Nullable="true" MaxLength="201" />
-          <Property Type="String" Name="PName" Nullable="true" MaxLength="201" />
-          <Property Type="String" Name="conDate" Nullable="true" MaxLength="8" />
-          <Property Type="Time" Name="conTime" Nullable="true" />
-          <Property Type="String" Name="duration" Nullable="false" MaxLength="7" />
-          <Property Type="String" Name="consultationStatus" Nullable="true" MaxLength="10" />
-          <Property Type="String" Name="cd" Nullable="true" MaxLength="8" />
-        </ComplexType>
-        <ComplexType Name="SP_DoctorReport_Result">
-          <Property Type="Int64" Name="doctorID" Nullable="false" />
-          <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="lastName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="email" Nullable="true" MaxLength="100" />
+        <ComplexType Name="SP_GetPatientMedication_Result">
+          <Property Type="Int64" Name="medicationID" Nullable="false" />
+          <Property Type="String" Name="medicineName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="frequency" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="source" Nullable="true" MaxLength="50" />
+          <Property Type="Int64" Name="patientId" Nullable="true" />
+          <Property Type="String" Name="cb" Nullable="true" MaxLength="50" />
           <Property Type="DateTime" Name="cd" Nullable="true" Precision="23" />
-          <Property Type="String" Name="specialityName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="mb" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="md" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="active" Nullable="true" />
+          <Property Type="DateTime" Name="reportedDate" Nullable="true" Precision="23" />
         </ComplexType>
-        <ComplexType Name="SP_PatientReport_Result">
-          <Property Type="Int64" Name="patientID" Nullable="false" />
-          <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="lastName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="email" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="gender" Nullable="true" MaxLength="10" />
-          <Property Type="Int32" Name="age" Nullable="true" />
+        <ComplexType Name="SP_GetPatientAllergies_Result">
+          <Property Type="Int64" Name="allergiesID" Nullable="false" />
+          <Property Type="String" Name="allergyName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="severity" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="reaction" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="source" Nullable="true" MaxLength="50" />
+          <Property Type="Int64" Name="patientID" Nullable="true" />
+          <Property Type="String" Name="status" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="cb" Nullable="true" MaxLength="50" />
           <Property Type="DateTime" Name="cd" Nullable="true" Precision="23" />
+          <Property Type="String" Name="mb" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="md" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="active" Nullable="true" />
+          <Property Type="DateTime" Name="reportedDate" Nullable="true" Precision="23" />
         </ComplexType>
+        <ComplexType Name="SP_GetPatientConditions_Result">
+          <Property Type="Int64" Name="conditionID" Nullable="false" />
+          <Property Type="String" Name="conditionName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Source" Nullable="true" MaxLength="50" />
+          <Property Type="Int64" Name="patientID" Nullable="true" />
+          <Property Type="String" Name="cb" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="cd" Nullable="true" Precision="23" />
+          <Property Type="String" Name="mb" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="md" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="active" Nullable="true" />
+          <Property Type="DateTime" Name="reportedDate" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="SP_GetPatientSurgeries_Result">
+          <Property Type="Int64" Name="surgeryID" Nullable="false" />
+          <Property Type="String" Name="bodyPart" Nullable="true" MaxLength="100" />
+          <Property Type="Boolean" Name="active" Nullable="true" />
+          <Property Type="Int64" Name="patientID" Nullable="true" />
+          <Property Type="String" Name="cb" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="cd" Nullable="true" Precision="23" />
+          <Property Type="String" Name="mb" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="md" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="reportedDate" Nullable="true" Precision="23" />
+        </ComplexType>
+        <EntityType Name="Surgery">
+          <Key>
+            <PropertyRef Name="surgeryID" />
+          </Key>
+          <Property Name="surgeryID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="bodyPart" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="active" Type="Boolean" />
+          <Property Name="patientID" Type="Int64" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="reportedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_Surgeries_Patient" FromRole="Surgeries" ToRole="Patient" />
+        </EntityType>
+        <Association Name="FK_Surgeries_Patient">
+          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.Surgery" Role="Surgeries" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="patientID" />
+            </Principal>
+            <Dependent Role="Surgeries">
+              <PropertyRef Name="patientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3305,7 +3450,7 @@
                 <ScalarProperty Name="active" ColumnName="active" />
                 <ScalarProperty Name="appTypeAV" ColumnName="appTypeAV" />
                 <ScalarProperty Name="chiefComplaints" ColumnName="chiefComplaints" />
-                <ScalarProperty Name="OtherComplaints" ColumnName="OtherComplaints" />
+                <ScalarProperty Name="rov" ColumnName="rov" />
                 <ScalarProperty Name="consultationType" ColumnName="consultationType" />
                 <ScalarProperty Name="consultationStatus" ColumnName="consultationStatus" />
               </MappingFragment>
@@ -3343,8 +3488,6 @@
           <EntitySetMapping Name="AspNetUsers">
             <EntityTypeMapping TypeName="SwiftKareDBModel.AspNetUser">
               <MappingFragment StoreEntitySet="AspNetUsers">
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="City" ColumnName="City" />
@@ -3361,6 +3504,8 @@
                 <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
                 <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3384,14 +3529,12 @@
                 <ScalarProperty Name="conditionName" ColumnName="conditionName" />
                 <ScalarProperty Name="Source" ColumnName="Source" />
                 <ScalarProperty Name="patientID" ColumnName="patientID" />
-                <ScalarProperty Name="ft" ColumnName="ft" />
-                <ScalarProperty Name="inch" ColumnName="inch" />
-                <ScalarProperty Name="weight" ColumnName="weight" />
                 <ScalarProperty Name="cb" ColumnName="cb" />
                 <ScalarProperty Name="cd" ColumnName="cd" />
                 <ScalarProperty Name="mb" ColumnName="mb" />
                 <ScalarProperty Name="md" ColumnName="md" />
                 <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="reportedDate" ColumnName="reportedDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3494,14 +3637,14 @@
           <EntitySetMapping Name="DoctorSpecialities">
             <EntityTypeMapping TypeName="SwiftKareDBModel.DoctorSpeciality">
               <MappingFragment StoreEntitySet="DoctorSpeciality">
-                <ScalarProperty Name="active" ColumnName="active" />
-                <ScalarProperty Name="MD" ColumnName="MD" />
-                <ScalarProperty Name="CD" ColumnName="CD" />
-                <ScalarProperty Name="MB" ColumnName="MB" />
-                <ScalarProperty Name="CB" ColumnName="CB" />
                 <ScalarProperty Name="doctorSpecialityID" ColumnName="doctorSpecialityID" />
                 <ScalarProperty Name="specialityName" ColumnName="specialityName" />
                 <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+                <ScalarProperty Name="CB" ColumnName="CB" />
+                <ScalarProperty Name="MB" ColumnName="MB" />
+                <ScalarProperty Name="CD" ColumnName="CD" />
+                <ScalarProperty Name="MD" ColumnName="MD" />
+                <ScalarProperty Name="active" ColumnName="active" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3593,6 +3736,7 @@
                 <ScalarProperty Name="mb" ColumnName="mb" />
                 <ScalarProperty Name="md" ColumnName="md" />
                 <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="reportedDate" ColumnName="reportedDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3614,6 +3758,22 @@
               <MappingFragment StoreEntitySet="Modules">
                 <ScalarProperty Name="moduleID" ColumnName="moduleID" />
                 <ScalarProperty Name="moduleName" ColumnName="moduleName" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="active" ColumnName="active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="News">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.News">
+              <MappingFragment StoreEntitySet="News">
+                <ScalarProperty Name="newsID" ColumnName="newsID" />
+                <ScalarProperty Name="newsTitle" ColumnName="newsTitle" />
+                <ScalarProperty Name="newsDetail" ColumnName="newsDetail" />
+                <ScalarProperty Name="newsThumbnail" ColumnName="newsThumbnail" />
+                <ScalarProperty Name="newsImage" ColumnName="newsImage" />
                 <ScalarProperty Name="cb" ColumnName="cb" />
                 <ScalarProperty Name="cd" ColumnName="cd" />
                 <ScalarProperty Name="mb" ColumnName="mb" />
@@ -3650,6 +3810,8 @@
                 <ScalarProperty Name="md" ColumnName="md" />
                 <ScalarProperty Name="active" ColumnName="active" />
                 <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="pharmacy" ColumnName="pharmacy" />
+                <ScalarProperty Name="pharmacyid" ColumnName="pharmacyid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3668,6 +3830,7 @@
                 <ScalarProperty Name="mb" ColumnName="mb" />
                 <ScalarProperty Name="md" ColumnName="md" />
                 <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="reportedDate" ColumnName="reportedDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3751,20 +3914,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Surgeries">
-            <EntityTypeMapping TypeName="SwiftKareDBModel.Surgery">
-              <MappingFragment StoreEntitySet="Surgeries">
-                <ScalarProperty Name="surgeryID" ColumnName="surgeryID" />
-                <ScalarProperty Name="bodyPartID" ColumnName="bodyPartID" />
-                <ScalarProperty Name="active" ColumnName="active" />
-                <ScalarProperty Name="patientID" ColumnName="patientID" />
-                <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-                <ScalarProperty Name="mb" ColumnName="mb" />
-                <ScalarProperty Name="md" ColumnName="md" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="sysdiagrams">
             <EntityTypeMapping TypeName="SwiftKareDBModel.sysdiagram">
               <MappingFragment StoreEntitySet="sysdiagrams">
@@ -3829,36 +3978,25 @@
               <ScalarProperty Name="Id" ColumnName="UserId" />
             </EndProperty>
           </AssociationSetMapping>
-          <EntitySetMapping Name="News">
-            <EntityTypeMapping TypeName="SwiftKareDBModel.News">
-              <MappingFragment StoreEntitySet="News">
-                <ScalarProperty Name="active" ColumnName="active" />
-                <ScalarProperty Name="md" ColumnName="md" />
-                <ScalarProperty Name="mb" ColumnName="mb" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-                <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="newsImage" ColumnName="newsImage" />
-                <ScalarProperty Name="newsThumbnail" ColumnName="newsThumbnail" />
-                <ScalarProperty Name="newsDetail" ColumnName="newsDetail" />
-                <ScalarProperty Name="newsTitle" ColumnName="newsTitle" />
-                <ScalarProperty Name="newsID" ColumnName="newsID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_AddAdmin" FunctionName="SwiftKareDBModel.Store.SP_AddAdmin" />
           <FunctionImportMapping FunctionImportName="SP_AddAlerts" FunctionName="SwiftKareDBModel.Store.SP_AddAlerts" />
           <FunctionImportMapping FunctionImportName="SP_AddAllergy" FunctionName="SwiftKareDBModel.Store.SP_AddAllergy" />
+          <FunctionImportMapping FunctionImportName="SP_AddAppointment" FunctionName="SwiftKareDBModel.Store.SP_AddAppointment" />
           <FunctionImportMapping FunctionImportName="SP_AddCity" FunctionName="SwiftKareDBModel.Store.SP_AddCity" />
           <FunctionImportMapping FunctionImportName="SP_AddDoctor" FunctionName="SwiftKareDBModel.Store.SP_AddDoctor" />
           <FunctionImportMapping FunctionImportName="SP_AddDocumentType" FunctionName="SwiftKareDBModel.Store.SP_AddDocumentType" />
           <FunctionImportMapping FunctionImportName="SP_AddLanguage" FunctionName="SwiftKareDBModel.Store.SP_AddLanguage" />
           <FunctionImportMapping FunctionImportName="SP_AddMedicine" FunctionName="SwiftKareDBModel.Store.SP_AddMedicine" />
           <FunctionImportMapping FunctionImportName="SP_AddNewss" FunctionName="SwiftKareDBModel.Store.SP_AddNewss" />
+          <FunctionImportMapping FunctionImportName="SP_AddPatient" FunctionName="SwiftKareDBModel.Store.SP_AddPatient" />
           <FunctionImportMapping FunctionImportName="SP_AddRoles" FunctionName="SwiftKareDBModel.Store.SP_AddRoles" />
           <FunctionImportMapping FunctionImportName="SP_AddSpeciality" FunctionName="SwiftKareDBModel.Store.SP_AddSpeciality" />
           <FunctionImportMapping FunctionImportName="SP_AddStates" FunctionName="SwiftKareDBModel.Store.SP_AddStates" />
           <FunctionImportMapping FunctionImportName="SP_AddSystemItem" FunctionName="SwiftKareDBModel.Store.SP_AddSystemItem" />
           <FunctionImportMapping FunctionImportName="SP_AddSystems" FunctionName="SwiftKareDBModel.Store.SP_AddSystems" />
+          <FunctionImportMapping FunctionImportName="SP_AddUSerFiles" FunctionName="SwiftKareDBModel.Store.SP_AddUSerFiles" />
           <FunctionImportMapping FunctionImportName="SP_AddZipCode" FunctionName="SwiftKareDBModel.Store.SP_AddZipCode" />
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="SwiftKareDBModel.Store.sp_alterdiagram" />
           <FunctionImportMapping FunctionImportName="SP_AppointmentReport" FunctionName="SwiftKareDBModel.Store.SP_AppointmentReport">
             <ResultMapping>
               <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_AppointmentReport_Result">
@@ -3882,6 +4020,20 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_ConsultationReport" FunctionName="SwiftKareDBModel.Store.SP_ConsultationReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_ConsultationReport_Result">
+                <ScalarProperty Name="DName" ColumnName="DName" />
+                <ScalarProperty Name="PName" ColumnName="PName" />
+                <ScalarProperty Name="conDate" ColumnName="conDate" />
+                <ScalarProperty Name="conTime" ColumnName="conTime" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="consultationStatus" ColumnName="consultationStatus" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="SwiftKareDBModel.Store.sp_creatediagram" />
           <FunctionImportMapping FunctionImportName="sp_DeleteAdmin" FunctionName="SwiftKareDBModel.Store.sp_DeleteAdmin" />
           <FunctionImportMapping FunctionImportName="sp_DeleteAlerts" FunctionName="SwiftKareDBModel.Store.sp_DeleteAlerts" />
           <FunctionImportMapping FunctionImportName="sp_DeleteAllergy" FunctionName="SwiftKareDBModel.Store.sp_DeleteAllergy" />
@@ -3898,8 +4050,57 @@
           <FunctionImportMapping FunctionImportName="sp_DeleteSystemItem" FunctionName="SwiftKareDBModel.Store.sp_DeleteSystemItem" />
           <FunctionImportMapping FunctionImportName="sp_DeleteSystems" FunctionName="SwiftKareDBModel.Store.sp_DeleteSystems" />
           <FunctionImportMapping FunctionImportName="sp_DeleteZipCode" FunctionName="SwiftKareDBModel.Store.sp_DeleteZipCode" />
+          <FunctionImportMapping FunctionImportName="SP_DoctorReport" FunctionName="SwiftKareDBModel.Store.SP_DoctorReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_DoctorReport_Result">
+                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="specialityName" ColumnName="specialityName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="SwiftKareDBModel.Store.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_PatientReport" FunctionName="SwiftKareDBModel.Store.SP_PatientReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_PatientReport_Result">
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="age" ColumnName="age" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_ResetDoctorPassword" FunctionName="SwiftKareDBModel.Store.sp_ResetDoctorPassword" />
           <FunctionImportMapping FunctionImportName="sp_ResetPatientPassword" FunctionName="SwiftKareDBModel.Store.sp_ResetPatientPassword" />
+          <FunctionImportMapping FunctionImportName="SP_SelectAdmin" FunctionName="SwiftKareDBModel.Store.SP_SelectAdmin">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SelectAdmin_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectAlerts" FunctionName="SwiftKareDBModel.Store.SP_SelectAlerts">
             <ResultMapping>
               <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SelectAlerts_Result">
@@ -3916,8 +4117,30 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectAllergy" FunctionName="SwiftKareDBModel.Store.SP_SelectAllergy">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SelectAllergy_Result">
+                <ScalarProperty Name="allergyID" ColumnName="allergyID" />
+                <ScalarProperty Name="allergyName" ColumnName="allergyName" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+              </ComplexTypeMapping>
+            </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectCity" FunctionName="SwiftKareDBModel.Store.SP_SelectCity">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SelectCity_Result">
+                <ScalarProperty Name="cityID" ColumnName="cityID" />
+                <ScalarProperty Name="cityName" ColumnName="cityName" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+              </ComplexTypeMapping>
+            </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectConsultation" FunctionName="SwiftKareDBModel.Store.SP_SelectConsultation">
             <ResultMapping>
@@ -3938,16 +4161,130 @@
           <FunctionImportMapping FunctionImportName="SP_SelectDoctor" FunctionName="SwiftKareDBModel.Store.SP_SelectDoctor">
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectDoctorsForApproval" FunctionName="SwiftKareDBModel.Store.SP_SelectDoctorsForApproval">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SelectDoctorsForApproval_Result">
+                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="secretQuestion1" ColumnName="secretQuestion1" />
+                <ScalarProperty Name="secretQuestion2" ColumnName="secretQuestion2" />
+                <ScalarProperty Name="secretQuestion3" ColumnName="secretQuestion3" />
+                <ScalarProperty Name="secretAnswer1" ColumnName="secretAnswer1" />
+                <ScalarProperty Name="secretAnswer2" ColumnName="secretAnswer2" />
+                <ScalarProperty Name="secretAnswer3" ColumnName="secretAnswer3" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="address1" ColumnName="address1" />
+                <ScalarProperty Name="address2" ColumnName="address2" />
+                <ScalarProperty Name="homePhone" ColumnName="homePhone" />
+                <ScalarProperty Name="cellPhone" ColumnName="cellPhone" />
+                <ScalarProperty Name="zip" ColumnName="zip" />
+                <ScalarProperty Name="dob" ColumnName="dob" />
+                <ScalarProperty Name="licenseNumber" ColumnName="licenseNumber" />
+                <ScalarProperty Name="npiNumber" ColumnName="npiNumber" />
+                <ScalarProperty Name="additionalInfo" ColumnName="additionalInfo" />
+                <ScalarProperty Name="picture" ColumnName="picture" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="lat" ColumnName="lat" />
+                <ScalarProperty Name="lon" ColumnName="lon" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="publication" ColumnName="publication" />
+                <ScalarProperty Name="aboutMe" ColumnName="aboutMe" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectDocType" FunctionName="SwiftKareDBModel.Store.SP_SelectDocType">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SelectDocType_Result">
+                <ScalarProperty Name="docTypeID" ColumnName="docTypeID" />
+                <ScalarProperty Name="typeName" ColumnName="typeName" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="active" ColumnName="active" />
+              </ComplexTypeMapping>
+            </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectLanguages" FunctionName="SwiftKareDBModel.Store.SP_SelectLanguages">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SelectLanguages_Result">
+                <ScalarProperty Name="languageID" ColumnName="languageID" />
+                <ScalarProperty Name="languageName" ColumnName="languageName" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="active" ColumnName="active" />
+              </ComplexTypeMapping>
+            </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectMedicine" FunctionName="SwiftKareDBModel.Store.SP_SelectMedicine">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SelectMedicine_Result">
+                <ScalarProperty Name="medicineID" ColumnName="medicineID" />
+                <ScalarProperty Name="medicineName" ColumnName="medicineName" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="active" ColumnName="active" />
+              </ComplexTypeMapping>
+            </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectNewss" FunctionName="SwiftKareDBModel.Store.SP_SelectNewss">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SelectNewss_Result">
+                <ScalarProperty Name="newsID" ColumnName="newsID" />
+                <ScalarProperty Name="newsTitle" ColumnName="newsTitle" />
+                <ScalarProperty Name="newsDetail" ColumnName="newsDetail" />
+                <ScalarProperty Name="newsThumbnail" ColumnName="newsThumbnail" />
+                <ScalarProperty Name="newsImage" ColumnName="newsImage" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="active" ColumnName="active" />
+              </ComplexTypeMapping>
+            </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectPatient" FunctionName="SwiftKareDBModel.Store.SP_SelectPatient">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SelectPatient_Result">
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="secretQuestion1" ColumnName="secretQuestion1" />
+                <ScalarProperty Name="secretQuestion2" ColumnName="secretQuestion2" />
+                <ScalarProperty Name="secretQuestion3" ColumnName="secretQuestion3" />
+                <ScalarProperty Name="secretAnswer1" ColumnName="secretAnswer1" />
+                <ScalarProperty Name="secretAnswer2" ColumnName="secretAnswer2" />
+                <ScalarProperty Name="secretAnswer3" ColumnName="secretAnswer3" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="address1" ColumnName="address1" />
+                <ScalarProperty Name="address2" ColumnName="address2" />
+                <ScalarProperty Name="homePhone" ColumnName="homePhone" />
+                <ScalarProperty Name="cellPhone" ColumnName="cellPhone" />
+                <ScalarProperty Name="zip" ColumnName="zip" />
+                <ScalarProperty Name="dob" ColumnName="dob" />
+                <ScalarProperty Name="languages" ColumnName="languages" />
+                <ScalarProperty Name="picture" ColumnName="picture" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="pharmacy" ColumnName="pharmacy" />
+                <ScalarProperty Name="pharmacyid" ColumnName="pharmacyid" />
+              </ComplexTypeMapping>
+            </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectRole" FunctionName="SwiftKareDBModel.Store.SP_SelectRole">
             <ResultMapping>
@@ -3963,8 +4300,30 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectSpeciality" FunctionName="SwiftKareDBModel.Store.SP_SelectSpeciality">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SelectSpeciality_Result">
+                <ScalarProperty Name="speciallityID" ColumnName="speciallityID" />
+                <ScalarProperty Name="specialityName" ColumnName="specialityName" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="active" ColumnName="active" />
+              </ComplexTypeMapping>
+            </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectStates" FunctionName="SwiftKareDBModel.Store.SP_SelectStates">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SelectStates_Result">
+                <ScalarProperty Name="stateID" ColumnName="stateID" />
+                <ScalarProperty Name="stateName" ColumnName="stateName" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="active" ColumnName="active" />
+              </ComplexTypeMapping>
+            </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectSystemItems" FunctionName="SwiftKareDBModel.Store.SP_SelectSystemItems">
             <ResultMapping>
@@ -3993,6 +4352,17 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectZipCode" FunctionName="SwiftKareDBModel.Store.SP_SelectZipCode">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SelectZipCode_Result">
+                <ScalarProperty Name="zipID" ColumnName="zipID" />
+                <ScalarProperty Name="zipName" ColumnName="zipName" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+              </ComplexTypeMapping>
+            </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_UpdateAlerts" FunctionName="SwiftKareDBModel.Store.sp_UpdateAlerts" />
           <FunctionImportMapping FunctionImportName="sp_UpdateAllergy" FunctionName="SwiftKareDBModel.Store.sp_UpdateAllergy" />
@@ -4008,60 +4378,88 @@
           <FunctionImportMapping FunctionImportName="sp_UpdateSystemItem" FunctionName="SwiftKareDBModel.Store.sp_UpdateSystemItem" />
           <FunctionImportMapping FunctionImportName="sp_UpdateSystems" FunctionName="SwiftKareDBModel.Store.sp_UpdateSystems" />
           <FunctionImportMapping FunctionImportName="sp_UpdateZipCode" FunctionName="SwiftKareDBModel.Store.sp_UpdateZipCode" />
-          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="SwiftKareDBModel.Store.sp_upgraddiagrams" />
-          <FunctionImportMapping FunctionImportName="SP_SelectAdmin" FunctionName="SwiftKareDBModel.Store.SP_SelectAdmin">
+          <FunctionImportMapping FunctionImportName="SP_GetPatientMedication" FunctionName="SwiftKareDBModel.Store.SP_GetPatientMedication">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SelectAdmin_Result">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_ConsultationReport" FunctionName="SwiftKareDBModel.Store.SP_ConsultationReport">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_ConsultationReport_Result">
-                <ScalarProperty Name="DName" ColumnName="DName" />
-                <ScalarProperty Name="PName" ColumnName="PName" />
-                <ScalarProperty Name="conDate" ColumnName="conDate" />
-                <ScalarProperty Name="conTime" ColumnName="conTime" />
-                <ScalarProperty Name="duration" ColumnName="duration" />
-                <ScalarProperty Name="consultationStatus" ColumnName="consultationStatus" />
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetPatientMedication_Result">
+                <ScalarProperty Name="medicationID" ColumnName="medicationID" />
+                <ScalarProperty Name="medicineName" ColumnName="medicineName" />
+                <ScalarProperty Name="frequency" ColumnName="frequency" />
+                <ScalarProperty Name="source" ColumnName="source" />
+                <ScalarProperty Name="patientId" ColumnName="patientId" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
                 <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="reportedDate" ColumnName="reportedDate" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_DoctorReport" FunctionName="SwiftKareDBModel.Store.SP_DoctorReport">
+          <FunctionImportMapping FunctionImportName="SP_GetPatientAllergies" FunctionName="SwiftKareDBModel.Store.SP_GetPatientAllergies">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_DoctorReport_Result">
-                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
-                <ScalarProperty Name="firstName" ColumnName="firstName" />
-                <ScalarProperty Name="lastName" ColumnName="lastName" />
-                <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-                <ScalarProperty Name="specialityName" ColumnName="specialityName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_PatientReport" FunctionName="SwiftKareDBModel.Store.SP_PatientReport">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_PatientReport_Result">
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetPatientAllergies_Result">
+                <ScalarProperty Name="allergiesID" ColumnName="allergiesID" />
+                <ScalarProperty Name="allergyName" ColumnName="allergyName" />
+                <ScalarProperty Name="severity" ColumnName="severity" />
+                <ScalarProperty Name="reaction" ColumnName="reaction" />
+                <ScalarProperty Name="source" ColumnName="source" />
                 <ScalarProperty Name="patientID" ColumnName="patientID" />
-                <ScalarProperty Name="firstName" ColumnName="firstName" />
-                <ScalarProperty Name="lastName" ColumnName="lastName" />
-                <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="gender" ColumnName="gender" />
-                <ScalarProperty Name="age" ColumnName="age" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
                 <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="reportedDate" ColumnName="reportedDate" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_AddAdmin1" FunctionName="SwiftKareDBModel.Store.SP_AddAdmin" />
-          <FunctionImportMapping FunctionImportName="SP_AddPatient" FunctionName="SwiftKareDBModel.Store.SP_AddPatient" />
+          <FunctionImportMapping FunctionImportName="SP_GetPatientConditions" FunctionName="SwiftKareDBModel.Store.SP_GetPatientConditions">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetPatientConditions_Result">
+                <ScalarProperty Name="conditionID" ColumnName="conditionID" />
+                <ScalarProperty Name="conditionName" ColumnName="conditionName" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="reportedDate" ColumnName="reportedDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_GetPatientSurgeries" FunctionName="SwiftKareDBModel.Store.SP_GetPatientSurgeries">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetPatientSurgeries_Result">
+                <ScalarProperty Name="surgeryID" ColumnName="surgeryID" />
+                <ScalarProperty Name="bodyPart" ColumnName="bodyPart" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="reportedDate" ColumnName="reportedDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Surgeries">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.Surgery">
+              <MappingFragment StoreEntitySet="Surgeries">
+                <ScalarProperty Name="reportedDate" ColumnName="reportedDate" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="bodyPart" ColumnName="bodyPart" />
+                <ScalarProperty Name="surgeryID" ColumnName="surgeryID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

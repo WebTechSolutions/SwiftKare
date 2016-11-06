@@ -18,14 +18,12 @@ namespace DataAccess
         public string conditionName { get; set; }
         public string Source { get; set; }
         public Nullable<long> patientID { get; set; }
-        public Nullable<int> ft { get; set; }
-        public Nullable<int> inch { get; set; }
-        public Nullable<int> weight { get; set; }
         public string cb { get; set; }
         public Nullable<System.DateTime> cd { get; set; }
         public string mb { get; set; }
         public Nullable<System.DateTime> md { get; set; }
         public Nullable<bool> active { get; set; }
+        public Nullable<System.DateTime> reportedDate { get; set; }
     
         public virtual Patient Patient { get; set; }
     }

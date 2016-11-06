@@ -53,6 +53,7 @@ namespace DataAccess
         public virtual DbSet<Medication> Medications { get; set; }
         public virtual DbSet<Medicine> Medicines { get; set; }
         public virtual DbSet<Module> Modules { get; set; }
+        public virtual DbSet<News> News { get; set; }
         public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<PatientAllergy> PatientAllergies { get; set; }
         public virtual DbSet<PatientSystem> PatientSystems { get; set; }
@@ -61,12 +62,36 @@ namespace DataAccess
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Speciallity> Speciallities { get; set; }
         public virtual DbSet<State> States { get; set; }
-        public virtual DbSet<Surgery> Surgeries { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<SystemItemss> SystemItemsses { get; set; }
         public virtual DbSet<UserFile> UserFiles { get; set; }
         public virtual DbSet<Zip> Zips { get; set; }
-        public virtual DbSet<News> News { get; set; }
+        public virtual DbSet<Surgery> Surgeries { get; set; }
+    
+        public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
+        {
+            var lastNameParameter = lastName != null ?
+                new ObjectParameter("lastName", lastName) :
+                new ObjectParameter("lastName", typeof(string));
+    
+            var firstNameParameter = firstName != null ?
+                new ObjectParameter("FirstName", firstName) :
+                new ObjectParameter("FirstName", typeof(string));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("email", email) :
+                new ObjectParameter("email", typeof(string));
+    
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            var cBParameter = cB != null ?
+                new ObjectParameter("CB", cB) :
+                new ObjectParameter("CB", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddAdmin", lastNameParameter, firstNameParameter, emailParameter, userIdParameter, cBParameter);
+        }
     
         public virtual int SP_AddAlerts(string alertText, string alertFor, string cB)
         {
@@ -96,6 +121,31 @@ namespace DataAccess
                 new ObjectParameter("CB", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddAllergy", allergyNameParameter, cBParameter);
+        }
+    
+        public virtual int SP_AddAppointment(Nullable<long> doctorID, Nullable<long> patientID, Nullable<System.DateTime> appDate, Nullable<System.TimeSpan> appTime, string cb)
+        {
+            var doctorIDParameter = doctorID.HasValue ?
+                new ObjectParameter("doctorID", doctorID) :
+                new ObjectParameter("doctorID", typeof(long));
+    
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
+    
+            var appDateParameter = appDate.HasValue ?
+                new ObjectParameter("appDate", appDate) :
+                new ObjectParameter("appDate", typeof(System.DateTime));
+    
+            var appTimeParameter = appTime.HasValue ?
+                new ObjectParameter("appTime", appTime) :
+                new ObjectParameter("appTime", typeof(System.TimeSpan));
+    
+            var cbParameter = cb != null ?
+                new ObjectParameter("cb", cb) :
+                new ObjectParameter("cb", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddAppointment", doctorIDParameter, patientIDParameter, appDateParameter, appTimeParameter, cbParameter);
         }
     
         public virtual int SP_AddCity(string cityName, string cB)
@@ -200,6 +250,31 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddNewss", newstitleParameter, newsdetailParameter, newsthumbnailParameter, newsImageParameter, cBParameter);
         }
     
+        public virtual int SP_AddPatient(string firstName, string lastName, string email, string userId, string cB)
+        {
+            var firstNameParameter = firstName != null ?
+                new ObjectParameter("FirstName", firstName) :
+                new ObjectParameter("FirstName", typeof(string));
+    
+            var lastNameParameter = lastName != null ?
+                new ObjectParameter("LastName", lastName) :
+                new ObjectParameter("LastName", typeof(string));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("Email", email) :
+                new ObjectParameter("Email", typeof(string));
+    
+            var userIdParameter = userId != null ?
+                new ObjectParameter("userId", userId) :
+                new ObjectParameter("userId", typeof(string));
+    
+            var cBParameter = cB != null ?
+                new ObjectParameter("CB", cB) :
+                new ObjectParameter("CB", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddPatient", firstNameParameter, lastNameParameter, emailParameter, userIdParameter, cBParameter);
+        }
+    
         public virtual int SP_AddRoles(string roleName, string cB)
         {
             var roleNameParameter = roleName != null ?
@@ -269,6 +344,39 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddSystems", systemNameParameter, cBParameter);
         }
     
+        public virtual int SP_AddUSerFiles(string documentType, Nullable<long> patientID, Nullable<long> doctorID, string cb, string fileName, byte[] fileContent, string fileurl)
+        {
+            var documentTypeParameter = documentType != null ?
+                new ObjectParameter("documentType", documentType) :
+                new ObjectParameter("documentType", typeof(string));
+    
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
+    
+            var doctorIDParameter = doctorID.HasValue ?
+                new ObjectParameter("doctorID", doctorID) :
+                new ObjectParameter("doctorID", typeof(long));
+    
+            var cbParameter = cb != null ?
+                new ObjectParameter("cb", cb) :
+                new ObjectParameter("cb", typeof(string));
+    
+            var fileNameParameter = fileName != null ?
+                new ObjectParameter("FileName", fileName) :
+                new ObjectParameter("FileName", typeof(string));
+    
+            var fileContentParameter = fileContent != null ?
+                new ObjectParameter("fileContent", fileContent) :
+                new ObjectParameter("fileContent", typeof(byte[]));
+    
+            var fileurlParameter = fileurl != null ?
+                new ObjectParameter("fileurl", fileurl) :
+                new ObjectParameter("fileurl", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddUSerFiles", documentTypeParameter, patientIDParameter, doctorIDParameter, cbParameter, fileNameParameter, fileContentParameter, fileurlParameter);
+        }
+    
         public virtual int SP_AddZipCode(string zipName, string cB)
         {
             var zipNameParameter = zipName != null ?
@@ -280,6 +388,27 @@ namespace DataAccess
                 new ObjectParameter("CB", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddZipCode", zipNameParameter, cBParameter);
+        }
+    
+        public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            var versionParameter = version.HasValue ?
+                new ObjectParameter("version", version) :
+                new ObjectParameter("version", typeof(int));
+    
+            var definitionParameter = definition != null ?
+                new ObjectParameter("definition", definition) :
+                new ObjectParameter("definition", typeof(byte[]));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_alterdiagram", diagramnameParameter, owner_idParameter, versionParameter, definitionParameter);
         }
     
         public virtual ObjectResult<SP_AppointmentReport_Result> SP_AppointmentReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto, string criteria)
@@ -344,6 +473,40 @@ namespace DataAccess
                 new ObjectParameter("lastname", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_CheckForDuplicatePatient_Result>("SP_CheckForDuplicatePatient", firstnameParameter, lastnameParameter);
+        }
+    
+        public virtual ObjectResult<SP_ConsultationReport_Result> SP_ConsultationReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto)
+        {
+            var datefromParameter = datefrom.HasValue ?
+                new ObjectParameter("datefrom", datefrom) :
+                new ObjectParameter("datefrom", typeof(System.DateTime));
+    
+            var datetoParameter = dateto.HasValue ?
+                new ObjectParameter("dateto", dateto) :
+                new ObjectParameter("dateto", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ConsultationReport_Result>("SP_ConsultationReport", datefromParameter, datetoParameter);
+        }
+    
+        public virtual int sp_creatediagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            var versionParameter = version.HasValue ?
+                new ObjectParameter("version", version) :
+                new ObjectParameter("version", typeof(int));
+    
+            var definitionParameter = definition != null ?
+                new ObjectParameter("definition", definition) :
+                new ObjectParameter("definition", typeof(byte[]));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_creatediagram", diagramnameParameter, owner_idParameter, versionParameter, definitionParameter);
         }
     
         public virtual int sp_DeleteAdmin(Nullable<long> adminID, string mB, Nullable<System.DateTime> mD)
@@ -618,6 +781,45 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_DeleteZipCode", zipIDParameter, mBParameter, mDParameter);
         }
     
+        public virtual ObjectResult<SP_DoctorReport_Result> SP_DoctorReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto)
+        {
+            var datefromParameter = datefrom.HasValue ?
+                new ObjectParameter("datefrom", datefrom) :
+                new ObjectParameter("datefrom", typeof(System.DateTime));
+    
+            var datetoParameter = dateto.HasValue ?
+                new ObjectParameter("dateto", dateto) :
+                new ObjectParameter("dateto", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_DoctorReport_Result>("SP_DoctorReport", datefromParameter, datetoParameter);
+        }
+    
+        public virtual ObjectResult<sp_helpdiagrams_Result> sp_helpdiagrams(string diagramname, Nullable<int> owner_id)
+        {
+            var diagramnameParameter = diagramname != null ?
+                new ObjectParameter("diagramname", diagramname) :
+                new ObjectParameter("diagramname", typeof(string));
+    
+            var owner_idParameter = owner_id.HasValue ?
+                new ObjectParameter("owner_id", owner_id) :
+                new ObjectParameter("owner_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_helpdiagrams_Result>("sp_helpdiagrams", diagramnameParameter, owner_idParameter);
+        }
+    
+        public virtual ObjectResult<SP_PatientReport_Result> SP_PatientReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto)
+        {
+            var datefromParameter = datefrom.HasValue ?
+                new ObjectParameter("datefrom", datefrom) :
+                new ObjectParameter("datefrom", typeof(System.DateTime));
+    
+            var datetoParameter = dateto.HasValue ?
+                new ObjectParameter("dateto", dateto) :
+                new ObjectParameter("dateto", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PatientReport_Result>("SP_PatientReport", datefromParameter, datetoParameter);
+        }
+    
         public virtual int sp_ResetDoctorPassword(Nullable<long> iD, string password, string mB, Nullable<System.DateTime> mD)
         {
             var iDParameter = iD.HasValue ?
@@ -660,29 +862,24 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ResetPatientPassword", iDParameter, passwordParameter, mBParameter, mDParameter);
         }
     
+        public virtual ObjectResult<SP_SelectAdmin_Result> SP_SelectAdmin()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectAdmin_Result>("SP_SelectAdmin");
+        }
+    
         public virtual ObjectResult<SP_SelectAlerts_Result> SP_SelectAlerts()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectAlerts_Result>("SP_SelectAlerts");
         }
     
-        public virtual ObjectResult<Allergy> SP_SelectAllergy()
+        public virtual ObjectResult<SP_SelectAllergy_Result> SP_SelectAllergy()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Allergy>("SP_SelectAllergy");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectAllergy_Result>("SP_SelectAllergy");
         }
     
-        public virtual ObjectResult<Allergy> SP_SelectAllergy(MergeOption mergeOption)
+        public virtual ObjectResult<SP_SelectCity_Result> SP_SelectCity()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Allergy>("SP_SelectAllergy", mergeOption);
-        }
-    
-        public virtual ObjectResult<City> SP_SelectCity()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<City>("SP_SelectCity");
-        }
-    
-        public virtual ObjectResult<City> SP_SelectCity(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<City>("SP_SelectCity", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectCity_Result>("SP_SelectCity");
         }
     
         public virtual ObjectResult<SP_SelectConsultation_Result> SP_SelectConsultation()
@@ -700,64 +897,34 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("SP_SelectDoctor", mergeOption);
         }
     
-        public virtual ObjectResult<Doctor> SP_SelectDoctorsForApproval()
+        public virtual ObjectResult<SP_SelectDoctorsForApproval_Result> SP_SelectDoctorsForApproval()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("SP_SelectDoctorsForApproval");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectDoctorsForApproval_Result>("SP_SelectDoctorsForApproval");
         }
     
-        public virtual ObjectResult<Doctor> SP_SelectDoctorsForApproval(MergeOption mergeOption)
+        public virtual ObjectResult<SP_SelectDocType_Result> SP_SelectDocType()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("SP_SelectDoctorsForApproval", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectDocType_Result>("SP_SelectDocType");
         }
     
-        public virtual ObjectResult<DocumentType> SP_SelectDocType()
+        public virtual ObjectResult<SP_SelectLanguages_Result> SP_SelectLanguages()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<DocumentType>("SP_SelectDocType");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectLanguages_Result>("SP_SelectLanguages");
         }
     
-        public virtual ObjectResult<DocumentType> SP_SelectDocType(MergeOption mergeOption)
+        public virtual ObjectResult<SP_SelectMedicine_Result> SP_SelectMedicine()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<DocumentType>("SP_SelectDocType", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectMedicine_Result>("SP_SelectMedicine");
         }
     
-        public virtual ObjectResult<Language> SP_SelectLanguages()
+        public virtual ObjectResult<SP_SelectNewss_Result> SP_SelectNewss()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Language>("SP_SelectLanguages");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectNewss_Result>("SP_SelectNewss");
         }
     
-        public virtual ObjectResult<Language> SP_SelectLanguages(MergeOption mergeOption)
+        public virtual ObjectResult<SP_SelectPatient_Result> SP_SelectPatient()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Language>("SP_SelectLanguages", mergeOption);
-        }
-    
-        public virtual ObjectResult<Medicine> SP_SelectMedicine()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Medicine>("SP_SelectMedicine");
-        }
-    
-        public virtual ObjectResult<Medicine> SP_SelectMedicine(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Medicine>("SP_SelectMedicine", mergeOption);
-        }
-    
-        public virtual ObjectResult<News> SP_SelectNewss()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<News>("SP_SelectNewss");
-        }
-    
-        public virtual ObjectResult<News> SP_SelectNewss(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<News>("SP_SelectNewss", mergeOption);
-        }
-    
-        public virtual ObjectResult<Patient> SP_SelectPatient()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Patient>("SP_SelectPatient");
-        }
-    
-        public virtual ObjectResult<Patient> SP_SelectPatient(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Patient>("SP_SelectPatient", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectPatient_Result>("SP_SelectPatient");
         }
     
         public virtual ObjectResult<SP_SelectRole_Result> SP_SelectRole()
@@ -765,24 +932,14 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectRole_Result>("SP_SelectRole");
         }
     
-        public virtual ObjectResult<Speciallity> SP_SelectSpeciality()
+        public virtual ObjectResult<SP_SelectSpeciality_Result> SP_SelectSpeciality()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Speciallity>("SP_SelectSpeciality");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectSpeciality_Result>("SP_SelectSpeciality");
         }
     
-        public virtual ObjectResult<Speciallity> SP_SelectSpeciality(MergeOption mergeOption)
+        public virtual ObjectResult<SP_SelectStates_Result> SP_SelectStates()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Speciallity>("SP_SelectSpeciality", mergeOption);
-        }
-    
-        public virtual ObjectResult<State> SP_SelectStates()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<State>("SP_SelectStates");
-        }
-    
-        public virtual ObjectResult<State> SP_SelectStates(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<State>("SP_SelectStates", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectStates_Result>("SP_SelectStates");
         }
     
         public virtual ObjectResult<SP_SelectSystemItems_Result> SP_SelectSystemItems()
@@ -790,14 +947,9 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectSystemItems_Result>("SP_SelectSystemItems");
         }
     
-        public virtual ObjectResult<PatientSystem> SP_SelectSystems()
+        public virtual int SP_SelectSystems()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<PatientSystem>("SP_SelectSystems");
-        }
-    
-        public virtual ObjectResult<PatientSystem> SP_SelectSystems(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<PatientSystem>("SP_SelectSystems", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectSystems");
         }
     
         public virtual ObjectResult<SP_selectTransactionHistory_Result> SP_selectTransactionHistory()
@@ -805,14 +957,9 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_selectTransactionHistory_Result>("SP_selectTransactionHistory");
         }
     
-        public virtual ObjectResult<Zip> SP_SelectZipCode()
+        public virtual ObjectResult<SP_SelectZipCode_Result> SP_SelectZipCode()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Zip>("SP_SelectZipCode");
-        }
-    
-        public virtual ObjectResult<Zip> SP_SelectZipCode(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Zip>("SP_SelectZipCode", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectZipCode_Result>("SP_SelectZipCode");
         }
     
         public virtual int sp_UpdateAlerts(Nullable<long> alertID, string alertText, string alertFor, string mB, Nullable<System.DateTime> mD)
@@ -1153,128 +1300,40 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_UpdateZipCode", zipIDParameter, zipNameParameter, mBParameter, mDParameter);
         }
     
-        public virtual int sp_upgraddiagrams()
+        public virtual ObjectResult<SP_GetPatientMedication_Result> SP_GetPatientMedication(Nullable<long> patientID)
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientMedication_Result>("SP_GetPatientMedication", patientIDParameter);
         }
     
-        public virtual ObjectResult<SP_SelectAdmin_Result> SP_SelectAdmin()
+        public virtual ObjectResult<SP_GetPatientAllergies_Result> SP_GetPatientAllergies(Nullable<long> patientID)
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectAdmin_Result>("SP_SelectAdmin");
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientAllergies_Result>("SP_GetPatientAllergies", patientIDParameter);
         }
     
-        public virtual ObjectResult<SP_ConsultationReport_Result> SP_ConsultationReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto)
+        public virtual ObjectResult<SP_GetPatientConditions_Result> SP_GetPatientConditions(Nullable<long> patientID)
         {
-            var datefromParameter = datefrom.HasValue ?
-                new ObjectParameter("datefrom", datefrom) :
-                new ObjectParameter("datefrom", typeof(System.DateTime));
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
     
-            var datetoParameter = dateto.HasValue ?
-                new ObjectParameter("dateto", dateto) :
-                new ObjectParameter("dateto", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ConsultationReport_Result>("SP_ConsultationReport", datefromParameter, datetoParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConditions_Result>("SP_GetPatientConditions", patientIDParameter);
         }
     
-        public virtual ObjectResult<SP_DoctorReport_Result> SP_DoctorReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto)
+        public virtual ObjectResult<SP_GetPatientSurgeries_Result> SP_GetPatientSurgeries(Nullable<long> patientID)
         {
-            var datefromParameter = datefrom.HasValue ?
-                new ObjectParameter("datefrom", datefrom) :
-                new ObjectParameter("datefrom", typeof(System.DateTime));
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
     
-            var datetoParameter = dateto.HasValue ?
-                new ObjectParameter("dateto", dateto) :
-                new ObjectParameter("dateto", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_DoctorReport_Result>("SP_DoctorReport", datefromParameter, datetoParameter);
-        }
-    
-        public virtual ObjectResult<SP_PatientReport_Result> SP_PatientReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto)
-        {
-            var datefromParameter = datefrom.HasValue ?
-                new ObjectParameter("datefrom", datefrom) :
-                new ObjectParameter("datefrom", typeof(System.DateTime));
-    
-            var datetoParameter = dateto.HasValue ?
-                new ObjectParameter("dateto", dateto) :
-                new ObjectParameter("dateto", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PatientReport_Result>("SP_PatientReport", datefromParameter, datetoParameter);
-        }
-    
-        public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
-        {
-            var lastNameParameter = lastName != null ?
-                new ObjectParameter("lastName", lastName) :
-                new ObjectParameter("lastName", typeof(string));
-    
-            var firstNameParameter = firstName != null ?
-                new ObjectParameter("FirstName", firstName) :
-                new ObjectParameter("FirstName", typeof(string));
-    
-            var emailParameter = email != null ?
-                new ObjectParameter("email", email) :
-                new ObjectParameter("email", typeof(string));
-    
-            var userIdParameter = userId != null ?
-                new ObjectParameter("UserId", userId) :
-                new ObjectParameter("UserId", typeof(string));
-    
-            var cBParameter = cB != null ?
-                new ObjectParameter("CB", cB) :
-                new ObjectParameter("CB", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddAdmin", lastNameParameter, firstNameParameter, emailParameter, userIdParameter, cBParameter);
-        }
-    
-        public virtual int SP_AddAdmin1(string lastName, string firstName, string email, string userId, string cB)
-        {
-            var lastNameParameter = lastName != null ?
-                new ObjectParameter("lastName", lastName) :
-                new ObjectParameter("lastName", typeof(string));
-    
-            var firstNameParameter = firstName != null ?
-                new ObjectParameter("FirstName", firstName) :
-                new ObjectParameter("FirstName", typeof(string));
-    
-            var emailParameter = email != null ?
-                new ObjectParameter("email", email) :
-                new ObjectParameter("email", typeof(string));
-    
-            var userIdParameter = userId != null ?
-                new ObjectParameter("UserId", userId) :
-                new ObjectParameter("UserId", typeof(string));
-    
-            var cBParameter = cB != null ?
-                new ObjectParameter("CB", cB) :
-                new ObjectParameter("CB", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddAdmin1", lastNameParameter, firstNameParameter, emailParameter, userIdParameter, cBParameter);
-        }
-    
-        public virtual int SP_AddPatient(string firstName, string lastName, string email, string userId, string cB)
-        {
-            var firstNameParameter = firstName != null ?
-                new ObjectParameter("FirstName", firstName) :
-                new ObjectParameter("FirstName", typeof(string));
-    
-            var lastNameParameter = lastName != null ?
-                new ObjectParameter("LastName", lastName) :
-                new ObjectParameter("LastName", typeof(string));
-    
-            var emailParameter = email != null ?
-                new ObjectParameter("Email", email) :
-                new ObjectParameter("Email", typeof(string));
-    
-            var userIdParameter = userId != null ?
-                new ObjectParameter("userId", userId) :
-                new ObjectParameter("userId", typeof(string));
-    
-            var cBParameter = cB != null ?
-                new ObjectParameter("CB", cB) :
-                new ObjectParameter("CB", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddPatient", firstNameParameter, lastNameParameter, emailParameter, userIdParameter, cBParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientSurgeries_Result>("SP_GetPatientSurgeries", patientIDParameter);
         }
     }
 }

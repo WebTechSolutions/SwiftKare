@@ -36,7 +36,7 @@ namespace DataAccess
         public Nullable<bool> active { get; set; }
         public string appTypeAV { get; set; }
         public string chiefComplaints { get; set; }
-        public string OtherComplaints { get; set; }
+        public string rov { get; set; }
         public string consultationType { get; set; }
         public string consultationStatus { get; set; }
     
