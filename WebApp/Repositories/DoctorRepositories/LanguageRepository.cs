@@ -77,8 +77,11 @@ namespace WebApp.Repositories.DoctorRepositories
             {
                 throw new NotImplementedException();
             }
+                public IQueryable<Language>  GetList()
+                {
+                    throw new NotImplementedException();
+                }
 
-               
     }
     }
 

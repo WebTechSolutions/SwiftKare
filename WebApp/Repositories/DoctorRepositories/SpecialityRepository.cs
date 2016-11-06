@@ -59,5 +59,10 @@ namespace WebApp.Repositories.DoctorRepositories
         {
             throw new NotImplementedException();
         }
+
+        public IQueryable<Speciallity> GetList()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
