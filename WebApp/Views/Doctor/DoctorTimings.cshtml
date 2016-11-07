@@ -1,6 +1,4 @@
-﻿@model WebApp.Models.DoctorTimingsViewModel
-@using System.Globalization
-
+﻿
 @{
     ViewBag.Title = "Doctor Timings";
     Layout = "~/Views/Shared/_DoctorLayout.cshtml";
@@ -16,52 +14,54 @@
     </div>
 
     <div class="clearfix"></div>
-
-   @using (Html.BeginForm("CreateEditTimings", "Doctor"))
-   {
-    @Html.AntiForgeryToken()
-
     <div class="form-horizontal">
         <hr />
-        @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.DoctorTiming.doctorTimingsID)
-        @Html.HiddenFor(model => model.DoctorTiming.doctorID)
-        @Html.HiddenFor(model=>model.DoctorTiming.Doctor)
 
         <div class="form-group">
-           
+
+            <input id="DoctorTiming_doctorTimingsID" type="hidden" value="0" />
+
             <label class="control-label col-md-2">Day</label>
 
             <div class="col-md-10">
-               @Html.DropDownListFor(m => m.DoctorTiming.day, Model.Days,new { @class = "form-control" })
+                <select class="form-control" id="DoctorTiming_day" name="DoctorTiming.day">
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                </select>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-md-2">From</label>
-            
+
             <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Timing.From, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Timing.From)
+                <input class="form-control" id="DoctorTiming_from" name="DoctorTiming.from" value="" type="text">
             </div>
         </div>
 
         <div class="form-group">
             <label class="control-label col-md-2">To</label>
             <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Timing.To, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Timing.To)
+                <input class="form-control" id="DoctorTiming_to" name="DoctorTiming.to" value="" type="text">
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-                @Html.ActionLink("Reset", "DoctorTimings")
+                <input type="submit" value="Save" onclick="addUpdate();" class="btn btn-default" />
+                <input type="submit" value="Reset" onclick="reset();" class="btn btn-default" />
+
 
             </div>
         </div>
     </div>
-   }
+
+
+
 
     <div class="x_panel">
         <div class="x_title">
@@ -85,24 +85,176 @@
                         </tr>
                     </thead>
 
-                    <tbody>
-
-                       
-                        @foreach (var item in Model.DoctorTimingsList)
-                        {
-                            <tr class="even pointer">
-                                <td>@Html.DisplayFor(modelItem => item.day)</td>
-                                <td>@Html.DisplayFor(modelItem => item.from)</td>
-                                <td>@Html.DisplayFor(modelItem => item.to)</td>
-                                <td>
-                                    @Html.ActionLink("Edit", "EditDoctorTiming", new { id = item.doctorTimingsID })
-                                    @Html.ActionLink("Delete", "DeleteDoctorTiming", new { id = item.doctorTimingsID })
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
+                    <tbody id="timingTable"></tbody>
                 </table>
             </div>
         </div>
     </div>
- </div>
+</div>
+
+
+@section Scripts {
+
+    <script type="text/javascript">
+        var _objUpdate = null;
+        var _objAdd = null;
+        var _doctorId = 0;
+        $(document).ready(function () {
+            GetTimings();
+        });
+
+        function ValidateForm() {
+            var success = "";
+
+            if ($("#DoctorTiming_from").val().length == 0) {
+                success = "Please enter from";
+                return success;
+            }
+            if ($("#DoctorTiming_to").val().length == 0) {
+                success = "Please enter to";
+                return success;
+            }
+        }
+
+
+
+        function GetTimings() {
+            $("tbody[id$='timingTable']").html('');
+            var param = "{}";
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDoctorTimings", "Doctor")',
+                data: param,
+                dataType: 'json',
+                success: function (response) {
+                    _objUpdate = response.DoctorTiming;
+                    _doctorId = response.DoctorId;
+                    bindTimingsTable(response.DoctorTimingsList);
+                },
+                error: errorRes
+
+            });
+
+        }
+
+        function errorRes(data) {
+            var err = eval("(" + data.responseText + ")");
+            alert(err.Message);
+        }
+        function bindTimingsTable(doctorTimingList) {
+            var tableHtml = "";
+            for (var i = 0; i < doctorTimingList.length; i++) {
+                tableHtml = tableHtml + "<tr>";
+                tableHtml = tableHtml + "<td>" + doctorTimingList[i].day + "</td>";
+                tableHtml = tableHtml + "<td>" + doctorTimingList[i].from + "</td>";
+                tableHtml = tableHtml + "<td>" + doctorTimingList[i].to + "</td>";
+                tableHtml = tableHtml + "<td><a href='#'  onclick='editObj(" + JSON.stringify(doctorTimingList[i]) + ",this);'> Edit</a> | <a href='#' onclick='deleteObj(" + doctorTimingList[i].doctorTimingsID + ")'>Delete</a></td>";
+                tableHtml = tableHtml + "</tr>";
+            }
+
+            $("tbody[id$='timingTable']").html(tableHtml);
+
+        }
+
+        function editObj(objTiming) {
+            $("#DoctorTiming_day").val(objTiming.day);
+            $("#DoctorTiming_from").val(objTiming.from);
+            $("#DoctorTiming_to").val(objTiming.to);
+            $("#DoctorTiming_doctorTimingsID").val(objTiming.doctorTimingsID);
+            _objUpdate = objTiming;
+        }
+        function reset() {
+            $("#DoctorTiming_day").prop("selectedIndex", 0);
+            $("#DoctorTiming_from").val('');
+            $("#DoctorTiming_to").val('');
+            $("#DoctorTiming_doctorTimingsID").val('0');
+            _objUpdate = null;
+        }
+
+        function deleteObj(doctorTimingsID) {
+            //alert(day);
+        }
+
+
+
+        function addUpdate() {
+            var msg = ValidateForm();
+            if (msg == "" || msg==undefined) {
+                fillObj();
+
+                var _data;
+                if (_objUpdate == null) {
+                    _data = _objAdd ;
+                }
+                else {
+                    _data =_objUpdate ;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("CreateEditTimings", "Doctor")',
+                    data: _data,
+                    dataType: 'json',
+                    success: function (response) {
+                        reset();
+                        GetTimings();
+                        _objUpdate = null;
+                    },
+                    error: errorRes
+
+                });
+
+            }
+            else {
+                alert(msg);
+            }
+
+
+        }
+
+        function deleteObj(doctorTimingsID) {
+            var confirmMessage = confirm("Are you sure you want to delete?");
+            if (confirmMessage == false)
+                return false;
+
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("DeleteDoctorTiming", "Doctor")',
+                    data: { 'id': doctorTimingsID },
+                    dataType: 'json',
+                    success: function () {
+                        GetTimings();
+                    },
+                    error: errorRes
+
+                });
+         }
+
+
+        function fillObj() {
+
+            if (_objUpdate == null) {
+                _objAdd = {};
+                _objAdd["doctorID"] = _doctorId;
+                _objAdd["doctorTimingsID"] = 0;
+                _objAdd["day"] = $("#DoctorTiming_day").val();
+                _objAdd["from"] = $("#DoctorTiming_from").val();
+                _objAdd["to"] = $("#DoctorTiming_to").val();
+            }
+            else {
+                _objUpdate.doctorTimingsID = parseInt($("#DoctorTiming_doctorTimingsID").val());
+                _objUpdate.day = $("#DoctorTiming_day").val();
+                _objUpdate.from = $("#DoctorTiming_from").val();
+                _objUpdate.to = $("#DoctorTiming_to").val();
+            }
+        }
+
+
+
+
+    </script>
+}
+
+
+
