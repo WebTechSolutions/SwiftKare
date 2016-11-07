@@ -5,61 +5,91 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using DataAccess;
+using DataAccess.CommonModels;
+using System.Globalization;
 
 namespace RestAPIs.Controllers
 {
-   
+   [Authorize]
     public class DoctorTimingsController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
 
-        // GET: api/DoctorTimings
-        public IQueryable<DoctorTiming> GetDoctorTimings()
-        {
-            return db.DoctorTimings;
-        }
 
         // GET: api/DoctorTimings/5
-        [ResponseType(typeof(DoctorTiming))]
+        [ResponseType(typeof(DoctorTimingsModel))]
         public async Task<IHttpActionResult> GetDoctorTiming(long id)
         {
             DoctorTiming doctorTiming = await db.DoctorTimings.FindAsync(id);
             if (doctorTiming == null)
-            {
                 return NotFound();
-            }
 
-            return Ok(doctorTiming);
+            var model = new DoctorTimingsModel();
+            model.doctorID = (long)doctorTiming.doctorID;
+            model.doctorTimingsID = doctorTiming.doctorTimingsID;
+            model.day = doctorTiming.day;
+            var from = DateTime.Today.Add((TimeSpan)doctorTiming.from);
+            var to = DateTime.Today.Add((TimeSpan)doctorTiming.to);
+            model.from = from.ToString("hh:mm tt");
+            model.to = to.ToString("hh:mm tt");
+
+            return Ok(model);
         }
 
         //api/DoctorTimings? doctorId = { doctorId }
-        public List<DoctorTiming> GetDoctorTimingByDoctorId(long doctorId)
+        public List<DoctorTimingsModel> GetDoctorTimingByDoctorId(long doctorId)
         {
-            var timings = new List<DoctorTiming>();
-            timings = db.DoctorTimings.ToList();
-            var doctorTiming=timings.Where(o => o.doctorID == doctorId).ToList();
-
-            return doctorTiming;
+            var timings = new List<DoctorTimingsModel>();
+            var doctorTimingList = db.DoctorTimings.Where(o => o.doctorID == doctorId && o.active == true).ToList();
+            foreach (var doctorTiming in doctorTimingList)
+            {
+                var model = new DoctorTimingsModel();
+                model.doctorID = (long)doctorTiming.doctorID;
+                model.doctorTimingsID = doctorTiming.doctorTimingsID;
+                model.day = doctorTiming.day;
+                var from = DateTime.Today.Add((TimeSpan)doctorTiming.from);
+                var to = DateTime.Today.Add((TimeSpan)doctorTiming.to);
+                model.from = from.ToString("hh:mm tt");
+                model.to = to.ToString("hh:mm tt");
+                timings.Add(model);
+            }
+            return timings;
         }
 
         // PUT: api/DoctorTimings/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutDoctorTiming(long id, DoctorTiming doctorTiming)
+        public async Task<IHttpActionResult> PutDoctorTiming(long id, DoctorTimingsModel doctorTimingModel)
         {
+            var doctorTiming = new DoctorTiming();
+
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != doctorTiming.doctorTimingsID)
+            if (id != doctorTimingModel.doctorTimingsID)
             {
                 return BadRequest();
             }
+            doctorTiming.doctorID = doctorTimingModel.doctorID;
+            doctorTiming.doctorTimingsID = id;
+            doctorTiming.day = doctorTimingModel.day;
+            doctorTiming.active = true;
+            doctorTiming.md = DateTime.Now;
+            doctorTiming.mb = doctorTimingModel.mb;
+
+            DateTime dateTimeFrom = DateTime.ParseExact(doctorTimingModel.from,
+                                    "hh:mm tt", CultureInfo.InvariantCulture);
+            DateTime dateTimeTo = DateTime.ParseExact(doctorTimingModel.to,
+                                "hh:mm tt", CultureInfo.InvariantCulture);
+
+            doctorTiming.from = dateTimeFrom.TimeOfDay;
+            doctorTiming.to = dateTimeTo.TimeOfDay;
 
             db.Entry(doctorTiming).State = EntityState.Modified;
 
@@ -83,13 +113,28 @@ namespace RestAPIs.Controllers
         }
 
         // POST: api/DoctorTimings
-        [ResponseType(typeof(DoctorTiming))]
-        public async Task<IHttpActionResult> PostDoctorTiming(DoctorTiming doctorTiming)
+        [ResponseType(typeof(DoctorTimingsModel))]
+        public async Task<IHttpActionResult> PostDoctorTiming(DoctorTimingsModel doctorTimingModel)
         {
+            var doctorTiming = new DoctorTiming();
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            doctorTiming.doctorID = doctorTimingModel.doctorID;
+            doctorTiming.doctorTimingsID = 0;
+            doctorTiming.day = doctorTimingModel.day;
+
+            DateTime dateTimeFrom = DateTime.ParseExact(doctorTimingModel.from,
+                                    "hh:mm tt", CultureInfo.InvariantCulture);
+            DateTime dateTimeTo = DateTime.ParseExact(doctorTimingModel.to,
+                                "hh:mm tt", CultureInfo.InvariantCulture);
+
+            doctorTiming.from = dateTimeFrom.TimeOfDay;
+            doctorTiming.to = dateTimeTo.TimeOfDay;
+            doctorTiming.active = true;
+            doctorTiming.cd = DateTime.Now;
+            doctorTiming.cb = doctorTimingModel.cb;
 
             db.DoctorTimings.Add(doctorTiming);
             await db.SaveChangesAsync();
@@ -98,15 +143,17 @@ namespace RestAPIs.Controllers
         }
 
         // DELETE: api/DoctorTimings/5
-        [ResponseType(typeof(DoctorTiming))]
+        [ResponseType(typeof(DoctorTimingsModel))]
         public async Task<IHttpActionResult> DeleteDoctorTiming(long id)
         {
+
             DoctorTiming doctorTiming = await db.DoctorTimings.FindAsync(id);
             if (doctorTiming == null)
             {
                 return NotFound();
             }
             doctorTiming.active = false;//Delete Operation changed
+            doctorTiming.md = DateTime.Now;
             db.Entry(doctorTiming).State = EntityState.Modified;
 
             try
@@ -124,10 +171,16 @@ namespace RestAPIs.Controllers
                     throw;
                 }
             }
-            db.DoctorTimings.Remove(doctorTiming);
-            await db.SaveChangesAsync();
+            var model = new DoctorTimingsModel();
+            model.doctorID = (long)doctorTiming.doctorID;
+            model.doctorTimingsID = doctorTiming.doctorTimingsID;
+            model.day = doctorTiming.day;
+            var from = DateTime.Today.Add((TimeSpan)doctorTiming.from);
+            var to = DateTime.Today.Add((TimeSpan)doctorTiming.to);
+            model.from = from.ToString("hh:mm tt");
+            model.to = to.ToString("hh:mm tt");
 
-            return Ok(doctorTiming);
+            return Ok(model);
         }
 
         protected override void Dispose(bool disposing)
