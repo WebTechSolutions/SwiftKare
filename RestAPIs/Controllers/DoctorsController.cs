@@ -11,6 +11,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using DataAccess;
 using RestAPIs.Models;
+using DataAccess.CommonModels;
 
 namespace RestAPIs.Controllers
 {
@@ -39,11 +40,30 @@ namespace RestAPIs.Controllers
         }
 
         // GET: api/Doctors/afafaf
-        public Doctor GetDoctorByUserId(string userId)
+        public DoctorModel GetDoctorByUserId(string userId)
         {
-            
+
             Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
-            return doctor;
+            var objModel = new DoctorModel();
+            objModel.doctorID = doctor.doctorID;
+            objModel.firstName = doctor.firstName;
+            objModel.lastName = doctor.lastName;
+            objModel.userId = doctor.userId;
+            objModel.email = doctor.email;
+            objModel.active = doctor.active;
+
+            objModel.secretQuestion1 = doctor.secretQuestion1;
+            objModel.secretQuestion2 = doctor.secretQuestion2;
+            objModel.secretQuestion3 = doctor.secretQuestion3;
+
+
+            objModel.secretAnswer1 = doctor.secretAnswer1;
+            objModel.secretAnswer2 = doctor.secretAnswer2;
+            objModel.secretAnswer3 = doctor.secretAnswer3;
+
+
+
+            return objModel;
         }
 
         // GET: api/Doctors/afafaf
