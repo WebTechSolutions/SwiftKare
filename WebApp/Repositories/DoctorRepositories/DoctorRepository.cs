@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http;
 using System.Net;
+using DataAccess.CommonModels;
 
 namespace WebApp.Repositories.DoctorRepositories
 {
@@ -54,10 +55,10 @@ namespace WebApp.Repositories.DoctorRepositories
         {
             throw new NotImplementedException();
         }
-        public Doctor GetByUserId(string userId)
+        public DoctorModel GetByUserId(string userId)
         {
             var response = ApiConsumerHelper.GetResponseString("api/Doctors?userId=" + userId);
-            var result = JsonConvert.DeserializeObject<Doctor>(response);
+            var result = JsonConvert.DeserializeObject<DoctorModel>(response);
             return result;
         }
 
