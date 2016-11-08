@@ -82,6 +82,8 @@
     <Compile Include="City.cs">
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="CommonModels\DoctorModel.cs" />
+    <Compile Include="CommonModels\DoctorTimingsModel.cs" />
     <Compile Include="Condition.cs">
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>
