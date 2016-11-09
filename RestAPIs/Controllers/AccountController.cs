@@ -14,7 +14,6 @@ using Identity.Membership.Models;
 
 namespace RestAPIs.Controllers
 {
-    [Authorize]
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
