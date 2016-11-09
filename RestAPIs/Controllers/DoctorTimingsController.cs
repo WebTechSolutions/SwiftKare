@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using DataAccess;
-using DataAccess.CommonModels;
+using DataAccess.CustomModels;
 using System.Globalization;
 
 namespace RestAPIs.Controllers
 {
-   [Authorize]
+    [Authorize(Roles = "Doctor")]
     public class DoctorTimingsController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
