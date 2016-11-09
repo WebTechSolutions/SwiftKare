@@ -1,6 +1,5 @@
 ﻿using System;
-
-namespace DataAccess.CommonModels
+namespace DataAccess.CustomModels
 {
     public class DoctorTimingsModel
     {
