@@ -82,8 +82,6 @@
     <Compile Include="City.cs">
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="CommonModels\DoctorModel.cs" />
-    <Compile Include="CommonModels\DoctorTimingsModel.cs" />
     <Compile Include="Condition.cs">
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>
@@ -93,6 +91,8 @@
     <Compile Include="ConsultationRO.cs">
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="CustomModels\DoctorModel.cs" />
+    <Compile Include="CustomModels\DoctorTimingsModel.cs" />
     <Compile Include="CustomModels\PatientAllergies_Custom.cs" />
     <Compile Include="CustomModels\PatientMedication_Custom.cs" />
     <Compile Include="CustomModels\PatientConditions_Custom.cs" />

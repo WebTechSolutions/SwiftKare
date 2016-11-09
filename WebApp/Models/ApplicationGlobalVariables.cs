@@ -9,8 +9,11 @@ namespace WebApp.Models
     public sealed class ApplicationGlobalVariables
     {
         private static readonly ApplicationGlobalVariables instance = new ApplicationGlobalVariables();
-            public readonly string ApiBaseUrl;
-            
+        public readonly string ApiBaseUrl;
+        public string UserName;
+        public string Password;
+        public string UserId;
+
 
         // Explicit static constructor to tell C# compiler
         // not to mark type as beforefieldinit

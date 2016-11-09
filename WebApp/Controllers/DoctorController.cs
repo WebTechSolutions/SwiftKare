@@ -4,7 +4,7 @@ using Microsoft.AspNet.Identity;
 using System.Web.Mvc;
 using WebApp.Repositories.DoctorRepositories;
 using WebApp.Models;
-using DataAccess.CommonModels;
+using DataAccess.CustomModels;
 
 namespace WebApp.Controllers
 {
@@ -27,7 +27,7 @@ namespace WebApp.Controllers
         {
             var Model = new DoctorTimingsViewModel();
             var objRepo = new DoctorRepository();
-            var userId = HttpContext.User.Identity.GetUserId();
+            var userId = ApplicationGlobalVariables.Instance.UserId;
             var doctor = objRepo.GetByUserId(userId);
             Model.DoctorId = doctor.doctorID;
             Model.DoctorTimingsList = objTimingRepo.GetListByDoctorId(doctor.doctorID).ToList();
@@ -41,7 +41,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult CreateEditTimings(DoctorTimingsModel model)
         {
-            var userName = HttpContext.User.Identity.GetUserName();
+            var userName = ApplicationGlobalVariables.Instance.UserName;
 
             if (model.doctorTimingsID <= 0)
             {

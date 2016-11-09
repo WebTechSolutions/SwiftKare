@@ -1,7 +1,7 @@
 ﻿using DataAccess;
 using System.Collections.Generic;
 using System.Web.Mvc;
-using DataAccess.CommonModels;
+using DataAccess.CustomModels;
 
 namespace WebApp.Models
 {

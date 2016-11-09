@@ -105,8 +105,13 @@ namespace WebApp.Controllers
             {
                 case SignInStatus.Success:
                     {
+                        
                         //var userId = HttpContext.User.Identity.GetUserId();
                         string userId = UserManager.FindByName(model.LoginViewModel.Email)?.Id;
+                        ApplicationGlobalVariables.Instance.UserName = model.LoginViewModel.Email;
+                        ApplicationGlobalVariables.Instance.Password = model.LoginViewModel.Password;
+                        ApplicationGlobalVariables.Instance.UserId = userId;
+
                         var roles = UserManager.GetRoles(userId);
                         if(roles.Contains("Doctor"))
                         {
@@ -179,6 +184,10 @@ namespace WebApp.Controllers
                 dynamic addedResult;
                 if (result.Succeeded)
                 {
+                    ApplicationGlobalVariables.Instance.UserName = model.RegisterViewModel.Email;
+                    ApplicationGlobalVariables.Instance.Password = model.RegisterViewModel.Password;
+                    ApplicationGlobalVariables.Instance.UserId = user.Id;
+
                     if (model.IsPatient)
                     {
                         PatientRepository objRepo = new PatientRepository();

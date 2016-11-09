@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http;
 using System.Net;
-using DataAccess.CommonModels;
+using DataAccess.CustomModels;
 
 namespace WebApp.Repositories.DoctorRepositories
 {

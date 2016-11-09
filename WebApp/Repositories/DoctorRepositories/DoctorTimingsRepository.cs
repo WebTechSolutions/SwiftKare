@@ -7,7 +7,7 @@ using WebApp.Interfaces;
 using DataAccess;
 using WebApp.Helper;
 using Newtonsoft.Json;
-using DataAccess.CommonModels;
+using DataAccess.CustomModels;
 
 namespace WebApp.Repositories.DoctorRepositories
 {

@@ -16,10 +16,10 @@ namespace WebApp.Helper
         {
             const string clientKey = "abc";
             const string clientSecret = "ddddddddd";
-            const string username = "";
-            var password = "";
+            string username = ApplicationGlobalVariables.Instance.UserName;//"dr@gmail.com";
+            var password = ApplicationGlobalVariables.Instance.Password;//"Admin@12345";
             var url = Models.ApplicationGlobalVariables.Instance.ApiBaseUrl;
-            var authorization = $"Basic {$"{clientKey}:{clientSecret}".ToStringBase64Encode()}";
+
 
             var session = HttpContext.Current.Session;
             AccessTokenModel token = null;
@@ -37,7 +37,7 @@ namespace WebApp.Helper
 
                 client.BaseAddress = new Uri(url);
                 client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Add("Authorization", authorization);
+                //client.DefaultRequestHeaders.Add("Authorization", authorization);
 
                 var content = new FormUrlEncodedContent(new[]
                 {
