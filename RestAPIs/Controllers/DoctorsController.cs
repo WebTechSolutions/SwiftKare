@@ -12,7 +12,7 @@ using DataAccess.CustomModels;
 
 namespace RestAPIs.Controllers
 {
-    [Authorize(Roles = "Doctor")]
+    
     public class DoctorsController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
@@ -35,7 +35,6 @@ namespace RestAPIs.Controllers
 
             return Ok(doctor);
         }
-
         // GET: api/Doctors/afafaf
         public DoctorModel GetDoctorByUserId(string userId)
         {
@@ -71,7 +70,7 @@ namespace RestAPIs.Controllers
             return doctor.doctorID;
         }
 
-
+        [Authorize(Roles = "Doctor")]
         // PUT: api/Doctors/5
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutDoctor(long id, Doctor doctor)
@@ -121,7 +120,7 @@ namespace RestAPIs.Controllers
 
             return CreatedAtRoute("DefaultApi", new { id = doctor.doctorID }, doctor);
         }
-
+        [Authorize(Roles = "Doctor")]
         // DELETE: api/Doctors/5
         [ResponseType(typeof(Doctor))]
         public async Task<IHttpActionResult> DeleteDoctor(long id)

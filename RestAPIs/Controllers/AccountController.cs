@@ -11,6 +11,8 @@ using Microsoft.Owin.Security;
 using System.Threading.Tasks;
 using Identity.Membership;
 using Identity.Membership.Models;
+using RestAPIs.Extensions;
+using RestAPIs.Models;
 
 namespace RestAPIs.Controllers
 {
@@ -52,13 +54,49 @@ namespace RestAPIs.Controllers
             private set { _signInManager = value; }
         }
 
+
+        private bool IsValidclient(HttpRequestMessage request)
+        {
+            var headerValue = request.GetHeader("Authorization");
+
+            if (headerValue == null)
+                return false;
+
+            if (headerValue.Contains(":"))
+            {
+                var arr = headerValue.Split(':');
+                if (arr.Length > 1)
+                {
+                    var clientId = arr[0];
+                    var clientSecret = arr[1];
+                    var objModel = new OauthUserModel();
+                    if (!(clientId == objModel.OauthClient && clientSecret == objModel.OauthClientSecret))
+                        return false;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+            return true;
+        }
+
+
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         [Route("Login")]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        public async Task<SignInStatus> Login(LoginViewModel model)
+        public async Task<SignInStatus> Login(LoginViewModel model, HttpRequestMessage request)
         {
+            if (!IsValidclient(request))
+                return SignInStatus.Failure;
+
+            //    var id = headerValues.FirstOrDefault();
             // This doen't count login failures towards lockout only two factor authentication
             // To enable password failures to trigger lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
@@ -72,8 +110,9 @@ namespace RestAPIs.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("Register")]
-        public async Task<IdentityResult> Register(RegisterViewModel model)
+        public async Task<IdentityResult> Register(RegisterViewModel model, HttpRequestMessage request)
         {
+            
 
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
 
