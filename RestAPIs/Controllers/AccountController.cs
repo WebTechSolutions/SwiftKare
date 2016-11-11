@@ -55,35 +55,7 @@ namespace RestAPIs.Controllers
         }
 
 
-        private bool IsValidclient(HttpRequestMessage request)
-        {
-            var headerValue = request.GetHeader("Authorization");
 
-            if (headerValue == null)
-                return false;
-
-            if (headerValue.Contains(":"))
-            {
-                var arr = headerValue.Split(':');
-                if (arr.Length > 1)
-                {
-                    var clientId = arr[0];
-                    var clientSecret = arr[1];
-                    var objModel = new OauthUserModel();
-                    if (!(clientId == objModel.OauthClient && clientSecret == objModel.OauthClientSecret))
-                        return false;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-            return true;
-        }
 
 
         // POST: /Account/Login
@@ -93,17 +65,38 @@ namespace RestAPIs.Controllers
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         public async Task<SignInStatus> Login(LoginViewModel model, HttpRequestMessage request)
         {
-            if (!IsValidclient(request))
-                return SignInStatus.Failure;
 
-            //    var id = headerValues.FirstOrDefault();
-            // This doen't count login failures towards lockout only two factor authentication
-            // To enable password failures to trigger lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            return result;
+            if (!request.IsValidClient())
+            {
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent("Unauthorized, Client is not valid"),
+                    ReasonPhrase = "Bad Request"
+                };
+                throw new HttpResponseException(resp);
+            }
+            // return SignInStatus.Failure;
+
+            try
+            {
+                //    var id = headerValues.FirstOrDefault();
+                // This doen't count login failures towards lockout only two factor authentication
+                // To enable password failures to trigger lockout, change to shouldLockout: true
+                var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+                return result;
+            }
+
+            catch (Exception)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent("An error occurred, please try again or contact the administrator."),
+                    ReasonPhrase = "Critical Exception"
+                });
+            }
         }
 
-        
+
 
 
         // POST: /Account/Register
@@ -112,43 +105,91 @@ namespace RestAPIs.Controllers
         [Route("Register")]
         public async Task<IdentityResult> Register(RegisterViewModel model, HttpRequestMessage request)
         {
-            
+            if (!request.IsValidClient())
+            {
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent("Unauthorized, Client is not valid"),
+                    ReasonPhrase = "Bad Request"
+                };
+                throw new HttpResponseException(resp);
+            }
 
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            try
+            {
 
-            // Add the Address properties:
-            user.Address = model.Address;
-            user.City = model.City;
-            user.State = model.State;
-            user.PostalCode = model.PostalCode;
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
 
-            var result = await UserManager.CreateAsync(user, model.Password);
-            return result;
+                // Add the Address properties:
+                user.Address = model.Address;
+                user.City = model.City;
+                user.State = model.State;
+                user.PostalCode = model.PostalCode;
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+
+
+                return result;
+            }
+            catch (Exception)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent("An error occurred, please try again or contact the administrator."),
+                    ReasonPhrase = "Critical Exception"
+                });
+            }
         }
 
         // POST: /Account/ForgotPassword
         [HttpPost]
         [AllowAnonymous]
         [Route("ForgotPassword")]
-        public async Task<string> ForgotPassword(ForgotPasswordViewModel model)
+        public async Task<string> ForgotPassword(ForgotPasswordViewModel model, HttpRequestMessage request)
         {
-            if (ModelState.IsValid)
+            if (!request.IsValidClient())
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
-                
-
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
                 {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    return "NotConfirmed";
-                }
-
-                var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                return code;
+                    Content = new StringContent("Unauthorized, Client is not valid"),
+                    ReasonPhrase = "Bad Request"
+                };
+                throw new HttpResponseException(resp);
             }
 
-            // If we got this far, something failed, redisplay form
-            return "";
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var user = await UserManager.FindByNameAsync(model.Email);
+
+
+                    if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                    {
+                        // Don't reveal that the user does not exist or is not confirmed
+                        var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                        {
+                            Content = new StringContent("user is not exist with this email address or email is not confirmed"),
+                            ReasonPhrase = "Not Confirmed"
+                        };
+                        throw new HttpResponseException(resp);
+                    }
+
+                    var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                    return code;
+                }
+
+                // If we got this far, something failed, redisplay form
+                return "";
+            }
+            catch (Exception)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent("An error occurred, please try again or contact the administrator."),
+                    ReasonPhrase = "Critical Exception"
+                });
+            }
         }
 
 
@@ -156,22 +197,59 @@ namespace RestAPIs.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("ResetPassword")]
-        public async Task<IdentityResult> ResetPassword(ResetPasswordViewModel model)
+        public async Task<IdentityResult> ResetPassword(ResetPasswordViewModel model, HttpRequestMessage request)
         {
-            var user = await UserManager.FindByNameAsync(model.Email);
-            if(user!=null)
+            if (!request.IsValidClient())
             {
-                var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
-                return result;
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent("Unauthorized, Client is not valid"),
+                    ReasonPhrase = "BadRequest"
+                };
+                throw new HttpResponseException(resp);
             }
-            return null;
+            try
+            {
+                var user = await UserManager.FindByNameAsync(model.Email);
+                if (user != null)
+                {
+                    var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+                    return result;
+                }
+                else
+                {
+                    var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                    {
+                        Content = new StringContent("user is not exist with this email address"),
+                        ReasonPhrase = "Not Found"
+                    };
+                    throw new HttpResponseException(resp);
+                }
+            }
+            catch (Exception)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent("An error occurred, please try again or contact the administrator."),
+                    ReasonPhrase = "Critical Exception"
+                });
+            }
         }
 
 
         [HttpPost]
         [Route("LogOff")]
-        public string LogOff()
+        public string LogOff(HttpRequestMessage request)
         {
+            if (!request.IsValidClient())
+            {
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent("Unauthorized, Client is not valid"),
+                    ReasonPhrase = "BadRequest"
+                };
+                throw new HttpResponseException(resp);
+            }
             AuthenticationManager.SignOut();
             return "LogOff";
         }
