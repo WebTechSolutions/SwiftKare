@@ -279,3 +279,11 @@ __pycache__/
 
 ### VisualStudio Patch ###
 build/
+/RestAPIs/Web.Release.config
+/RestAPIs/Web.Debug.config
+/RestAPIs/Web.config
+/RestAPIs/packages.config
+/WebApp/Web.Release.config
+/WebApp/Web.Debug.config
+/WebApp/Web.config
+/WebApp/packages.config
