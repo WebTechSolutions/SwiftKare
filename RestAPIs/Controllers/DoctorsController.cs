@@ -9,65 +9,152 @@ using System.Web.Http.Description;
 using DataAccess;
 using RestAPIs.Models;
 using DataAccess.CustomModels;
+using System.Net.Http;
+using RestAPIs.Extensions;
+using System;
 
 namespace RestAPIs.Controllers
 {
-    
+
     public class DoctorsController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
-       
+
         // GET: api/Doctors
-        public IQueryable<Doctor> GetDoctors()
+        public IQueryable<Doctor> GetDoctors(HttpRequestMessage request)
         {
-            return db.Doctors;
+            if (!request.IsValidClient())
+            {
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent("Unauthorized, Client is not valid"),
+                    ReasonPhrase = "Bad Request"
+                };
+                throw new HttpResponseException(resp);
+            }
+            try
+            {
+                return db.Doctors;
+            }
+            catch (Exception)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent("An error occurred, please try again or contact the administrator."),
+                    ReasonPhrase = "Critical Exception"
+                });
+            }
+
         }
 
         // GET: api/Doctors/5
         [ResponseType(typeof(Doctor))]
-        public async Task<IHttpActionResult> GetDoctor(long id)
+        public async Task<IHttpActionResult> GetDoctor(long id, HttpRequestMessage request)
         {
-            Doctor doctor = await db.Doctors.FindAsync(id);
-            if (doctor == null)
+            if (!request.IsValidClient())
             {
-                return NotFound();
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent("Unauthorized, Client is not valid"),
+                    ReasonPhrase = "Bad Request"
+                };
+                throw new HttpResponseException(resp);
+            }
+            try
+            {
+                Doctor doctor = await db.Doctors.FindAsync(id);
+                if (doctor == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(doctor);
+            }
+            catch (Exception)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent("An error occurred, please try again or contact the administrator."),
+                    ReasonPhrase = "Critical Exception"
+                });
             }
 
-            return Ok(doctor);
         }
         // GET: api/Doctors/afafaf
-        public DoctorModel GetDoctorByUserId(string userId)
+        public DoctorModel GetDoctorByUserId(string userId, HttpRequestMessage request)
         {
 
-            Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
-            var objModel = new DoctorModel();
-            objModel.doctorID = doctor.doctorID;
-            objModel.firstName = doctor.firstName;
-            objModel.lastName = doctor.lastName;
-            objModel.userId = doctor.userId;
-            objModel.email = doctor.email;
-            objModel.active = doctor.active;
+            if (!request.IsValidClient())
+            {
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent("Unauthorized, Client is not valid"),
+                    ReasonPhrase = "Bad Request"
+                };
+                throw new HttpResponseException(resp);
+            }
+            try
+            {
 
-            objModel.secretQuestion1 = doctor.secretQuestion1;
-            objModel.secretQuestion2 = doctor.secretQuestion2;
-            objModel.secretQuestion3 = doctor.secretQuestion3;
+                Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
+                var objModel = new DoctorModel();
+                objModel.doctorID = doctor.doctorID;
+                objModel.firstName = doctor.firstName;
+                objModel.lastName = doctor.lastName;
+                objModel.userId = doctor.userId;
+                objModel.email = doctor.email;
+                objModel.active = doctor.active;
+
+                objModel.secretQuestion1 = doctor.secretQuestion1;
+                objModel.secretQuestion2 = doctor.secretQuestion2;
+                objModel.secretQuestion3 = doctor.secretQuestion3;
 
 
-            objModel.secretAnswer1 = doctor.secretAnswer1;
-            objModel.secretAnswer2 = doctor.secretAnswer2;
-            objModel.secretAnswer3 = doctor.secretAnswer3;
+                objModel.secretAnswer1 = doctor.secretAnswer1;
+                objModel.secretAnswer2 = doctor.secretAnswer2;
+                objModel.secretAnswer3 = doctor.secretAnswer3;
 
+                return objModel;
+            }
 
+            catch (Exception)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent("An error occurred, please try again or contact the administrator."),
+                    ReasonPhrase = "Critical Exception"
+                });
+            }
 
-            return objModel;
         }
 
         // GET: api/Doctors/afafaf
         [Route("api/Doctors/Id")]
-        public long GetDoctorId(string userId)
+        public long GetDoctorId(string userId, HttpRequestMessage request)
         {
-            Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
-            return doctor.doctorID;
+            if (!request.IsValidClient())
+            {
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent("Unauthorized, Client is not valid"),
+                    ReasonPhrase = "Bad Request"
+                };
+                throw new HttpResponseException(resp);
+            }
+            try
+            {
+                Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
+                return doctor.doctorID;
+            }
+            catch (Exception)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent("An error occurred, please try again or contact the administrator."),
+                    ReasonPhrase = "Critical Exception"
+                });
+            }
+
         }
 
         [Authorize(Roles = "Doctor")]
@@ -108,18 +195,41 @@ namespace RestAPIs.Controllers
 
         // POST: api/Doctors
         [ResponseType(typeof(Doctor))]
-        public async Task<IHttpActionResult> PostDoctor(Doctor doctor)
+        public async Task<IHttpActionResult> PostDoctor(Doctor doctor, HttpRequestMessage request)
         {
-            if (!ModelState.IsValid)
+            if (!request.IsValidClient())
             {
-                return BadRequest(ModelState);
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent("Unauthorized, Client is not valid"),
+                    ReasonPhrase = "Bad Request"
+                };
+                throw new HttpResponseException(resp);
             }
 
-            db.Doctors.Add(doctor);
-            await db.SaveChangesAsync();
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                db.Doctors.Add(doctor);
+                await db.SaveChangesAsync();
+                return CreatedAtRoute("DefaultApi", new { id = doctor.doctorID }, doctor);
+            }
+            catch(Exception)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent("An error occurred, please try again or contact the administrator."),
+                    ReasonPhrase = "Critical Exception"
+                });
 
-            return CreatedAtRoute("DefaultApi", new { id = doctor.doctorID }, doctor);
+            }
+            
         }
+
+
         [Authorize(Roles = "Doctor")]
         // DELETE: api/Doctors/5
         [ResponseType(typeof(Doctor))]
@@ -212,7 +322,7 @@ namespace RestAPIs.Controllers
 
         }
         // POST: api/searchDoctor/SeeDoctorViewModel
-       // [Route("api/searchDoctor/searchModel/")]
+        // [Route("api/searchDoctor/searchModel/")]
         //[ResponseType(typeof(Doctor))]
         //public IEnumerable<SeeDoctorDTO> SeeDoctor(SeeDoctorViewModel searchModel)
         //{
@@ -263,14 +373,14 @@ namespace RestAPIs.Controllers
         //    }
         //    catch(Exception ex)
         //    {
-               
+
         //        HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
         //        httpResponseMessage.Content = new StringContent(ex.Message);
         //        throw new HttpResponseException(httpResponseMessage);
         //    }
-          
+
 
         //}
     }
-  
+
 }
