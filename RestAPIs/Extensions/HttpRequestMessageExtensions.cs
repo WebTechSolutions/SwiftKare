@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestAPIs.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -56,6 +57,37 @@ namespace RestAPIs.Extensions
 
             return keys.First();
         }
+
+        public static bool IsValidClient(this HttpRequestMessage request)
+        {
+            var headerValue = request.GetHeader("Authorization");
+            if (headerValue == null)
+                return false;
+
+            if (headerValue.Contains(":"))
+            {
+                var arr = headerValue.Split(':');
+                if (arr.Length > 1)
+                {
+                    var clientId = arr[0];
+                    var clientSecret = arr[1];
+                    var objModel = new OauthUserModel();
+                    if (!(clientId == objModel.OauthClient && clientSecret == objModel.OauthClientSecret))
+                        return false;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+            return true;
+    }
+
+
 
         /// <summary>
         ///     Retrieves an individual cookie from the cookies collection
