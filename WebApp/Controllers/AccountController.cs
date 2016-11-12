@@ -117,6 +117,12 @@ namespace WebApp.Controllers
                         {
                             var objRepo = new DoctorRepository();
                             var doctor = objRepo.GetByUserId(userId);
+                            var userModel = new UserInfoModel();
+                            userModel.Id = doctor.doctorID;
+                            userModel.Email = doctor.email;
+                            userModel.FirstName = doctor.firstName;
+                            userModel.LastName = doctor.lastName;
+                            SessionHandler.UserInfo = userModel;
                             if(doctor.active==null||(bool)doctor.active)
                                 return RedirectToAction("DoctorTimings", "Doctor");
                         }
@@ -124,6 +130,13 @@ namespace WebApp.Controllers
                         {
                             var objRepo = new PatientRepository();
                             var patient = objRepo.GetByUserId(userId);
+                            var userModel = new UserInfoModel();
+                            userModel.Id = patient.patientID;
+                            userModel.Email = patient.email;
+                            userModel.FirstName = patient.firstName;
+                            userModel.LastName = patient.lastName;
+                            SessionHandler.UserInfo = userModel;
+
                             if (patient.active == null || (bool)patient.active)
                                 return RedirectToAction("Index", "Patient");
                         }
