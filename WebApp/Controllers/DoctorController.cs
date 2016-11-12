@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using WebApp.Repositories.DoctorRepositories;
 using WebApp.Models;
 using DataAccess.CustomModels;
+using WebApp.Helper;
 
 namespace WebApp.Controllers
 {
@@ -27,7 +28,7 @@ namespace WebApp.Controllers
         {
             var Model = new DoctorTimingsViewModel();
             var objRepo = new DoctorRepository();
-            var userId = ApplicationGlobalVariables.Instance.UserId;
+            var userId = SessionHandler.UserId;
             var doctor = objRepo.GetByUserId(userId);
             Model.DoctorId = doctor.doctorID;
             Model.DoctorTimingsList = objTimingRepo.GetListByDoctorId(doctor.doctorID).ToList();
@@ -41,18 +42,24 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult CreateEditTimings(DoctorTimingsModel model)
         {
-            var userName = ApplicationGlobalVariables.Instance.UserName;
+            var timingsList = objTimingRepo.GetListByDoctorId(model.doctorID);
+            var alreadItems = timingsList.Where(o => o.day == model.day && o.from == model.from && o.to == model.to).ToList();
+            if(alreadItems.Count<=0)
+            {
+                var userName = SessionHandler.UserName;
 
-            if (model.doctorTimingsID <= 0)
-            {
-                model.cb = userName;
-                objTimingRepo.Add(model);
+                if (model.doctorTimingsID <= 0)
+                {
+                    model.cb = userName;
+                    objTimingRepo.Add(model);
+                }
+                else
+                {
+                    model.mb = userName;
+                    objTimingRepo.Put(model.doctorTimingsID, model);
+                }
             }
-            else
-            {
-                model.mb = userName;
-                objTimingRepo.Put(model.doctorTimingsID, model);
-            }
+            
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
