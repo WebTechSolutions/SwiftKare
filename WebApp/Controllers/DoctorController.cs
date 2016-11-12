@@ -48,12 +48,12 @@ namespace WebApp.Controllers
 
                 if (model.doctorTimingsID <= 0)
                 {
-                    model.cb = userName;
+                    model.username = userName;
                     objTimingRepo.Add(model);
                 }
                 else
                 {
-                    model.mb = userName;
+                    model.username = userName;
                     objTimingRepo.Put(model.doctorTimingsID, model);
                 }
             }
