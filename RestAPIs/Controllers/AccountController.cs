@@ -13,6 +13,7 @@ using Identity.Membership;
 using Identity.Membership.Models;
 using RestAPIs.Extensions;
 using RestAPIs.Models;
+using DataAccess;
 
 namespace RestAPIs.Controllers
 {
@@ -103,8 +104,11 @@ namespace RestAPIs.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("Register")]
-        public async Task<IdentityResult> Register(RegisterViewModel model, HttpRequestMessage request)
+        public async Task<DataAccess.CustomModels.UserModel> Register(RegisterApiModel model, HttpRequestMessage request)
         {
+
+            var userModel = new DataAccess.CustomModels.UserModel();
+
             if (!request.IsValidClient())
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
@@ -115,26 +119,79 @@ namespace RestAPIs.Controllers
                 throw new HttpResponseException(resp);
             }
 
-            try
+
+            if (model.Role.ToLower() == "patient" || model.Role.ToLower() == "doctor")
             {
-
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-
-                                // Add the Address properties:
-
-                var result = await UserManager.CreateAsync(user, model.Password);
-               
-
-                return result;
-            }
-            catch (Exception)
-            {
-                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                try
                 {
-                    Content = new StringContent("An error occurred while posting in api/Account/Register, please try again or contact the administrator."),
-                    ReasonPhrase = "Critical Exception"
-                });
+
+                    var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                    var result = await UserManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        SwiftKareDBEntities db = new SwiftKareDBEntities();
+
+                        if (model.Role.ToLower() == "patient")
+                        {
+                            var resultRole = await UserManager.AddToRoleAsync(user.Id, "Patient");
+
+                            //add the patient
+                        }
+                        else if (model.Role.ToLower() == "doctor")
+                        {
+                            var resultRole = await UserManager.AddToRoleAsync(user.Id, "Doctor");
+                            var doctor = new Doctor
+                            {
+                                userId = user.Id,
+                                lastName = user.LastName,
+                                firstName = user.FirstName,
+                                email = user.Email
+                            };
+                            db.Doctors.Add(doctor);
+                            await db.SaveChangesAsync();
+                            userModel.Id = doctor.doctorID;
+                        }
+                        else
+                        {
+
+                        }
+
+                    }
+                    else
+                    {
+                        userModel.Errors = result.Errors.ToList();
+                    }
+                    userModel.Email = model.Email;
+                    userModel.FirstName = model.FirstName;
+                    userModel.LastName = model.LastName;
+                    
+
+                    return userModel;
+                }
+                catch (Exception)
+                {
+                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("An error occurred while posting in api/Account/Register, please try again or contact the administrator."),
+                        ReasonPhrase = "Critical Exception"
+                    });
+                }
             }
+            else
+            {
+                var resp = new HttpResponseMessage(HttpStatusCode.NotImplemented)
+                {
+                    Content = new StringContent("Role is undefined"),
+                    ReasonPhrase = "Undefined Role"
+                };
+                throw new HttpResponseException(resp);
+            }
+
+
+
+
+
+
         }
 
         // POST: /Account/ForgotPassword
