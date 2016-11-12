@@ -81,7 +81,7 @@ namespace RestAPIs.Controllers
             doctorTiming.day = doctorTimingModel.day;
             doctorTiming.active = true;
             doctorTiming.md = DateTime.Now;
-            doctorTiming.mb = doctorTimingModel.mb;
+            doctorTiming.mb = doctorTimingModel.username;
 
             DateTime dateTimeFrom = DateTime.ParseExact(doctorTimingModel.from,
                                     "hh:mm tt", CultureInfo.InvariantCulture);
@@ -134,7 +134,8 @@ namespace RestAPIs.Controllers
             doctorTiming.to = dateTimeTo.TimeOfDay;
             doctorTiming.active = true;
             doctorTiming.cd = DateTime.Now;
-            doctorTiming.cb = doctorTimingModel.cb;
+            doctorTiming.md = DateTime.Now;
+            doctorTiming.cb = doctorTimingModel.username;
 
             db.DoctorTimings.Add(doctorTiming);
             await db.SaveChangesAsync();
