@@ -78,20 +78,13 @@ namespace Identity.Membership.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        // Add the new address properties:
-        public string Address { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-
+        [Required]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        [Required]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
-
-        // Use a sensible display name for views:
-        [Display(Name = "Postal Code")]
-        public string PostalCode { get; set; }
     }
 
     public class ResetPasswordViewModel
