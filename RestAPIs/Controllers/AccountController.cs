@@ -90,7 +90,7 @@ namespace RestAPIs.Controllers
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
                 {
-                    Content = new StringContent("An error occurred, please try again or contact the administrator."),
+                    Content = new StringContent("An error occurred while posting in api/account/login, please try again or contact the administrator."),
                     ReasonPhrase = "Critical Exception"
                 });
             }
@@ -120,14 +120,14 @@ namespace RestAPIs.Controllers
 
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
 
-                // Add the Address properties:
+                                // Add the Address properties:
                 user.Address = model.Address;
                 user.City = model.City;
                 user.State = model.State;
                 user.PostalCode = model.PostalCode;
 
                 var result = await UserManager.CreateAsync(user, model.Password);
-
+               
 
                 return result;
             }
@@ -135,7 +135,7 @@ namespace RestAPIs.Controllers
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
                 {
-                    Content = new StringContent("An error occurred, please try again or contact the administrator."),
+                    Content = new StringContent("An error occurred while posting in api/Account/Register, please try again or contact the administrator."),
                     ReasonPhrase = "Critical Exception"
                 });
             }
@@ -186,7 +186,7 @@ namespace RestAPIs.Controllers
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
                 {
-                    Content = new StringContent("An error occurred, please try again or contact the administrator."),
+                    Content = new StringContent("An error occurred while posting in api/account/ForgotPassword, please try again or contact the administrator."),
                     ReasonPhrase = "Critical Exception"
                 });
             }
@@ -230,7 +230,7 @@ namespace RestAPIs.Controllers
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
                 {
-                    Content = new StringContent("An error occurred, please try again or contact the administrator."),
+                    Content = new StringContent("An error occurred while posting in api/account/ResetPassword, please try again or contact the administrator."),
                     ReasonPhrase = "Critical Exception"
                 });
             }
