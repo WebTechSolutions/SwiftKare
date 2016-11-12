@@ -143,7 +143,7 @@ namespace RestAPIs.Controllers
         }
 
         // DELETE: api/DoctorTimings/5
-        [ResponseType(typeof(DoctorTimingsModel))]
+        [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> DeleteDoctorTiming(long id)
         {
 
@@ -180,7 +180,7 @@ namespace RestAPIs.Controllers
             model.from = from.ToString("hh:mm tt");
             model.to = to.ToString("hh:mm tt");
 
-            return Ok(model);
+            return StatusCode(HttpStatusCode.OK);
         }
 
         protected override void Dispose(bool disposing)
