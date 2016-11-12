@@ -109,18 +109,9 @@ namespace WebApp.Controllers
                      Email =
                          userViewModel.Email,
                      // Add the Address Info:
-                     Address = userViewModel.Address,
-                     City = userViewModel.City,
-                     State = userViewModel.State,
-                     PostalCode = userViewModel.PostalCode
                  };
 
-                 // Add the Address Info:
-                 user.Address = userViewModel.Address;
-                 user.City = userViewModel.City;
-                 user.State = userViewModel.State;
-                 user.PostalCode = userViewModel.PostalCode;
-
+                
                  // Then create:
                  var adminresult = await UserManager.CreateAsync(user, userViewModel.Password);
 
