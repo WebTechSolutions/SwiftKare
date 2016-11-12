@@ -31,7 +31,19 @@ namespace WebApp.Helper
             {
                 response = ex.Response as HttpWebResponse;
             }
-            actual = response != null ? UnPackResponse(response) : "Status:OK";
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                actual = response != null ? UnPackResponse(response) : "";
+            }
+            else
+            {
+                var resp = new HttpResponseMessage(response.StatusCode)
+                {
+                    Content = new StringContent(UnPackResponse(response)),
+                    ReasonPhrase = response.StatusDescription
+                };
+                throw new HttpResponseException(resp);
+            }
             return actual;
         }
         public static string GetResponseString(string requestUriString, bool isBearerRequired)
@@ -49,7 +61,7 @@ namespace WebApp.Helper
             else
                 authorizationheader = $"Basic {ApplicationGlobalVariables.Instance.ClientId}:{ApplicationGlobalVariables.Instance.Secret}";
 
-            request.Headers.Add("Authorization", authorizationheader);
+             request.Headers.Add("Authorization", authorizationheader);
 
             var actual = "";
             try
@@ -60,7 +72,19 @@ namespace WebApp.Helper
             {
                 response = ex.Response as HttpWebResponse;
             }
-            actual = response != null ? UnPackResponse(response) : "Status:OK";
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                actual = response != null ? UnPackResponse(response) : "";
+            }
+            else
+            {
+                var resp = new HttpResponseMessage(response.StatusCode)
+                {
+                    Content = new StringContent(UnPackResponse(response)),
+                    ReasonPhrase = response.StatusDescription
+                };
+                throw new HttpResponseException(resp);
+            }
             return actual;
         }
 
@@ -74,22 +98,26 @@ namespace WebApp.Helper
                     client.BaseAddress = new Uri(ApplicationGlobalVariables.Instance.ApiBaseUrl);
                     client.DefaultRequestHeaders.Clear();
                     client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
-                    try
+                    var response = client.PostAsync(endPointAddress, new StringContent(strContent, Encoding.Default, "application/json"));
+                    if (response.Result.IsSuccessStatusCode)
                     {
-                        dynamic requestResult = client.PostAsync(endPointAddress, new StringContent(strContent, Encoding.Default, "application/json")).Result.Content.ReadAsStringAsync().Result;
+                        dynamic requestResult = response.Result.Content.ReadAsStringAsync().Result;
                         return requestResult;
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        throw ex;
+                        var resp = new HttpResponseMessage(response.Result.StatusCode)
+                        {
+                            Content = new StringContent(response.Result.Content.ReadAsStringAsync().Result),
+                            ReasonPhrase = response.Result.ReasonPhrase
+                        };
+                        throw new HttpResponseException(resp);
                     }
                 }
             }
             catch (Exception ex)
             {
-                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                httpResponseMessage.Content = new StringContent(ex.Message);
-                throw new HttpResponseException(httpResponseMessage);
+                throw ex;
             }
         }
 
@@ -110,22 +138,26 @@ namespace WebApp.Helper
                         authorizationheader = $"Basic {ApplicationGlobalVariables.Instance.ClientId}:{ApplicationGlobalVariables.Instance.Secret}";
 
                     client.DefaultRequestHeaders.Add("Authorization", authorizationheader);
-                    try
+                    var response = client.PostAsync(endPointAddress, new StringContent(strContent, Encoding.Default, "application/json"));
+                    if (response.Result.IsSuccessStatusCode)
                     {
-                        dynamic requestResult = client.PostAsync(endPointAddress, new StringContent(strContent, Encoding.Default, "application/json")).Result.Content.ReadAsStringAsync().Result;
+                        dynamic requestResult = response.Result.Content.ReadAsStringAsync().Result;
                         return requestResult;
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        throw ex;
+                        var resp = new HttpResponseMessage(response.Result.StatusCode)
+                        {
+                            Content = new StringContent(response.Result.Content.ReadAsStringAsync().Result),
+                            ReasonPhrase = response.Result.ReasonPhrase
+                        };
+                        throw new HttpResponseException(resp);
                     }
                 }
             }
             catch (Exception ex)
             {
-                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                httpResponseMessage.Content = new StringContent(ex.Message);
-                throw new HttpResponseException(httpResponseMessage);
+                throw ex;
             }
         }
 
@@ -139,14 +171,20 @@ namespace WebApp.Helper
                     client.BaseAddress = new Uri(ApplicationGlobalVariables.Instance.ApiBaseUrl);
                     client.DefaultRequestHeaders.Clear();
                     client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
-                    try
+                    var response = client.PutAsync(endPointAddress, new StringContent(strContent, Encoding.Default, "application/json"));
+                    if (response.Result.IsSuccessStatusCode)
                     {
-                        dynamic requestResult = client.PutAsync(endPointAddress, new StringContent(strContent, Encoding.Default, "application/json")).Result.Content.ReadAsStringAsync().Result;
+                        dynamic requestResult = response.Result.Content.ReadAsStringAsync().Result;
                         return requestResult;
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        throw ex;
+                        var resp = new HttpResponseMessage(response.Result.StatusCode)
+                        {
+                            Content = new StringContent(response.Result.Content.ReadAsStringAsync().Result),
+                            ReasonPhrase = response.Result.ReasonPhrase
+                        };
+                        throw new HttpResponseException(resp);
                     }
                 }
             }
@@ -166,14 +204,20 @@ namespace WebApp.Helper
                     client.BaseAddress = new Uri(ApplicationGlobalVariables.Instance.ApiBaseUrl);
                     client.DefaultRequestHeaders.Clear();
                     client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
-                    try
+                    var response = client.DeleteAsync(endPointAddress);
+                    if (response.Result.IsSuccessStatusCode)
                     {
-                        dynamic requestResult = client.DeleteAsync(endPointAddress).Result.Content.ReadAsStringAsync().Result;
+                        dynamic requestResult = response.Result.Content.ReadAsStringAsync().Result;
                         return requestResult;
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        throw ex;
+                        var resp = new HttpResponseMessage(response.Result.StatusCode)
+                        {
+                            Content = new StringContent(response.Result.Content.ReadAsStringAsync().Result),
+                            ReasonPhrase = response.Result.ReasonPhrase
+                        };
+                        throw new HttpResponseException(resp);
                     }
                 }
             }
