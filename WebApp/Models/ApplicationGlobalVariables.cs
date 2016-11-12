@@ -10,9 +10,8 @@ namespace WebApp.Models
     {
         private static readonly ApplicationGlobalVariables instance = new ApplicationGlobalVariables();
         public readonly string ApiBaseUrl;
-        public string UserName;
-        public string Password;
-        public string UserId;
+        public string ClientId;
+        public string Secret;
 
 
         // Explicit static constructor to tell C# compiler
@@ -24,6 +23,8 @@ namespace WebApp.Models
         private ApplicationGlobalVariables()
         {
             ApiBaseUrl = "http://localhost:13040/";
+            ClientId = "abc";
+            Secret = "ddddddddd";
         }
 
 
