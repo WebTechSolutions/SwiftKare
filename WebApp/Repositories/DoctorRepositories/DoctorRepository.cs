@@ -22,7 +22,7 @@ namespace WebApp.Repositories.DoctorRepositories
             t.active = true;
             t.status = true;
             var strContent = JsonConvert.SerializeObject(t);
-            var response = ApiConsumerHelper.PostData("api/Doctors", strContent);
+            var response = ApiConsumerHelper.PostData("api/Doctors", strContent,false);
             var result = JsonConvert.DeserializeObject<Doctor>(response);
             var userAssignRole = new UserAssignRoleModel();
             userAssignRole.UserId = t.userId;
@@ -57,14 +57,14 @@ namespace WebApp.Repositories.DoctorRepositories
         }
         public DoctorModel GetByUserId(string userId)
         {
-            var response = ApiConsumerHelper.GetResponseString("api/Doctors?userId=" + userId);
+            var response = ApiConsumerHelper.GetResponseString("api/Doctors?userId=" + userId,false);
             var result = JsonConvert.DeserializeObject<DoctorModel>(response);
             return result;
         }
 
         public long GetId(string userId)
         {
-            var response = ApiConsumerHelper.GetResponseString("api/Doctors/Id?userId=" + userId);
+            var response = ApiConsumerHelper.GetResponseString("api/Doctors/Id?userId=" + userId,false);
             var result = JsonConvert.DeserializeObject<long>(response);
             return result;
         }
