@@ -16,7 +16,7 @@ namespace WebApp.Helper
         {
             var baseUri = ApplicationGlobalVariables.Instance.ApiBaseUrl;
             var accessToken = OauthHelper.AccessToken;
-            var request = WebRequest.Create(baseUri+requestUriString);
+            var request = WebRequest.Create(baseUri + requestUriString);
             request.Method = "Get";
             request.ContentType = "application/json";
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
@@ -34,7 +34,36 @@ namespace WebApp.Helper
             actual = response != null ? UnPackResponse(response) : "Status:OK";
             return actual;
         }
-        
+        public static string GetResponseString(string requestUriString, bool isBearerRequired)
+        {
+            var baseUri = ApplicationGlobalVariables.Instance.ApiBaseUrl;
+            var accessToken = isBearerRequired ? OauthHelper.AccessToken : "";
+            var request = WebRequest.Create(baseUri + requestUriString);
+            request.Method = "Get";
+            request.ContentType = "application/json";
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            HttpWebResponse response;
+            var authorizationheader = "";
+            if (isBearerRequired)
+                authorizationheader = $"Bearer {accessToken}";
+            else
+                authorizationheader = $"Basic {ApplicationGlobalVariables.Instance.ClientId}:{ApplicationGlobalVariables.Instance.Secret}";
+
+            request.Headers.Add("Authorization", authorizationheader);
+
+            var actual = "";
+            try
+            {
+                response = request.GetResponse() as HttpWebResponse;
+            }
+            catch (WebException ex)
+            {
+                response = ex.Response as HttpWebResponse;
+            }
+            actual = response != null ? UnPackResponse(response) : "Status:OK";
+            return actual;
+        }
+
         public static string PostData(string endPointAddress, string strContent)
         {
             var accessToken = OauthHelper.AccessToken;
@@ -45,6 +74,42 @@ namespace WebApp.Helper
                     client.BaseAddress = new Uri(ApplicationGlobalVariables.Instance.ApiBaseUrl);
                     client.DefaultRequestHeaders.Clear();
                     client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
+                    try
+                    {
+                        dynamic requestResult = client.PostAsync(endPointAddress, new StringContent(strContent, Encoding.Default, "application/json")).Result.Content.ReadAsStringAsync().Result;
+                        return requestResult;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                httpResponseMessage.Content = new StringContent(ex.Message);
+                throw new HttpResponseException(httpResponseMessage);
+            }
+        }
+
+        public static string PostData(string endPointAddress, string strContent, bool isBearerRequired)
+        {
+            var accessToken = isBearerRequired ? OauthHelper.AccessToken : "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(ApplicationGlobalVariables.Instance.ApiBaseUrl);
+                    client.DefaultRequestHeaders.Clear();
+                    var authorizationheader = "";
+
+                    if (isBearerRequired)
+                        authorizationheader = $"Bearer {accessToken}";
+                    else
+                        authorizationheader = $"Basic {ApplicationGlobalVariables.Instance.ClientId}:{ApplicationGlobalVariables.Instance.Secret}";
+
+                    client.DefaultRequestHeaders.Add("Authorization", authorizationheader);
                     try
                     {
                         dynamic requestResult = client.PostAsync(endPointAddress, new StringContent(strContent, Encoding.Default, "application/json")).Result.Content.ReadAsStringAsync().Result;
