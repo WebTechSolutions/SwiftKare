@@ -8,10 +8,6 @@ namespace DataAccess.CustomModels
         public string day { get; set; }
         public string from { get; set; }
         public string to { get; set; }
-        public string cb { get; set; }
-        public string mb { get; set; }
-        public Nullable<System.DateTime> cd { get; set; }
-        public Nullable<System.DateTime> md { get; set; }
-        public Nullable<bool> active { get; set; }
+        public string username { get; set; }
     }
 }
