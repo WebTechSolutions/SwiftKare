@@ -16,8 +16,8 @@ namespace WebApp.Helper
         {
             const string clientKey = "abc";
             const string clientSecret = "ddddddddd";
-            string username = ApplicationGlobalVariables.Instance.UserName;//"dr@gmail.com";
-            var password = ApplicationGlobalVariables.Instance.Password;//"Admin@12345";
+            string username = SessionHandler.UserName;//"dr@gmail.com";
+            var password = SessionHandler.Password;//"Admin@12345";
             var url = Models.ApplicationGlobalVariables.Instance.ApiBaseUrl;
 
 
