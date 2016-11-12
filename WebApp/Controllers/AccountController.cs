@@ -183,10 +183,6 @@ namespace WebApp.Controllers
                     Email = model.RegisterViewModel.Email,
                     FirstName = model.RegisterViewModel.FirstName,
                     LastName = model.RegisterViewModel.LastName,
-                    Address = model.RegisterViewModel.Address,
-                    City = model.RegisterViewModel.City,
-                    State = model.RegisterViewModel.State,
-                    PostalCode = model.RegisterViewModel.PostalCode
                 };
 
                 // Add the Address properties:
