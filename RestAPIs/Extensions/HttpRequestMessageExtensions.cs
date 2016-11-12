@@ -72,7 +72,7 @@ namespace RestAPIs.Extensions
                     var clientId = arr[0];
                     var clientSecret = arr[1];
                     var objModel = new OauthUserModel();
-                    if (!(clientId == objModel.OauthClient && clientSecret == objModel.OauthClientSecret))
+                    if (!(clientId == $"Basic {objModel.OauthClient}" && clientSecret == objModel.OauthClientSecret))
                         return false;
                 }
                 else
