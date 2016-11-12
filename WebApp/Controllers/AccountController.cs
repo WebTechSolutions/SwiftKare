@@ -108,9 +108,9 @@ namespace WebApp.Controllers
                         
                         //var userId = HttpContext.User.Identity.GetUserId();
                         string userId = UserManager.FindByName(model.LoginViewModel.Email)?.Id;
-                        ApplicationGlobalVariables.Instance.UserName = model.LoginViewModel.Email;
-                        ApplicationGlobalVariables.Instance.Password = model.LoginViewModel.Password;
-                        ApplicationGlobalVariables.Instance.UserId = userId;
+                        SessionHandler.UserName = model.LoginViewModel.Email;
+                        SessionHandler.Password = model.LoginViewModel.Password;
+                        SessionHandler.UserId = userId;
 
                         var roles = UserManager.GetRoles(userId);
                         if(roles.Contains("Doctor"))
@@ -184,9 +184,9 @@ namespace WebApp.Controllers
                 dynamic addedResult;
                 if (result.Succeeded)
                 {
-                    ApplicationGlobalVariables.Instance.UserName = model.RegisterViewModel.Email;
-                    ApplicationGlobalVariables.Instance.Password = model.RegisterViewModel.Password;
-                    ApplicationGlobalVariables.Instance.UserId = user.Id;
+                    SessionHandler.UserName = model.RegisterViewModel.Email;
+                    SessionHandler.Password = model.RegisterViewModel.Password;
+                    SessionHandler.UserId = user.Id;
 
                     if (model.IsPatient)
                     {
