@@ -28,12 +28,10 @@ namespace WebApp.Controllers
         {
             var Model = new DoctorTimingsViewModel();
             var objRepo = new DoctorRepository();
-            var userId = SessionHandler.UserId;
-            var doctor = objRepo.GetByUserId(userId);
-            Model.DoctorId = doctor.doctorID;
-            Model.DoctorTimingsList = objTimingRepo.GetListByDoctorId(doctor.doctorID).ToList();
+            Model.DoctorId = SessionHandler.UserInfo.Id;
+            Model.DoctorTimingsList = objTimingRepo.GetListByDoctorId(Model.DoctorId).ToList();
             Model.DoctorTiming = new DoctorTimingsModel();
-            Model.DoctorTiming.doctorID = doctor.doctorID;
+            Model.DoctorTiming.doctorID = Model.DoctorId;
             Model.DoctorTiming.doctorTimingsID = 0;
             return Json(Model, JsonRequestBehavior.AllowGet);
         }
