@@ -98,7 +98,7 @@ namespace RestAPIs.Controllers
                         if (model.Role.ToLower() == "doctor")
                         {
                             var doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
-                            if(doctor!=null)
+                            if (doctor != null)
                             {
                                 userModel.Id = doctor.doctorID;
                                 userModel.FirstName = doctor.firstName;
@@ -109,10 +109,10 @@ namespace RestAPIs.Controllers
                                 userModel.Errors = new List<string>();
                                 userModel.Errors.Add("User is not exist with this role.");
                             }
-                            
+
                         }
                     }
-                    else if(result==SignInStatus.Failure)
+                    else if (result == SignInStatus.Failure)
                     {
                         userModel.Errors = new List<string>();
                         userModel.Errors.Add("Login fail, please try later");
@@ -148,7 +148,7 @@ namespace RestAPIs.Controllers
                 };
                 throw new HttpResponseException(resp);
             }
-            if(userModel.Id<=0 && userModel.Errors == null)
+            if (userModel.Id <= 0 && userModel.Errors == null)
             {
                 userModel.Errors = new List<string>();
                 userModel.Errors.Add("Unexpected error from api/login");
@@ -199,6 +199,16 @@ namespace RestAPIs.Controllers
                         if (model.Role.ToLower() == "patient")
                         {
                             var resultRole = await UserManager.AddToRoleAsync(user.Id, "Patient");
+                            var patient = new Patient
+                            {
+                                userId = user.Id,
+                                lastName = user.LastName,
+                                firstName = user.FirstName,
+                                email = user.Email
+                            };
+                            db.Patients.Add(patient);
+                            await db.SaveChangesAsync();
+                            userModel.Id = patient.patientID;
 
                             //add the patient
                         }
@@ -260,8 +270,9 @@ namespace RestAPIs.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("ForgotPassword")]
-        public async Task<string> ForgotPassword(ForgotPasswordViewModel model, HttpRequestMessage request)
+        public async Task<DataAccess.CustomModels.ForgotModel> ForgotPassword(ForgotApiModel model, HttpRequestMessage request)
         {
+            var objModel = new DataAccess.CustomModels.ForgotModel { Email = model.Email };
             if (!request.IsValidClient())
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
@@ -272,39 +283,104 @@ namespace RestAPIs.Controllers
                 throw new HttpResponseException(resp);
             }
 
-            try
+            if (model.Role.ToLower() == "patient" || model.Role.ToLower() == "doctor")
             {
-                if (ModelState.IsValid)
+
+                try
                 {
-                    var user = await UserManager.FindByNameAsync(model.Email);
-
-
-                    if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                    if (ModelState.IsValid)
                     {
-                        // Don't reveal that the user does not exist or is not confirmed
-                        var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                        var user = await UserManager.FindByNameAsync(model.Email);
+                        if (user == null)
                         {
-                            Content = new StringContent("user is not exist with this email address or email is not confirmed"),
-                            ReasonPhrase = "Not Confirmed"
-                        };
-                        throw new HttpResponseException(resp);
+                            // Don't reveal that the user does not exist or is not confirmed
+                            var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                            {
+                                Content = new StringContent("user is not exist with this email address or email is not confirmed"),
+                                ReasonPhrase = "Not Confirmed"
+                            };
+                            throw new HttpResponseException(resp);
+                        }
+                        SwiftKareDBEntities db = new SwiftKareDBEntities();
+                        Random rnd = new Random();
+                        int caseSwitch = rnd.Next(1, 4);
+                        if (model.Role.ToLower() == "doctor")
+                        {
+                            Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == user.Id);
+                            switch (caseSwitch)
+                            {
+                                case 1:
+                                    objModel.SecretQuestion = doctor.secretQuestion1;
+                                    objModel.SecretAnswer = doctor.secretAnswer1;
+                                    break;
+                                case 2:
+                                    objModel.SecretQuestion = doctor.secretQuestion2;
+                                    objModel.SecretAnswer = doctor.secretAnswer2;
+                                    break;
+                                default:
+                                    objModel.SecretQuestion = doctor.secretQuestion3;
+                                    objModel.SecretAnswer = doctor.secretAnswer3;
+                                    break;
+                            }
+                        }
+                        else if (model.Role.ToLower() == "patient")
+                        {
+                            Patient patient = db.Patients.SingleOrDefault(o => o.userId == user.Id);
+                            switch (caseSwitch)
+                            {
+                                case 1:
+                                    objModel.SecretQuestion = patient.secretQuestion1;
+                                    objModel.SecretAnswer = patient.secretAnswer1;
+                                    break;
+                                case 2:
+                                    objModel.SecretQuestion = patient.secretQuestion2;
+                                    objModel.SecretAnswer = patient.secretAnswer2;
+                                    break;
+                                default:
+                                    objModel.SecretQuestion = patient.secretQuestion3;
+                                    objModel.SecretAnswer = patient.secretAnswer3;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            var resp = new HttpResponseMessage(HttpStatusCode.NotImplemented)
+                            {
+                                Content = new StringContent("Role is undefined"),
+                                ReasonPhrase = "Undefined Role"
+                            };
+                            throw new HttpResponseException(resp);
+                        }
+
+
+
+                        // var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                        // return code;
                     }
 
-                    var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                    return code;
+                    // If we got this far, something failed, redisplay form
+                    //return "";
                 }
-
-                // If we got this far, something failed, redisplay form
-                return "";
-            }
-            catch (Exception)
-            {
-                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                catch (Exception)
                 {
-                    Content = new StringContent("An error occurred while posting in api/account/ForgotPassword, please try again or contact the administrator."),
-                    ReasonPhrase = "Critical Exception"
-                });
+                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("An error occurred while posting in api/account/ForgotPassword, please try again or contact the administrator."),
+                        ReasonPhrase = "Critical Exception"
+                    });
+                }
             }
+            else
+            {
+                var resp = new HttpResponseMessage(HttpStatusCode.NotImplemented)
+                {
+                    Content = new StringContent("Role is undefined"),
+                    ReasonPhrase = "Undefined Role"
+                };
+                throw new HttpResponseException(resp);
+            }
+
+            return objModel;
         }
 
 
@@ -312,8 +388,9 @@ namespace RestAPIs.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("ResetPassword")]
-        public async Task<IdentityResult> ResetPassword(ResetPasswordViewModel model, HttpRequestMessage request)
+        public async Task<DataAccess.CustomModels.ResetPasswordModel> ResetPassword(ResetPasswordViewModel model, HttpRequestMessage request)
         {
+            
             if (!request.IsValidClient())
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
@@ -323,13 +400,26 @@ namespace RestAPIs.Controllers
                 };
                 throw new HttpResponseException(resp);
             }
+            var objModel = new DataAccess.CustomModels.ResetPasswordModel();
+
             try
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
+
+                model.Code= UserManager.GeneratePasswordResetToken(user.Id);
+
                 if (user != null)
                 {
                     var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
-                    return result;
+                    if (result.Succeeded)
+                    {
+                        objModel.Messages = new List<string>();
+                        objModel.Messages.Add("Your Password has been reset, please try!...");
+                    }
+                    else
+                    {
+                        objModel.Messages = result.Errors.ToList();
+                    }
                 }
                 else
                 {
@@ -340,6 +430,7 @@ namespace RestAPIs.Controllers
                     };
                     throw new HttpResponseException(resp);
                 }
+
             }
             catch (Exception)
             {
@@ -349,7 +440,12 @@ namespace RestAPIs.Controllers
                     ReasonPhrase = "Critical Exception"
                 });
             }
+
+            return objModel;
+
         }
+
+       
 
 
         [HttpPost]
