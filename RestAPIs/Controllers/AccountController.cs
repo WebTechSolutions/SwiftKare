@@ -64,8 +64,12 @@ namespace RestAPIs.Controllers
         [AllowAnonymous]
         [Route("Login")]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        public async Task<SignInStatus> Login(LoginViewModel model, HttpRequestMessage request)
+        public async Task<DataAccess.CustomModels.UserModel> Login(LoginApiModel model, HttpRequestMessage request)
         {
+            var userModel = new DataAccess.CustomModels.UserModel
+            {
+                Email = model.Email
+            };
 
             if (!request.IsValidClient())
             {
@@ -76,25 +80,81 @@ namespace RestAPIs.Controllers
                 };
                 throw new HttpResponseException(resp);
             }
-            // return SignInStatus.Failure;
 
-            try
-            {
-                //    var id = headerValues.FirstOrDefault();
-                // This doen't count login failures towards lockout only two factor authentication
-                // To enable password failures to trigger lockout, change to shouldLockout: true
-                var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-                return result;
-            }
 
-            catch (Exception)
+            if (model.Role.ToLower() == "patient" || model.Role.ToLower() == "doctor")
             {
-                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+
+                try
                 {
-                    Content = new StringContent("An error occurred while posting in api/account/login, please try again or contact the administrator."),
-                    ReasonPhrase = "Critical Exception"
-                });
+                    //    var id = headerValues.FirstOrDefault();
+                    // This doen't count login failures towards lockout only two factor authentication
+                    // To enable password failures to trigger lockout, change to shouldLockout: true
+                    var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, false, shouldLockout: false);
+                    var userId = UserManager.FindByName(model.Email)?.Id;
+                    if (result == SignInStatus.Success)
+                    {
+                        SwiftKareDBEntities db = new SwiftKareDBEntities();
+                        if (model.Role.ToLower() == "doctor")
+                        {
+                            var doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
+                            if(doctor!=null)
+                            {
+                                userModel.Id = doctor.doctorID;
+                                userModel.FirstName = doctor.firstName;
+                                userModel.LastName = doctor.lastName;
+                            }
+                            else
+                            {
+                                userModel.Errors = new List<string>();
+                                userModel.Errors.Add("User is not exist with this role.");
+                            }
+                            
+                        }
+                    }
+                    else if(result==SignInStatus.Failure)
+                    {
+                        userModel.Errors = new List<string>();
+                        userModel.Errors.Add("Login fail, please try later");
+                    }
+                    else if (result == SignInStatus.LockedOut)
+                    {
+                        userModel.Errors = new List<string>();
+                        userModel.Errors.Add("Account has been locked");
+                    }
+                    else if (result == SignInStatus.RequiresVerification)
+                    {
+                        userModel.Errors = new List<string>();
+                        userModel.Errors.Add("Account need to verify");
+                    }
+                    // return result;
+                }
+
+                catch (Exception)
+                {
+                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent("An error occurred while posting in api/account/login, please try again or contact the administrator."),
+                        ReasonPhrase = "Critical Exception"
+                    });
+                }
             }
+            else
+            {
+                var resp = new HttpResponseMessage(HttpStatusCode.NotImplemented)
+                {
+                    Content = new StringContent("Role is undefined"),
+                    ReasonPhrase = "Undefined Role"
+                };
+                throw new HttpResponseException(resp);
+            }
+            if(userModel.Id<=0 && userModel.Errors == null)
+            {
+                userModel.Errors = new List<string>();
+                userModel.Errors.Add("Unexpected error from api/login");
+            }
+
+            return userModel;
         }
 
 
@@ -107,7 +167,12 @@ namespace RestAPIs.Controllers
         public async Task<DataAccess.CustomModels.UserModel> Register(RegisterApiModel model, HttpRequestMessage request)
         {
 
-            var userModel = new DataAccess.CustomModels.UserModel();
+            var userModel = new DataAccess.CustomModels.UserModel
+            {
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName
+            };
 
             if (!request.IsValidClient())
             {
@@ -161,10 +226,7 @@ namespace RestAPIs.Controllers
                     {
                         userModel.Errors = result.Errors.ToList();
                     }
-                    userModel.Email = model.Email;
-                    userModel.FirstName = model.FirstName;
-                    userModel.LastName = model.LastName;
-                    
+
 
                     return userModel;
                 }
