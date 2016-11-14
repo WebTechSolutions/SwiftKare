@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-
+//jam
 namespace Identity.Membership.Models
 {
     public class ExternalLoginConfirmationViewModel
