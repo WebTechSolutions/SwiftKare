@@ -40,6 +40,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult CreateEditTimings(DoctorTimingsModel model)
         {
+            //jam
             var timingsList = objTimingRepo.GetListByDoctorId(model.doctorID);
             var alreadItems = timingsList.Where(o => o.day == model.day && o.from == model.from && o.to == model.to).ToList();
             if(alreadItems.Count<=0)
