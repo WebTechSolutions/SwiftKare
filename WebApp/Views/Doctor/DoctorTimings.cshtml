@@ -6,91 +6,208 @@
 
 
 <!-- page content -->
-<div class="right_col" role="main">
-    <div class="page-title">
-        <div class="title_left">
-            <h3>My Scheduler</h3>
-        </div>
-    </div>
-
-    <div class="clearfix"></div>
-    <div class="form-horizontal">
-        <hr />
-
-        <div class="form-group">
-
-            <input id="DoctorTiming_doctorTimingsID" type="hidden" value="0" />
-
-            <label class="control-label col-md-2">Day</label>
-
-            <div class="col-md-10">
-                <select class="form-control" id="DoctorTiming_day" name="DoctorTiming.day">
-                    <option value="Monday">Monday</option>
-                    <option value="Tuesday">Tuesday</option>
-                    <option value="Wednesday">Wednesday</option>
-                    <option value="Thursday">Thursday</option>
-                    <option value="Friday">Friday</option>
-                    <option value="Saturday">Saturday</option>
-                    <option value="Sunday">Sunday</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-md-2">From</label>
-
-            <div class="col-md-10">
-                <input class="form-control" id="DoctorTiming_from" name="DoctorTiming.from" value="" type="text">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2">To</label>
-            <div class="col-md-10">
-                <input class="form-control" id="DoctorTiming_to" name="DoctorTiming.to" value="" type="text">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" onclick="addUpdate();" class="btn btn-default" />
-                <input type="submit" value="Reset" onclick="reset();" class="btn btn-default" />
 
 
-            </div>
-        </div>
-    </div>
-
-
-
-
+<div class="right_col" style="min-height: 1779px;">
     <div class="x_panel">
+        
         <div class="x_title">
-            <h2>@ViewBag.Title</h2>
+            <h2>Schedule</h2>
             <ul class="nav navbar-right panel_toolbox">
-                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
             </ul>
             <div class="clearfix"></div>
         </div>
-
-
         <div class="x_content">
-            <div class="table-responsive">
-                <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                    <thead>
-                        <tr class="headings">
-                            <th class="column-title">Day</th>
-                            <th class="column-title">From</th>
-                            <th class="column-title">To </th>
-                            <th class="column-title">Action</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="timingTable"></tbody>
-                </table>
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <label class="control-label">Day:</label>
+                    <div class="form-group">
+                        <select id="DoctorTiming_day" class="form-control">
+                            <option>Monday</option>
+                            <option>Tuesday</option>
+                            <option>Wednesday</option>
+                            <option>Thursday</option>
+                            <option>Friday</option>
+                            <option>Saturday</option>
+                            <option>Sunday</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="form-control-wrapper">
+                        <div class="form-group label-floating is-empty">
+                            <label for="time" class="control-label">From Time</label>
+                            <input id="DoctorTiming_from" class="form-control" data-dtp="dtp_0Gd9z" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="form-control-wrapper">
+                        <div class="form-group label-floating is-empty">
+                            <label for="time" class="control-label">To Time</label>
+                            <input id="DoctorTiming_to" class="form-control" data-dtp="dtp_bTytq" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <button class="btn btn-primary" onclick="addUpdate();" style="margin-top: 26px;" type="button">Add</button>
+                    <button class="btn btn-primary" onclick="reset();" style="margin-top: 26px;" type="button">Reset</button>
+                </div>
             </div>
+
+            <div class="x_panel">
+                <div class="x_title">
+                    
+                    <div class="table-responsive">
+                        <div id="divLoader" style="display:none;" class="loader"></div>
+
+                        <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                            <thead>
+                                <tr class="headings">
+                                    <th class="column-title">Day</th>
+                                    <th class="column-title">From</th>
+                                    <th class="column-title">To </th>
+                                    <th class="column-title">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="timingTable"></tbody>
+                        </table>
+                    </div>
+                    ---------------------------------
+
+
+                    <h2>Days</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content" style="display: block;">
+                    <div class="table-responsive">
+                        <h2>Monday</h2>
+                        <table class="table table-striped table-bordered dataTable no-footer">
+                            <tbody>
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- monday -->
+
+                    <div class="table-responsive">
+                        <h2>Tuesday</h2>
+                        <table class="table table-striped table-bordered dataTable no-footer">
+                            <tbody>
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- Tuesday -->
+
+                    <div class="table-responsive">
+                        <h2>Wednesday</h2>
+                        <table class="table table-striped table-bordered dataTable no-footer">
+                            <tbody>
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- Wednesday -->
+
+                    <div class="table-responsive">
+                        <h2>Thursday</h2>
+                        <table class="table table-striped table-bordered dataTable no-footer">
+                            <tbody>
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- Thursday -->
+
+                    <div class="table-responsive">
+                        <h2>Friday</h2>
+                        <table class="table table-striped table-bordered dataTable no-footer">
+                            <tbody>
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- Friday -->
+
+                    <div class="table-responsive">
+                        <h2>Saturday</h2>
+                        <table class="table table-striped table-bordered dataTable no-footer">
+                            <tbody>
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+
+                                <tr class="time_btn">
+                                    <td class="time-remove"><span>8:00am To 9:00am</span> <button class="btn btn-primary" type="button">Delete</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- Saturday -->
+
+                    <div class="table-responsive">
+                        <h2>Sunday</h2>
+                        <p>There is no time Slot available</p>
+                    </div><!-- Sunday -->
+                </div>
+            </div><!-- Days -->
         </div>
     </div>
 </div>
+
 
 
 @section Scripts {
@@ -99,9 +216,34 @@
         var _objUpdate = null;
         var _objAdd = null;
         var _doctorId = 0;
-        $(document).ready(function () {
-            GetTimings();
-        });
+
+    $(document).ready(function()
+    {
+        GetTimings();
+     
+
+        $('#DoctorTiming_from').bootstrapMaterialDatePicker
+      ({
+          date: false,
+          shortTime: true,
+          format: 'HH:mm A',
+
+      });
+
+        $('#DoctorTiming_to').bootstrapMaterialDatePicker
+      ({
+          date: false,
+          shortTime: true,
+          format: 'HH:mm A',
+
+      });
+
+
+      $.material.init()
+    });
+
+
+       
 
         function ValidateForm() {
             var success = "";
@@ -120,6 +262,7 @@
 
         function GetTimings() {
             $("tbody[id$='timingTable']").html('');
+            $("div[id$='divLoader']").show();
             var param = "{}";
             $.ajax({
                 type: 'POST',
@@ -151,8 +294,9 @@
                 tableHtml = tableHtml + "<td><a href='#'  onclick='editObj(" + JSON.stringify(doctorTimingList[i]) + ",this);'> Edit</a> | <a href='#' onclick='deleteObj(" + doctorTimingList[i].doctorTimingsID + ")'>Delete</a></td>";
                 tableHtml = tableHtml + "</tr>";
             }
-
+            $("div[id$='divLoader']").hide();
             $("tbody[id$='timingTable']").html(tableHtml);
+            
 
         }
 
@@ -189,7 +333,7 @@
                 else {
                     _data =_objUpdate ;
                 }
-
+                $("div[id$='divLoader']").show();
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Action("CreateEditTimings", "Doctor")',
@@ -217,7 +361,7 @@
             if (confirmMessage == false)
                 return false;
 
-
+            $("div[id$='divLoader']").show();
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Action("DeleteDoctorTiming", "Doctor")',
