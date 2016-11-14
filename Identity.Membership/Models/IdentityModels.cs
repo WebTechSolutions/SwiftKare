@@ -3,7 +3,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
-
+//jam
 namespace Identity.Membership.Models
 {
     public class ApplicationUser : IdentityUser
