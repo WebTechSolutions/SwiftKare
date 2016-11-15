@@ -30,11 +30,62 @@ namespace WebApp.Controllers
             var objRepo = new DoctorRepository();
             Model.DoctorId = SessionHandler.UserInfo.Id;
             Model.DoctorTimingsList = objTimingRepo.GetListByDoctorId(Model.DoctorId).ToList();
+
+            Model.DayWiseTimings = GetList(Model.DoctorTimingsList);
+
+
+
             Model.DoctorTiming = new DoctorTimingsModel();
             Model.DoctorTiming.doctorID = Model.DoctorId;
             Model.DoctorTiming.doctorTimingsID = 0;
             return Json(Model, JsonRequestBehavior.AllowGet);
         }
+
+        private List<DoctorTimingsListModel> GetList(List<DoctorTimingsModel> list)
+        {
+            var daywiseList = new List<DoctorTimingsListModel>();
+            var obj = new DoctorTimingsListModel();
+            obj.Day = "Monday";
+            obj.Timings = list.Count(o => o.day.ToLower() == obj.Day.ToLower())>0? list.Where(o => o.day.ToLower() == obj.Day.ToLower()).ToList(): new List<DoctorTimingsModel>();
+            daywiseList.Add(obj);
+
+            obj = new DoctorTimingsListModel();
+            obj.Day = "Tuesday";
+            obj.Timings = list.Count(o => o.day.ToLower() == obj.Day.ToLower()) > 0 ? list.Where(o => o.day.ToLower() == obj.Day.ToLower()).ToList() : new List<DoctorTimingsModel>();
+            daywiseList.Add(obj);
+
+
+            obj = new DoctorTimingsListModel();
+            obj.Day = "Wednesday";
+            obj.Timings = list.Count(o => o.day.ToLower() == obj.Day.ToLower()) > 0 ? list.Where(o => o.day.ToLower() == obj.Day.ToLower()).ToList() : new List<DoctorTimingsModel>();
+            daywiseList.Add(obj);
+
+
+            obj = new DoctorTimingsListModel();
+            obj.Day = "Thursday";
+            obj.Timings = list.Count(o => o.day.ToLower() == obj.Day.ToLower()) > 0 ? list.Where(o => o.day.ToLower() == obj.Day.ToLower()).ToList() : new List<DoctorTimingsModel>();
+            daywiseList.Add(obj);
+
+            obj = new DoctorTimingsListModel();
+            obj.Day = "Friday";
+            obj.Timings = list.Count(o => o.day.ToLower() == obj.Day.ToLower()) > 0 ? list.Where(o => o.day.ToLower() == obj.Day.ToLower()).ToList() : new List<DoctorTimingsModel>();
+            daywiseList.Add(obj);
+
+            obj = new DoctorTimingsListModel();
+            obj.Day = "Saturday";
+            obj.Timings = list.Count(o => o.day.ToLower() == obj.Day.ToLower()) > 0 ? list.Where(o => o.day.ToLower() == obj.Day.ToLower()).ToList() : new List<DoctorTimingsModel>();
+            daywiseList.Add(obj);
+
+            obj = new DoctorTimingsListModel();
+            obj.Day = "Sunday";
+            obj.Timings = list.Count(o => o.day.ToLower() == obj.Day.ToLower()) > 0 ? list.Where(o => o.day.ToLower() == obj.Day.ToLower()).ToList() : new List<DoctorTimingsModel>();
+            daywiseList.Add(obj);
+
+            return daywiseList;
+
+
+        }
+
 
 
         [HttpPost]
