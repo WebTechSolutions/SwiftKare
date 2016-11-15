@@ -10,5 +10,12 @@ namespace WebApp.Models
         public List<DoctorTimingsModel> DoctorTimingsList { get; set; }
         public DoctorTimingsModel DoctorTiming { get; set; }
         public long DoctorId { get; set; }
+        public List<DoctorTimingsListModel> DayWiseTimings { get; set; }
     }
+    public class DoctorTimingsListModel
+    {
+        public string Day { get; set; }
+        public List<DoctorTimingsModel> Timings { get; set; }
+    }
+
 }
