@@ -1,4 +1,5 @@
 ﻿using Identity.Membership.Models;
+//jam
 namespace WebApp.Models
 {
     public class LoginRegisterViewModel
