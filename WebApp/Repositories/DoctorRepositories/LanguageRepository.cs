@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using WebApp.Helper;
 using Identity.Membership.Models;
 using System.Collections;
-using DataAccess.CommonModels;
 
 namespace WebApp.Repositories.DoctorRepositories
 {
@@ -32,11 +31,10 @@ namespace WebApp.Repositories.DoctorRepositories
         {
             throw new NotImplementedException();
         }
-
-        public List<Languages> Get()
+        public IEnumerable<Language> Get()
         {
             var response = ApiConsumerHelper.GetResponseString("api/Languages");
-            var result = JsonConvert.DeserializeObject<List<Languages>>(response);
+            var result = JsonConvert.DeserializeObject<List<Language>>(response);
            // var result = JsonConvert.DeserializeObject<Language>(response);
             return result;
         }
