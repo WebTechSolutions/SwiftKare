@@ -1,4 +1,5 @@
 ﻿using DataAccess;
+using DataAccess.CommonModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,30 +16,62 @@ namespace RestAPIs.Controllers
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
         HttpResponseMessage response;
-
-        [Route("api/addAppointment/appModel/")]
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutAppointments(Appointment model)
+        
+        [Route("api/ROV")]
+        public HttpResponseMessage GetROV(long id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                var rov = (from l in db.Appointments
+                           where l.active == true && l.patientID == id
+                           orderby l.appID descending
+                           select new AppointmentModel{ rov = l.rov }).FirstOrDefault();
+                response = Request.CreateResponse(HttpStatusCode.OK, rov);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetROV in SearchDcotorController");
             }
 
 
-            db.Appointments.Add(model);
+        }
+        [HttpPost]
+        [Route("api/addAppointment/appModel/")]
+        [ResponseType(typeof(void))]
+        public async Task<HttpResponseMessage> AddAppointments(AppointmentModel model)
+        {
+            Appointment app = new Appointment();
             try
             {
+                if (model.appDate==null || model.appTime==null||model.userID==null||model.doctorID==null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Appointment model is not valid.");
+                    return response;
+                }
+                Patient patient = db.Patients.Where(p => p.userId == model.userID).FirstOrDefault();
+               
+                app.active = true;
+                app.doctorID = model.doctorID;
+                app.patientID = patient.patientID;
+                app.appTime = model.appTime;
+                app.appDate = model.appDate;
+                app.cb = model.userID;
+                app.cd = System.DateTime.Now;
+
+                db.Appointments.Add(app);
+
                 await db.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                throw;
+                ThrowError(ex, "AddAppointments in AppointmentController.");
             }
 
-
-            return CreatedAtRoute("DefaultApi", new { id = model.appID }, model);
+            response = Request.CreateResponse(HttpStatusCode.OK, app.appID);
+            return response;
         }
+        [HttpPost]
         [Route("api/addRovChiefComplaints/appModel/")]
         [ResponseType(typeof(void))]
         public async Task<HttpResponseMessage> AddROV(Appointment model)
