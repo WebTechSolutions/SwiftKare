@@ -73,7 +73,10 @@
         <AssociationConnector Association="SwiftKareDBModel.FK_SystemItems_Systems" ManuallyRouted="false" />
         <AssociationConnector Association="SwiftKareDBModel.FK_RoleModules_Roles" ManuallyRouted="false" />
         <AssociationConnector Association="SwiftKareDBModel.AspNetUserRoles" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Surgery" Width="1.5" PointX="3" PointY="31" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.PatientSurgery" Width="1.5" PointX="3" PointY="31" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Reaction" Width="1.5" PointX="16.375" PointY="7.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Severity" Width="1.5" PointX="16.375" PointY="11.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Surgery" Width="1.5" PointX="13.375" PointY="16.75" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Surgeries_Patient" />
       </Diagram>
     </edmx:Diagrams>
