@@ -15,15 +15,11 @@ namespace DataAccess
     public partial class Surgery
     {
         public long surgeryID { get; set; }
-        public string bodyPart { get; set; }
-        public Nullable<bool> active { get; set; }
-        public Nullable<long> patientID { get; set; }
+        public string surgeryName { get; set; }
         public string cb { get; set; }
         public Nullable<System.DateTime> cd { get; set; }
         public string mb { get; set; }
         public Nullable<System.DateTime> md { get; set; }
-        public Nullable<System.DateTime> reportedDate { get; set; }
-    
-        public virtual Patient Patient { get; set; }
+        public Nullable<bool> active { get; set; }
     }
 }
