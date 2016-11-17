@@ -7,6 +7,10 @@ using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
 using WebApp.Repositories.DoctorRepositories;
+using DataAccess.CommonModels;
+using WebApp.Repositories.PatientRepositories;
+using DataAccess.CustomModels;
+using System.Text.RegularExpressions;
 
 namespace WebApp.Controllers
 {
@@ -15,116 +19,124 @@ namespace WebApp.Controllers
        // GET: SeeDoctor
         public ActionResult SeeDoctor()
         {
-            SeeDoctorViewModel SeeDoctorViewModel = new SeeDoctorViewModel();
-            SeeDoctorViewModel=assignDefault();
-            return View(SeeDoctorViewModel);
+            ViewBag.PatienID = 10015;
+            return View();
         }
 
-        //private IEnumerable<SelectListItem> GetSelectListItems(IEnumerable<string> elements)
-        //{
-        //    // Create an empty list to hold result of the operation
-        //    var selectList = new List<SelectListItem>();
-
-        //    // For each string in the 'elements' variable, create a new SelectListItem object
-        //    // that has both its Value and Text properties set to a particular value.
-        //    // This will result in MVC rendering each item as:
-        //    //     <option value="State Name">State Name</option>
-        //    foreach (var element in elements)
-        //    {
-        //        selectList.Add(new SelectListItem
-        //        {
-        //            Value = element,
-        //            Text = element
-        //        });
-        //    }
-
-        //    return selectList;
-        //}
         [HttpPost]
-        public ActionResult SearchDoctor(SeeDoctorViewModel model)
+        // Languages
+        public JsonResult GetAllLanguages()
         {
-            SeeDoctorViewModel seedoctorviewModel = new SeeDoctorViewModel();
-            seedoctorviewModel = assignDefault();
-            SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
-           //IEnumerable<SeeDoctorDTO> docList= objDoctorRepo.SeeDoctor(model.Doctor.firstName, model.Gender, model.Language, model.Speciallity, model.AppDate.DayOfWeek.ToString(), model.Timing.seacrhTime);
             try
             {
-                if (model.SearchModel.Gender == "ALL") { model.SearchModel.Gender = ""; }
-                if (model.SearchModel.DoctorName == null) { model.SearchModel.DoctorName = ""; }
-                IEnumerable docList = objSeeDoctorRepo.SeeDoctor(model.SearchModel);
-                if (docList != null)
-                {
-                    ViewBag.DoctorList = docList;
-                }
-                if (docList == null)
-                {
-                    ViewBag.infoMessage = "No record found";
-                    ViewBag.errorMessage = "";
-                    ViewBag.successMessage = "";
+                List<Languages> languages = new List<Languages>();
+                var objLanguageRepo = new LanguageRepository();
+                languages = objLanguageRepo.Get().ToList();
+                return Json(new { Success = true, Object = languages });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+            
+        }
 
-                }
-                return View("SeeDoctor", seedoctorviewModel);
+        //Specialities
+        [HttpPost]
+        
+        public JsonResult GetAllSpecialities()
+        {
+            try
+            {
+                List<Specialities> specialities = new List<Specialities>();
+                var objSpecialityRepo = new SpecialityRepository();
+                specialities = objSpecialityRepo.Get().ToList();
+                return Json(new { Success = true, Object = specialities });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult SearchDoctor(SearchDoctorModel model)
+        {
+            SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
+            //IEnumerable<SeeDoctorDTO> docList= objDoctorRepo.SeeDoctor(model.Doctor.firstName, model.Gender, model.Language, model.Speciallity, model.AppDate.DayOfWeek.ToString(), model.Timing.seacrhTime);
+            try
+            {
+                if (model.gender == "ALL") { model.gender = null; }
+                if (model.name == "") { model.name = null; }
+                if (model.language == "ALL") { model.language = null; }
+                if (model.speciality == "ALL") { model.speciality = null; }
+                List<DoctorModel> doctorList = new List<DoctorModel>();
+                doctorList = objSeeDoctorRepo.SeeDoctor(model);
+                return Json(new { Success = true, Object = doctorList });
 
             }
             catch (Exception ex)
             {
-                ViewBag.errorMessage = "Error occurred while processing your request. Please try again. " + ex.Message;
-                ViewBag.successMessage = "";
-                ViewBag.infoMessage = "";
-                return View("SeeDoctor");
+                return Json(new { Message = ex.Message });
             }
 
 
         }
         [HttpPost]
-        public ActionResult SearchAppointments(SeeDoctorViewModel model)
+        public JsonResult FetchDoctorTimings(FetchTimingsModel model)
         {
             try
             {
-                //SeeDoctorViewModel seedoctorviewModel = new SeeDoctorViewModel();
-                //seedoctorviewModel = assignDefault();
                 SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
-                IEnumerable<BookAppointment> appList = objSeeDoctorRepo.FetchDoctorTimes(model.BookAppointment);
+                List<FetchDoctorTimingModel> appList = new List<FetchDoctorTimingModel>();
+                appList = objSeeDoctorRepo.FetchDoctorTimes(model);
+                List<string> timings = new List<string>();
                 if (appList != null)
                 {
                     //calculate time slots
-                    model.BookAppointment.mylist = displayTimeSlots(appList);
-                    ViewBag.DoctorList = appList;
+                    timings = displayTimeSlots(appList);
                 }
-                if (appList == null)
-                {
-                    ViewBag.infoMessage = "No record found";
-                    ViewBag.errorMessage = "";
-                    ViewBag.successMessage = "";
 
-                }
-                return View("SeeDoctor", model);
+                return Json(new { Success = true, Object = timings });
 
             }
             catch (Exception ex)
             {
-                ViewBag.errorMessage = "Error occurred while processing your request. Please try again. " + ex.Message;
-                ViewBag.successMessage = "";
-                ViewBag.infoMessage = "";
-                return View("SeeDoctor", model);
+                return Json(new { Message = ex.Message });
             }
 
         }
-        private List<string> displayTimeSlots(IEnumerable<BookAppointment> appList)
+        [HttpPost]
+        public JsonResult SaveAppointment(AppointmentModel model)
+        {
+            try
+            {
+                SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
+                long appID = objSeeDoctorRepo.AddAppointment(model);
+                return Json(new { Success = true, appID = appID });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+
+        }
+        private List<string> displayTimeSlots(IEnumerable<FetchDoctorTimingModel> appList)
         {
             List<string> timeSlots = new List<string> { };
-           
+
             foreach (var item in appList)
             {
-              
-                TimeSpan startTime = item.fromTime;
-                TimeSpan endTime = item.toTime;
+
+                TimeSpan startTime = (TimeSpan)item.from;
+                TimeSpan endTime = (TimeSpan)item.to;
                 if (!(timeSlots.Contains(startTime.ToString())))
                 {
                     timeSlots.Add(startTime.ToString());
                     TimeSpan tempp = TimeSpan.FromMinutes(15);
-                    startTime=startTime.Add(tempp);
-                    
+                    startTime = startTime.Add(tempp);
+
                 }
 
                 bool flag = true;
@@ -134,9 +146,9 @@ namespace WebApp.Controllers
                     {
                         //if (!(TimeSpan.Equals(slot, item.appTime)))
                         //{
-                            timeSlots.Add(startTime.ToString());
-                            TimeSpan tempp = TimeSpan.FromMinutes(15);
-                            startTime = startTime.Add(tempp);
+                        timeSlots.Add(startTime.ToString());
+                        TimeSpan tempp = TimeSpan.FromMinutes(15);
+                        startTime = startTime.Add(tempp);
 
                         //}
                     }
@@ -146,13 +158,13 @@ namespace WebApp.Controllers
                         startTime = startTime.Add(tempp);
 
                     }
-                        
+
                     if (TimeSpan.Equals(startTime, endTime))
                     {
                         if (!(timeSlots.Contains(startTime.ToString())))
                         {
-                                 timeSlots.Add(startTime.ToString());
-                                TimeSpan tempp = TimeSpan.FromMinutes(15);
+                            timeSlots.Add(startTime.ToString());
+                            TimeSpan tempp = TimeSpan.FromMinutes(15);
                             startTime = startTime.Add(tempp);
 
                         }
@@ -162,37 +174,344 @@ namespace WebApp.Controllers
             }//for loop for database records.
 
 
-           
-                foreach(var app in appList)
+
+            foreach (var app in appList)
+            {
+                if (timeSlots.Contains(app.appTime.ToString()))
                 {
-                    if(timeSlots.Contains(app.appTime.ToString()))
-                    {
                     timeSlots.Remove(app.appTime.ToString());
-                    }
                 }
-                return timeSlots;
+            }
+            return timeSlots;
         }
 
-        private SeeDoctorViewModel assignDefault()
+        [HttpPost]
+        public JsonResult GetROV(long patientid)
         {
-            SeeDoctorViewModel SeeDoctorViewModel = new SeeDoctorViewModel();
-            SearchModel SearchModel = new SearchModel();
-            BookAppointment BookAppointment = new BookAppointment();
-
-            var langRepo = new LanguageRepository();
-            var specRepo = new SpecialityRepository();
-
-            IEnumerable<Language> language = langRepo.Get();
-            SelectList langlist = new SelectList(language, "languageName", "languageName");
-
-            SearchModel.LanguageList = langlist;
-            IEnumerable<Speciallity> speciality = specRepo.Get();
-            SelectList speclist = new SelectList(speciality, "specialityName", "specialityName");
-            SearchModel.SpeciallityList = speclist;
-            SeeDoctorViewModel.SearchModel = SearchModel;
-            SeeDoctorViewModel.BookAppointment = BookAppointment;
-            return SeeDoctorViewModel;
+            try
+            {
+                SeeDoctorRepository objDoctorRepo = new SeeDoctorRepository();
+                AppointmentModel rov = objDoctorRepo.LoadROV(patientid);
+                return Json(new { Success = true, Object = rov });
+                             
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
         }
-            
+
+        [HttpPost]
+        public JsonResult GetHealthConditions(long patientid)
+        {
+            try
+            {
+                ConditionRepository objRepo = new ConditionRepository();
+                List<PatientConditions_Custom> model = objRepo.LoadHealthConditions(patientid);
+
+                return Json(new { Success = true, Conditions = model });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+               
+            }
+        }
+
+        
+        public JsonResult AddUpdateCondition(long condid,PatientConditions_Custom condition)
+        {
+            try
+            {
+                if (condition.conditionName == null || condition.conditionName == "" || !Regex.IsMatch(condition.conditionName, @"^[a-zA-Z\s]+$"))
+                {
+                    return Json(new { Success = true, ConditionID = -1 });
+                }
+                ConditionRepository objRepo = new ConditionRepository();
+                if (condid == 0)
+                {
+                    long condID = objRepo.AddCondition(condition);
+                    return Json(new { Success = true, ConditionID = condID });
+
+                }
+                else
+                {
+                    long condID = objRepo.EditCondition(condid,condition);
+                    return Json(new { Success = true, ConditionID = condID });
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+
+        }
+
+        public JsonResult DeleteCondition(long conditionID)
+        {
+            try
+            {
+                ConditionRepository objRepo = new ConditionRepository();
+                long condID = objRepo.DeleteCondition(conditionID);
+                return Json(new { Success = true, ConditionID = condID });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+
+        }
+
+        //Patient Medication
+        [HttpPost]
+        public JsonResult GetMedicines()
+        {
+            try
+            {
+                MedicationRepository objRepo = new MedicationRepository();
+                List<MedicineModel> model = objRepo.GetMedicines();
+
+                return Json(new { Success = true, Medicines = model });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+
+            }
+        }
+        [HttpPost]
+        public JsonResult GetMedications(long patientid)
+        {
+            try
+            {
+                MedicationRepository objRepo = new MedicationRepository();
+                List<PatientMedication_Custom> model = objRepo.LoadMedications(patientid);
+
+                return Json(new { Success = true, Medications = model });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+
+            }
+        }
+
+        public JsonResult AddUpdateMedications(long mid,PatientMedication_Custom medication)
+        {
+            try
+            {
+                if (medication.medicineName == null || medication.medicineName == "" || !Regex.IsMatch(medication.medicineName, @"^[a-zA-Z\s]+$"))
+                {
+                    return Json(new { Success = true, ConditionID = -1 });
+                }
+                MedicationRepository objRepo = new MedicationRepository();
+                if (mid == 0)
+                {
+                    long medID = objRepo.AddMedication(medication);
+                    return Json(new { Success = true, MedicationID = medID });
+
+                }
+                else
+                {
+                    long medID = objRepo.EditMedication(mid,medication);
+                    return Json(new { Success = true, MedicationID = medID });
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+
+        }
+
+        public JsonResult DeleteMedications(long medicationID)
+        {
+            try
+            {
+                MedicationRepository objRepo = new MedicationRepository();
+                long medID = objRepo.DeleteMedication(medicationID);
+                return Json(new { Success = true, MedicationID = medID });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+
+        }
+
+
+        //Patient Allergies
+        [HttpPost]
+        public JsonResult GetAllergies()
+        {
+            try
+            {
+               AllergiesRepository objRepo = new AllergiesRepository();
+               List<AllergiesModel> model = objRepo.GetAllergies();
+
+                return Json(new { Success = true, Allergies = model });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+
+            }
+        }
+
+        [HttpPost]
+        public JsonResult LoadPatientAllergies(long patientid)
+        {
+            try
+            {
+                List<PatientAllergies_Custom> pallergies = new List<PatientAllergies_Custom>();
+                var objRepo = new AllergiesRepository();
+                pallergies = objRepo.LoadPatientAllergies(patientid);
+                return Json(pallergies, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult AddUpdateAllergies(long allergiesID,PatientAllergies_Custom allergy)
+        {
+            try
+            {
+                if (allergy.allergyName == null || allergy.allergyName == "" || !Regex.IsMatch(allergy.allergyName, @"^[a-zA-Z\s]+$"))
+                {
+                    return Json(new { Success = true, AllergyID = -1 });
+                }
+                AllergiesRepository objRepo = new AllergiesRepository();
+                if (allergiesID == 0)
+                {
+                    long allergy_ID = objRepo.AddPatientAllergy(allergy);
+                    return Json(new { Success = true, AllergyID = allergy_ID });
+
+                }
+                else
+                {
+                    long allergy_ID = objRepo.EditPatientAllergy(allergiesID,allergy);
+                    return Json(new { Success = true, AllergyID = allergy_ID });
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+
+        }
+
+        public JsonResult DeleteAllergy(long allergyID)
+        {
+            try
+            {
+                AllergiesRepository objRepo = new AllergiesRepository();
+                long allergy_ID = objRepo.DeletePatientAllergy(allergyID);
+                return Json(new { Success = true, AllergyID = allergy_ID });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+
+        }
+
+
+        //Patient Surgeries
+        [HttpPost]
+        public JsonResult GetSurgeries()
+        {
+            try
+            {
+                SurgeriesRepository objRepo = new SurgeriesRepository();
+                List<Surgeries> model = objRepo.GetSystems();
+
+                return Json(new { Success = true, Systems = model });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+
+            }
+        }
+
+        [HttpPost]
+        public JsonResult LoadPatientSurgeries(long patientid)
+        {
+            try
+            {
+                List<GetPatientSurgeries> psurgeries = new List<GetPatientSurgeries>();
+                var objRepo = new SurgeriesRepository();
+                psurgeries = objRepo.LoadPatientSurgeries(patientid);
+                return Json(new { Success = true, Surgeries = psurgeries });
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult AddUpdateSurgeries(long id,PatientSurgery_Custom surgery)
+        {
+            try
+            {
+                if (surgery.bodyPart == null || surgery.bodyPart == "" || !Regex.IsMatch(surgery.bodyPart, @"^[a-zA-Z\s]+$"))
+                {
+                    return Json(new { Success = true, SurgeryID = -1 });
+                }
+                SurgeriesRepository objRepo = new SurgeriesRepository();
+                if (id == 0)
+                {
+                    long surg_ID = objRepo.AddPatientSurgery(surgery);
+                    return Json(new { Success = true, SurgeryID = surg_ID });
+
+                }
+                else
+                {
+                    long surgery_ID = objRepo.EditPatientSurgery(id,surgery);
+                    return Json(new { Success = true, SurgeryID = surgery_ID });
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+
+        }
+
+        public JsonResult DeleteSurgery(long surgeryID)
+        {
+            try
+            {
+                SurgeriesRepository objRepo = new SurgeriesRepository();
+                long surgery_ID = objRepo.DeletePatientSurgery(surgeryID);
+                return Json(new { Success = true, AllergyID = surgery_ID });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+
+        }
+
+
     }
 }

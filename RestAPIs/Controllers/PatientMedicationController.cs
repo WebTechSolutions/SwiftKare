@@ -11,6 +11,8 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using DataAccess.CustomModels;
 using System.Text;
+using DataAccess.CommonModels;
+using System.Text.RegularExpressions;
 
 namespace RestAPIs.Controllers
 {
@@ -19,15 +21,35 @@ namespace RestAPIs.Controllers
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
         HttpResponseMessage response;
 
-        
-        [Route("api/getPatientMedication/patientId")]
-        public HttpResponseMessage GetPatientMedications(long Id)
+        [Route("api/getMedicine")]
+        public HttpResponseMessage GetMedicines()
         {
             try
             {
-                var newmedication = db.SP_GetPatientMedication(Id);
-                response = Request.CreateResponse(HttpStatusCode.OK, newmedication);
+                var medicines = (from l in db.Medicines
+                                   where l.active == true
+                                   select new MedicineModel { medicineID = l.medicineID, medicineName = l.medicineName}).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, medicines);
                 return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetMedicine in PatientMedicationController");
+            }
+
+        }
+
+        [Route("api/getPatienMedications")]
+        public HttpResponseMessage GetPatientMedications(long patientID)
+        {
+            try
+            {
+                var medications = (from l in db.Medications
+                                   where l.active == true && l.patientId == patientID
+                                   select new GetMedication { medicationID = l.medicationID, patientId=l.patientId, medicineName = l.medicineName, frequency = l.frequency, reporteddate = l.reportedDate }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, medications);
+                return response;
+                               
             }
             catch(Exception ex)
             {
@@ -36,99 +58,133 @@ namespace RestAPIs.Controllers
          
         }
 
-        [Route("api/addPatientMedication/medicationModel/")]
+        [Route("api/addPatientMedication")]
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> AddPatientMedication(PatientMedication_Custom model)
         {
             Medication medication = new Medication();
             try
             {
-                if (model.frequency == null || model.frequency == "" || model.medicineName == null || model.medicineName == ""
-                    ||model.patientId==0||model.userId==null||model.userId=="")
-                {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medication Model is not valid.");
+                
+                if (model.medicineName == null || model.medicineName == "")
+                    {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medicine name is not valid.");
                     return response;
                 }
-            Patient patient = db.Patients.Where(p=>p.userId==model.userId).FirstOrDefault();
-            
-            medication.active = true;
-            medication.frequency = model.frequency;
-            medication.patientId = model.patientId;
-            medication.cd = System.DateTime.Now;
-            medication.source = "S";
-            medication.reportedDate = System.DateTime.Now;
-            medication.cb = patient.email;
-            medication.medicineName = model.medicineName;
-            db.Medications.Add(medication);
-            await db.SaveChangesAsync();
-           
+                if( model.patientId == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Patient ID is not valid.");
+                    return response;
+                }
+                medication = db.Medications.Where(m => m.medicineName == model.medicineName).FirstOrDefault();
+                if (medication == null)
+                {
+                    medication = new Medication();
+                    medication.active = true;
+                    medication.frequency = model.frequency;
+                    medication.patientId = model.patientId;
+                    medication.cd = System.DateTime.Now;
+                    medication.source = "S";
+                    medication.reportedDate = System.DateTime.Now;
+                    medication.cb = medication.patientId.ToString();
+                    medication.medicineName = model.medicineName;
+                    db.Medications.Add(medication);
+                    await db.SaveChangesAsync();
+                }
+                else
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medicine name already exists.");
+                    return response;
+                }
+               
             }
             catch (Exception ex)
             {
                 ThrowError(ex, "AddPatientMedication in PatientMedicationController.");
             }
-
-            var newmedication = db.SP_GetPatientMedication(model.patientId);
-            response = Request.CreateResponse(HttpStatusCode.OK, newmedication);
+            response = Request.CreateResponse(HttpStatusCode.OK, medication.medicationID);
             return response;
+
         }
 
         
-        [Route("api/editPatientMedication/medicationModel/")]
+        [Route("api/editPatientMedication")]
         [ResponseType(typeof(HttpResponseMessage))]
-        public async Task<HttpResponseMessage> EditPatientMedication(PatientMedication_Custom model)
+        public async Task<HttpResponseMessage> EditPatientMedication(long medicationID, PatientMedication_Custom model)
         {
             try
             {
-
-
-                if (model.frequency == null || model.frequency == "" || model.medicineName == null || model.medicineName == ""
-                          || model.patientId == 0 || model.userId == null || model.userId == ""||model.medicationID==0)
+                if(medicationID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medicine ID is not valid.");
+                    return response;
+                }
+                if(model.frequency != null|| model.frequency != "")
+                {
+                    if(!Regex.IsMatch(model.medicineName, @"^[a-zA-Z\s]+$"))
+                    {
+                        response = Request.CreateResponse(HttpStatusCode.BadRequest, "Frequency is not valid.");
+                        return response;
+                    }
+                }
+                if (model.medicineName == null || model.medicineName == ""||!Regex.IsMatch(model.medicineName, @"^[a-zA-Z\s]+$"))
                 {
                   
-                response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medication Model is not valid.");
+                response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medicine name is not valid.");
                 return response;
                 }
-            Medication medication = db.Medications.Where(m=>m.medicationID==model.medicationID).FirstOrDefault();
-            if (medication==null)
+                if(model.patientId == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Patient ID is not valid.");
+                    return response;
+                }
+                Medication medication = db.Medications.Where(m => m.medicationID == medicationID).FirstOrDefault();
+                if (medication == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medication record not found.");
+                    return response;
+                }
+               
+                medication = db.Medications.Where(m => m.medicationID != medicationID && m.medicineName==model.medicineName).FirstOrDefault();
+            if (medication != null)
             {
-                response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medication record not found.");
+                response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medication already exists.");
                 return response;
             }
-            Patient patient = db.Patients.Where(p => p.userId == model.userId).FirstOrDefault();
-            medication.frequency = model.frequency;
-            medication.md = System.DateTime.Now;
-            medication.mb = patient.email;
-            db.Entry(medication).State = EntityState.Modified;
-            await db.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                return ThrowError(ex, "EditPatientMedication in PatientMedicationController.");
-            }
+                medication = new Medication();
+                medication.frequency = model.frequency;
+                medication.md = System.DateTime.Now;
+                medication.mb = model.patientId.ToString();
+                db.Entry(medication).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    return ThrowError(ex, "EditPatientMedication in PatientMedicationController.");
+                }
 
-            var newmedication = db.SP_GetPatientMedication(model.patientId);
-            response = Request.CreateResponse(HttpStatusCode.OK, newmedication);
+         
+            response = Request.CreateResponse(HttpStatusCode.OK, medicationID);
             return response;
         }
 
         [HttpPost]
-        [Route("api/deletePatientMedication/medicationModel/")]
+        [Route("api/deletePatientMedication")]
         [ResponseType(typeof(HttpResponseMessage))]
-        public async Task<HttpResponseMessage> DeletePatientMedication(long medicationId,long patientId)
+        public async Task<HttpResponseMessage> DeletePatientMedication(long medicationID)
         {
 
             try
             {
-                Medication medication = await db.Medications.FindAsync(medicationId);
-            Patient patient = await db.Patients.FindAsync(patientId);
+                Medication medication = await db.Medications.FindAsync(medicationID);
+                Patient patient = await db.Patients.FindAsync(medication.patientId);
             if (medication == null || patient == null)
             {
                 response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medication record not found.");
                 return response;
             }
             medication.active = false;//Delete Operation changed
-            medication.mb = patient.email;
+            medication.mb = patient.userId;
             medication.md = System.DateTime.Now;
             db.Entry(medication).State = EntityState.Modified;
 
@@ -138,8 +194,8 @@ namespace RestAPIs.Controllers
             {
                 return ThrowError(ex, "DeletePatientMedication in PatientMedicationController.");
             }
-            var newmedication = db.SP_GetPatientMedication(patientId);
-            response = Request.CreateResponse(HttpStatusCode.OK, newmedication);
+           
+            response = Request.CreateResponse(HttpStatusCode.OK, medicationID);
             return response;
         }
      
