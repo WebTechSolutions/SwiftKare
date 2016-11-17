@@ -29,7 +29,7 @@ namespace WebApp.Controllers
         {
             try
             {
-                List<Language> languages = new List<Language>();
+                List<Languages> languages = new List<Languages>();
                 var objLanguageRepo = new LanguageRepository();
                 languages = objLanguageRepo.Get().ToList();
                 return Json(new { Success = true, Object = languages });
@@ -48,7 +48,7 @@ namespace WebApp.Controllers
         {
             try
             {
-                List<Speciallity> specialities = new List<Speciallity>();
+                List<Specialities> specialities = new List<Specialities>();
                 var objSpecialityRepo = new SpecialityRepository();
                 specialities = objSpecialityRepo.Get().ToList();
                 return Json(new { Success = true, Object = specialities });
