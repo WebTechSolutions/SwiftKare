@@ -8,6 +8,7 @@ using WebApp.Interfaces;
 using Newtonsoft.Json;
 using WebApp.Helper;
 using Identity.Membership.Models;
+using DataAccess.CommonModels;
 
 namespace WebApp.Repositories.DoctorRepositories
 {
@@ -47,11 +48,10 @@ namespace WebApp.Repositories.DoctorRepositories
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Speciallity> Get()
+        public List<Specialities> Get()
         {
             var response = ApiConsumerHelper.GetResponseString("api/Speciallities");
-            var result = JsonConvert.DeserializeObject<List<Speciallity>>(response);
-            // var result = JsonConvert.DeserializeObject<Language>(response);
+            var result = JsonConvert.DeserializeObject<List<Specialities>>(response);
             return result;
         }
 

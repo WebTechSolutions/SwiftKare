@@ -26,7 +26,7 @@ namespace DataAccess
             this.Medications = new HashSet<Medication>();
             this.PatientAllergies = new HashSet<PatientAllergy>();
             this.UserFiles = new HashSet<UserFile>();
-            this.Surgeries = new HashSet<Surgery>();
+            this.PatientSurgeries = new HashSet<PatientSurgery>();
         }
     
         public long patientID { get; set; }
@@ -76,6 +76,6 @@ namespace DataAccess
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserFile> UserFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Surgery> Surgeries { get; set; }
+        public virtual ICollection<PatientSurgery> PatientSurgeries { get; set; }
     }
 }

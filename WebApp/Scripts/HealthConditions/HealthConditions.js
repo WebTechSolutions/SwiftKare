@@ -1,0 +1,313 @@
+﻿var _objUpdate = null;
+var _objAdd = null;
+var _patientId = 0;
+var rowID = null;
+var _conditionTable = null;
+var date = new Date();
+var ticks = date.getTime();
+
+
+function GetHealthConditions(patientid) {
+    $("tbody[id$='conditionsTable']").html('');
+    $.ajax({
+        type: 'POST',
+        url: '/SeeDoctor/GetHealthConditions',
+        data: { 'patientid': patientid },
+        dataType: 'json',
+        success: function (response) {
+            if (response.Success == true) {
+
+                if (response.Conditions != null) {
+                    //_objUpdate = response.Conditions;
+                    _conditionTable =response.Conditions;
+                    _patientId = response.Conditions[0].patientID;
+                     bindConditionsTable(response.Conditions);
+
+                }
+            }
+            // else {alert(data.ErrorMessage);}
+
+            return false;
+        },
+        error: errorRes
+
+    });
+
+}
+function bindConditionsTable(Conditions) {
+  
+    var table = $('#conditionstable').DataTable();
+    table.clear();
+    for (var i = 0; i < Conditions.length; i++) {
+
+        $('#conditionstable').dataTable().fnAddData([
+             i + 1,
+             Conditions[i].conditionName,
+              ToJavaScriptDate(Conditions[i].reportedDate),
+              "<div class='btn-group'> <button type='button' class='btn btn-primary'>Action</button>" +
+                                            "<button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>" +
+                                                "<span class='caret'></span>" +
+                                                "<span class='sr-only'>Toggle Dropdown</span>" +
+                                            "</button>" +
+                                            "<ul class='dropdown-menu' role='menu'>" +
+                                               "<li>" +
+                                                "<a class='editbtn' href='#'  onclick='editObj(" + JSON.stringify(Conditions[i]) + ",this);'>Edit</a>" +
+                                                "</li>" +
+                                                "<li>" +
+                                                 "<button id='delete' type='button' class='btn btn-link submit' style='border-bottom:none' onclick='deleteObj(" + Conditions[i].conditionID + ");'>Delete</button></li>" +
+                                            "</ul>" +
+                                        "</div>"
+        ]);
+
+    }
+       
+
+}
+function ToJavaScriptDate(value) {
+    var pattern = /Date\(([^)]+)\)/;
+    var results = pattern.exec(value);
+    var dt = new Date(parseFloat(results[1]));
+    return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
+}
+function editObj(objCondition) {
+    $("#myCondition").val(objCondition.conditionName);
+    $("#conditionID").val(objCondition.conditionID);
+    _objUpdate = {};
+    _objUpdate["conditionName"] = (objCondition.conditionName);
+    _objUpdate["conditionID"] = (objCondition.conditionID);
+    _objUpdate["patientID"] = (objCondition.patientID);
+    rowID = objCondition.conditionID;
+   }
+function resetCondition() {
+   
+    $("#myCondition").val('');
+    $("#conditionID").val('0');
+    _objUpdate = null;
+   _objAdd = null;
+    
+}
+
+
+
+//
+function addupdateCondition() {
+    var msg = ValidateForm();
+    if (msg == "" || msg == undefined) {
+        fillObj();
+
+        var condition;
+        if (_objUpdate == null) {
+            condition = _objAdd;
+        }
+        else {
+            _objUpdate.conditionName = $("#myCondition").val();
+            condition = _objUpdate;
+        }
+        
+        $.ajax({
+            type: 'POST',
+            url: '/SeeDoctor/AddUpdateCondition',
+            data: condition,
+            dataType: 'json',
+            success: function (response) {
+                if (response.Success == true) {
+                    if (response.ConditionID < 0) {
+                        new PNotify({
+                            title: 'Error',
+                            text: "Invalid condition name",
+                            type: 'success',
+                            styling: 'bootstrap3'
+                        });
+                    }
+                    if (response.ConditionID > 0) {
+                        new PNotify({
+                            title: 'Success',
+                            text: "Condition is saved successfully.",
+                            type: 'success',
+                            styling: 'bootstrap3'
+                        });
+                        if (_objAdd != null) {
+                            var _newObj = {};
+                            _newObj["conditionID"] = response.ConditionID;
+                            _newObj["patientID"] = _objAdd.patientID;
+                            _newObj["conditionName"] = _objAdd.conditionName;
+                            _newObj["reportedDate"] = "/Date(" + ticks + ")/";
+                            _conditionTable.splice(0, 0, _newObj);
+                            bindConditionsTable(_conditionTable);
+                           _objAdd = null;
+                           
+
+                        }
+                        else if (_objAdd == null) {
+                            changeCondition(response.ConditionID, _objUpdate.conditionName);
+                            bindConditionsTable(_conditionTable);
+                           _objUpdate = null;
+                            
+                        }
+                       
+                    }
+                   
+                   
+                            
+                }
+               
+            },
+            error: errorRes
+
+        });
+
+    }
+    else {
+        alert(msg);
+    }
+
+
+}
+
+function deleteObj(conditionID) {
+    var confirmMessage = confirm("Are you sure you want to delete?");
+    if (confirmMessage == false)
+        return false;
+
+
+    $.ajax({
+        type: 'POST',
+        url: '/SeeDoctor/DeleteCondition',
+        data: { 'conditionID': parseInt(conditionID) },
+        dataType: 'json',
+        success: function (response) {
+            if (response.Success == true)
+            {
+                if (response.ConditionID != 0)
+                {
+                    new PNotify({
+                        title: 'Success',
+                        text: "Condition is deleted successfully.",
+                        type: 'success',
+                        styling: 'bootstrap3'
+                    });
+                    removeCondition(response.ConditionID);
+                    bindConditionsTable(_conditionTable);
+                   
+                }
+                else
+                {
+                    new PNotify({
+                        title: 'Information',
+                        text: "Condition is not found.",
+                        type: 'info',
+                        styling: 'bootstrap3'
+                    });
+                }
+              
+            }
+           
+            
+        },
+        error: errorRes
+
+    });
+}
+
+
+function UpdateConditionTable(Condition)
+{
+    var tableHtml = "";
+    var table = $('#conditionstable').DataTable();
+   // table.row.add($("<tr class='even pointer' id='row" + Condition.conditionID + "'>"
+   //     + "<td>" + Condition.conditionID + "</td>"
+   // + "<td style='word-break:break-all'>" + Condition.conditionName + "</td>"
+   //+"<td>" + getCurrentDate() + "</td>"
+   //+ "<td style='width:100px'> <div class='btn-group'> <button type='button' class='btn btn-primary'>Action</button>" +
+   //                                     "<button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>" +
+   //                                         "<span class='caret'></span>" +
+   //                                         "<span class='sr-only'>Toggle Dropdown</span>" +
+   //                                     "</button>" +
+   //                                     "<ul class='dropdown-menu' role='menu'>" +
+   //                                        "<li>" +
+   //                                         "<a class='editbtn' href='#'  onclick='editObj(" + JSON.stringify(Condition) + ",this);'>Edit</a>" +
+   //                                         "</li>" +
+   //                                         "<li>" +
+   //                                          "<button id='delete' type='button' class='btn btn-link submit' style='border-bottom:none' onclick='deleteObj(" + Condition.conditionID + ")'>Delete</button></li>" +
+   //                                     "</ul>" +
+    //                                 "</div></td></tr>")).draw(true);
+    $('#conditionstable').dataTable().fnAddData([
+             i + 1,
+             Conditions.conditionName,
+              ToJavaScriptDate(Conditions[i].reportedDate),
+              "<div class='btn-group'> <button type='button' class='btn btn-primary'>Action</button>" +
+                                            "<button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>" +
+                                                "<span class='caret'></span>" +
+                                                "<span class='sr-only'>Toggle Dropdown</span>" +
+                                            "</button>" +
+                                            "<ul class='dropdown-menu' role='menu'>" +
+                                               "<li>" +
+                                                "<a class='editbtn' href='#'  onclick='editObj(" + JSON.stringify(Conditions[i]) + ",this);'>Edit</a>" +
+                                                "</li>" +
+                                                "<li>" +
+                                                 "<button id='delete' type='button' class='btn btn-link submit' style='border-bottom:none' onclick='deleteObj(" + Conditions[i].conditionID + ");'>Delete</button></li>" +
+                                            "</ul>" +
+                                        "</div>"
+    ]);
+   
+}
+function getCurrentDate()
+{
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if (dd < 10) {
+        dd = '0' + dd
+    }
+
+    if (mm < 10) {
+        mm = '0' + mm
+    }
+
+    return today = mm + '/' + dd + '/' + yyyy;
+}
+function fillObj() {
+
+    if (_objUpdate == null) {
+        _objAdd = {};
+        _objAdd["conditionName"] = $("#myCondition").val();
+        _objAdd["patientID"] = _patientId;
+    }
+    
+}
+function ValidateForm() {
+    var success = "";
+
+    if ($("#myCondition").val() == "") {
+        success = "Please enter condition name";
+       
+    }
+    return success;
+    
+}
+
+function changeCondition(value, desc) {
+    for (var i in _conditionTable) {
+        if (_conditionTable[i].conditionID == value) {
+            _conditionTable[i].conditionName = desc;
+            break;
+        }
+    }
+}
+function removeCondition(value)
+{
+    for (var i in _conditionTable) {
+        if (_conditionTable[i].conditionID == value) {
+            _conditionTable.splice(i, 1);
+            break;
+        }
+    }
+}
+
+
+
+
+
+

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -18,13 +19,34 @@ namespace RestAPIs.Controllers
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
         HttpResponseMessage response;
 
-        [Route("api/getPatienSugeries/patientId/")]
-        public HttpResponseMessage GetPatientSugeries(long patientId)
+
+        [Route("api/getSurgeries")]
+        public HttpResponseMessage GetSurgeries()
         {
             try
             {
-                var newsugery = db.SP_GetPatientSurgeries(patientId);
-                response = Request.CreateResponse(HttpStatusCode.OK, newsugery);
+                var surgeries = (from l in db.Surgeries
+                                 where l.active == true
+                                 select new Surgeries { surgeryID = l.surgeryID, surgeryName = l.surgeryName }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, surgeries);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetSurgeries in PatientSurgeriesController");
+            }
+
+        }
+
+        [Route("api/getPatienSurgeries")]
+        public HttpResponseMessage GetPatientSugeries(long patientID)
+        {
+            try
+            {
+                var surgeries = (from l in db.PatientSurgeries
+                                 where l.active == true && l.patientID == patientID
+                                 select new GetPatientSurgeries { surgeryID = l.surgeryID, bodyPart = l.bodyPart }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, surgeries);
                 return response;
             }
             catch (Exception ex)
@@ -34,65 +56,82 @@ namespace RestAPIs.Controllers
 
         }
 
-        [Route("api/addPatientSugery/sugeryModel/")]
+        [Route("api/addPatientSurgery")]
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> AddPatientSugery(PatientSurgery_Custom model)
         {
-            Surgery psurgery = new Surgery();
+            PatientSurgery psurgery = new PatientSurgery();
             try
             {
-                if (model.bodyPart == null || model.bodyPart == "" || model.patientID == null || model.patientID == 0)
+                if (model.bodyPart == null || model.bodyPart == "" || !Regex.IsMatch(model.bodyPart, @"^[a-zA-Z\s]+$"))
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "PatientSugery Model is not valid.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid body part.");
                     return response;
                 }
-                Patient patient = db.Patients.Where(p => p.userId == model.userID).FirstOrDefault();
+                if (model.patientID == null || model.patientID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid patient id.");
+                    return response;
+                }
+                
+                psurgery = db.PatientSurgeries.Where(p => p.bodyPart == model.bodyPart).FirstOrDefault();
+                if (psurgery!=null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Body part already exists.");
+                    return response;
+                }
+                if (psurgery==null)
+                {
+                    psurgery = new PatientSurgery();
+                    psurgery.active = true;
+                    psurgery.bodyPart = model.bodyPart;
+                    psurgery.patientID = model.patientID;
+                    psurgery.cd = System.DateTime.Now;
+                    psurgery.reportedDate = System.DateTime.Now;
+                    psurgery.cb = model.patientID.ToString();
 
-                psurgery.active = true;
-                psurgery.bodyPart = model.bodyPart;
-                psurgery.patientID = model.patientID;
-                psurgery.cd = System.DateTime.Now;
-                psurgery.reportedDate = System.DateTime.Now;
-                psurgery.cb = patient.email;
-
-                db.Surgeries.Add(psurgery);
-                await db.SaveChangesAsync();
-
+                    db.PatientSurgeries.Add(psurgery);
+                    await db.SaveChangesAsync();
+                }
+               
             }
             catch (Exception ex)
             {
                 ThrowError(ex, "AddPatientSurgery in PatientSurgeriesController.");
             }
 
-            var newpsurgery = db.SP_GetPatientSurgeries(model.patientID);
-            response = Request.CreateResponse(HttpStatusCode.OK, newpsurgery);
+            response = Request.CreateResponse(HttpStatusCode.OK, psurgery.surgeryID);
             return response;
         }
 
-        [Route("api/editPatientSugery/sugeryModel/")]
+        [Route("api/editPatientSurgery")]
         [ResponseType(typeof(HttpResponseMessage))]
-        public async Task<HttpResponseMessage> EditPatientSugery(PatientSurgery_Custom model)
+        public async Task<HttpResponseMessage> EditPatientSugery(long surgeryID,PatientSurgery_Custom model)
         {
+            PatientSurgery psurgery = new PatientSurgery();
             try
             {
-                if (model.bodyPart==null||model.bodyPart==""||model.patientID==null||model.patientID==0||model.surgeryID==0)
+                if (model.bodyPart == null || model.bodyPart == "" || !Regex.IsMatch(model.bodyPart, @"^[a-zA-Z\s]+$"))
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Patient Surgery Model is not valid.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid body part.");
                     return response;
                 }
-                Surgery psurgery = db.Surgeries.Where(m => m.surgeryID == model.surgeryID).FirstOrDefault();
+                if (model.patientID == null || model.patientID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid patient id.");
+                    return response;
+                }
+                psurgery = db.PatientSurgeries.Where(m => m.surgeryID == surgeryID).FirstOrDefault();
                 if (psurgery == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, "Patient Surgery record not found.");
                     return response;
                 }
-                Patient patient = db.Patients.Where(p => p.userId == model.userID).FirstOrDefault();
+               
                 psurgery.bodyPart = model.bodyPart;
                 psurgery.md = System.DateTime.Now;
-                psurgery.mb = patient.email;
+                psurgery.mb = psurgery.patientID.ToString();
                 db.Entry(psurgery).State = EntityState.Modified;
-
-
                 await db.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -100,44 +139,46 @@ namespace RestAPIs.Controllers
                 return ThrowError(ex, "EditPatientSurgery in PatientSurgeriesController.");
             }
 
-            var newpsurgery = db.SP_GetPatientSurgeries(model.patientID);
-            response = Request.CreateResponse(HttpStatusCode.OK, newpsurgery);
+            response = Request.CreateResponse(HttpStatusCode.OK, surgeryID);
             return response;
         }
 
         [HttpPost]
-        [Route("api/deletePatientSurgery/surgeryModel/")]
+        [Route("api/deletePatientSurgery")]
         [ResponseType(typeof(HttpResponseMessage))]
-        public async Task<HttpResponseMessage> DeletePatientCondition(long surgeryId,long patientId)
+        public async Task<HttpResponseMessage> DeletePatientSurgery(long surgeryID)
         {
             try
             {
-                if (surgeryId == 0)
+                if (surgeryID == 0)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Patient Surgery Model is not valid.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid Patient Surgery ID.");
                     return response;
                 }
-                Surgery psurgery = await db.Surgeries.FindAsync(surgeryId);
-                Patient patient = await db.Patients.FindAsync(patientId);
-                if (psurgery == null || patient == null)
+                PatientSurgery psurgery = await db.PatientSurgeries.FindAsync(surgeryID);
+            
+                if (psurgery == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, "Patient Surgery record not found.");
                     return response;
                 }
-                psurgery.active = false;//Delete Operation changed
-                psurgery.mb = patient.email;
-                psurgery.md = System.DateTime.Now;
-                db.Entry(psurgery).State = EntityState.Modified;
-
-                await db.SaveChangesAsync();
+                else
+                {
+                    Patient patient = await db.Patients.FindAsync(psurgery.patientID);
+                    psurgery.active = false;//Delete Operation changed
+                    psurgery.mb = psurgery.patientID.ToString();
+                    psurgery.md = System.DateTime.Now;
+                    db.Entry(psurgery).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                }
+                
             }
             catch (Exception ex)
             {
                 return ThrowError(ex, "DeletePatientSurgery in PatientSurgeriesController.");
             }
 
-            var newpsurgery = db.SP_GetPatientSurgeries(patientId);
-            response = Request.CreateResponse(HttpStatusCode.OK, newpsurgery);
+            response = Request.CreateResponse(HttpStatusCode.OK, surgeryID);
             return response;
         }
         private HttpResponseMessage ThrowError(Exception ex, string Action)
