@@ -29,7 +29,7 @@ namespace WebApp.Controllers
         {
             try
             {
-                List<Language> languages = new List<Language>();
+                List<Languages> languages = new List<Languages>();
                 var objLanguageRepo = new LanguageRepository();
                 languages = objLanguageRepo.Get().ToList();
                 return Json(new { Success = true, Object = languages });
@@ -48,7 +48,7 @@ namespace WebApp.Controllers
         {
             try
             {
-                List<Speciallity> specialities = new List<Speciallity>();
+                List<Specialities> specialities = new List<Specialities>();
                 var objSpecialityRepo = new SpecialityRepository();
                 specialities = objSpecialityRepo.Get().ToList();
                 return Json(new { Success = true, Object = specialities });
@@ -70,9 +70,8 @@ namespace WebApp.Controllers
                 if (model.name == "") { model.name = null; }
                 if (model.language == "ALL") { model.language = null; }
                 if (model.speciality == "ALL") { model.speciality = null; }
-                List<DoctorModel> doctorList = new List<DoctorModel>();
-                doctorList = objSeeDoctorRepo.SeeDoctor(model);
-                return Json(new { Success = true, Object = doctorList });
+                List<DoctorModel> doctorList = objSeeDoctorRepo.SeeDoctor(model);
+                return Json(new { Success = true, DoctorList = doctorList });
 
             }
             catch (Exception ex)
@@ -207,7 +206,7 @@ namespace WebApp.Controllers
             try
             {
                 ConditionRepository objRepo = new ConditionRepository();
-                List<PatientConditions_Custom> model = objRepo.LoadHealthConditions(patientid);
+                List<GetPatientConditions> model = objRepo.LoadHealthConditions(patientid);
 
                 return Json(new { Success = true, Conditions = model });
 
@@ -220,7 +219,7 @@ namespace WebApp.Controllers
         }
 
         
-        public JsonResult AddUpdateCondition(long condid,PatientConditions_Custom condition)
+        public JsonResult AddUpdateCondition(long conditionID, PatientConditions_Custom condition)
         {
             try
             {
@@ -229,16 +228,16 @@ namespace WebApp.Controllers
                     return Json(new { Success = true, ConditionID = -1 });
                 }
                 ConditionRepository objRepo = new ConditionRepository();
-                if (condid == 0)
+                if (conditionID == 0)
                 {
-                    long condID = objRepo.AddCondition(condition);
-                    return Json(new { Success = true, ConditionID = condID });
+                    ApiResultModel apiresult = objRepo.AddCondition(condition);
+                    return Json(new { Success = true, ApiResultModel = apiresult });
 
                 }
                 else
                 {
-                    long condID = objRepo.EditCondition(condid,condition);
-                    return Json(new { Success = true, ConditionID = condID });
+                    ApiResultModel apiresult = objRepo.EditCondition(conditionID, condition);
+                    return Json(new { Success = true, ApiResultModel =apiresult });
                 }
 
 
@@ -255,8 +254,8 @@ namespace WebApp.Controllers
             try
             {
                 ConditionRepository objRepo = new ConditionRepository();
-                long condID = objRepo.DeleteCondition(conditionID);
-                return Json(new { Success = true, ConditionID = condID });
+                ApiResultModel apiresult = objRepo.DeleteCondition(conditionID);
+                return Json(new { Success = true, ApiResultModel= apiresult });
 
             }
             catch (Exception ex)
@@ -290,7 +289,7 @@ namespace WebApp.Controllers
             try
             {
                 MedicationRepository objRepo = new MedicationRepository();
-                List<PatientMedication_Custom> model = objRepo.LoadMedications(patientid);
+                List<GetMedication> model = objRepo.LoadMedications(patientid);
 
                 return Json(new { Success = true, Medications = model });
 
@@ -313,14 +312,14 @@ namespace WebApp.Controllers
                 MedicationRepository objRepo = new MedicationRepository();
                 if (mid == 0)
                 {
-                    long medID = objRepo.AddMedication(medication);
-                    return Json(new { Success = true, MedicationID = medID });
+                    ApiResultModel apiresult = objRepo.AddMedication(medication);
+                    return Json(new { Success = true, ApiResultModel =apiresult });
 
                 }
                 else
                 {
-                    long medID = objRepo.EditMedication(mid,medication);
-                    return Json(new { Success = true, MedicationID = medID });
+                    ApiResultModel apiresult = objRepo.EditMedication(mid,medication);
+                    return Json(new { Success = true, ApiResultModel= apiresult });
                 }
 
 
@@ -337,8 +336,8 @@ namespace WebApp.Controllers
             try
             {
                 MedicationRepository objRepo = new MedicationRepository();
-                long medID = objRepo.DeleteMedication(medicationID);
-                return Json(new { Success = true, MedicationID = medID });
+                ApiResultModel apiresult = objRepo.DeleteMedication(medicationID);
+                return Json(new { Success = true, ApiResultModel= apiresult });
 
             }
             catch (Exception ex)
@@ -367,20 +366,56 @@ namespace WebApp.Controllers
 
             }
         }
+        //GetSensitivities
+        [HttpPost]
+        public JsonResult GetSensitivities()
+        {
+            try
+            {
+                AllergiesRepository objRepo = new AllergiesRepository();
+                List<SensitivityModel> model = objRepo.GetSensitivities();
 
+                return Json(new { Success = true, Object = model });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+
+            }
+        }
+
+        //GetReactions
+        [HttpPost]
+        public JsonResult GetReactions()
+        {
+            try
+            {
+                AllergiesRepository objRepo = new AllergiesRepository();
+                List<ReactionModel> model = objRepo.GetReactions();
+
+                return Json(new { Success = true, Object = model });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+
+            }
+        }
         [HttpPost]
         public JsonResult LoadPatientAllergies(long patientid)
         {
             try
             {
-                List<PatientAllergies_Custom> pallergies = new List<PatientAllergies_Custom>();
+               
                 var objRepo = new AllergiesRepository();
-                pallergies = objRepo.LoadPatientAllergies(patientid);
-                return Json(pallergies, JsonRequestBehavior.AllowGet);
+                List<GetPatientAllergies> pallergies = objRepo.LoadPatientAllergies(patientid);
+                return Json(new { Success = true, Allergies = pallergies });
             }
             catch (Exception ex)
             {
-                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+                return Json(new { Message = ex.Message });
             }
         }
 
@@ -395,14 +430,14 @@ namespace WebApp.Controllers
                 AllergiesRepository objRepo = new AllergiesRepository();
                 if (allergiesID == 0)
                 {
-                    long allergy_ID = objRepo.AddPatientAllergy(allergy);
-                    return Json(new { Success = true, AllergyID = allergy_ID });
+                    ApiResultModel apiresult = objRepo.AddPatientAllergy(allergy);
+                    return Json(new { Success = true, ApiResultModel= apiresult });
 
                 }
                 else
                 {
-                    long allergy_ID = objRepo.EditPatientAllergy(allergiesID,allergy);
-                    return Json(new { Success = true, AllergyID = allergy_ID });
+                    ApiResultModel apiresult = objRepo.EditPatientAllergy(allergiesID,allergy);
+                    return Json(new { Success = true, ApiResultModel =apiresult });
                 }
 
 
@@ -419,8 +454,8 @@ namespace WebApp.Controllers
             try
             {
                 AllergiesRepository objRepo = new AllergiesRepository();
-                long allergy_ID = objRepo.DeletePatientAllergy(allergyID);
-                return Json(new { Success = true, AllergyID = allergy_ID });
+                ApiResultModel apiresult = objRepo.DeletePatientAllergy(allergyID);
+                return Json(new { Success = true, ApiResultModel= apiresult });
 
             }
             catch (Exception ex)
@@ -438,9 +473,9 @@ namespace WebApp.Controllers
             try
             {
                 SurgeriesRepository objRepo = new SurgeriesRepository();
-                List<Surgeries> model = objRepo.GetSystems();
+                List<SurgeriesModel> model = objRepo.GetSurgeries();
 
-                return Json(new { Success = true, Systems = model });
+                return Json(new { Success = true, Surgeries = model });
 
             }
             catch (Exception ex)
@@ -477,14 +512,14 @@ namespace WebApp.Controllers
                 SurgeriesRepository objRepo = new SurgeriesRepository();
                 if (id == 0)
                 {
-                    long surg_ID = objRepo.AddPatientSurgery(surgery);
-                    return Json(new { Success = true, SurgeryID = surg_ID });
+                    ApiResultModel apiresult = objRepo.AddPatientSurgery(surgery);
+                    return Json(new { Success = true, ApiResultModel =apiresult });
 
                 }
                 else
                 {
-                    long surgery_ID = objRepo.EditPatientSurgery(id,surgery);
-                    return Json(new { Success = true, SurgeryID = surgery_ID });
+                    ApiResultModel apiresult = objRepo.EditPatientSurgery(id,surgery);
+                    return Json(new { Success = true, ApiResultModel =apiresult });
                 }
 
 
@@ -501,8 +536,8 @@ namespace WebApp.Controllers
             try
             {
                 SurgeriesRepository objRepo = new SurgeriesRepository();
-                long surgery_ID = objRepo.DeletePatientSurgery(surgeryID);
-                return Json(new { Success = true, AllergyID = surgery_ID });
+                ApiResultModel apiresult = objRepo.DeletePatientSurgery(surgeryID);
+                return Json(new { Success = true, ApiResultModel= apiresult });
 
             }
             catch (Exception ex)

@@ -11,33 +11,34 @@ namespace WebApp.Repositories.PatientRepositories
 {
     public class ConditionRepository
     {
-        public long AddCondition(PatientConditions_Custom condition)
+        public ApiResultModel AddCondition(PatientConditions_Custom condition)
         {
             var strContent = JsonConvert.SerializeObject(condition);
             var response = ApiConsumerHelper.PostData("api/addPatientCondition", strContent);
-            var result = JsonConvert.DeserializeObject<long>(response);
+            var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
             return result;
+            
         }
-        public long EditCondition(long id,PatientConditions_Custom condition)
+        public ApiResultModel EditCondition(long conditionID, PatientConditions_Custom condition)
         {
             var strContent = JsonConvert.SerializeObject(condition);
-            var response = ApiConsumerHelper.PutData("api/editPatientCondition/?Id="+id, strContent);
-            var result = JsonConvert.DeserializeObject<long>(response);
+            var response = ApiConsumerHelper.PostData("api/editPatientCondition?conditionID="+conditionID, strContent);
+            var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
             return result;
         }
-        public long DeleteCondition(long id)
+        public ApiResultModel DeleteCondition(long id)
         {
            
             var response = ApiConsumerHelper.DeleteData("api/deletePatientCondition/?conditionId=" + id);
-            var result = JsonConvert.DeserializeObject<long>(response);
+            var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
             return result;
         }
 
-        public List<PatientConditions_Custom> LoadHealthConditions(long pid)
+        public List<GetPatientConditions> LoadHealthConditions(long pid)
         {
            
             var response = ApiConsumerHelper.GetResponseString("api/getPatienConditions/?patientID=" + pid);
-            var result = JsonConvert.DeserializeObject<List<PatientConditions_Custom>>(response);
+            var result = JsonConvert.DeserializeObject<List<GetPatientConditions>>(response);
             return result;
         }
     }

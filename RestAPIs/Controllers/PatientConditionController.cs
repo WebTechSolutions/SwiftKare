@@ -14,6 +14,7 @@ using System.Web.Http.Description;
 
 namespace RestAPIs.Controllers
 {
+    [Authorize]
     public class PatientConditionController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
@@ -27,7 +28,7 @@ namespace RestAPIs.Controllers
                 var conditions = (from l in db.Conditions
                            where l.active == true && l.patientID == patientID
                            orderby l.conditionID descending
-                           select new GetPatientConditions{ conditionID = l.conditionID, patientID=l.patientID, conditionName=l.conditionName,
+                           select new GetPatientConditions{ conditionID = l.conditionID, patientID=l.patientID, conditionName=l.conditionName.Trim(),
                            reportedDate=l.reportedDate}).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, conditions);
                 return response;
@@ -46,38 +47,35 @@ namespace RestAPIs.Controllers
             try
             {
                
-                if (model.conditionName == null || model.conditionName == "" || !Regex.IsMatch(model.conditionName, @"^[a-zA-Z\s]+$"))
+                if (model.conditionName == null || model.conditionName == "" || !Regex.IsMatch(model.conditionName.Trim(), @"^[a-zA-Z\s]+$"))
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Condition name is not valid.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid condition name." } );
                     return response;
                 }
-                if(model.patientID == null || model.patientID == 0)
+                if (model.patientID == null || model.patientID == 0)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid Patient ID.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
                     return response;
                 }
 
-                condition = db.Conditions.Where(m => m.conditionName == model.conditionName).FirstOrDefault();
+                condition = db.Conditions.Where(m => m.conditionName == model.conditionName.Trim() && m.active==true).FirstOrDefault();
                 if(condition==null)
                 {
                     condition = new Condition();
-                    var pt = (from p in db.Patients
-                                  where p.patientID == model.patientID
-                                  select new { p.userId }).FirstOrDefault();
                     condition.active = true;
                     condition.conditionName = model.conditionName;
                     condition.patientID = model.patientID;
                     condition.cd = System.DateTime.Now;
                     condition.Source = "S";
                     condition.reportedDate = System.DateTime.Now;
-                    condition.cb = pt.userId;
+                    condition.cb = model.patientID.ToString();
 
                     db.Conditions.Add(condition);
                     await db.SaveChangesAsync();
                 }
                 else
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Condition name already exists.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Condition name already exists." });
                     return response;
                 }
               
@@ -87,7 +85,7 @@ namespace RestAPIs.Controllers
             {
                 ThrowError(ex, "AddPatientCondition in PatientConditionController.");
             }
-            response = Request.CreateResponse(HttpStatusCode.OK, condition.conditionID);
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = condition.conditionID, message = "" } );
             return response;
 
 
@@ -102,39 +100,44 @@ namespace RestAPIs.Controllers
             {
                 if (conditionID == 0)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid Condition ID.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid condition ID." });
                     return response;
                 }
-                if (model.conditionName == null || model.conditionName == "")
+                if (model.conditionName == null || model.conditionName == "" || !Regex.IsMatch(model.conditionName.Trim(), @"^[a-zA-Z\s]+$"))
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Condition Model is not valid.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid condition name." });
                     return response;
                 }
-                if ( model.patientID == null || model.patientID == 0)
+                if (model.patientID == null || model.patientID == 0)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid Patient ID.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
                     return response;
                 }
+                //check for duplicate names
+                condition = db.Conditions.Where(m => m.conditionID != conditionID && m.conditionName == model.conditionName.Trim() && m.active==true).FirstOrDefault();
+                if (condition != null)
+                {
+                    //conditionID = -1;
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Condition name already exists." });
+                    return response;
+                }
+               
                 condition = db.Conditions.Where(m => m.conditionID == conditionID).FirstOrDefault();
                 if (condition == null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Condition record not found.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Condition not found." });
                     return response;
-                }
-                condition = db.Conditions.Where(m => m.conditionID != conditionID && m.conditionName == model.conditionName).FirstOrDefault();
-                if (condition == null)
-                {
-                    condition.conditionName = model.conditionName;
-                    condition.md = System.DateTime.Now;
-                    condition.mb = condition.patientID.ToString();
-                    db.Entry(condition).State = EntityState.Modified;
-                    await db.SaveChangesAsync();
                 }
                 else
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Condition name already exists.");
-                    return response;
+                        condition.conditionName = model.conditionName;
+                        condition.md = System.DateTime.Now;
+                        condition.mb = condition.patientID.ToString();
+                        db.Entry(condition).State = EntityState.Modified;
+                        await db.SaveChangesAsync();
+                    
                 }
+               
            
             }
             catch (Exception ex)
@@ -142,7 +145,7 @@ namespace RestAPIs.Controllers
                 return ThrowError(ex, "EditPatientCondition in PatientConditionController.");
             }
 
-            response = Request.CreateResponse(HttpStatusCode.OK, conditionID);
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = conditionID, message = "" });
             return response;
         }
 
@@ -152,16 +155,21 @@ namespace RestAPIs.Controllers
         {
             try
             {
-            Condition condition = await db.Conditions.FindAsync(conditionID);
-            Patient patient = await db.Patients.FindAsync(condition.patientID);
-            if (condition == null || patient == null)
+                Patient patient = new Patient();
+                if (conditionID == null || conditionID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid condition ID." });
+                    return response;
+                }
+                Condition condition = db.Conditions.Where(cond => cond.conditionID==conditionID && cond.active==true).FirstOrDefault();
+               if (condition != null) { patient = await db.Patients.FindAsync(condition.patientID); }
+            if (condition == null)
             {
-                response = Request.CreateResponse(HttpStatusCode.BadRequest, "Condition record not found.");
-                conditionID = 0;
+                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Condition not found." });
                 return response;
             }
             condition.active = false;//Delete Operation changed
-            condition.mb = patient.userId;
+            condition.mb = condition.patientID.ToString();
             condition.md = System.DateTime.Now;
             db.Entry(condition).State = EntityState.Modified;
 
@@ -173,13 +181,15 @@ namespace RestAPIs.Controllers
                 return ThrowError(ex, "DeletePatientCondition in PatientConditionController.");
             }
 
-            response = Request.CreateResponse(HttpStatusCode.OK, conditionID);
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = conditionID, message = "" });
             return response;
         }
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
-            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.ToString(), Encoding.Unicode);
+            //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
+            //response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.ToString(), Encoding.Unicode);
+            //return response;
+            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Following Error occurred at method:"+ Action+"\n"+ex.InnerException });
             return response;
         }
         protected override void Dispose(bool disposing)

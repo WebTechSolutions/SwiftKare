@@ -10,11 +10,11 @@ namespace WebApp.Repositories.PatientRepositories
 {
     public class SurgeriesRepository
     {
-        public List<Surgeries> GetSystems()
+        public List<SurgeriesModel> GetSurgeries()
         {
 
             var response = ApiConsumerHelper.GetResponseString("api/getSurgeries");
-            var result = JsonConvert.DeserializeObject<List<Surgeries>>(response);
+            var result = JsonConvert.DeserializeObject<List<SurgeriesModel>>(response);
             return result;
         }
 
@@ -26,27 +26,27 @@ namespace WebApp.Repositories.PatientRepositories
             return result;
         }
 
-        public long AddPatientSurgery(PatientSurgery_Custom condition)
+        public ApiResultModel AddPatientSurgery(PatientSurgery_Custom condition)
         {
             var strContent = JsonConvert.SerializeObject(condition);
             var response = ApiConsumerHelper.PostData("api/addPatientSurgery", strContent);
-            var result = JsonConvert.DeserializeObject<long>(response);
+            var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
             return result;
         }
 
-        public long EditPatientSurgery(long id, PatientSurgery_Custom condition)
+        public ApiResultModel EditPatientSurgery(long id, PatientSurgery_Custom condition)
         {
             var strContent = JsonConvert.SerializeObject(condition);
-            var response = ApiConsumerHelper.PutData("api/editPatientSurgery/?surgeryID" + id, strContent);
-            var result = JsonConvert.DeserializeObject<long>(response);
+            var response = ApiConsumerHelper.PostData("api/editPatientSurgery?surgeryID=" + id, strContent);
+            var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
             return result;
         }
        
-        public long DeletePatientSurgery(long id)
+        public ApiResultModel DeletePatientSurgery(long id)
         {
 
             var response = ApiConsumerHelper.DeleteData("api/deletePatientSurgery/?surgeryID=" + id);
-            var result = JsonConvert.DeserializeObject<long>(response);
+            var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
             return result;
         }
     }

@@ -1,7 +1,7 @@
 ﻿var _objUpdate = null;
 var _objAdd = null;
 var _patientId = 0;
-var rowID = null;
+var _medicationID = null;
 var _medicationTable = null;
 var date = new Date();
 var ticks = date.getTime();
@@ -18,9 +18,9 @@ function GetMedicines()
         success: function (response) {
             if (response.Success == true) {
 
-                if (response.Medicines != null) {
+                if (response.Medicines.length>0) {
                     medicines = response.Medicines;
-                    bindtoTextBox(medicines);
+                    bindtoTextBoxMedicine(medicines);
                 }
                
             }
@@ -35,7 +35,7 @@ function GetMedicines()
       
 }
 
-function bindtoTextBox(medicines)
+function bindtoTextBoxMedicine(medicines)
 {
 
     var medicinesArray = $.map(medicines, function (el) {
@@ -57,7 +57,7 @@ function GetMedications(patientid) {
         success: function (response) {
             if (response.Success == true) {
 
-                if (response.Medications != null) {
+                if (response.Medications.length > 0) {
                     _medicationTable = response.Medications;
                     _patientId = response.Medications[0].patientId;
                     bindMedicinesTable(response.Medications);
@@ -82,7 +82,7 @@ function bindMedicinesTable(Medications) {
                    i + 1,
                    Medications[i].medicineName,
                     Medications[i].frequency,
-                    ToJavaScriptDate(Medications[i].reporteddate),
+                    ToJavaScriptDateMedicine(Medications[i].reporteddate),
                     "<div class='btn-group'> <button type='button' class='btn btn-primary'>Action</button>" +
                                                   "<button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>" +
                                                       "<span class='caret'></span>" +
@@ -100,7 +100,7 @@ function bindMedicinesTable(Medications) {
     }
 }
 
-function ToJavaScriptDate(value) {
+function ToJavaScriptDateMedicine(value) {
     var pattern = /Date\(([^)]+)\)/;
     var results = pattern.exec(value);
     var dt = new Date(parseFloat(results[1]));
@@ -116,7 +116,7 @@ function editMedicine(objMedicine) {
     _objUpdate["frequency"] = (objMedicine.frequency);
     _objUpdate["medicationID"] = (objMedicine.medicationID);
     _objUpdate["patientId"] = (objMedicine.patientId);
-    rowID = objMedicine.medicationID;
+    _medicationID = objMedicine.medicationID;
 }
 
 function resetMedicine() {
@@ -129,12 +129,13 @@ function resetMedicine() {
 }
 
 function addupdateMedicine() {
-    var msg = ValidateForm();
+    var msg = ValidateFormMedicine();
     if (msg == "" || msg == undefined) {
-        fillObj();
+        fillObjMedicine();
 
         var medication;
         if (_objUpdate == null) {
+            _medicationID = 0;
             medication = _objAdd;
         }
         else {
@@ -145,19 +146,19 @@ function addupdateMedicine() {
         $.ajax({
             type: 'POST',
             url: '/SeeDoctor/AddUpdateMedications',
-            data: medication,
+            data: { 'mid': parseInt(_medicationID), 'medication': medication },
             dataType: 'json',
             success: function (response) {
                 if (response.Success == true) {
-                    if (response.MedicationID < 0) {
+                    if (response.ApiResultModel.message != "") {
                         new PNotify({
                             title: 'Error',
-                            text: "Invalid medicine name",
-                            type: 'success',
+                            text: response.ApiResultModel.message,
+                            type: 'error',
                             styling: 'bootstrap3'
                         });
                     }
-                    if (response.MedicationID > 0) {
+                    else if (response.ApiResultModel.message == "") {
                         new PNotify({
                             title: 'Success',
                             text: "Medicine is saved successfully.",
@@ -166,7 +167,7 @@ function addupdateMedicine() {
                         });
                         if (_objAdd != null) {
                             var _newObj = {};
-                            _newObj["medicationID"] = response.MedicationID;
+                            _newObj["medicationID"] = response.ApiResultModel.ID;
                             _newObj["patientId"] = _objAdd.patientId;
                             _newObj["medicineName"] = _objAdd.medicineName;
                             _newObj["frequency"] = _objAdd.frequency;
@@ -178,7 +179,7 @@ function addupdateMedicine() {
 
                         }
                         else if (_objAdd == null) {
-                            changeMedicine(response.MedicationID, _objUpdate.medicineName, _objUpdate.frequency);
+                            changeMedicine(response.ApiResultModel.ID, _objUpdate.medicineName, _objUpdate.frequency);
                             bindMedicinesTable(_medicationTable);
                             _objUpdate = null;
 
@@ -216,27 +217,28 @@ function deleteMedicine(medicationID) {
         dataType: 'json',
         success: function (response) {
             if (response.Success == true) {
-                if (response.MedicationID != 0) {
+                if(response.ApiResultModel.message=="")
                     new PNotify({
                         title: 'Success',
                         text: "Medicine is deleted successfully.",
                         type: 'success',
                         styling: 'bootstrap3'
                     });
-                    removeMedicine(response.MedicationID);
-                    bindMedicinesTable(_medicationTable);
-
-                }
-                else {
-                    new PNotify({
-                        title: 'Information',
-                        text: "Medicine is not found.",
-                        type: 'info',
-                        styling: 'bootstrap3'
-                    });
-                }
-
+                removeMedicine(response.ApiResultModel.ID);
+                bindMedicinesTable(_medicationTable);
+                   
             }
+            else if(response.ApiResultModel.message!="")
+            {
+                new PNotify({
+                    title: 'Error',
+                    text: response.ApiResultModel.message,
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+            }
+
+            
 
 
         },
@@ -281,7 +283,7 @@ function getCurrentDate() {
     return today = mm + '/' + dd + '/' + yyyy;
 }
 
-function fillObj() {
+function fillObjMedicine() {
 
     if (_objUpdate == null) {
         _objAdd = {};
@@ -292,7 +294,7 @@ function fillObj() {
 
 }
 
-function ValidateForm() {
+function ValidateFormMedicine() {
     var success = "";
 
     if ($("#myMedicine").val() == "") {

@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 
 namespace RestAPIs.Controllers
 {
+    [Authorize]
     public class PatientMedicationController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
@@ -28,7 +29,7 @@ namespace RestAPIs.Controllers
             {
                 var medicines = (from l in db.Medicines
                                    where l.active == true
-                                   select new MedicineModel { medicineID = l.medicineID, medicineName = l.medicineName}).ToList();
+                                   select new MedicineModel { medicineID = l.medicineID, medicineName = l.medicineName.Trim() }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, medicines);
                 return response;
             }
@@ -46,7 +47,7 @@ namespace RestAPIs.Controllers
             {
                 var medications = (from l in db.Medications
                                    where l.active == true && l.patientId == patientID
-                                   select new GetMedication { medicationID = l.medicationID, patientId=l.patientId, medicineName = l.medicineName, frequency = l.frequency, reporteddate = l.reportedDate }).ToList();
+                                   select new GetMedication { medicationID = l.medicationID, patientId=l.patientId, medicineName = l.medicineName.Trim(), frequency = l.frequency.Trim(), reporteddate = l.reportedDate }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, medications);
                 return response;
                                
@@ -66,17 +67,25 @@ namespace RestAPIs.Controllers
             try
             {
                 
-                if (model.medicineName == null || model.medicineName == "")
+                if (model.medicineName == null || model.medicineName == ""|| !Regex.IsMatch(model.medicineName, @"^[a-zA-Z\s]+$"))
                     {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medicine name is not valid.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel {ID=0, message="Medicine name is not valid." } );
                     return response;
                 }
-                if( model.patientId == 0)
+                if (model.frequency != null || model.frequency != "")
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Patient ID is not valid.");
+                    if (!Regex.IsMatch(model.frequency, @"^[a-zA-Z\s]+$"))
+                    {
+                        response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Frequency is not valid." });
+                        return response;
+                    }
+                }
+                if ( model.patientId == 0 || model.patientId==null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient ID is not valid." });
                     return response;
                 }
-                medication = db.Medications.Where(m => m.medicineName == model.medicineName).FirstOrDefault();
+                medication = db.Medications.Where(m => m.medicineName == model.medicineName && m.active == true).FirstOrDefault();
                 if (medication == null)
                 {
                     medication = new Medication();
@@ -93,7 +102,7 @@ namespace RestAPIs.Controllers
                 }
                 else
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medicine name already exists.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medicine name already exists." });
                     return response;
                 }
                
@@ -102,7 +111,7 @@ namespace RestAPIs.Controllers
             {
                 ThrowError(ex, "AddPatientMedication in PatientMedicationController.");
             }
-            response = Request.CreateResponse(HttpStatusCode.OK, medication.medicationID);
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = medication.medicationID, message = "Medication saved succesfully" });
             return response;
 
         }
@@ -114,45 +123,48 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                if(medicationID == 0)
+                Medication medication = new Medication();
+                if (medicationID == 0)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medicine ID is not valid.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medicine ID is not valid." });
                     return response;
                 }
-                if(model.frequency != null|| model.frequency != "")
+                if(model.frequency != null && model.frequency != "")
                 {
-                    if(!Regex.IsMatch(model.medicineName, @"^[a-zA-Z\s]+$"))
+                    if(!Regex.IsMatch(model.frequency, @"^[a-zA-Z\s]+$"))
                     {
-                        response = Request.CreateResponse(HttpStatusCode.BadRequest, "Frequency is not valid.");
+                        response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Frequency is not valid." });
                         return response;
                     }
                 }
-                if (model.medicineName == null || model.medicineName == ""||!Regex.IsMatch(model.medicineName, @"^[a-zA-Z\s]+$"))
+                if (model.medicineName == null || model.medicineName == ""||!Regex.IsMatch(model.medicineName.Trim(), @"^[a-zA-Z\s]+$"))
                 {
                   
-                response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medicine name is not valid.");
+                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medicine name is not valid." });
                 return response;
                 }
-                if(model.patientId == 0)
+                if (model.patientId == 0 || model.patientId == null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Patient ID is not valid.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient ID is not valid." });
                     return response;
                 }
-                Medication medication = db.Medications.Where(m => m.medicationID == medicationID).FirstOrDefault();
+                medication = db.Medications.Where(m => m.medicationID != medicationID && m.medicineName.Trim() == model.medicineName.Trim() && m.active == true).FirstOrDefault();
+                if (medication != null)
+                {
+                    //conditionID = -1;
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medication name already exists." });
+                    return response;
+                }
+
+                medication = db.Medications.Where(m => m.medicationID == medicationID).FirstOrDefault();
                 if (medication == null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medication record not found.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medication record not found." });
                     return response;
                 }
                
-                medication = db.Medications.Where(m => m.medicationID != medicationID && m.medicineName==model.medicineName).FirstOrDefault();
-            if (medication != null)
-            {
-                response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medication already exists.");
-                return response;
-            }
-                medication = new Medication();
                 medication.frequency = model.frequency;
+                medication.medicineName = model.medicineName;
                 medication.md = System.DateTime.Now;
                 medication.mb = model.patientId.ToString();
                 db.Entry(medication).State = EntityState.Modified;
@@ -164,11 +176,11 @@ namespace RestAPIs.Controllers
                 }
 
          
-            response = Request.CreateResponse(HttpStatusCode.OK, medicationID);
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = medicationID, message = "Medication saved succesfully" });
             return response;
         }
 
-        [HttpPost]
+       
         [Route("api/deletePatientMedication")]
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> DeletePatientMedication(long medicationID)
@@ -176,15 +188,17 @@ namespace RestAPIs.Controllers
 
             try
             {
-                Medication medication = await db.Medications.FindAsync(medicationID);
-                Patient patient = await db.Patients.FindAsync(medication.patientId);
+                Medication medication = db.Medications.Where(med=>med.medicationID==medicationID && med.active==true).FirstOrDefault();
+                Patient patient = new Patient();
+                if (medication != null) { patient = await db.Patients.FindAsync(medication.patientId); }
+              
             if (medication == null || patient == null)
             {
-                response = Request.CreateResponse(HttpStatusCode.BadRequest, "Medication record not found.");
+                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = medicationID, message = "Medication not found." });
                 return response;
             }
             medication.active = false;//Delete Operation changed
-            medication.mb = patient.userId;
+            medication.mb = patient.patientID.ToString();
             medication.md = System.DateTime.Now;
             db.Entry(medication).State = EntityState.Modified;
 
@@ -195,7 +209,7 @@ namespace RestAPIs.Controllers
                 return ThrowError(ex, "DeletePatientMedication in PatientMedicationController.");
             }
            
-            response = Request.CreateResponse(HttpStatusCode.OK, medicationID);
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = medicationID, message = "Medication deleted succesfully" });
             return response;
         }
      
@@ -210,8 +224,10 @@ namespace RestAPIs.Controllers
 
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
-            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.ToString(), Encoding.Unicode);
+            //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
+            //response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.ToString(), Encoding.Unicode);
+            //return response;
+            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Following Error occurred at method:" + Action + "\n" + ex.Message });
             return response;
         }
     }

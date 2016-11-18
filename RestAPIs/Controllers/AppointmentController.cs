@@ -1,5 +1,6 @@
 ﻿using DataAccess;
 using DataAccess.CommonModels;
+using DataAccess.CustomModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,19 +45,19 @@ namespace RestAPIs.Controllers
             Appointment app = new Appointment();
             try
             {
-                if (model.appDate==null || model.appTime==null||model.userID==null||model.doctorID==null)
+                if (model.appDate==null || model.appTime==null||model.doctorID==null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Appointment model is not valid.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Appointment model is not valid." });
                     return response;
                 }
-                Patient patient = db.Patients.Where(p => p.userId == model.userID).FirstOrDefault();
+               
                
                 app.active = true;
                 app.doctorID = model.doctorID;
-                app.patientID = patient.patientID;
+                app.patientID = model.patientID;
                 app.appTime = model.appTime;
                 app.appDate = model.appDate;
-                app.cb = model.userID;
+                app.cb = model.patientID.ToString();
                 app.cd = System.DateTime.Now;
 
                 db.Appointments.Add(app);
@@ -80,7 +81,7 @@ namespace RestAPIs.Controllers
             {
                     if (!ModelState.IsValid)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "ROV model Model is not valid.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "ROV model Model is not valid." });
                     return response;
                 }
 
@@ -94,7 +95,7 @@ namespace RestAPIs.Controllers
                 ThrowError(ex, "AddROV in AppointmentController.");
             }
 
-            response = Request.CreateResponse(HttpStatusCode.OK, model.appID);
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.appID, message = "" });
             return response;
         }
         [Route("api/addPatientFiles/appModel/")]
@@ -103,7 +104,7 @@ namespace RestAPIs.Controllers
         {
             if (!ModelState.IsValid)
             {
-                response = Request.CreateResponse(HttpStatusCode.BadRequest, "UserFile model is not valid.");
+                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "UserFile model is not valid." });
                 return response;
             }
             db.UserFiles.Add(model);
@@ -116,7 +117,7 @@ namespace RestAPIs.Controllers
                 ThrowError(ex, "AddROV in AppointmentController.");
             }
 
-            response = Request.CreateResponse(HttpStatusCode.OK, model.fileID);
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.fileID, message = "" });
             return response;
         }
 

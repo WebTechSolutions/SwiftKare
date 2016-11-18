@@ -14,6 +14,7 @@ using System.Web.Http.Description;
 
 namespace RestAPIs.Controllers
 {
+    [Authorize]
     public class PatientSugeriesController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
@@ -27,7 +28,7 @@ namespace RestAPIs.Controllers
             {
                 var surgeries = (from l in db.Surgeries
                                  where l.active == true
-                                 select new Surgeries { surgeryID = l.surgeryID, surgeryName = l.surgeryName }).ToList();
+                                 select new SurgeriesModel { surgeryID = l.surgeryID, surgeryName = l.surgeryName.Trim() }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, surgeries);
                 return response;
             }
@@ -45,7 +46,7 @@ namespace RestAPIs.Controllers
             {
                 var surgeries = (from l in db.PatientSurgeries
                                  where l.active == true && l.patientID == patientID
-                                 select new GetPatientSurgeries { surgeryID = l.surgeryID, bodyPart = l.bodyPart }).ToList();
+                                 select new GetPatientSurgeries { surgeryID = l.surgeryID, bodyPart = l.bodyPart.Trim() }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, surgeries);
                 return response;
             }
@@ -63,21 +64,21 @@ namespace RestAPIs.Controllers
             PatientSurgery psurgery = new PatientSurgery();
             try
             {
-                if (model.bodyPart == null || model.bodyPart == "" || !Regex.IsMatch(model.bodyPart, @"^[a-zA-Z\s]+$"))
+                if (model.bodyPart == null || model.bodyPart == "" || !Regex.IsMatch(model.bodyPart.Trim(), @"^[a-zA-Z\s]+$"))
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid body part.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid surgery." });
                     return response;
                 }
                 if (model.patientID == null || model.patientID == 0)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid patient id.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient id." });
                     return response;
                 }
                 
-                psurgery = db.PatientSurgeries.Where(p => p.bodyPart == model.bodyPart).FirstOrDefault();
+                psurgery = db.PatientSurgeries.Where(p => p.bodyPart.Trim() == model.bodyPart.Trim() && p.active == true).FirstOrDefault();
                 if (psurgery!=null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Body part already exists.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Surgery already exists." });
                     return response;
                 }
                 if (psurgery==null)
@@ -100,7 +101,7 @@ namespace RestAPIs.Controllers
                 ThrowError(ex, "AddPatientSurgery in PatientSurgeriesController.");
             }
 
-            response = Request.CreateResponse(HttpStatusCode.OK, psurgery.surgeryID);
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = psurgery.surgeryID, message = "" });
             return response;
         }
 
@@ -111,20 +112,26 @@ namespace RestAPIs.Controllers
             PatientSurgery psurgery = new PatientSurgery();
             try
             {
-                if (model.bodyPart == null || model.bodyPart == "" || !Regex.IsMatch(model.bodyPart, @"^[a-zA-Z\s]+$"))
+                if (model.bodyPart == null || model.bodyPart == "" || !Regex.IsMatch(model.bodyPart.Trim(), @"^[a-zA-Z\s]+$"))
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid body part.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID =0, message = "Invalid surgery." });
                     return response;
                 }
                 if (model.patientID == null || model.patientID == 0)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid patient id.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient id." });
+                    return response;
+                }
+                psurgery = db.PatientSurgeries.Where(all => all.bodyPart.Trim() == model.bodyPart.Trim() && all.surgeryID != surgeryID && all.active == true).FirstOrDefault();
+                if (psurgery != null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Surgery already exists." });
                     return response;
                 }
                 psurgery = db.PatientSurgeries.Where(m => m.surgeryID == surgeryID).FirstOrDefault();
                 if (psurgery == null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Patient Surgery record not found.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Surgery found." });
                     return response;
                 }
                
@@ -139,7 +146,7 @@ namespace RestAPIs.Controllers
                 return ThrowError(ex, "EditPatientSurgery in PatientSurgeriesController.");
             }
 
-            response = Request.CreateResponse(HttpStatusCode.OK, surgeryID);
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = surgeryID, message = "" });
             return response;
         }
 
@@ -152,14 +159,14 @@ namespace RestAPIs.Controllers
             {
                 if (surgeryID == 0)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid Patient Surgery ID.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid surgery ID." });
                     return response;
                 }
                 PatientSurgery psurgery = await db.PatientSurgeries.FindAsync(surgeryID);
             
                 if (psurgery == null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Patient Surgery record not found.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Surgery not found." });
                     return response;
                 }
                 else
@@ -178,13 +185,15 @@ namespace RestAPIs.Controllers
                 return ThrowError(ex, "DeletePatientSurgery in PatientSurgeriesController.");
             }
 
-            response = Request.CreateResponse(HttpStatusCode.OK, surgeryID);
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = surgeryID, message = "" });
             return response;
         }
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
-            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.ToString(), Encoding.Unicode);
+            //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
+            //response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.ToString(), Encoding.Unicode);
+            //return response;
+            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Following Error occurred at method:" + Action + "\n" + ex.InnerException });
             return response;
         }
         protected override void Dispose(bool disposing)

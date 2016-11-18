@@ -19,6 +19,7 @@ using DataAccess.CustomModels;
 
 namespace RestAPIs.Controllers
 {
+    [Authorize]
     public class SearchDoctorController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
@@ -41,9 +42,6 @@ namespace RestAPIs.Controllers
             catch (Exception ex)
             {
 
-                //HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                //httpResponseMessage.Content = new StringContent(ex.Message);
-                //throw new HttpResponseException(httpResponseMessage);
                return ThrowError(ex, "SeeDoctor in SeacrhDoctorController.");
             }
          
@@ -56,15 +54,8 @@ namespace RestAPIs.Controllers
             try
             {
                 var result = db.SP_FetchDoctorTimings(searchModel.doctorID,searchModel.appDate).ToList();
-              
-                //var result = from docTime in db.DoctorTimings
-                //           join f in db.Appointments on docTime.doctorID equals f.doctorID into app
-                //           from docapp in app.Where(f => f.appDate == searchModel.appDate && f.active==true).DefaultIfEmpty()
-                //           where docTime.doctorID == searchModel.doctorID && docTime.active == true 
-                //           select new FetchDoctorTimingModel { doctorID = (long)docTime.doctorID, fromTime = (TimeSpan)docTime.@from, toTime = (TimeSpan)docTime.to, appTime = (TimeSpan)docapp.appTime };
-                
-                    response = Request.CreateResponse(HttpStatusCode.OK, result);
-                    return response;
+                response = Request.CreateResponse(HttpStatusCode.OK, result);
+               return response;
                
             }
             catch (Exception ex)

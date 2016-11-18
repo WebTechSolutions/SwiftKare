@@ -2,23 +2,24 @@
 var _objAdd = null;
 var _patientId = 0;
 var rowID = null;
-var systems = null;
+var surgeries = null;
+var _surgeryTable = null;
+var surgeryID = 0;
 
-
-function GetSystems() {
+function GetSurgeries() {
     var param = {};
 
     $.ajax({
         type: 'POST',
-        url: '/SeeDoctor/GetSystems',
+        url: '/SeeDoctor/GetSurgeries',
         data: param,
         dataType: 'json',
         success: function (response) {
             if (response.Success == true) {
 
-                if (response.Systems != null) {
-                    systems = response.Systems;
-                    bindtoTextBox(systems);
+                if (response.Surgeries != null) {
+                    surgeries = response.Surgeries;
+                    bindtoTextBox(surgeries);
                 }
 
             }
@@ -33,22 +34,22 @@ function GetSystems() {
 
 }
 
-function bindtoTextBox(systems) {
+function bindtoTextBox(surgeries) {
 
-    var surgeriesArray = $.map(systems, function (el) {
+    var surgeriesArray = $.map(surgeries, function (el) {
         return el.bodyPart;
     });
 
-    $('#myBodyPart').autocomplete({
+    $('#mySurgery').autocomplete({
         lookup: surgeriesArray
     });
 }
 
-function LoadSurgeries(patientid) {
+function GetPatientSurgeries(patientid) {
     $("tbody[id$='medicinesTable']").html('');
     $.ajax({
         type: 'POST',
-        url: '/SeeDoctor/LoadSurgeries',
+        url: '/SeeDoctor/LoadPatientSurgeries',
         data: { 'patientid': patientid },
         dataType: 'json',
         success: function (response) {
@@ -56,7 +57,9 @@ function LoadSurgeries(patientid) {
 
                 if (response.Surgeries != null) {
                     _patientId = response.Surgeries[0].patientID;
-                    bindingSurgeriesTable(response.Surgeries);
+                    _surgeryTable = Surgeries;
+                    removeDuplicateSurgeries(surgeries);
+                    bindingSurgeriesTable(_surgeryTable,surgeries);
 
                 }
             }
@@ -68,20 +71,42 @@ function LoadSurgeries(patientid) {
 
 }
 
-function bindingSurgeriesTable(Surgeries) {
+function bindingSurgeriesTable(PSurgeries,GSurgeies) {
     var table = $('#surgeriestable').DataTable();
     table.clear();
-    for (var i = 0; i < Surgeries.length; i++) {
+    for (var i = 0; i < PSurgeries.length; i++) {
         $('#surgeriestable').dataTable().fnAddData([
                   
                    "<div class='checkbox' style='display: inline-block; width: 150px;'>"+
                                                                 "<label>"+
-                                                                 "<input type='checkbox' class='flat'>&nbsp"+ Surgeries[i].bodyPart+
+                                                                 "<input checked='checked' id='" + PSurgeries[i].surgeryID + "' type='checkbox' class='flat'>&nbsp" + PSurgeries[i].bodyPart +
                                                                 "</label>"+
                                                             "</div>"
         ]);
     }
+    for (var i = 0; i < GSurgeries.length; i++) {
+        $('#surgeriestable').dataTable().fnAddData([
 
+                   "<div class='checkbox' style='display: inline-block; width: 150px;'>" +
+                                                                "<label>" +
+                                                                 "<input id='" + GSurgeries[i].surgeryName + "' type='checkbox' class='flat'>&nbsp" + GSurgeries[i].surgeryName +
+                                                                "</label>" +
+                                                            "</div>"
+        ]);
+    }
+
+}
+
+function removeDuplicateSurgeries(surgeries)
+{
+    for (var i in _surgeryTable) {
+        for (var i in surgeries) {
+            if (_surgeryTable[i].bodyPart == surgeries[i].surgeryName) {
+                _surgeryTable.splice(i, 1);
+               
+            }
+        }
+    }
 }
 
 function reset() {
@@ -92,35 +117,33 @@ function reset() {
 }
 
 function addupdateSurgery() {
-    var msg = ValidateForm();
+    var msg = ValidateFormSurgery();
     if (msg == "" || msg == undefined) {
-        fillObj();
+        fillObjSurgery();
 
         var surgery;
         if (_objUpdate == null) {
             surgery = _objAdd;
+            surgeryID = 0
         }
-        else {
-            _objUpdate.bodyPart = $("#myBodyPart").val();
-            surgery = _objUpdate;
-        }
+       
 
         $.ajax({
             type: 'POST',
             url: '/SeeDoctor/AddUpdateSurgeries',
-            data: surgery,
+            data: { 'surgeryID': parseInt(surgeryID), 'surgery': surgery },
             dataType: 'json',
             success: function (response) {
                 if (response.Success == true) {
-                    if (response.SurgeryID < 0) {
+                    if (response.ApiResultModel.message != "") {
                         new PNotify({
                             title: 'Error',
-                            text: "Invalid body part.",
-                            type: 'success',
+                            text: response.ApiResultModel.message,
+                            type: 'error',
                             styling: 'bootstrap3'
                         });
                     }
-                    if (response.MedicineID > 0) {
+                    else if (response.ApiResultModel.message == "") {
                         new PNotify({
                             title: 'Success',
                             text: "Surgery is saved successfully.",
@@ -129,10 +152,11 @@ function addupdateSurgery() {
                         });
                         if (_objAdd != null) {
                             var _newObj = {};
-                            _newObj["surgeryID"] = response.SurgeryID;
+                            _newObj["surgeryID"] = response.ApiResultModel.ID;
                             _newObj["patientId"] = _objAdd.patientId;
                             _newObj["bodyPart"] = _objAdd.bodyPart;
-                            bindingSurgeriesTable(_surgeryTable);
+                            removeDuplicateSurgeries(surgeries);
+                            bindingSurgeriesTable(_surgeryTable, surgeries);
                             _objAdd = null;
 
                         }
@@ -161,37 +185,34 @@ function addupdateSurgery() {
 
 }
 
-function deleteObj(medicineID) {
-    var confirmMessage = confirm("Are you sure you want to delete?");
-    if (confirmMessage == false)
-        return false;
-
-
-    $.ajax({
+function deleteObjSurgery(surgeryID) {
+     $.ajax({
         type: 'POST',
-        url: '/SeeDoctor/DeleteMedicine',
-        data: { 'medicineID': parseInt(medicineID) },
+        url: '/SeeDoctor/DeleteSurgery',
+        data: { 'surgeryID': parseInt(surgeryID) },
         dataType: 'json',
         success: function (response) {
             if (response.Success == true) {
-                if (response.MedicineID != 0) {
+                if(response.ApiResultModel.message=="")
                     new PNotify({
                         title: 'Success',
-                        text: "Medicine is deleted successfully.",
+                        text: "Surgery is deleted successfully.",
                         type: 'success',
                         styling: 'bootstrap3'
                     });
-                    document.getElementById("row" + response.MedicineID).outerHTML = "";
-
-                }
-                else {
-                    new PNotify({
-                        title: 'Information',
-                        text: "Medicine is not found.",
-                        type: 'info',
-                        styling: 'bootstrap3'
-                    });
-                }
+                removeSurgery(response.ApiResultModel.ID);
+                bindingSurgeriesTable(_surgeryTable, surgeries);
+                   
+            }
+            else if(response.ApiResultModel.message!="")
+            {
+                new PNotify({
+                    title: 'Error',
+                    text: response.ApiResultModel.message,
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+            }
 
             }
 
@@ -202,7 +223,7 @@ function deleteObj(medicineID) {
     });
 }
 
-function fillObj() {
+function fillObjSurgery() {
 
     if (_objUpdate == null) {
         _objAdd = {};
@@ -212,7 +233,7 @@ function fillObj() {
 
 }
 
-function ValidateForm() {
+function ValidateFormSurgery() {
     var success = "";
 
     if ($("#myBodyPart").val() == "") {
@@ -221,6 +242,15 @@ function ValidateForm() {
     }
     return success;
 
+}
+
+function removeSurgery(value) {
+    for (var i in _surgeryTable) {
+        if (_surgeryTable[i].surgeryID == value) {
+            _surgeryTable.splice(i, 1);
+            break;
+        }
+    }
 }
 
 

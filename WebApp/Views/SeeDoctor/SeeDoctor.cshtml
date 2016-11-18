@@ -9,10 +9,13 @@
         display: none;
     }
 </style>
-<script src="~/Scripts/SeeDoctor/SearchDoctor.js"></script>
 <script src="~/Scripts/HealthConditions/HealthConditions.js"></script>
-@*<script src="~/Scripts/PatientAllergies/PateintAllergies.js"></script>*@
 <script src="~/Scripts/Medicine/Medicine.js"></script>
+<script src="~/Scripts/PatientAllergies/PateintAllergies.js"></script>
+
+<script src="~/Scripts/SeeDoctor/SearchDoctor.js"></script>
+
+
 
 <div class="right_col">
     <div class="clearfix"></div>
@@ -396,11 +399,11 @@
                                                         <!-- colspan="3" -->
                                                         <td>
                                                             <div class="input-group" style="width: 100%;">
-                                                                <input type="text" name="country" placeholder="Add Conditions" id="myCondition" class="form-control" />
+                                                                <input maxlength="50" type="text" name="country" placeholder="Add Conditions" id="myCondition" class="form-control" />
                                                             </div>
                                                         </td>
                                                         <td width="30%">
-                                                            <button id="addcondition" class="btn btn-primary" type="button">Add conditions</button>
+                                                            <button id="addcondition" class="btn btn-primary" type="button">Add Conditions</button>
                                                             <button id="reset" class="btn btn-primary" type="button">Reset</button>
                                                         </td>
                                                     </tr>
@@ -455,12 +458,12 @@
                                                     <tr id="medications" style="display:none">
                                                         <td>
                                                             <div class="form-group">
-                                                                <input type="text" name="country" placeholder="Search Medicine" id="myMedicine" class="form-control" />
+                                                                <input maxlength="50" type="text" name="country" placeholder="Search Medicine" id="myMedicine" class="form-control" />
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="form-group">
-                                                                <input type="text" name="country" placeholder="Frequency" id="myFrequency" class="form-control" />
+                                                                <input maxlength="50" type="text" name="country" placeholder="Frequency" id="myFrequency" class="form-control" />
                                                             </div>
                                                         </td>
                                                         <td width="30%">
@@ -504,7 +507,7 @@
 
                                     <div class="x_content">
                                         <div class="table-responsive">
-                                            <table class="table" style="margin-bottom: 5px;">
+                                            <table class="table" style="margin-bottom: 5px;" >
                                                 <tbody>
                                                     <tr>
                                                         <td style="border-top: none"><h2>Do you have any allergies or Drug Sensitivities?</h2></td>
@@ -513,73 +516,59 @@
                                                         <td style="border-top: none">
                                                             <div class="text-right">
                                                                 <label>
-                                                                    No <input type="checkbox" class="js-switch" /> Yes
+                                                                    No <input type="checkbox" class="js-switch" id="allergyCheckbox" /> Yes
                                                                 </label>
                                                             </div>
                                                         </td>
                                                     </tr>
 
-                                                    <tr>
+                                                    <tr id="allergies" style="display:none">
                                                         <td>
                                                             <div class="form-group">
-                                                                <input type="text" name="country" placeholder="Add Allergies" id="autocomplete-custom-append3" class="form-control" />
+                                                                <input maxlength="50" type="text" name="country" placeholder="Add Allergies" id="myAllergies" class="form-control" />
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="form-group">
-                                                                <input type="text" name="country" placeholder="Add Sensitivities" id="autocomplete-custom-append4" class="form-control" />
+                                                                <select class="form-control" id="Sensitivity">
+                                                                    <option value="">Choose Severity</option>
+
+                                                                </select>
+                                                                @*<input type="text" name="country" placeholder="Add Sensitivities" id="autocomplete-custom-append4" class="form-control" />*@
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="form-group">
-                                                                <input type="text" name="country" placeholder="Add Reaction" id="autocomplete-custom-append5" class="form-control" />
+                                                                <select class="form-control" id="Reaction">
+                                                                    <option value="">Choose Reaction</option>
+
+                                                                </select>
+                                                                @*<input type="text" name="country" placeholder="Add Reaction" id="autocomplete-custom-append5" class="form-control" />*@
                                                             </div>
                                                         </td>
                                                         <td width="10%">
-                                                            <button class="btn btn-primary" style="max-width: 200px; float: right; margin-right: 0;" type="button">Add Allergies</button>
+                                                            <button id="addallergy" class="btn btn-primary" type="button">Add Allergy</button>
+                                                            <button id="resetallergy" class="btn btn-primary" type="button">Reset</button>
                                                         </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
 
-                                            <table id="datatable-keytable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                             <table id="allergiestable" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
                                                 <thead>
                                                     <tr class="headings">
-                                                        <th class="column-title">My Allergies</th>
+                                                        <th class="column-title">Sr.No </th>
+                                                        <th class="column-title">Allergy</th>
                                                         <th class="column-title">Severity</th>
                                                         <th class="column-title">Reaction</th>
-                                                        <th class="column-title">Source</th>
+                                                        <th class="column-title">Reported Date</th>
+                                                        <th class="column-title">Action</th>
+                                                        
                                                     </tr>
                                                 </thead>
 
                                                 <tbody>
-                                                    <tr class="even pointer">
-                                                        <td>My allergies1</td>
-                                                        <td>Severity1</td>
-                                                        <td>Reaction1</td>
-                                                        <td>Source1</td>
-                                                    </tr>
-
-                                                    <tr class="even pointer">
-                                                        <td>My allergies2</td>
-                                                        <td>Severity2</td>
-                                                        <td>Reaction2</td>
-                                                        <td>Source2</td>
-                                                    </tr>
-
-                                                    <tr class="even pointer">
-                                                        <td>My allergies3</td>
-                                                        <td>Severity3</td>
-                                                        <td>Reaction3</td>
-                                                        <td>Source3</td>
-                                                    </tr>
-
-                                                    <tr class="even pointer">
-                                                        <td>My allergies4</td>
-                                                        <td>Severity4</td>
-                                                        <td>Reaction4</td>
-                                                        <td>Source4</td>
-                                                    </tr>
+                                                   
 
                                                 </tbody>
                                             </table>
@@ -607,19 +596,20 @@
                                                         <td style="border-top: none">
                                                             <div class="text-right">
                                                                 <label>
-                                                                    No <input type="checkbox" class="js-switch" /> Yes
+                                                                    No <input type="checkbox" class="js-switch" id="surgeryCheckbox" /> Yes
                                                                 </label>
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    <tr>
+                                                    <tr id="surgeries" style="display:none">
                                                         <td>
                                                             <div class="input-group" style="width: 100%;">
-                                                                <input type="text" name="country" placeholder="Add Surgeries" id="autocomplete-custom-append6" class="form-control" />
+                                                                <input maxlength="50" type="text" name="country" placeholder="Add Surgeries" id="mySurgeries" class="form-control" />
                                                             </div>
                                                         </td>
                                                         <td width="10%">
-                                                            <button class="btn btn-primary" style="max-width: 200px; float: right; margin-right: 0;" type="button">Add Surgeries</button>
+                                                            <button id="addsurgery" class="btn btn-primary" type="button">Add Surgeries</button>
+                                                          
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -745,7 +735,7 @@
                 </div>
             </div>
         </div>
-      
+      </div> @*end class="right_col"*@
         <script>
             $(document).ready(function () {
 
@@ -819,6 +809,8 @@
             //});
            
         </script>
+
+    @*For Health Conditions*@
     <script>
         $(document).ready(function () {
             GetHealthConditions(@ViewBag.PatienID);
@@ -840,14 +832,11 @@
         });
         $('#conditionCheckbox').on('click', function () {
             if ($('#conditionCheckbox')[0].checked) {
-                //alert('test');
-                // $('#addcondition').removeAttr('disabled');
-                //$('#reset').removeAttr('disabled');
+               
                 document.getElementById("healthconditions").style.display = "block";
             }
             else {
-                //$('#addcondition').attr('disabled', 'disabled');
-                //$('#reset').attr('disabled', 'disabled');
+               
                 document.getElementById("healthconditions").style.display = "none";
             }
 
@@ -861,16 +850,7 @@
         $(document).ready(function () {
             GetMedicines();
             GetMedications(@ViewBag.PatienID);
-            // initialize autocomplete with custom appendTo
-            //var medicinesArray = $.map(medicines, function (value, key) {
-            //    return {
-            //        value: value,
-            //        data: key
-            //    };
-            //});
-            //$('#myMedicine').autocomplete({
-            //    lookup: medicinesArray
-            //});
+            
         });
         $('#addmedicine').on('click', function () {
             if ($("#myMedicine").val() == "") {
@@ -882,7 +862,7 @@
             }
 
         });
-        $('#reset').on('click', function () {
+        $('#resetmedicine').on('click', function () {
             resetMedicine();
 
         });
@@ -898,6 +878,90 @@
 
         });
     </script>
+
+    @*For Allergies*@
+    <script>
+        $(document).ready(function () {
+            GetSensitivities();
+            GetReactions();
+           GetPatientAllergies(@ViewBag.PatienID);
+           
+        });
+        $('#addallergy').on('click', function () {
+            if ($("#myAllergy").val() == "") {
+                alert("Allergy name is required.");
+            }
+            else {
+
+                addupdateAllergies();
+            }
+
+        });
+        $('#resetallergy').on('click', function () {
+            resetAllergies();
+
+        });
+        $('#allergyCheckbox').on('click', function () {
+            if ($('#allergyCheckbox')[0].checked) {
+
+                document.getElementById("allergies").style.display = "block";
+            }
+            else {
+
+                document.getElementById("allergies").style.display = "none";
+            }
+
+        });
+    </script>
+
+
+    @*For Surgeries*@
+    <script>
+        $(document).ready(function () {
+           // GetSurgeries();
+           // GetPatientSurgeries(@ViewBag.PatienID);
+            
+        });
+        $('#addsurgery').on('click', function () {
+            if ($("#mySurgery").val() == "") {
+                alert("Surgery name is required.");
+            }
+            else {
+
+                addupdateSurgery();
+            }
+
+        });
+         $('#surgeryCheckbox').on('click', function () {
+             if ($('#surgeryCheckbox')[0].checked) {
+
+                document.getElementById("surgeries").style.display = "block";
+            }
+            else {
+
+                 document.getElementById("surgeries").style.display = "none";
+            }
+
+         });
+         //$('input:checkbox').click(function () {
+         //    //$('#result').append(' (click! ' + this.id + ')');
+         //    var ischecked = $(this).is(':checked');
+         //    if (!ischecked) {
+         //        var returnVal = confirm("Are you sure?");
+         //        if (returnVal == true) {
+         //            $(this).attr("checked", false);
+        //            deleteObjSurgery(this.id);
+         //        }
+         //        else {
+
+         //            $('#chk').prop('checked', true);
+         //        }
+
+         //        //alert(returnVal);
+         //    }
+         //});
+    </script>
+
         <script>
             $(document).ready(function () {
 

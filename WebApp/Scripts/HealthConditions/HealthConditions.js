@@ -1,7 +1,7 @@
 ﻿var _objUpdate = null;
 var _objAdd = null;
 var _patientId = 0;
-var rowID = null;
+var _conditionID = null;
 var _conditionTable = null;
 var date = new Date();
 var ticks = date.getTime();
@@ -17,7 +17,7 @@ function GetHealthConditions(patientid) {
         success: function (response) {
             if (response.Success == true) {
 
-                if (response.Conditions != null) {
+                if (response.Conditions.length>0) {
                     //_objUpdate = response.Conditions;
                     _conditionTable =response.Conditions;
                     _patientId = response.Conditions[0].patientID;
@@ -43,7 +43,7 @@ function bindConditionsTable(Conditions) {
         $('#conditionstable').dataTable().fnAddData([
              i + 1,
              Conditions[i].conditionName,
-              ToJavaScriptDate(Conditions[i].reportedDate),
+              ConverttoDateHealthConditions(Conditions[i].reportedDate),
               "<div class='btn-group'> <button type='button' class='btn btn-primary'>Action</button>" +
                                             "<button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>" +
                                                 "<span class='caret'></span>" +
@@ -51,10 +51,10 @@ function bindConditionsTable(Conditions) {
                                             "</button>" +
                                             "<ul class='dropdown-menu' role='menu'>" +
                                                "<li>" +
-                                                "<a class='editbtn' href='#'  onclick='editObj(" + JSON.stringify(Conditions[i]) + ",this);'>Edit</a>" +
+                                                "<a class='editbtn' href='#'  onclick='editHealthConditions(" + JSON.stringify(Conditions[i]) + ",this);'>Edit</a>" +
                                                 "</li>" +
                                                 "<li>" +
-                                                 "<button id='delete' type='button' class='btn btn-link submit' style='border-bottom:none' onclick='deleteObj(" + Conditions[i].conditionID + ");'>Delete</button></li>" +
+                                                 "<button id='delete' type='button' class='btn btn-link submit' style='border-bottom:none' onclick='deleteHealthConditions(" + Conditions[i].conditionID + ");'>Delete</button></li>" +
                                             "</ul>" +
                                         "</div>"
         ]);
@@ -63,20 +63,20 @@ function bindConditionsTable(Conditions) {
        
 
 }
-function ToJavaScriptDate(value) {
+function ConverttoDateHealthConditions(value) {
     var pattern = /Date\(([^)]+)\)/;
     var results = pattern.exec(value);
     var dt = new Date(parseFloat(results[1]));
     return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
 }
-function editObj(objCondition) {
+function editHealthConditions(objCondition) {
     $("#myCondition").val(objCondition.conditionName);
     $("#conditionID").val(objCondition.conditionID);
     _objUpdate = {};
     _objUpdate["conditionName"] = (objCondition.conditionName);
     _objUpdate["conditionID"] = (objCondition.conditionID);
     _objUpdate["patientID"] = (objCondition.patientID);
-    rowID = objCondition.conditionID;
+    _conditionID = objCondition.conditionID;
    }
 function resetCondition() {
    
@@ -91,13 +91,14 @@ function resetCondition() {
 
 //
 function addupdateCondition() {
-    var msg = ValidateForm();
+    var msg = ValidateFormHealthConditions();
     if (msg == "" || msg == undefined) {
-        fillObj();
+        fillObjHealthConditions();
 
         var condition;
         if (_objUpdate == null) {
             condition = _objAdd;
+            _conditionID = 0;
         }
         else {
             _objUpdate.conditionName = $("#myCondition").val();
@@ -107,19 +108,20 @@ function addupdateCondition() {
         $.ajax({
             type: 'POST',
             url: '/SeeDoctor/AddUpdateCondition',
-            data: condition,
+            data: { 'conditionID': parseInt(_conditionID), 'condition': condition },
             dataType: 'json',
             success: function (response) {
                 if (response.Success == true) {
-                    if (response.ConditionID < 0) {
+                    if(response.ApiResultModel.message!="")
+                   {
                         new PNotify({
                             title: 'Error',
-                            text: "Invalid condition name",
-                            type: 'success',
+                            text: response.ApiResultModel.message,
+                            type: 'error',
                             styling: 'bootstrap3'
                         });
                     }
-                    if (response.ConditionID > 0) {
+                    else if(response.ApiResultModel.message==""){
                         new PNotify({
                             title: 'Success',
                             text: "Condition is saved successfully.",
@@ -128,7 +130,7 @@ function addupdateCondition() {
                         });
                         if (_objAdd != null) {
                             var _newObj = {};
-                            _newObj["conditionID"] = response.ConditionID;
+                            _newObj["conditionID"] = response.ApiResultModel.ID;
                             _newObj["patientID"] = _objAdd.patientID;
                             _newObj["conditionName"] = _objAdd.conditionName;
                             _newObj["reportedDate"] = "/Date(" + ticks + ")/";
@@ -139,7 +141,7 @@ function addupdateCondition() {
 
                         }
                         else if (_objAdd == null) {
-                            changeCondition(response.ConditionID, _objUpdate.conditionName);
+                            changeCondition(response.ApiResultModel.ID, _objUpdate.conditionName);
                             bindConditionsTable(_conditionTable);
                            _objUpdate = null;
                             
@@ -164,7 +166,7 @@ function addupdateCondition() {
 
 }
 
-function deleteObj(conditionID) {
+function deleteHealthConditions(conditionID) {
     var confirmMessage = confirm("Are you sure you want to delete?");
     if (confirmMessage == false)
         return false;
@@ -178,31 +180,28 @@ function deleteObj(conditionID) {
         success: function (response) {
             if (response.Success == true)
             {
-                if (response.ConditionID != 0)
-                {
+                
+                if(response.ApiResultModel.message=="")
                     new PNotify({
                         title: 'Success',
                         text: "Condition is deleted successfully.",
                         type: 'success',
                         styling: 'bootstrap3'
                     });
-                    removeCondition(response.ConditionID);
+                    removeCondition(response.ApiResultModel.ID);
                     bindConditionsTable(_conditionTable);
                    
                 }
-                else
+                else if(response.ApiResultModel.message!="")
                 {
                     new PNotify({
-                        title: 'Information',
-                        text: "Condition is not found.",
-                        type: 'info',
+                        title: 'Error',
+                        text: response.ApiResultModel.message,
+                        type: 'error',
                         styling: 'bootstrap3'
                     });
                 }
-              
-            }
-           
-            
+             
         },
         error: errorRes
 
@@ -251,7 +250,7 @@ function UpdateConditionTable(Condition)
     ]);
    
 }
-function getCurrentDate()
+function getCurrentDateHealthConditions()
 {
     var today = new Date();
     var dd = today.getDate();
@@ -268,7 +267,7 @@ function getCurrentDate()
 
     return today = mm + '/' + dd + '/' + yyyy;
 }
-function fillObj() {
+function fillObjHealthConditions() {
 
     if (_objUpdate == null) {
         _objAdd = {};
@@ -277,7 +276,7 @@ function fillObj() {
     }
     
 }
-function ValidateForm() {
+function ValidateFormHealthConditions() {
     var success = "";
 
     if ($("#myCondition").val() == "") {

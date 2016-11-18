@@ -65,8 +65,8 @@ function GetAllSpecialities() {
         data: param,
         dataType: 'json',
         success: function (response) {
-            $.each(response, function (item) {
-                listitems += '<option value=' + response[item].speciallityID + '>' + response[item].specialityName + '</option>';
+            $.each(response.Object, function (item) {
+                listitems += '<option value=' + response.Object[item].speciallityID + '>' + response.Object[item].specialityName + '</option>';
 
             });
             $select.append(listitems);
@@ -87,8 +87,8 @@ function GetAllLanguages() {
         data: param,
         dataType: 'json',
         success: function (response) {
-            $.each(response, function (item) {
-                 listitems += '<option value=' + response[item].languageID + '>' + response[item].languageName + '</option>';
+            $.each(response.Object, function (item) {
+                listitems += '<option value=' + response.Object[item].languageID + '>' + response.Object[item].languageName + '</option>';
               
             });
            $select.append(listitems);
@@ -147,43 +147,49 @@ function SearchDoctor()
         dataType: 'json',
         success: function (response) {
             var div = "";
+            if (response.Success == true)
+            {
+                if (response.DoctorList != null) {
 
-            $.each(response, function (item) {
-               
-                div = div + " <div class='col-lg-2 col-md-4 col-sm-6 col-xs-12 text-center'>" +
-                              "<div class='well profile_view p-0'>" +
-                               "<a class='hrt' href='#' style='color: #5A738E;'><span id='toggle1' class='fa fa-heart-o' aria-hidden='true'></span></a>"+
-                                "<a class='hrt1' href='#' style='color: #5A738E;'><span id='toggle_1' class='fa fa-heart' aria-hidden='true'></span></a>"+
-                                "<i class='crl fa fa-circle' aria-hidden='true' style='color: green; cursor: pointer;font-size: 12px;'></i>"+
-                                "<img src='images/img.jpg' alt='' class='img-circle img-responsive m-b-10 m-t-20' style='margin: 0 auto;display: inline-block;'>"+
-                                
-                                 " <a href='#' class='thumbnail-col-inner' data-toggle='modal' data-target='#myModal1' id='"+response[item].doctorID+"' onclick='showDoctorTimings(" + response[item].doctorID +")'>" +
-                                  "<i class='cl1 fa fa-calendar' aria-hidden='true'></i>"+
-                                "</a>"+
-                               
-                                "<a href='#'>"+
-                                 " <i class='ph1 fa fa-phone' aria-hidden='true'></i>"+
-                                "</a>"+
-                                
-                                "<h2 class='m-0'>"+
-                                "<a href='#' class='thumbnail-col-inner m-b-15' data-toggle='modal' data-target='#myModal8' id='" + response[item].doctorID + "'>" + response[item].firstName + " " + response[item].lastName + "</a>" +
-                                "</h2>"+
-                                "<h4 class='brief m-0' style='color: green'>Available for Call</h4>"+
-                                "<p class='ratings m-t-5' style='text-align: center;'>"+
-                                  
-                                  "<a href='#'><span class='fa fa-star'></span></a>"+
-                                  "<a href='#'><span class='fa fa-star'></span></a>"+
-                                  "<a href='#'><span class='fa fa-star'></span></a>"+
-                                  "<a href='#'><span class='fa fa-star'></span></a>"+
-                                  "<a href='#'><span class='fa fa-star-o'></span></a>"+
-                                "</p>"+
-                              "</div></div>";
+                    $.each(response.DoctorList, function (item) {
 
-            });
-            if (div == "") { document.getElementById("doctorList").innerHTML = "No record found"; }
-            else { document.getElementById("doctorList").innerHTML = div; }
-           
-            document.getElementById("mainpanel").style.display = "block";
+                        div = div + " <div class='col-lg-2 col-md-4 col-sm-6 col-xs-12 text-center'>" +
+                                      "<div class='well profile_view p-0'>" +
+                                       "<a class='hrt' href='#' style='color: #5A738E;'><span id='toggle1' class='fa fa-heart-o' aria-hidden='true'></span></a>" +
+                                        "<a class='hrt1' href='#' style='color: #5A738E;'><span id='toggle_1' class='fa fa-heart' aria-hidden='true'></span></a>" +
+                                        "<i class='crl fa fa-circle' aria-hidden='true' style='color: green; cursor: pointer;font-size: 12px;'></i>" +
+                                        "<img src='images/img.jpg' alt='' class='img-circle img-responsive m-b-10 m-t-20' style='margin: 0 auto;display: inline-block;'>" +
+
+                                         " <a href='#' class='thumbnail-col-inner' data-toggle='modal' data-target='#myModal1' id='" + DoctorList[item].doctorID + "' onclick='showDoctorTimings(" + DoctorList[item].doctorID + ")'>" +
+                                          "<i class='cl1 fa fa-calendar' aria-hidden='true'></i>" +
+                                        "</a>" +
+
+                                        "<a href='#'>" +
+                                         " <i class='ph1 fa fa-phone' aria-hidden='true'></i>" +
+                                        "</a>" +
+
+                                        "<h2 class='m-0'>" +
+                                        "<a href='#' class='thumbnail-col-inner m-b-15' data-toggle='modal' data-target='#myModal8' id='" + DoctorList[item].doctorID + "'>" + DoctorList[item].firstName + " " + DoctorList[item].lastName + "</a>" +
+                                        "</h2>" +
+                                        "<h4 class='brief m-0' style='color: green'>Available for Call</h4>" +
+                                        "<p class='ratings m-t-5' style='text-align: center;'>" +
+
+                                          "<a href='#'><span class='fa fa-star'></span></a>" +
+                                          "<a href='#'><span class='fa fa-star'></span></a>" +
+                                          "<a href='#'><span class='fa fa-star'></span></a>" +
+                                          "<a href='#'><span class='fa fa-star'></span></a>" +
+                                          "<a href='#'><span class='fa fa-star-o'></span></a>" +
+                                        "</p>" +
+                                      "</div></div>";
+
+                    });
+                    if (div == "") { document.getElementById("doctorList").innerHTML = "No record found"; }
+                    else { document.getElementById("doctorList").innerHTML = div; }
+
+                    document.getElementById("mainpanel").style.display = "block";
+                }
+            }
+            
         },
         error: errorRes
 

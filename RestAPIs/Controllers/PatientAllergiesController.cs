@@ -14,6 +14,7 @@ using System.Web.Http.Description;
 
 namespace RestAPIs.Controllers
 {
+    [Authorize]
     public class PatientAllergiesController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
@@ -26,7 +27,7 @@ namespace RestAPIs.Controllers
             {
                 var allergies = (from l in db.Allergies
                                  where l.active == true
-                                 select new AllergiesModel { allergyID = l.allergyID, allergyName = l.allergyName }).ToList();
+                                 select new AllergiesModel { allergyID = l.allergyID, allergyName = l.allergyName.Trim() }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, allergies);
                 return response;
             }
@@ -36,14 +37,14 @@ namespace RestAPIs.Controllers
             }
 
         }
-        [Route("api/getSeverity")]
+        [Route("api/getSensitivity")]
         public HttpResponseMessage GetSeverities()
         {
             try
             {
                 var severities = (from l in db.Severities
                                  where l.active == true
-                                 select new Severity { severityID  = l.severityID, severityName = l.severityName }).ToList();
+                                 select new SensitivityModel  { sensitivityID  = l.severityID, sensitivityName = l.severityName.Trim() }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, severities);
                 return response;
             }
@@ -60,7 +61,7 @@ namespace RestAPIs.Controllers
             {
                 var reactions = (from l in db.Reactions
                                   where l.active == true
-                                  select new Reaction { reactionID = l.reactionID, reactionName = l.reactionName }).ToList();
+                                  select new ReactionModel { reactionID = l.reactionID, reactionName = l.reactionName.Trim() }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, reactions);
                 return response;
             }
@@ -79,7 +80,7 @@ namespace RestAPIs.Controllers
             {
                 var allergies = (from l in db.PatientAllergies
                                  where l.active == true && l.patientID == patientID
-                                 select new GetPatientAllergies { allergiesID = l.allergiesID, allergyName = l.allergyName, reaction = l.reaction, severity = l.severity, reporteddate = l.reportedDate }).ToList();
+                                 select new GetPatientAllergies { allergiesID = l.allergiesID, allergyName = l.allergyName.Trim(), reaction = l.reaction.Trim(), severity = l.severity.Trim(), reporteddate = l.reportedDate }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, allergies);
                 return response;
             }
@@ -97,18 +98,18 @@ namespace RestAPIs.Controllers
             PatientAllergy pallergy = new PatientAllergy();
             try
             {
-                if (model.allergyName == "" || model.allergyName == null || !Regex.IsMatch(model.allergyName, @"^[a-zA-Z\s]+$"))
+                if (model.allergyName == "" || model.allergyName == null || !Regex.IsMatch(model.allergyName.Trim(), @"^[a-zA-Z\s]+$"))
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid Allergy Name.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid allergy name." });
                     return response;
                 }
                 if (model.patientID == 0)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid Patient ID.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
                     return response;
                 }
 
-                pallergy = db.PatientAllergies.Where(all => all.allergyName == model.allergyName).FirstOrDefault();
+                pallergy = db.PatientAllergies.Where(all => all.allergyName.Trim() == model.allergyName.Trim() && all.active == true).FirstOrDefault();
                 if(pallergy== null)
                 {
                     pallergy = new PatientAllergy();
@@ -128,7 +129,7 @@ namespace RestAPIs.Controllers
                 }
                 else
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Allergy already exists.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Allergy already exists." });
                     return response;
                 }
                
@@ -139,8 +140,8 @@ namespace RestAPIs.Controllers
                 ThrowError(ex, "AddPatientAllergy in PatientAllergiesController.");
             }
 
-            //var newpallergy = db.SP_GetPatientAllergies(model.patientID);
-            response = Request.CreateResponse(HttpStatusCode.OK, pallergy.allergiesID);
+         
+            response = Request.CreateResponse(HttpStatusCode.OK,  new ApiResultModel { ID = pallergy.allergiesID, message = "" });
             return response;
         }
 
@@ -148,34 +149,38 @@ namespace RestAPIs.Controllers
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> EditPatientAllergy(long allergyID,PatientAllergies_Custom model)
         {
+            PatientAllergy pallergy = new PatientAllergy();
             try
             {
-                if (model.allergyName == "" || model.allergyName == null || !Regex.IsMatch(model.allergyName, @"^[a-zA-Z\s]+$"))
+                if (model.allergyName == "" || model.allergyName == null || !Regex.IsMatch(model.allergyName.Trim(), @"^[a-zA-Z\s]+$"))
                 { 
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid Allergy Name.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid allergy name." });
                     return response;
                 }
                 if (model.patientID == 0 )
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid Patient ID.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
                     return response;
                 }
                 if(allergyID == 0)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid Allergies ID.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid allergies ID." });
                     return response;
                 }
-
-                PatientAllergy pallergy = db.PatientAllergies.Where(m => m.allergiesID == allergyID).FirstOrDefault();
-                if (pallergy == null)
+                pallergy = db.PatientAllergies.Where(all => all.allergyName.Trim() == model.allergyName.Trim() && all.allergiesID != allergyID && all.active == true).FirstOrDefault();
+                if (pallergy != null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Patient Allergy record not found.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Allergy already exists." });
                     return response;
                 }
-                pallergy = db.PatientAllergies.Where(all => all.allergyName == model.allergyName && all.allergiesID!= allergyID).FirstOrDefault();
+                    pallergy = db.PatientAllergies.Where(m => m.allergiesID == allergyID).FirstOrDefault();
                 if (pallergy == null)
                 {
-                    pallergy = new PatientAllergy();
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Allergy not found." });
+                    return response;
+                }
+                             
+                  
                     pallergy.allergyName = model.allergyName;
                     pallergy.severity = model.severity;
                     pallergy.reaction = model.reaction;
@@ -183,13 +188,6 @@ namespace RestAPIs.Controllers
                     pallergy.mb = pallergy.patientID.ToString();
                     db.Entry(pallergy).State = EntityState.Modified;
                     await db.SaveChangesAsync();
-
-                }
-                else
-                {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Allergy already exists.");
-                    return response;
-                }
                 
             }
             catch (Exception ex)
@@ -198,7 +196,7 @@ namespace RestAPIs.Controllers
             }
 
             
-            response = Request.CreateResponse(HttpStatusCode.OK, allergyID);
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = allergyID, message = "" });
             return response;
         }
         [HttpPost]
@@ -208,11 +206,11 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                PatientAllergy pallergy = await db.PatientAllergies.FindAsync(allergyID);
-                
+                PatientAllergy pallergy =  db.PatientAllergies.Where(all => all.allergiesID == allergyID && all.active == true).FirstOrDefault();
+
                 if (pallergy == null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Patient Allergy record not found.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Allergy not found." });
                     return response;
                 }
                 pallergy.active = false;//Delete Operation changed
@@ -226,13 +224,15 @@ namespace RestAPIs.Controllers
                 return ThrowError(ex, "DeletePatientAllergy in PatientAllergiesController.");
             }
 
-            response = Request.CreateResponse(HttpStatusCode.OK, allergyID);
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = allergyID, message = "" });
             return response;
         }
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
-            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.ToString(), Encoding.Unicode);
+            //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
+            //response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.ToString(), Encoding.Unicode);
+            //return response;
+            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Following Error occurred at method:" + Action + " " + ex.Message });
             return response;
         }
         protected override void Dispose(bool disposing)
