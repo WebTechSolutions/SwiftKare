@@ -80,7 +80,7 @@ namespace WebApp
                      "~/Scripts/select2.full.min.js",
                      "~/Scripts/daterangepiker/daterangepicker.js",
                      "~/Scripts/switchery.min.js",
-                    "~/Scripts/toggle.js",
+                    //"~/Scripts/toggle.js",
                      "~/Scripts/validator.js",
                      "~/Scripts/jquery.smartWizard.js",
                        "~/Scripts/dropzone.min.js",
