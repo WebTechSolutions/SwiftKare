@@ -138,7 +138,7 @@ namespace WebApp.Controllers
                             SessionHandler.UserInfo = userModel;
 
                             if (patient.active == null || (bool)patient.active)
-                                return RedirectToAction("Index", "Patient");
+                                return RedirectToAction("SeeDoctor", "SeeDoctor");
                         }
                         else if(roles.Contains("Admin"))
                         {
