@@ -8,6 +8,7 @@ using WebApp.Interfaces;
 using Newtonsoft.Json;
 using WebApp.Helper;
 using Identity.Membership.Models;
+using DataAccess.CustomModels;
 
 namespace WebApp.Repositories.PatientRepositories
 {
@@ -67,5 +68,13 @@ namespace WebApp.Repositories.PatientRepositories
         {
             throw new NotImplementedException();
         }
+        public ApiResultModel AddPharmacy(PatientPharmacy_Custom pharmacy)
+        {
+            var strContent = JsonConvert.SerializeObject(pharmacy);
+            var response = ApiConsumerHelper.PostData("api/addupdatePatientPharmacy", strContent);
+            var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
+            return result;
+        }
+       
     }
 }

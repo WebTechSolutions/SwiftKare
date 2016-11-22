@@ -71,7 +71,7 @@ namespace WebApp.Controllers
                 if (model.language == "ALL") { model.language = null; }
                 if (model.speciality == "ALL") { model.speciality = null; }
                 List<DoctorModel> doctorList = objSeeDoctorRepo.SeeDoctor(model);
-                return Json(new { Success = true, DoctorList = doctorList });
+                return Json(new { Success = true, DoctorModel = doctorList });
 
             }
             catch (Exception ex)
@@ -225,12 +225,15 @@ namespace WebApp.Controllers
             {
                 if (condition.conditionName == null || condition.conditionName == "" || !Regex.IsMatch(condition.conditionName, @"^[a-zA-Z\s]+$"))
                 {
-                    return Json(new { Success = true, ConditionID = -1 });
+                    ApiResultModel apiresult = new ApiResultModel();
+                    apiresult.message = "Invalid condition name.Only letters and numbers are allowed.";
+                    return Json(new { Success = true, ApiResultModel = apiresult });
                 }
                 ConditionRepository objRepo = new ConditionRepository();
                 if (conditionID == 0)
                 {
-                    ApiResultModel apiresult = objRepo.AddCondition(condition);
+                    ApiResultModel apiresult = new ApiResultModel();
+                    apiresult=objRepo.AddCondition(condition);
                     return Json(new { Success = true, ApiResultModel = apiresult });
 
                 }
@@ -254,7 +257,8 @@ namespace WebApp.Controllers
             try
             {
                 ConditionRepository objRepo = new ConditionRepository();
-                ApiResultModel apiresult = objRepo.DeleteCondition(conditionID);
+                ApiResultModel apiresult = new ApiResultModel();
+                apiresult = objRepo.DeleteCondition(conditionID);
                 return Json(new { Success = true, ApiResultModel= apiresult });
 
             }
@@ -307,18 +311,22 @@ namespace WebApp.Controllers
             {
                 if (medication.medicineName == null || medication.medicineName == "" || !Regex.IsMatch(medication.medicineName, @"^[a-zA-Z\s]+$"))
                 {
-                    return Json(new { Success = true, ConditionID = -1 });
+                    ApiResultModel apiresult = new ApiResultModel();
+                    apiresult.message = "Invalid medicine name.Only letters and numbers are allowed.";
+                    return Json(new { Success = true, ApiResultModel = apiresult });
                 }
                 MedicationRepository objRepo = new MedicationRepository();
                 if (mid == 0)
                 {
-                    ApiResultModel apiresult = objRepo.AddMedication(medication);
+                    ApiResultModel apiresult = new ApiResultModel();
+                    apiresult = objRepo.AddMedication(medication);
                     return Json(new { Success = true, ApiResultModel =apiresult });
 
                 }
                 else
                 {
-                    ApiResultModel apiresult = objRepo.EditMedication(mid,medication);
+                    ApiResultModel apiresult = new ApiResultModel();
+                    apiresult = objRepo.EditMedication(mid,medication);
                     return Json(new { Success = true, ApiResultModel= apiresult });
                 }
 
@@ -336,7 +344,8 @@ namespace WebApp.Controllers
             try
             {
                 MedicationRepository objRepo = new MedicationRepository();
-                ApiResultModel apiresult = objRepo.DeleteMedication(medicationID);
+                ApiResultModel apiresult = new ApiResultModel();
+                apiresult = objRepo.DeleteMedication(medicationID);
                 return Json(new { Success = true, ApiResultModel= apiresult });
 
             }
@@ -425,7 +434,10 @@ namespace WebApp.Controllers
             {
                 if (allergy.allergyName == null || allergy.allergyName == "" || !Regex.IsMatch(allergy.allergyName, @"^[a-zA-Z\s]+$"))
                 {
-                    return Json(new { Success = true, AllergyID = -1 });
+                    ApiResultModel apiresult = new ApiResultModel();
+                    apiresult.message = "Invalid allergy name.Only letters and numbers are allowed.";
+                   
+                    return Json(new { Success = true, ApiResultModel = apiresult });
                 }
                 AllergiesRepository objRepo = new AllergiesRepository();
                 if (allergiesID == 0)
@@ -501,16 +513,18 @@ namespace WebApp.Controllers
             }
         }
 
-        public JsonResult AddUpdateSurgeries(long id,PatientSurgery_Custom surgery)
+        public JsonResult AddUpdateSurgeries(long surgeryID, PatientSurgery_Custom surgery)
         {
             try
             {
-                if (surgery.bodyPart == null || surgery.bodyPart == "" || !Regex.IsMatch(surgery.bodyPart, @"^[a-zA-Z\s]+$"))
+                if (surgery.bodyPart == null || surgery.bodyPart == "" || !Regex.IsMatch(surgery.bodyPart, "^[0-9a-zA-Z ]+$"))//!Regex.IsMatch(surgery.bodyPart, @"^[a-zA-Z\s]+$"))
                 {
-                    return Json(new { Success = true, SurgeryID = -1 });
+                    ApiResultModel apiresult = new ApiResultModel();
+                    apiresult.message = "Invalid body part name.Only letters and numbers are allowed.";
+                    return Json(new { Success = true, ApiResultModel = apiresult });
                 }
                 SurgeriesRepository objRepo = new SurgeriesRepository();
-                if (id == 0)
+                if (surgeryID == 0)
                 {
                     ApiResultModel apiresult = objRepo.AddPatientSurgery(surgery);
                     return Json(new { Success = true, ApiResultModel =apiresult });
@@ -518,7 +532,7 @@ namespace WebApp.Controllers
                 }
                 else
                 {
-                    ApiResultModel apiresult = objRepo.EditPatientSurgery(id,surgery);
+                    ApiResultModel apiresult = objRepo.EditPatientSurgery(surgeryID, surgery);
                     return Json(new { Success = true, ApiResultModel =apiresult });
                 }
 
@@ -530,7 +544,32 @@ namespace WebApp.Controllers
             }
 
         }
+        public JsonResult AddUpdatePharmacy(PatientPharmacy_Custom pharmacy)
+        {
+            ApiResultModel apiresult = new ApiResultModel();
+            try
+            {
+                if (pharmacy.pharmacy == null || pharmacy.pharmacy == "" || !Regex.IsMatch(pharmacy.pharmacy, "^[0-9a-zA-Z ]+$"))
+                {
+                    
+                    apiresult.message = "Invalid pharmacy name.Only letters and numbers are allowed.";
+                    return Json(new { Success = true, ApiResultModel = apiresult });
+                }
+                else
+                {
+                    PatientRepository objRepo = new PatientRepository();
+                    apiresult = objRepo.AddPharmacy(pharmacy);
+                    return Json(new { Success = true, ApiResultModel = apiresult });
 
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+
+        }
         public JsonResult DeleteSurgery(long surgeryID)
         {
             try

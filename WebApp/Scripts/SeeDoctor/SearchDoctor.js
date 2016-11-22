@@ -26,34 +26,7 @@ function GetROV(patientid) {
 
 }
 
-function uploadFiles()
-{
-    var form = $('#FormUpload')[0];
-    var dataString = new FormData(form);
-    $.ajax({
-        url: '/Uploader/Upload',  //Server script to process data
-        type: 'POST',
-        xhr: function () {  // Custom XMLHttpRequest
-            var myXhr = $.ajaxSettings.xhr();
-            if (myXhr.upload) { // Check if upload property exists
-                //myXhr.upload.onprogress = progressHandlingFunction
-                myXhr.upload.addEventListener('progress', progressHandlingFunction,
-				false); // For handling the progress of the upload
-            }
-            return myXhr;
-        },
-        //Ajax events
-        success: successHandler,
-        error: errorHandler,
-        complete: completeHandler,
-        // Form data
-        data: dataString,
-        //Options to tell jQuery not to process data or worry about content-type.
-        cache: false,
-        contentType: false,
-        processData: false
-    });
-}
+
 function GetAllSpecialities() {
     var param = "{}";
     var listitems;
@@ -98,34 +71,21 @@ function GetAllLanguages() {
     });
 
 }
-function AppointmentBasicInfo() {
-   
-    _objAppointment["doctorID"] = $("#doctorid").val();
-    _objAppointment["userID"] = "1143ff06-4692-4590-bdde-891ed34797b5";
-    _objAppointment["appDate"] = $("#appdate").val();
-    _objAppointment["appTime"] = "10:15";
-   
-   
-    //$.ajax({
-    //    type: 'POST',
-    //    url: '/SeeDoctor/SaveAppointment',
-    //    data: _objSearch,
-    //    dataType: 'json',
-    //    success: function (response) {
-           
-    //            new PNotify({
-    //                title: 'Success',
-    //                text: "Appointment is created successfully.",
-    //                type: 'success',
-    //                styling: 'bootstrap3'
-    //            });
+function toggle(id)
+{
+        document.getElementById(""+id+"nofav").style.display = "none";
+        document.getElementById("" + id + "fav").style.display = "block";
 
-    //            $("#appointmentID").val(response.appID);
-            
-    //    },
-    //    error: errorRes
+        return false;
+    
+   
+}
+function untoggle(id) {
+    document.getElementById("" + id + "nofav").style.display = "block";
+    document.getElementById("" + id + "fav").style.display = "none";
 
-    //});
+    return false;
+
 
 }
 function SearchDoctor()
@@ -146,45 +106,45 @@ function SearchDoctor()
         data: _objSearch,
         dataType: 'json',
         success: function (response) {
-            var div = "";
+            
+            var tableHtml = "";
             if (response.Success == true)
             {
-                if (response.DoctorList != null) {
+                if (response.DoctorModel .length>0) {
 
-                    $.each(response.DoctorList, function (item) {
+                    $.each(response.DoctorModel, function (item) {
+                       
+                         tableHtml = tableHtml + " <li>" +
+                                      "<div class='well profile_view p-0' style='display: inline-block'>" +
+                                       "<a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel[item].doctorID + "nofav' class='fa fa-heart-o'  onclick='toggle(" + response.DoctorModel[item].doctorID + ");return false;' style='display:block'></span></a>" +
+                                        "<a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel[item].doctorID + "fav' class='fa fa-heart'  onclick='untoggle(" + response.DoctorModel[item].doctorID + ");return false;' style='display:none'></span></a>" +
+                                       "<i class='crl fa fa-circle' aria-hidden='true' style='color: red; cursor: pointer;font-size: 12px;'></i>" +
+                                        "<img src='../Content/images/img.jpg' alt='' class='img-circle img-responsive m-b-10 m-t-20' style='margin: 0 auto;display: inline-block;'>" +
+                                        "<h2 class='m-0'>"+
+                                         " <a href='' class='thumbnail-col-inner m-b-15' data-toggle='modal' data-target='#myModal2' id='" + response.DoctorModel[item].doctorID + "' onclick='showDoctorTimings(" + response.DoctorModel[item].doctorID + ")'>Dr." +
+                                         response.DoctorModel[item].firstName+"&nbsp;"+ response.DoctorModel[item].lastName+"</a>" +
+                                          "</h2>"+
+                                          "<h4 class='brief m-0' style='color: green'>Available for Call</h4>"+
 
-                        div = div + " <div class='col-lg-2 col-md-4 col-sm-6 col-xs-12 text-center'>" +
-                                      "<div class='well profile_view p-0'>" +
-                                       "<a class='hrt' href='#' style='color: #5A738E;'><span id='toggle1' class='fa fa-heart-o' aria-hidden='true'></span></a>" +
-                                        "<a class='hrt1' href='#' style='color: #5A738E;'><span id='toggle_1' class='fa fa-heart' aria-hidden='true'></span></a>" +
-                                        "<i class='crl fa fa-circle' aria-hidden='true' style='color: green; cursor: pointer;font-size: 12px;'></i>" +
-                                        "<img src='images/img.jpg' alt='' class='img-circle img-responsive m-b-10 m-t-20' style='margin: 0 auto;display: inline-block;'>" +
-
-                                         " <a href='#' class='thumbnail-col-inner' data-toggle='modal' data-target='#myModal1' id='" + DoctorList[item].doctorID + "' onclick='showDoctorTimings(" + DoctorList[item].doctorID + ")'>" +
-                                          "<i class='cl1 fa fa-calendar' aria-hidden='true'></i>" +
-                                        "</a>" +
-
-                                        "<a href='#'>" +
-                                         " <i class='ph1 fa fa-phone' aria-hidden='true'></i>" +
-                                        "</a>" +
-
-                                        "<h2 class='m-0'>" +
-                                        "<a href='#' class='thumbnail-col-inner m-b-15' data-toggle='modal' data-target='#myModal8' id='" + DoctorList[item].doctorID + "'>" + DoctorList[item].firstName + " " + DoctorList[item].lastName + "</a>" +
-                                        "</h2>" +
-                                        "<h4 class='brief m-0' style='color: green'>Available for Call</h4>" +
-                                        "<p class='ratings m-t-5' style='text-align: center;'>" +
-
-                                          "<a href='#'><span class='fa fa-star'></span></a>" +
-                                          "<a href='#'><span class='fa fa-star'></span></a>" +
-                                          "<a href='#'><span class='fa fa-star'></span></a>" +
-                                          "<a href='#'><span class='fa fa-star'></span></a>" +
-                                          "<a href='#'><span class='fa fa-star-o'></span></a>" +
-                                        "</p>" +
-                                      "</div></div>";
+                                         "<p class='ratings m-t-5 m-b-0' style='text-align: center;'>"+
+                                         "<a href='' class='thumbnail-col-inner' data-toggle='modal' data-target='#myModal1'>"+
+                                         "<i class='fa fa-calendar' aria-hidden='true'></i>"+
+                                         "</a>"+
+                                  "<a href=''><i class='fa fa-star-o'></i></a>"+
+                                  "<a href=''><i class='fa fa-star-o'></i></a>"+
+                                  "<a href=''><i class='fa fa-star-o'></i></a>"+
+                                  "<a href=''><i class='fa fa-star-o'></i></a>"+
+                                  "<a href=''><i class='fa fa-star-o'></i></a>"+
+                                  "<a href=''>"+
+                                    "<i class='fa fa-phone' aria-hidden='true'></i>"+
+                                  "</a>"+
+                                  "</p>" +
+                                  "</div></li>";
 
                     });
-                    if (div == "") { document.getElementById("doctorList").innerHTML = "No record found"; }
-                    else { document.getElementById("doctorList").innerHTML = div; }
+                   
+                    if (response.DoctorModel.length > 0) { document.getElementById("docList").innerHTML = tableHtml; }
+                    else { document.getElementById("docList").innerHTML = "No record found";; }
 
                     document.getElementById("mainpanel").style.display = "block";
                 }
@@ -246,7 +206,7 @@ function errorRes(data) {
     new PNotify({
         title: 'Error',
         text: data.Message,
-        type: 'info',
+        type: 'error',
         styling: 'bootstrap3'
     });
 }

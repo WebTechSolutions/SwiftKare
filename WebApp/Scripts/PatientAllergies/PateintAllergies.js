@@ -3,7 +3,7 @@ var _objAdd = null;
 var _patientId = 0;
 var allergyID = null;
 
-var _allergyTable = null;
+var _allergyTable = [];
 
 function GetAllergies() {
     var param = {};
@@ -39,8 +39,8 @@ function bindtoTextBoxAllergies(allergies) {
         return el.allergyName;
     });
 
-    $('#myAllergies').autocomplete({
-        lookup: medicinesArray
+    $('#myAllergy').autocomplete({
+        lookup: allergiesArray
     });
 }
 
@@ -54,8 +54,8 @@ function GetSensitivities() {
         data: param,
         dataType: 'json',
         success: function (response) {
-            $.each(response, function (item) {
-                listitems += '<option value=' + response[item].severityID + '>' + response[item].sensitivityName + '</option>';
+            $.each(response.Object, function (item) {
+                listitems += '<option value=' + response.Object[item].severityID + '>' + response.Object[item].sensitivityName + '</option>';
 
             });
             $select.append(listitems);
@@ -76,8 +76,8 @@ function GetReactions() {
         data: param,
         dataType: 'json',
         success: function (response) {
-            $.each(response, function (item) {
-                listitems += '<option value=' + response[item].reactionID + '>' + response[item].reactionName + '</option>';
+            $.each(response.Object, function (item) {
+                listitems += '<option value=' + response.Object[item].reactionID + '>' + response.Object[item].reactionName + '</option>';
 
             });
             $select.append(listitems);
@@ -99,7 +99,7 @@ function GetPatientAllergies(patientid) {
             if (response.Success == true) {
 
                 if (response.Allergies.length>0) {
-                    _patientId = response.Allergies[0].patientID;
+                    _patientId = patientid;
                     _allergyTable = response.Allergies;
                     bindAllergiesTable(_allergyTable);
 
@@ -117,14 +117,15 @@ function GetPatientAllergies(patientid) {
 
 
 function bindAllergiesTable(Allergies) {
-     
+    $('#allergiestable').DataTable().clear();
+   
      for (var i = 0; i < Allergies.length; i++) {
         $('#allergiestable').dataTable().fnAddData([
                    i + 1,
                    Allergies[i].allergyName,
                     Allergies[i].severity,
                     Allergies[i].reaction,
-                    ToJavaScriptDateAllergies(Allergies[i].reportedDate),
+                    ToJavaScriptDateAllergies(Allergies[i].reporteddate),
                     "<div class='btn-group'> <button type='button' class='btn btn-primary'>Action</button>" +
                                                   "<button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>" +
                                                       "<span class='caret'></span>" +
@@ -140,7 +141,7 @@ function bindAllergiesTable(Allergies) {
                                               "</div>"
         ]);
     }
-
+     $('#allergiestable').DataTable().draw();
 }
 function ToJavaScriptDateAllergies(value) {
     var pattern = /Date\(([^)]+)\)/;
@@ -150,21 +151,23 @@ function ToJavaScriptDateAllergies(value) {
 }
 function editAllergies(objAllergy) {
     $("#myAllergy").val(objAllergy.allergyName);
-    $('#Sensitivity option[value=' + objAllergy.severity + ']').prop('selected', true);
-    $('#Reaction option[value=' + objAllergy.reaction + ']').prop('selected', true);
+    //$('#Sensitivity option[value=' + objAllergy.severity + ']').prop('selected', true);
+    //$('#Reaction option[value=' + objAllergy.reaction + ']').prop('selected', true);
     _objUpdate = {};
     _objUpdate["allergyName"] = (objAllergy.allergyName);
     _objUpdate["severity"] = (objAllergy.severity);
     _objUpdate["reaction"] = (objAllergy.reaction);
     _objUpdate["allergiesID"] = (objAllergy.allergiesID);
     _objUpdate["patientID"] = (objAllergy.patientID);
+    $('#Sensitivity').find('option[text="' + objAllergy.severity + '"]').val();
+    $('#Reaction').find('option[text="' + objAllergy.reaction + '"]').val();
     allergyID = objAllergy.allergiesID;
 }
 function resetAllergies() {
 
     $("#myAllergy").val('');
-    $('#Sensitivity option[value=Choose Severity]').prop('selected', true);
-    $('#Reaction option[value=Choose Reaction]').prop('selected', true);
+    $("#Sensitivity").val($("#Sensitivity option:first").val());
+    $("#Reaction").val($("#Reaction option:first").val());
     allergyID = 0;
     _objUpdate = null;
     _objAdd = null;
@@ -174,10 +177,10 @@ function resetAllergies() {
 
 
 //
-function addupdateAllergies() {
+function addupdateAllergies(patientid) {
     var msg = ValidateFormAllergies();
     if (msg == "" || msg == undefined) {
-        fillObjAllergies();
+        fillObjAllergies(patientid);
 
         var allergy;
         if (_objUpdate == null) {
@@ -188,6 +191,14 @@ function addupdateAllergies() {
             _objUpdate.allergyName = $("#myAllergy").val();
             _objUpdate.severity = $("#Sensitivity option:selected").text();
             _objUpdate.reaction = $("#Reaction option:selected").text();
+            if ($("#Sensitivity option:selected").text() == "Choose Sensitivity") {
+                _objUpdate.severity = "";
+
+            }
+            if ($("#Reaction option:selected").text() == "Choose Reaction") {
+
+                _objUpdate.reaction = "";
+            }
             allergy = _objUpdate;
         }
 
@@ -220,7 +231,7 @@ function addupdateAllergies() {
                             _newObj["allergyName"] = _objAdd.allergyName;
                             _newObj["severity"] = _objAdd.severity;
                             _newObj["reaction"] = _objAdd.reaction;
-                            _newObj["reportedDate"] = "/Date(" + ticks + ")/";
+                            _newObj["reporteddate"] = "/Date(" + ticks + ")/";
                             _allergyTable.splice(0, 0, _newObj);
                             bindAllergiesTable(_allergyTable);
                             _objAdd = null;
@@ -239,6 +250,7 @@ function addupdateAllergies() {
 
 
                 }
+                resetAllergies();
 
             },
             error: errorRes
@@ -266,26 +278,30 @@ function deleteAllergies(allergyID) {
         dataType: 'json',
         success: function (response) {
             if (response.Success == true) {
-                if(response.ApiResultModel.message=="")
+                if (response.ApiResultModel.message == "")
+                {
                     new PNotify({
                         title: 'Success',
                         text: "Allergy is deleted successfully.",
                         type: 'success',
                         styling: 'bootstrap3'
                     });
-                removeAllergy(response.ApiResultModel.ID);
-                bindAllergiesTable(_allergyTable);
+                    removeAllergy(response.ApiResultModel.ID);
+                    bindAllergiesTable(_allergyTable);
+                }
+                else if (response.ApiResultModel.message != "") {
+                    new PNotify({
+                        title: 'Error',
+                        text: response.ApiResultModel.message,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                }
+                    
+                
                    
             }
-            else if(response.ApiResultModel.message!="")
-            {
-                new PNotify({
-                    title: 'Error',
-                    text: response.ApiResultModel.message,
-                    type: 'error',
-                    styling: 'bootstrap3'
-                });
-            }
+           
 
             
 
@@ -314,15 +330,24 @@ function getCurrentDate() {
 
     return today = mm + '/' + dd + '/' + yyyy;
 }
-function fillObjAllergies() {
+function fillObjAllergies(patientid) {
 
     if (_objUpdate == null) {
         _objAdd = {};
+
         _objAdd["allergyName"] = $("#myAllergy").val();
-        _objAdd["severity"] = $('#Sensitivity option[value=' + objAllergy.severity + ']').prop('selected', true);
-        _objAdd["reaction"] = $('#Reaction option[value=' + objAllergy.reaction + ']').prop('selected', true);
-        _objAdd["patientID"] = _patientId;
+        _objAdd["severity"] = $("#Sensitivity option:selected").text();;
+        _objAdd["reaction"] = $("#Reaction option:selected").text();
+        _objAdd["patientID"] = patientid;
         allergyID = 0;
+        if ($("#Sensitivity option:selected").text() == "Choose Sensitivity") {
+            _objAdd.severity = "";
+
+        }
+        if ($("#Reaction option:selected").text() == "Choose Reaction") {
+
+            _objAdd.reaction = "";
+        }
     }
 
 }
@@ -338,8 +363,8 @@ function ValidateFormAllergies() {
 }
 
 function changeAllergy(value, allergyName, severity, reaction) {
-    for (var i in _allergiesTable) {
-        if (_allergyTable[i].allergyID == value) {
+    for (var i in _allergyTable) {
+        if (_allergyTable[i].allergiesID == value) {
             _allergyTable[i].allergyName = allergyName;
             _allergyTable[i].severity = severity;
             _allergyTable[i].reaction = reaction;
@@ -349,7 +374,7 @@ function changeAllergy(value, allergyName, severity, reaction) {
 }
 function removeAllergy(value) {
     for (var i in _allergyTable) {
-        if (_allergyTable[i].allergyID == value) {
+        if (_allergyTable[i].allergiesID == value) {
             _allergyTable.splice(i, 1);
             break;
         }

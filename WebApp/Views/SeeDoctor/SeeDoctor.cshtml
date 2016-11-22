@@ -12,9 +12,9 @@
 <script src="~/Scripts/HealthConditions/HealthConditions.js"></script>
 <script src="~/Scripts/Medicine/Medicine.js"></script>
 <script src="~/Scripts/PatientAllergies/PateintAllergies.js"></script>
-
+<script src="~/Scripts/Surgeries/Surgeries.js"></script>
 <script src="~/Scripts/SeeDoctor/SearchDoctor.js"></script>
-
+<script src="~/Scripts/Appointment/Appointment.js"></script>
 
 
 <div class="right_col">
@@ -120,102 +120,110 @@
 
                             <div id="step-1">
 
-                                <div class="x_panel">
-                                    <div class="x_title">
-                                        <h2>Search Doctor</h2>
-                                        <ul class="nav navbar-right panel_toolbox">
-                                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-                                        </ul>
-                                        <div class="clearfix"></div>
-                                    </div>
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Search Doctor</h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
 
-                                    <div class="x_content">
-                                        <div class="row">
+        <div class="x_content">
+            <div class="row">
 
-                                            <div class="col-md-4 col-sm-6 col-xs-12">
-                                                <label class="control-label">Appointment Date:</label>
-                                                <div class="xdisplay_inputx form-group has-feedback">
-                                                    <input type="text" id="searchdate" class="form-control floating-label" placeholder="Date">
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <form class="form-horizontal form-label-left">
+                        <label class="control-label">Appointment Date:</label>
+                        <div class="xdisplay_inputx form-group has-feedback">
+                            <div class="form-group">
+                                <div class="error" id="sd" style="display:none">Search date is required.</div>
+                                <input type="text" id="searchdate" class="form-control floating-label" placeholder="Date">
 
-                                                </div>
-
-
-                                                <label class="control-label">Perferred Time:</label>
-                                                <div class="form-group">
-                                                    <input type="text" id="time" class="form-control floating-label" placeholder="Time">
-
-                                                </div>
-
-                                            </div>
-
-                                            <div class="col-md-4 col-sm-6 col-xs-12">
+                            </div>
+                        </div>
 
 
-                                                <label class="control-label">Specially:</label>
-                                                <div class="form-group">
-                                                    <select class="form-control" id="Speciality">
-                                                        <option value="">ALL</option>
+                        <label class="control-label">Perferred Time:</label>
+                        <div class="form-group">
+                            <div class="error" id="pt" style="display:none">Preferred time is required.</div>
+                            <input type="text" id="time" class="form-control input-red" placeholder="Time">
 
-                                                    </select>
-                                                </div>
-                                                <label class="control-label">Language:</label>
-                                                <div class="form-group">
-                                                    <select class="form-control" id="Language">
-                                                        <option value="">ALL</option>
+                        </div>
+                    </form>
 
-                                                    </select>
-                                                </div>
+</div>
+
+                <div class="col-md-4 col-sm-6 col-xs-12">
 
 
+                    <label class="control-label">Specially:</label>
+                    <div class="form-group">
+                        <select class="form-control" id="Speciality">
+                            <option value="">ALL</option>
+
+                        </select>
+                    </div>
+                    <label class="control-label">Language:</label>
+                    <div class="form-group">
+                        <select class="form-control" id="Language">
+                            <option value="">ALL</option>
+
+                        </select>
+                    </div>
 
 
-                                            </div>
-                                            <div class="col-md-4 col-sm-6 col-xs-12">
-                                                <label class="control-label">Gender:</label>
-                                                <div class="form-group">
-
-                                                    <select class="form-control" id="Gender">
-                                                        <option value="">ALL</option>
-                                                        <option value="">Male</option>
-                                                        <option value="">Female</option>
-
-                                                    </select>
-                                                </div>
-                                                <label class="control-label">Provider name:</label>
-                                                <div class="form-group">
-
-                                                    <input id="providerName" type="text" class="form-control" placeholder="Search By Name">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="ln_solid"></div>
-                                        <button type="button" class="btn btn-primary pull-right" id="search-click" onclick="searchDoctor();">Search</button>
-
-                                    </div>
-
-                                </div>
 
 
-                                <div id="maindiv"></div>
-                                <div class="x_panel" id="mainpanel">
-                                    <div class="x_title">
-                                        <h2>Doctor Result</h2>
-                                        <ul class="nav navbar-right panel_toolbox">
-                                            <li>
-                                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                            </li>
-                                        </ul>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                    <div class="x_content according-defalut-close" style="float: none;">
-                                        <div class="row" id="doctorList">
+                </div>
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <label class="control-label">Gender:</label>
+                    <div class="form-group">
+
+                        <select class="form-control" id="Gender">
+                            <option value="">ALL</option>
+                            <option value="">Male</option>
+                            <option value="">Female</option>
+
+                        </select>
+                    </div>
+                    <label class="control-label">Provider name:</label>
+                    <div class="form-group">
+
+                        <input id="providerName" type="text" class="form-control" placeholder="Search By Name">
+                    </div>
+                </div>
+
+            </div>
+            <div class="ln_solid"></div>
+            <button type="button" class="btn btn-primary pull-right" id="search-click" onclick="searchDoctor();">Search</button>
+
+        </div>
+
+    </div>
 
 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>@*step1*@
+    <div id="maindiv"></div>
+    <div class="x_panel" id="mainpanel">
+        <div class="x_title">
+            <h2>Doctor Result</h2>
+            <ul class="nav navbar-right panel_toolbox">
+                
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content according-defalut-close" style="float: none;" id="doctorList">
+            <ul class="doctor_details" id="docList"></ul>
+            @*<div class="row" id="doctorList">
+
+
+                </div>*@
+        </div>
+    </div>
+</div>@*step1*@
                            
 
                             <div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8">
@@ -327,10 +335,8 @@
 
 
                                                 <form class="form-horizontal form-label-left">
-                                                    <div class="col-sm-12 text-center">
-                                                        <div class="col-lg-2 col-md-4 col-sm-12" id="TimingsData">
-
-                                                        </div>
+                                                    <div class="col-sm-12 text-center" id="TimingsData">
+                                                        
                                                     </div>
                                                     <button type="button" class="btn btn-primary btn-sm pull-right" id="apply">Apply</button>
                                                 </form>
@@ -352,6 +358,7 @@
                                           <option value="mouth">Word of mouth</option>
                                         </select> -->
                                         <div class="input-group" style="width: 100%;">
+                                            
                                             <input id="ROV" type="text" name="country" placeholder="Reason For Your Appointment" class="form-control" />
                                         </div>
                                     </div>
@@ -363,7 +370,7 @@
                                 </form>
                                 <p>Add a photo(helpful for rashes, cut, etc)</p>
                                 <form action="form_upload.html" class="dropzone" id="mydropzone">
-                                    @*<input type="button" value="Upload Files to Server" id="btnUpload">*@
+                                    <input type="button" value="Upload Files to Server" id="btnUpload">
                                 </form>
                                 <p>Only .pdf, .gif, .png, .jpeg formats are allowed</p>
                             </div>
@@ -398,14 +405,19 @@
                                                     <tr id="healthconditions" style="display:none">
                                                         <!-- colspan="3" -->
                                                         <td>
-                                                            <div class="input-group" style="width: 100%;">
-                                                                <input maxlength="50" type="text" name="country" placeholder="Add Conditions" id="myCondition" class="form-control" />
+                                                          
+                                                            <div class="form-group">
+                                                                <div class="input-group" style="width: 100%;">
+                                                                    <div class="error" id="divcondition" style="display:none;text-align:left">Condition name is required.</div>
+                                                                    <input maxlength="50" type="text" name="country" placeholder="Add Conditions" id="myCondition" class="form-control input-red" />
+                                                                </div>
                                                             </div>
                                                         </td>
                                                         <td width="30%">
                                                             <button id="addcondition" class="btn btn-primary" type="button">Add Conditions</button>
                                                             <button id="reset" class="btn btn-primary" type="button">Reset</button>
                                                         </td>
+
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -457,8 +469,11 @@
 
                                                     <tr id="medications" style="display:none">
                                                         <td>
+                                                          
                                                             <div class="form-group">
-                                                                <input maxlength="50" type="text" name="country" placeholder="Search Medicine" id="myMedicine" class="form-control" />
+                                                             
+                                                                <div class="error" id="divmedicine" style="display:none">Medicine name is required.</div>
+                                                                <input maxlength="50" type="text" name="country" placeholder="Search Medicine" id="myMedicine" class="form-control input-red" />
                                                             </div>
                                                         </td>
                                                         <td>
@@ -524,20 +539,23 @@
 
                                                     <tr id="allergies" style="display:none">
                                                         <td>
+                                                           
                                                             <div class="form-group">
-                                                                <input maxlength="50" type="text" name="country" placeholder="Add Allergies" id="myAllergies" class="form-control" />
+                                                                <div class="error" id="divallergy" style="display:none">Allergy name is required.</div>
+                                                                <input maxlength="50" type="text" name="country" placeholder="Add Allergies" id="myAllergy" class="form-control input-red" />
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="form-group">
                                                                 <select class="form-control" id="Sensitivity">
-                                                                    <option value="">Choose Severity</option>
+                                                                    <option value="">Choose Sensitivity</option>
 
                                                                 </select>
                                                                 @*<input type="text" name="country" placeholder="Add Sensitivities" id="autocomplete-custom-append4" class="form-control" />*@
                                                             </div>
                                                         </td>
                                                         <td>
+
                                                             <div class="form-group">
                                                                 <select class="form-control" id="Reaction">
                                                                     <option value="">Choose Reaction</option>
@@ -546,7 +564,7 @@
                                                                 @*<input type="text" name="country" placeholder="Add Reaction" id="autocomplete-custom-append5" class="form-control" />*@
                                                             </div>
                                                         </td>
-                                                        <td width="10%">
+                                                        <td width="30%">
                                                             <button id="addallergy" class="btn btn-primary" type="button">Add Allergy</button>
                                                             <button id="resetallergy" class="btn btn-primary" type="button">Reset</button>
                                                         </td>
@@ -590,21 +608,26 @@
                                     <div class="x_content">
                                         <div class="table-responsive">
                                             <table id="surgeriestable" class="table" style="margin-bottom: 5px;">
-                                                <tbody>
+                                                <tbody >
                                                     <tr>
                                                         <td style="border-top: none">Have you ever had any surgeries or medical procedures?</td>
+                                                        <td style="border-top: none"></td>
+                                                        <td style="border-top: none"></td>
                                                         <td style="border-top: none">
-                                                            <div class="text-right">
+                                                            <div class="text-right" style="width: 87px;">
                                                                 <label>
                                                                     No <input type="checkbox" class="js-switch" id="surgeryCheckbox" /> Yes
                                                                 </label>
                                                             </div>
                                                         </td>
                                                     </tr>
+                                                   
                                                     <tr id="surgeries" style="display:none">
                                                         <td>
+                                                            
                                                             <div class="input-group" style="width: 100%;">
-                                                                <input maxlength="50" type="text" name="country" placeholder="Add Surgeries" id="mySurgeries" class="form-control" />
+                                                                <div class="error" id="divsurgery" style="display:none">Surgery name is required.</div>
+                                                                <input maxlength="50" type="text" name="country" placeholder="Add Surgeries" id="myBodyPart" class="form-control input-red" />
                                                             </div>
                                                         </td>
                                                         <td width="10%">
@@ -622,10 +645,12 @@
                                                                 <label>
                                                                     <input type="checkbox" class="flat" checked="checked">&nbsp Ankle
                                                                 </label>
+                                                               
+                                                                                                                           
                                                             </div>
-                                                            
+                                                           
                                                         </td>
-                                                        <td></td>
+                                                       <td></td>
                                                     </tr>*@
                                                 </tbody>
                                             </table>
@@ -640,7 +665,8 @@
                                         <div class="x_panel">
                                             <div class="x_title">
                                                 <div class="input-group res-w-input" style="width: 94%; float: left;">
-                                                    <input type="text" name="country" placeholder="Search Pharmacy" id="autocomplete-custom-append2" class="form-control" />
+                                                    <input type="text" name="country" placeholder="Search Pharmacy" id="pharmacy" class="form-control"/>
+                                                    <input type="number" id="pharmacyid" style="display:none" />
                                                 </div>
                                                 <ul class="nav navbar-right panel_toolbox">
                                                     <li>
@@ -707,7 +733,7 @@
                                     <div class="col-md-6 col-sm-12 col-xs-12">
                                         <div class="x_panel">
                                             <div class="x_title">
-                                                <h2>Appotinment Informationu</h2>
+                                                <h2>Appotinment Information</h2>
                                                 <ul class="nav navbar-right panel_toolbox">
                                                     <li>
                                                         <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -743,13 +769,54 @@
                 GetAllSpecialities();
                 GetROV(@ViewBag.PatienID);
                
+
+                 //initialize autocomplete with custom appendTo
+                //$('#pharmacy').autocomplete({
+                //    lookup: pharmacyArray
+                //});
+                
                
             });
             function searchDoctor() {
-                SearchDoctor();
+                
+                if ($("#time").val() == "Time" || $("#time").val() == "") {
+                    document.getElementById("pt").style.display = "block";
+                }
+                else {
+                    document.getElementById("pt").style.display = "none";
+                }
+                if ($("#time").val() != "Time" && $("#time").val() != "")
+                {
+                    SearchDoctor();
+                }
+               
 
             }
-            
+            $(function () {
+                var pharmacy = { 1: "pharmacy 1", 2: "pharmacy 2", 3: "pharmacy 3" };
+
+                var pharmacyArray = $.map(pharmacy, function (value, key) {
+                    return {
+                        value: value,
+                        data: key
+                    };
+                });
+                $("#pharmacy").autocomplete({
+                    lookup: pharmacyArray,
+                    select: function (s, e) {
+                        alert(e.item.value);
+                        //savePharmacy(e.item.value);
+                        //$(this).val(b.item.value);
+                        //$("#pharmacyid").val(a.item.value);
+
+
+                    }
+                });
+            });
+            function savePharmacy(name)
+            {
+                alert(name);
+            }
             $('#searchdate').bootstrapMaterialDatePicker
                     ({
                         time: false,
@@ -782,7 +849,7 @@
             $("#myModal8").on('show.bs.modal', function (e) {
                 var $modal = $(this);
                 mydocid = e.relatedTarget.id;
-                alert(mydocid);
+                //alert(mydocid);
                 $("#docscheduleid").val(mydocid);
 
             });
@@ -797,16 +864,16 @@
                     addRemoveLinks: true,
                     dictResponseError: 'Server not Configured',
                     acceptedFiles: ".pdf,.png,.jpg,.gif,.bmp,.jpeg",
-                    autoDiscover: false,
+                    autoDiscover:false,
                     uploadMultiple: true,
                     autoProcessQueue: false
                 };
             })
-            //$('#btnUpload').on('click', function () {
+            $('#btnUpload').on('click', function () {
                
-            //    myDropzone.processQueue();
-            //    uploadFiles();
-            //});
+                myDropzone.processQueue();
+                uploadFiles();
+            });
            
         </script>
 
@@ -818,12 +885,13 @@
         //For health conditions//
         $('#addcondition').on('click', function () {
             if ($("#myCondition").val() == "") {
-                alert("Health condition is required.");
+                document.getElementById("divcondition").style.display = "block";
             }
             else {
-
-                addupdateCondition();
+                document.getElementById("divcondition").style.display = "none";
+                addupdateCondition(@ViewBag.PatienID);
             }
+           
 
         });
         $('#reset').on('click', function () {
@@ -854,12 +922,14 @@
         });
         $('#addmedicine').on('click', function () {
             if ($("#myMedicine").val() == "") {
-                alert("Medcine name is required.");
+                document.getElementById("divmedicine").style.display = "block";
             }
-            else {
-
-                addupdateMedicine();
+            else
+            {
+                document.getElementById("divmedicine").style.display = "none";
+                addupdateMedicine(@ViewBag.PatienID);
             }
+           
 
         });
         $('#resetmedicine').on('click', function () {
@@ -882,20 +952,21 @@
     @*For Allergies*@
     <script>
         $(document).ready(function () {
+            GetAllergies();
             GetSensitivities();
             GetReactions();
            GetPatientAllergies(@ViewBag.PatienID);
-           
+
         });
         $('#addallergy').on('click', function () {
             if ($("#myAllergy").val() == "") {
-                alert("Allergy name is required.");
+                document.getElementById("divallergy").style.display = "block";
             }
             else {
-
-                addupdateAllergies();
+                document.getElementById("divallergy").style.display = "none";
+                 addupdateAllergies(@ViewBag.PatienID);
             }
-
+         
         });
         $('#resetallergy').on('click', function () {
             resetAllergies();
@@ -918,19 +989,19 @@
     @*For Surgeries*@
     <script>
         $(document).ready(function () {
-           // GetSurgeries();
-           // GetPatientSurgeries(@ViewBag.PatienID);
-            
+            GetSurgeries();
+            GetPatientSurgeries(@ViewBag.PatienID);
+
         });
         $('#addsurgery').on('click', function () {
-            if ($("#mySurgery").val() == "") {
-                alert("Surgery name is required.");
+            if ($("#myBodyPart").val() == "") {
+                document.getElementById("divsurgery").style.display = "block";
             }
             else {
-
-                addupdateSurgery();
+                document.getElementById("divsurgery").style.display = "none";
+                addupdateSurgery(@ViewBag.PatienID);
             }
-
+            
         });
          $('#surgeryCheckbox').on('click', function () {
              if ($('#surgeryCheckbox')[0].checked) {
@@ -943,23 +1014,8 @@
             }
 
          });
-         //$('input:checkbox').click(function () {
-         //    //$('#result').append(' (click! ' + this.id + ')');
-         //    var ischecked = $(this).is(':checked');
-         //    if (!ischecked) {
-         //        var returnVal = confirm("Are you sure?");
-         //        if (returnVal == true) {
-         //            $(this).attr("checked", false);
-        //            deleteObjSurgery(this.id);
-         //        }
-         //        else {
 
-         //            $('#chk').prop('checked', true);
-         //        }
 
-         //        //alert(returnVal);
-         //    }
-         //});
     </script>
 
         <script>
@@ -1152,32 +1208,7 @@
             });
         </script>
 
-        <!-- jQuery autocomplete -->
-        <script>
-            $(document).ready(function () {
-                //GetMedicines();
-                
-                //$('#myMedicine').autocomplete({
-                //    lookup: medicinesArray
-                //});
-                //var countries = { 1: "asasasa", A2: "cvcvcv",2: "mmmmmmmmmmmmmmmmmm", 3: "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm"};
-
-                //var countriesArray = $.map(countries, function (value, key) {
-                //    return {
-                //        value: value,
-                //        data: key
-                //    };
-                //});
-
-                // initialize autocomplete with custom appendTo
-                //$('#autocomplete-custom-append,#autocomplete-custom-append1,#autocomplete-custom-append2,#autocomplete-custom-append3,#autocomplete-custom-append4,#autocomplete-custom-append5,#autocomplete-custom-append6').autocomplete({
-                //    lookup: countriesArray
-                //});
-                
-            });
-        </script>
-
-        <script>
+         <script>
             $('#search-click').click(function () {
                 $('.according-defalut-close').show();
             });
@@ -1271,13 +1302,15 @@
         </script>
 
         <script>
-            $('#toggle1').click(function () {
+            $('#toggle1').on(function () {
+                
                 $('#toggle_1').show();
                 return false;
             });
         </script>
         <script>
-            $('#toggle_1').click(function () {
+            $('#toggle_1').on(function () {
+               
                 $('#toggle_1').hide();
                 return false;
             });

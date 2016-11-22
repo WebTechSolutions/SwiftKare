@@ -2,7 +2,7 @@
 var _objAdd = null;
 var _patientId = 0;
 var _conditionID = null;
-var _conditionTable = null;
+var _conditionTable =[];
 var date = new Date();
 var ticks = date.getTime();
 
@@ -20,7 +20,7 @@ function GetHealthConditions(patientid) {
                 if (response.Conditions.length>0) {
                     //_objUpdate = response.Conditions;
                     _conditionTable =response.Conditions;
-                    _patientId = response.Conditions[0].patientID;
+                    _patientId = patientid;
                      bindConditionsTable(response.Conditions);
 
                 }
@@ -36,8 +36,8 @@ function GetHealthConditions(patientid) {
 }
 function bindConditionsTable(Conditions) {
   
-    var table = $('#conditionstable').DataTable();
-    table.clear();
+    
+    $('#conditionstable').DataTable().clear();
     for (var i = 0; i < Conditions.length; i++) {
 
         $('#conditionstable').dataTable().fnAddData([
@@ -60,7 +60,7 @@ function bindConditionsTable(Conditions) {
         ]);
 
     }
-       
+    $('#conditionstable').DataTable().draw();
 
 }
 function ConverttoDateHealthConditions(value) {
@@ -90,15 +90,15 @@ function resetCondition() {
 
 
 //
-function addupdateCondition() {
+function addupdateCondition(_patientId) {
     var msg = ValidateFormHealthConditions();
     if (msg == "" || msg == undefined) {
-        fillObjHealthConditions();
+        fillObjHealthConditions(_patientId);
 
         var condition;
         if (_objUpdate == null) {
             condition = _objAdd;
-            _conditionID = 0;
+           _conditionID = 0;
         }
         else {
             _objUpdate.conditionName = $("#myCondition").val();
@@ -134,16 +134,18 @@ function addupdateCondition() {
                             _newObj["patientID"] = _objAdd.patientID;
                             _newObj["conditionName"] = _objAdd.conditionName;
                             _newObj["reportedDate"] = "/Date(" + ticks + ")/";
-                            _conditionTable.splice(0, 0, _newObj);
-                            bindConditionsTable(_conditionTable);
-                           _objAdd = null;
+                           _conditionTable.splice(0, 0, _newObj);
+                           bindConditionsTable(_conditionTable);
+                            //_objAdd = null;
+                           resetCondition();
                            
 
                         }
                         else if (_objAdd == null) {
                             changeCondition(response.ApiResultModel.ID, _objUpdate.conditionName);
                             bindConditionsTable(_conditionTable);
-                           _objUpdate = null;
+                            resetCondition();
+                           //_objUpdate = null;
                             
                         }
                        
@@ -267,7 +269,7 @@ function getCurrentDateHealthConditions()
 
     return today = mm + '/' + dd + '/' + yyyy;
 }
-function fillObjHealthConditions() {
+function fillObjHealthConditions(_patientId) {
 
     if (_objUpdate == null) {
         _objAdd = {};

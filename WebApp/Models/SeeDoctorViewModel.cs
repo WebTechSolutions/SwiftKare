@@ -10,7 +10,7 @@ namespace WebApp.Models
     public class SeeDoctorViewModel
     {
         public SearchModel SearchModel { get; set; }
-        public BookAppointment BookAppointment { get; set; }
+        //public BookAppointment BookAppointment { get; set; }
      
 
         //    public IEnumerable<SelectListItem> LanguageList { get; set; }

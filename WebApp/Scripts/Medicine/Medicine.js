@@ -2,7 +2,7 @@
 var _objAdd = null;
 var _patientId = 0;
 var _medicationID = null;
-var _medicationTable = null;
+var _medicationTable = [];
 var date = new Date();
 var ticks = date.getTime();
 var medicines = null;
@@ -59,7 +59,7 @@ function GetMedications(patientid) {
 
                 if (response.Medications.length > 0) {
                     _medicationTable = response.Medications;
-                    _patientId = response.Medications[0].patientId;
+                    _patientId = patientid;
                     bindMedicinesTable(response.Medications);
 
                 }
@@ -75,8 +75,8 @@ function GetMedications(patientid) {
 }
 
 function bindMedicinesTable(Medications) {
-    var table = $('#medicinestable').DataTable();
-    table.clear();
+   
+    $('#medicinestable').DataTable().clear();
     for (var i = 0; i < Medications.length; i++) {
         $('#medicinestable').dataTable().fnAddData([
                    i + 1,
@@ -98,6 +98,7 @@ function bindMedicinesTable(Medications) {
                                               "</div>"
         ]);
     }
+    $('#medicinestable').DataTable().draw();
 }
 
 function ToJavaScriptDateMedicine(value) {
@@ -128,10 +129,10 @@ function resetMedicine() {
 
 }
 
-function addupdateMedicine() {
+function addupdateMedicine(patientid) {
     var msg = ValidateFormMedicine();
     if (msg == "" || msg == undefined) {
-        fillObjMedicine();
+        fillObjMedicine(patientid);
 
         var medication;
         if (_objUpdate == null) {
@@ -283,13 +284,13 @@ function getCurrentDate() {
     return today = mm + '/' + dd + '/' + yyyy;
 }
 
-function fillObjMedicine() {
+function fillObjMedicine(patientid) {
 
     if (_objUpdate == null) {
         _objAdd = {};
         _objAdd["medicineName"] = $("#myMedicine").val();
         _objAdd["frequency"] = $("#myFrequency").val();
-        _objAdd["patientId"] = _patientId;
+        _objAdd["patientId"] = patientid;
     }
 
 }
