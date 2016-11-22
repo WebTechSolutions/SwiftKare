@@ -80,7 +80,7 @@ namespace RestAPIs.Controllers
             {
                 var allergies = (from l in db.PatientAllergies
                                  where l.active == true && l.patientID == patientID
-                                 select new GetPatientAllergies { allergiesID = l.allergiesID, allergyName = l.allergyName.Trim(), reaction = l.reaction.Trim(), severity = l.severity.Trim(), reporteddate = l.reportedDate }).ToList();
+                                 select new GetPatientAllergies { allergiesID = l.allergiesID, patientID=l.patientID, allergyName = l.allergyName.Trim(), reaction = l.reaction.Trim(), severity = l.severity.Trim(), reporteddate = l.reportedDate }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, allergies);
                 return response;
             }
@@ -98,9 +98,9 @@ namespace RestAPIs.Controllers
             PatientAllergy pallergy = new PatientAllergy();
             try
             {
-                if (model.allergyName == "" || model.allergyName == null || !Regex.IsMatch(model.allergyName.Trim(), @"^[a-zA-Z\s]+$"))
+                if (model.allergyName == "" || model.allergyName == null || !Regex.IsMatch(model.allergyName.Trim(), "^[0-9a-zA-Z ]+$"))
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid allergy name." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid allergy name. Only letters and numbers are allowed." });
                     return response;
                 }
                 if (model.patientID == 0)
@@ -152,9 +152,9 @@ namespace RestAPIs.Controllers
             PatientAllergy pallergy = new PatientAllergy();
             try
             {
-                if (model.allergyName == "" || model.allergyName == null || !Regex.IsMatch(model.allergyName.Trim(), @"^[a-zA-Z\s]+$"))
+                if (model.allergyName == "" || model.allergyName == null || !Regex.IsMatch(model.allergyName.Trim(), "^[0-9a-zA-Z ]+$"))
                 { 
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid allergy name." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid allergy name.Only letters and numbers are allowed." });
                     return response;
                 }
                 if (model.patientID == 0 )
@@ -199,7 +199,7 @@ namespace RestAPIs.Controllers
             response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = allergyID, message = "" });
             return response;
         }
-        [HttpPost]
+      
         [Route("api/deletePatientAllergy")]
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> DeletePatientCondition(long allergyID)

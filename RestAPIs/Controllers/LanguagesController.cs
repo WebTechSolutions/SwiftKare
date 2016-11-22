@@ -12,17 +12,33 @@ using System.Web.Http.Description;
 using DataAccess;
 
 using System.Collections;
+using DataAccess.CommonModels;
+using System.Text;
 
 namespace RestAPIs.Controllers
 {
     public class LanguagesController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
-
+        HttpResponseMessage response;
         // GET: api/Languages
-        public IQueryable<Language> GetLanguages()
+        [Route("api/Languages")]
+        public HttpResponseMessage GetLanguages()
         {
-            return db.Languages;
+            try
+            {
+                var languages = (from l in db.Languages
+                              where l.active == true
+                              select new Languages { languageID = l.languageID, languageName = l.languageName }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, languages);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetLanguages in LanguagesController");
+            }
+            
+           
         }
             
             
@@ -122,6 +138,13 @@ namespace RestAPIs.Controllers
         private IEnumerable<Language> Get()
         {
             return db.Languages.ToList();
+        }
+
+        private HttpResponseMessage ThrowError(Exception ex, string Action)
+        {
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
+            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.ToString(), Encoding.Unicode);
+            return response;
         }
     }
 }

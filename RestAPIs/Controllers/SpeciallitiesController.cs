@@ -10,18 +10,33 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using DataAccess;
+using DataAccess.CommonModels;
+using System.Text;
 
 namespace RestAPIs.Controllers
 {
     public class SpeciallitiesController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
-
-        // GET: api/Speciallities
-        public IQueryable<Speciallity> GetSpeciallities()
+        HttpResponseMessage response;
+        [Route("api/Speciallities")]
+        public HttpResponseMessage GetSpeciallities()
         {
-            return db.Speciallities;
+            try
+            {
+                var specialities = (from l in db.Speciallities
+                                 where l.active == true
+                                 select new Specialities { speciallityID = l.speciallityID, specialityName = l.specialityName }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, specialities);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetSpeciallities in SpecialitiesController");
+            }
         }
+
+
         private IEnumerable<Speciallity> Get()
         {
             return db.Speciallities.ToList();
@@ -117,6 +132,13 @@ namespace RestAPIs.Controllers
         private bool SpeciallityExists(long id)
         {
             return db.Speciallities.Count(e => e.speciallityID == id) > 0;
+        }
+
+        private HttpResponseMessage ThrowError(Exception ex, string Action)
+        {
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
+            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.ToString(), Encoding.Unicode);
+            return response;
         }
     }
 }

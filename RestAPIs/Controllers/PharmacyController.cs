@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -19,28 +20,34 @@ namespace RestAPIs.Controllers
         HttpResponseMessage response;
 
 
-        [Route("api/addPatientPharmacy/pharmacyModel/")]
+        [Route("api/addPatientPharmacy")]
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> AddPharmacy(PatientPharmacy_Custom model)
         {
+            Patient patient = new Patient();
             try
             {
-                if (model.patientID==0||model.pharmacy==""||model.pharmacy==null)
+                if (model.pharmacy == "" || model.pharmacy == null || !Regex.IsMatch(model.pharmacy.Trim(), "^[0-9a-zA-Z ]+$"))
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Patient pharmacy Model is not valid.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid pharmacy name. Only letters and numbers are allowed." });
                     return response;
                 }
-                Patient patient = db.Patients.Where(m => m.patientID == model.patientID).FirstOrDefault();
+                if(model.patientID == 0 || model.patientID==null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID"});
+                    return response;
+                }
+                patient = db.Patients.Where(m => m.patientID == model.patientID).FirstOrDefault();
                 if (patient == null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, "Patient record not found.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient record not found." });
                     return response;
                 }
               
                 patient.pharmacy = model.pharmacy;
                 patient.pharmacyid = model.pharmacyid;
                 patient.md = System.DateTime.Now;
-                patient.mb = patient.email;
+                patient.mb = model.patientID.ToString();
                 db.Entry(patient).State = EntityState.Modified;
 
 
@@ -51,8 +58,7 @@ namespace RestAPIs.Controllers
                 return ThrowError(ex, "AddPharmacy in PharmacyController.");
             }
 
-            //var newpsurgery = db.SP_GetPatientMedication();
-            response = Request.CreateResponse(HttpStatusCode.OK, "Pharmacy is added successfully.");
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = Convert.ToInt64(model.pharmacyid), message = "Pharmacy is added successfully." });
             return response;
         }
 

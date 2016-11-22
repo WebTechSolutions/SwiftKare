@@ -64,9 +64,9 @@ namespace RestAPIs.Controllers
             PatientSurgery psurgery = new PatientSurgery();
             try
             {
-                if (model.bodyPart == null || model.bodyPart == "" || !Regex.IsMatch(model.bodyPart.Trim(), @"^[a-zA-Z\s]+$"))
+                if (model.bodyPart == null || model.bodyPart == "" || !Regex.IsMatch(model.bodyPart.Trim(), "^[0-9a-zA-Z ]+$"))
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid surgery." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid surgery.Only letters and numbers are allowed." });
                     return response;
                 }
                 if (model.patientID == null || model.patientID == 0)
@@ -75,10 +75,17 @@ namespace RestAPIs.Controllers
                     return response;
                 }
                 
-                psurgery = db.PatientSurgeries.Where(p => p.bodyPart.Trim() == model.bodyPart.Trim() && p.active == true).FirstOrDefault();
+                psurgery = db.PatientSurgeries.Where(p => p.bodyPart.Trim() == model.bodyPart.Trim()).FirstOrDefault();
                 if (psurgery!=null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Surgery already exists." });
+                   // response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Surgery already exists." });
+                    //return response;
+                    psurgery.md = System.DateTime.Now;
+                    psurgery.mb = psurgery.patientID.ToString();
+                    psurgery.active = true;
+                    db.Entry(psurgery).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = psurgery.surgeryID, message = "" });
                     return response;
                 }
                 if (psurgery==null)
@@ -112,9 +119,9 @@ namespace RestAPIs.Controllers
             PatientSurgery psurgery = new PatientSurgery();
             try
             {
-                if (model.bodyPart == null || model.bodyPart == "" || !Regex.IsMatch(model.bodyPart.Trim(), @"^[a-zA-Z\s]+$"))
+                if (model.bodyPart == null || model.bodyPart == "" || !Regex.IsMatch(model.bodyPart.Trim(), "^[0-9a-zA-Z ]+$"))
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID =0, message = "Invalid surgery." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID =0, message = "Invalid surgery. Only letters and numbers are allowed." });
                     return response;
                 }
                 if (model.patientID == null || model.patientID == 0)
@@ -150,7 +157,7 @@ namespace RestAPIs.Controllers
             return response;
         }
 
-        [HttpPost]
+      
         [Route("api/deletePatientSurgery")]
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> DeletePatientSurgery(long surgeryID)
@@ -171,7 +178,7 @@ namespace RestAPIs.Controllers
                 }
                 else
                 {
-                    Patient patient = await db.Patients.FindAsync(psurgery.patientID);
+                    
                     psurgery.active = false;//Delete Operation changed
                     psurgery.mb = psurgery.patientID.ToString();
                     psurgery.md = System.DateTime.Now;

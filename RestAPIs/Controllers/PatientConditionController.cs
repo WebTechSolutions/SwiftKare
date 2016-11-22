@@ -47,9 +47,9 @@ namespace RestAPIs.Controllers
             try
             {
                
-                if (model.conditionName == null || model.conditionName == "" || !Regex.IsMatch(model.conditionName.Trim(), @"^[a-zA-Z\s]+$"))
+                if (model.conditionName == null || model.conditionName == "" || !Regex.IsMatch(model.conditionName.Trim(), "^[0-9a-zA-Z ]+$"))
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid condition name." } );
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid condition name. Only letters and numbers are allowed." } );
                     return response;
                 }
                 if (model.patientID == null || model.patientID == 0)
@@ -103,9 +103,9 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid condition ID." });
                     return response;
                 }
-                if (model.conditionName == null || model.conditionName == "" || !Regex.IsMatch(model.conditionName.Trim(), @"^[a-zA-Z\s]+$"))
+                if (model.conditionName == null || model.conditionName == "" || !Regex.IsMatch(model.conditionName.Trim(), "^[0-9a-zA-Z ]+$"))
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid condition name." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid condition name.Only letters and numbers are allowed." });
                     return response;
                 }
                 if (model.patientID == null || model.patientID == 0)

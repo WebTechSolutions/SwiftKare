@@ -67,9 +67,9 @@ namespace RestAPIs.Controllers
             try
             {
                 
-                if (model.medicineName == null || model.medicineName == ""|| !Regex.IsMatch(model.medicineName, @"^[a-zA-Z\s]+$"))
+                if (model.medicineName == null || model.medicineName == ""|| !Regex.IsMatch(model.medicineName, "^[0-9a-zA-Z ]+$"))
                     {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel {ID=0, message="Medicine name is not valid." } );
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel {ID=0, message="Medicine name is not valid. Only letter and numbers are allowed." } );
                     return response;
                 }
                 if (model.frequency != null || model.frequency != "")
@@ -111,7 +111,7 @@ namespace RestAPIs.Controllers
             {
                 ThrowError(ex, "AddPatientMedication in PatientMedicationController.");
             }
-            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = medication.medicationID, message = "Medication saved succesfully" });
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = medication.medicationID, message = "" });
             return response;
 
         }
@@ -137,10 +137,10 @@ namespace RestAPIs.Controllers
                         return response;
                     }
                 }
-                if (model.medicineName == null || model.medicineName == ""||!Regex.IsMatch(model.medicineName.Trim(), @"^[a-zA-Z\s]+$"))
+                if (model.medicineName == null || model.medicineName == ""||!Regex.IsMatch(model.medicineName.Trim(), "^[0-9a-zA-Z ]+$"))
                 {
                   
-                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medicine name is not valid." });
+                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medicine name is not valid. Only letters and numbers are allowed." });
                 return response;
                 }
                 if (model.patientId == 0 || model.patientId == null)
@@ -176,7 +176,7 @@ namespace RestAPIs.Controllers
                 }
 
          
-            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = medicationID, message = "Medication saved succesfully" });
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = medicationID, message = "" });
             return response;
         }
 
@@ -190,15 +190,15 @@ namespace RestAPIs.Controllers
             {
                 Medication medication = db.Medications.Where(med=>med.medicationID==medicationID && med.active==true).FirstOrDefault();
                 Patient patient = new Patient();
-                if (medication != null) { patient = await db.Patients.FindAsync(medication.patientId); }
+               // if (medication != null) { patient = await db.Patients.FindAsync(medication.patientId); }
               
-            if (medication == null || patient == null)
+            if (medication == null)
             {
-                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = medicationID, message = "Medication not found." });
+                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medication not found." });
                 return response;
             }
             medication.active = false;//Delete Operation changed
-            medication.mb = patient.patientID.ToString();
+            medication.mb = medication.patientId.ToString();
             medication.md = System.DateTime.Now;
             db.Entry(medication).State = EntityState.Modified;
 
@@ -209,7 +209,7 @@ namespace RestAPIs.Controllers
                 return ThrowError(ex, "DeletePatientMedication in PatientMedicationController.");
             }
            
-            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = medicationID, message = "Medication deleted succesfully" });
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = medicationID, message = "" });
             return response;
         }
      
