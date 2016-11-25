@@ -308,16 +308,24 @@
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
         </EntityType>
-        <EntityType Name="FamilyHX">
+        <EntityType Name="FamilyHXItems">
           <Key>
-            <PropertyRef Name="fhxid" />
+            <PropertyRef Name="familyHXItemsID" />
           </Key>
-          <Property Name="fhxid" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="questionID" Type="bigint" />
-          <Property Name="answer" Type="varchar" MaxLength="50" />
-          <Property Name="patientID" Type="bigint" />
-          <Property Name="customQuestion" Type="varchar" MaxLength="50" />
-          <Property Name="customAnswer" Type="varchar" MaxLength="50" />
+          <Property Name="familyHXItemsID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="cb" Type="varchar" MaxLength="50" />
+          <Property Name="cd" Type="datetime" />
+          <Property Name="mb" Type="varchar" MaxLength="50" />
+          <Property Name="md" Type="datetime" />
+          <Property Name="active" Type="bit" />
+        </EntityType>
+        <EntityType Name="Frequency">
+          <Key>
+            <PropertyRef Name="frequencyID" />
+          </Key>
+          <Property Name="frequencyID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
@@ -336,19 +344,18 @@
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
         </EntityType>
-        <EntityType Name="LifeStyle">
+        <EntityType Name="LifeStyleQuestions">
           <Key>
-            <PropertyRef Name="liftStyleID" />
+            <PropertyRef Name="questionID" />
           </Key>
-          <Property Name="liftStyleID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="questionID" Type="bigint" />
-          <Property Name="answer" Type="varchar" MaxLength="10" />
-          <Property Name="patientID" Type="bigint" />
+          <Property Name="questionID" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="question" Type="varchar" MaxLength="50" />
+          <Property Name="category" Type="varchar" MaxLength="50" />
+          <Property Name="active" Type="bit" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
-          <Property Name="active" Type="bit" />
         </EntityType>
         <EntityType Name="Medications">
           <Key>
@@ -455,6 +462,34 @@
           <Property Name="active" Type="bit" />
           <Property Name="reportedDate" Type="datetime" />
         </EntityType>
+        <EntityType Name="PatientFamilyHX">
+          <Key>
+            <PropertyRef Name="fhxid" />
+          </Key>
+          <Property Name="fhxid" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="relationship" Type="varchar" MaxLength="50" />
+          <Property Name="patientID" Type="bigint" />
+          <Property Name="cb" Type="varchar" MaxLength="50" />
+          <Property Name="cd" Type="datetime" />
+          <Property Name="mb" Type="varchar" MaxLength="50" />
+          <Property Name="md" Type="datetime" />
+          <Property Name="active" Type="bit" />
+        </EntityType>
+        <EntityType Name="PatientLifeStyle">
+          <Key>
+            <PropertyRef Name="patientlifestyleID" />
+          </Key>
+          <Property Name="patientlifestyleID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="patientID" Type="bigint" />
+          <Property Name="question" Type="varchar" MaxLength="50" />
+          <Property Name="answer" Type="varchar" MaxLength="50" />
+          <Property Name="cb" Type="varchar" MaxLength="50" />
+          <Property Name="cd" Type="datetime" />
+          <Property Name="mb" Type="varchar" MaxLength="50" />
+          <Property Name="md" Type="datetime" />
+          <Property Name="active" Type="bit" />
+        </EntityType>
         <EntityType Name="PatientSurgeries">
           <Key>
             <PropertyRef Name="surgeryID" />
@@ -481,19 +516,6 @@
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
         </EntityType>
-        <EntityType Name="Questions">
-          <Key>
-            <PropertyRef Name="questionID" />
-          </Key>
-          <Property Name="questionID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="question" Type="varchar" MaxLength="50" />
-          <Property Name="category" Type="varchar" MaxLength="50" />
-          <Property Name="active" Type="bit" />
-          <Property Name="cb" Type="varchar" MaxLength="50" />
-          <Property Name="cd" Type="datetime" />
-          <Property Name="mb" Type="varchar" MaxLength="50" />
-          <Property Name="md" Type="datetime" />
-        </EntityType>
         <EntityType Name="Reaction">
           <Key>
             <PropertyRef Name="reactionID" />
@@ -505,6 +527,18 @@
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
+        </EntityType>
+        <EntityType Name="Relationship">
+          <Key>
+            <PropertyRef Name="relationshipID" />
+          </Key>
+          <Property Name="relationshipID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="cb" Type="varchar" MaxLength="50" />
+          <Property Name="cd" Type="datetime" />
+          <Property Name="mb" Type="varchar" MaxLength="50" />
+          <Property Name="md" Type="datetime" />
+          <Property Name="activre" Type="bit" />
         </EntityType>
         <EntityType Name="RoleModules">
           <Key>
@@ -525,6 +559,18 @@
           </Key>
           <Property Name="roleID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="roleName" Type="varchar" MaxLength="50" />
+          <Property Name="cb" Type="varchar" MaxLength="50" />
+          <Property Name="cd" Type="datetime" />
+          <Property Name="mb" Type="varchar" MaxLength="50" />
+          <Property Name="md" Type="datetime" />
+          <Property Name="active" Type="bit" />
+        </EntityType>
+        <EntityType Name="ROV">
+          <Key>
+            <PropertyRef Name="rovID" />
+          </Key>
+          <Property Name="rovID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="rov" Type="varchar" MaxLength="50" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
@@ -881,49 +927,13 @@
         </Association>
         <Association Name="FK_FamilyHX_Patient">
           <End Role="Patient" Type="Self.Patient" Multiplicity="0..1" />
-          <End Role="FamilyHX" Type="Self.FamilyHX" Multiplicity="*" />
+          <End Role="PatientFamilyHX" Type="Self.PatientFamilyHX" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Patient">
               <PropertyRef Name="patientID" />
             </Principal>
-            <Dependent Role="FamilyHX">
+            <Dependent Role="PatientFamilyHX">
               <PropertyRef Name="patientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_FamilyHX_Questions">
-          <End Role="Questions" Type="Self.Questions" Multiplicity="0..1" />
-          <End Role="FamilyHX" Type="Self.FamilyHX" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Questions">
-              <PropertyRef Name="questionID" />
-            </Principal>
-            <Dependent Role="FamilyHX">
-              <PropertyRef Name="questionID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_LifeStyle_Patient">
-          <End Role="Patient" Type="Self.Patient" Multiplicity="0..1" />
-          <End Role="LifeStyle" Type="Self.LifeStyle" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="patientID" />
-            </Principal>
-            <Dependent Role="LifeStyle">
-              <PropertyRef Name="patientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_LifeStyle_Questions">
-          <End Role="Questions" Type="Self.Questions" Multiplicity="0..1" />
-          <End Role="LifeStyle" Type="Self.LifeStyle" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Questions">
-              <PropertyRef Name="questionID" />
-            </Principal>
-            <Dependent Role="LifeStyle">
-              <PropertyRef Name="questionID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1226,7 +1236,7 @@
         </Function>
         <Function Name="SP_FetchDoctorTimings" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="docID" Type="bigint" Mode="In" />
-          <Parameter Name="appDate" Type="datetime" Mode="In" />
+          <Parameter Name="appDate" Type="date" Mode="In" />
         </Function>
         <Function Name="SP_GetPatientAllergies" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="patientID" Type="bigint" Mode="In" />
@@ -1404,21 +1414,25 @@
           <EntitySet Name="DoctorSpeciality" EntityType="Self.DoctorSpeciality" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DoctorTimings" EntityType="Self.DoctorTimings" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocumentType" EntityType="Self.DocumentType" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="FamilyHX" EntityType="Self.FamilyHX" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FamilyHXItems" EntityType="Self.FamilyHXItems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Frequency" EntityType="Self.Frequency" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Languages" EntityType="Self.Languages" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="LifeStyle" EntityType="Self.LifeStyle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LifeStyleQuestions" EntityType="Self.LifeStyleQuestions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Medications" EntityType="Self.Medications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Medicine" EntityType="Self.Medicine" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Modules" EntityType="Self.Modules" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="News" EntityType="Self.News" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Patient" EntityType="Self.Patient" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PatientAllergies" EntityType="Self.PatientAllergies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PatientFamilyHX" EntityType="Self.PatientFamilyHX" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PatientLifeStyle" EntityType="Self.PatientLifeStyle" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PatientSurgeries" EntityType="Self.PatientSurgeries" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PatientSystems" EntityType="Self.PatientSystems" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Questions" EntityType="Self.Questions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Reaction" EntityType="Self.Reaction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Relationship" EntityType="Self.Relationship" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RoleModules" EntityType="Self.RoleModules" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ROV" EntityType="Self.ROV" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Severity" EntityType="Self.Severity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Speciallity" EntityType="Self.Speciallity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="States" EntityType="Self.States" Schema="dbo" store:Type="Tables" />
@@ -1509,19 +1523,7 @@
           </AssociationSet>
           <AssociationSet Name="FK_FamilyHX_Patient" Association="Self.FK_FamilyHX_Patient">
             <End Role="Patient" EntitySet="Patient" />
-            <End Role="FamilyHX" EntitySet="FamilyHX" />
-          </AssociationSet>
-          <AssociationSet Name="FK_FamilyHX_Questions" Association="Self.FK_FamilyHX_Questions">
-            <End Role="Questions" EntitySet="Questions" />
-            <End Role="FamilyHX" EntitySet="FamilyHX" />
-          </AssociationSet>
-          <AssociationSet Name="FK_LifeStyle_Patient" Association="Self.FK_LifeStyle_Patient">
-            <End Role="Patient" EntitySet="Patient" />
-            <End Role="LifeStyle" EntitySet="LifeStyle" />
-          </AssociationSet>
-          <AssociationSet Name="FK_LifeStyle_Questions" Association="Self.FK_LifeStyle_Questions">
-            <End Role="Questions" EntitySet="Questions" />
-            <End Role="LifeStyle" EntitySet="LifeStyle" />
+            <End Role="PatientFamilyHX" EntitySet="PatientFamilyHX" />
           </AssociationSet>
           <AssociationSet Name="FK_Medications_Patient" Association="Self.FK_Medications_Patient">
             <End Role="Patient" EntitySet="Patient" />
@@ -1882,24 +1884,6 @@
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
         </EntityType>
-        <EntityType Name="FamilyHX">
-          <Key>
-            <PropertyRef Name="fhxid" />
-          </Key>
-          <Property Name="fhxid" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="questionID" Type="Int64" />
-          <Property Name="answer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="patientID" Type="Int64" />
-          <Property Name="customQuestion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="customAnswer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cd" Type="DateTime" Precision="3" />
-          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="md" Type="DateTime" Precision="3" />
-          <Property Name="active" Type="Boolean" />
-          <NavigationProperty Name="Patient" Relationship="Self.FK_FamilyHX_Patient" FromRole="FamilyHX" ToRole="Patient" />
-          <NavigationProperty Name="Question" Relationship="Self.FK_FamilyHX_Questions" FromRole="FamilyHX" ToRole="Questions" />
-        </EntityType>
         <EntityType Name="Language">
           <Key>
             <PropertyRef Name="languageID" />
@@ -1911,22 +1895,6 @@
           <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
-        </EntityType>
-        <EntityType Name="LifeStyle">
-          <Key>
-            <PropertyRef Name="liftStyleID" />
-          </Key>
-          <Property Name="liftStyleID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="questionID" Type="Int64" />
-          <Property Name="answer" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="patientID" Type="Int64" />
-          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cd" Type="DateTime" Precision="3" />
-          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="md" Type="DateTime" Precision="3" />
-          <Property Name="active" Type="Boolean" />
-          <NavigationProperty Name="Patient" Relationship="Self.FK_LifeStyle_Patient" FromRole="LifeStyle" ToRole="Patient" />
-          <NavigationProperty Name="Question" Relationship="Self.FK_LifeStyle_Questions" FromRole="LifeStyle" ToRole="Questions" />
         </EntityType>
         <EntityType Name="Medication">
           <Key>
@@ -2020,12 +1988,11 @@
           <NavigationProperty Name="Conditions" Relationship="Self.FK_Conditions_Patient" FromRole="Patient" ToRole="Conditions" />
           <NavigationProperty Name="Consultations" Relationship="Self.FK_Consultation_Patient" FromRole="Patient" ToRole="Consultation" />
           <NavigationProperty Name="ConsultationROS" Relationship="Self.FK_ConsultationROS_Patient" FromRole="Patient" ToRole="ConsultationROS" />
-          <NavigationProperty Name="FamilyHXes" Relationship="Self.FK_FamilyHX_Patient" FromRole="Patient" ToRole="FamilyHX" />
-          <NavigationProperty Name="LifeStyles" Relationship="Self.FK_LifeStyle_Patient" FromRole="Patient" ToRole="LifeStyle" />
           <NavigationProperty Name="Medications" Relationship="Self.FK_Medications_Patient" FromRole="Patient" ToRole="Medications" />
           <NavigationProperty Name="PatientAllergies" Relationship="Self.FK_Allergies_Patient" FromRole="Patient" ToRole="PatientAllergies" />
           <NavigationProperty Name="UserFiles" Relationship="Self.FK_UserFiles_Patient" FromRole="Patient" ToRole="UserFiles" />
           <NavigationProperty Name="PatientSurgeries" Relationship="SwiftKareDBModel.FK_Surgeries_Patient" FromRole="Patient" ToRole="PatientSurgery" />
+          <NavigationProperty Name="PatientFamilyHXes" Relationship="SwiftKareDBModel.FK_FamilyHX_Patient" FromRole="Patient" ToRole="PatientFamilyHX" />
         </EntityType>
         <EntityType Name="PatientAllergy">
           <Key>
@@ -2058,21 +2025,6 @@
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
           <NavigationProperty Name="SystemItemsses" Relationship="Self.FK_SystemItems_Systems" FromRole="PatientSystems" ToRole="SystemItemss" />
-        </EntityType>
-        <EntityType Name="Question">
-          <Key>
-            <PropertyRef Name="questionID" />
-          </Key>
-          <Property Name="questionID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="question1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="category" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="active" Type="Boolean" />
-          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cd" Type="DateTime" Precision="3" />
-          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="md" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="FamilyHXes" Relationship="Self.FK_FamilyHX_Questions" FromRole="Questions" ToRole="FamilyHX" />
-          <NavigationProperty Name="LifeStyles" Relationship="Self.FK_LifeStyle_Questions" FromRole="Questions" ToRole="LifeStyle" />
         </EntityType>
         <EntityType Name="RoleModule">
           <Key>
@@ -2403,54 +2355,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_FamilyHX_Patient">
-          <End Role="Patient" Type="Self.Patient" Multiplicity="0..1" />
-          <End Role="FamilyHX" Type="Self.FamilyHX" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="patientID" />
-            </Principal>
-            <Dependent Role="FamilyHX">
-              <PropertyRef Name="patientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_FamilyHX_Questions">
-          <End Role="Questions" Type="Self.Question" Multiplicity="0..1" />
-          <End Role="FamilyHX" Type="Self.FamilyHX" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Questions">
-              <PropertyRef Name="questionID" />
-            </Principal>
-            <Dependent Role="FamilyHX">
-              <PropertyRef Name="questionID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_LifeStyle_Patient">
-          <End Role="Patient" Type="Self.Patient" Multiplicity="0..1" />
-          <End Role="LifeStyle" Type="Self.LifeStyle" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="patientID" />
-            </Principal>
-            <Dependent Role="LifeStyle">
-              <PropertyRef Name="patientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_LifeStyle_Questions">
-          <End Role="Questions" Type="Self.Question" Multiplicity="0..1" />
-          <End Role="LifeStyle" Type="Self.LifeStyle" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Questions">
-              <PropertyRef Name="questionID" />
-            </Principal>
-            <Dependent Role="LifeStyle">
-              <PropertyRef Name="questionID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Medications_Patient">
           <End Role="Patient" Type="Self.Patient" Multiplicity="0..1" />
           <End Role="Medications" Type="Self.Medication" Multiplicity="*" />
@@ -2548,9 +2452,7 @@
           <EntitySet Name="DoctorSpecialities" EntityType="Self.DoctorSpeciality" />
           <EntitySet Name="DoctorTimings" EntityType="Self.DoctorTiming" />
           <EntitySet Name="DocumentTypes" EntityType="Self.DocumentType" />
-          <EntitySet Name="FamilyHXes" EntityType="Self.FamilyHX" />
           <EntitySet Name="Languages" EntityType="Self.Language" />
-          <EntitySet Name="LifeStyles" EntityType="Self.LifeStyle" />
           <EntitySet Name="Medications" EntityType="Self.Medication" />
           <EntitySet Name="Medicines" EntityType="Self.Medicine" />
           <EntitySet Name="Modules" EntityType="Self.Module" />
@@ -2558,7 +2460,6 @@
           <EntitySet Name="Patients" EntityType="Self.Patient" />
           <EntitySet Name="PatientAllergies" EntityType="Self.PatientAllergy" />
           <EntitySet Name="PatientSystems" EntityType="Self.PatientSystem" />
-          <EntitySet Name="Questions" EntityType="Self.Question" />
           <EntitySet Name="RoleModules" EntityType="Self.RoleModule" />
           <EntitySet Name="Roles" EntityType="Self.Role" />
           <EntitySet Name="Speciallities" EntityType="Self.Speciallity" />
@@ -2638,22 +2539,6 @@
           <AssociationSet Name="FK_UserFiles_Doctor" Association="Self.FK_UserFiles_Doctor">
             <End Role="Doctor" EntitySet="Doctors" />
             <End Role="UserFiles" EntitySet="UserFiles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_FamilyHX_Patient" Association="Self.FK_FamilyHX_Patient">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="FamilyHX" EntitySet="FamilyHXes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_FamilyHX_Questions" Association="Self.FK_FamilyHX_Questions">
-            <End Role="Questions" EntitySet="Questions" />
-            <End Role="FamilyHX" EntitySet="FamilyHXes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_LifeStyle_Patient" Association="Self.FK_LifeStyle_Patient">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="LifeStyle" EntitySet="LifeStyles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_LifeStyle_Questions" Association="Self.FK_LifeStyle_Questions">
-            <End Role="Questions" EntitySet="Questions" />
-            <End Role="LifeStyle" EntitySet="LifeStyles" />
           </AssociationSet>
           <AssociationSet Name="FK_Medications_Patient" Association="Self.FK_Medications_Patient">
             <End Role="Patient" EntitySet="Patients" />
@@ -3042,18 +2927,6 @@
           <FunctionImport Name="SP_GetPatientSurgeries" ReturnType="Collection(SwiftKareDBModel.SP_GetPatientSurgeries_Result)">
           <Parameter Name="patientID" Mode="In" Type="Int64" />
           </FunctionImport>
-          <EntitySet Name="PatientSurgeries" EntityType="SwiftKareDBModel.PatientSurgery" />
-          <EntitySet Name="Reactions" EntityType="SwiftKareDBModel.Reaction" />
-          <EntitySet Name="Severities" EntityType="SwiftKareDBModel.Severity" />
-          <EntitySet Name="Surgeries" EntityType="SwiftKareDBModel.Surgery" />
-          <AssociationSet Name="FK_Surgeries_Patient" Association="SwiftKareDBModel.FK_Surgeries_Patient">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="PatientSurgery" EntitySet="PatientSurgeries" />
-          </AssociationSet>
-          <FunctionImport Name="SP_FetchDoctorTimings" ReturnType="Collection(SwiftKareDBModel.SP_FetchDoctorTimings_Result)">
-            <Parameter Name="docID" Mode="In" Type="Int64" />
-            <Parameter Name="appDate" Mode="In" Type="DateTime" />
-          </FunctionImport>
           <FunctionImport Name="SP_SearchDoctor" ReturnType="Collection(SwiftKareDBModel.SP_SearchDoctor_Result)">
             <Parameter Name="language" Mode="In" Type="String" />
             <Parameter Name="spec" Mode="In" Type="String" />
@@ -3062,6 +2935,29 @@
             <Parameter Name="appTime" Mode="In" Type="Time" />
             <Parameter Name="gender" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="PatientSurgeries" EntityType="SwiftKareDBModel.PatientSurgery" />
+          <AssociationSet Name="FK_Surgeries_Patient" Association="SwiftKareDBModel.FK_Surgeries_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="PatientSurgery" EntitySet="PatientSurgeries" />
+          </AssociationSet>
+          <EntitySet Name="Reactions" EntityType="SwiftKareDBModel.Reaction" />
+          <EntitySet Name="Severities" EntityType="SwiftKareDBModel.Severity" />
+          <EntitySet Name="Surgeries" EntityType="SwiftKareDBModel.Surgery" />
+          <FunctionImport Name="SP_FetchDoctorTimings" ReturnType="Collection(SwiftKareDBModel.SP_FetchDoctorTimings_Result)">
+            <Parameter Name="docID" Mode="In" Type="Int64" />
+            <Parameter Name="appDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <EntitySet Name="FamilyHXItems" EntityType="SwiftKareDBModel.FamilyHXItem" />
+          <EntitySet Name="Frequencies" EntityType="SwiftKareDBModel.Frequency" />
+          <EntitySet Name="LifeStyleQuestions" EntityType="SwiftKareDBModel.LifeStyleQuestion" />
+          <EntitySet Name="PatientLifeStyles" EntityType="SwiftKareDBModel.PatientLifeStyle" />
+          <EntitySet Name="Relationships" EntityType="SwiftKareDBModel.Relationship" />
+          <EntitySet Name="ROVs" EntityType="SwiftKareDBModel.ROV" />
+          <EntitySet Name="PatientFamilyHXes" EntityType="SwiftKareDBModel.PatientFamilyHX" />
+          <AssociationSet Name="FK_FamilyHX_Patient" Association="SwiftKareDBModel.FK_FamilyHX_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="PatientFamilyHX" EntitySet="PatientFamilyHXes" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="SP_AppointmentReport_Result">
           <Property Type="Int64" Name="appID" Nullable="false" />
@@ -3399,6 +3295,11 @@
           <Property Type="DateTime" Name="md" Nullable="true" Precision="23" />
           <Property Type="DateTime" Name="reportedDate" Nullable="true" Precision="23" />
         </ComplexType>
+        <ComplexType Name="SP_SearchDoctor_Result">
+          <Property Type="Int64" Name="doctorID" Nullable="false" />
+          <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="lastName" Nullable="true" MaxLength="100" />
+        </ComplexType>
         <EntityType Name="PatientSurgery">
           <Key>
             <PropertyRef Name="surgeryID" />
@@ -3414,6 +3315,18 @@
           <Property Name="reportedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_Surgeries_Patient" FromRole="PatientSurgery" ToRole="Patient" />
         </EntityType>
+        <Association Name="FK_Surgeries_Patient">
+          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.PatientSurgery" Role="PatientSurgery" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="patientID" />
+            </Principal>
+            <Dependent Role="PatientSurgery">
+              <PropertyRef Name="patientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityType Name="Reaction">
           <Key>
             <PropertyRef Name="reactionID" />
@@ -3450,18 +3363,6 @@
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
         </EntityType>
-        <Association Name="FK_Surgeries_Patient">
-          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.PatientSurgery" Role="PatientSurgery" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="patientID" />
-            </Principal>
-            <Dependent Role="PatientSurgery">
-              <PropertyRef Name="patientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <ComplexType Name="SP_FetchDoctorTimings_Result">
           <Property Type="Int64" Name="doctorID" Nullable="true" />
           <Property Type="Time" Name="from" Nullable="true" />
@@ -3469,11 +3370,108 @@
           <Property Type="DateTime" Name="appDate" Nullable="true" />
           <Property Type="Time" Name="appTime" Nullable="true" />
         </ComplexType>
-        <ComplexType Name="SP_SearchDoctor_Result">
-          <Property Type="Int64" Name="doctorID" Nullable="false" />
-          <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="lastName" Nullable="true" MaxLength="100" />
-        </ComplexType>
+        <EntityType Name="FamilyHXItem">
+          <Key>
+            <PropertyRef Name="familyHXItemsID" />
+          </Key>
+          <Property Name="familyHXItemsID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Frequency">
+          <Key>
+            <PropertyRef Name="frequencyID" />
+          </Key>
+          <Property Name="frequencyID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="LifeStyleQuestion">
+          <Key>
+            <PropertyRef Name="questionID" />
+          </Key>
+          <Property Name="questionID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="question" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="category" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="active" Type="Boolean" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="PatientLifeStyle">
+          <Key>
+            <PropertyRef Name="patientlifestyleID" />
+          </Key>
+          <Property Name="patientlifestyleID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="patientID" Type="Int64" />
+          <Property Name="question" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="answer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Relationship">
+          <Key>
+            <PropertyRef Name="relationshipID" />
+          </Key>
+          <Property Name="relationshipID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="activre" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="ROV">
+          <Key>
+            <PropertyRef Name="rovID" />
+          </Key>
+          <Property Name="rovID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="rov1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="PatientFamilyHX">
+          <Key>
+            <PropertyRef Name="fhxid" />
+          </Key>
+          <Property Name="fhxid" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="relationship" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="patientID" Type="Int64" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+          <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_FamilyHX_Patient" FromRole="PatientFamilyHX" ToRole="Patient" />
+        </EntityType>
+        <Association Name="FK_FamilyHX_Patient">
+          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.PatientFamilyHX" Role="PatientFamilyHX" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="patientID" />
+            </Principal>
+            <Dependent Role="PatientFamilyHX">
+              <PropertyRef Name="patientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3792,43 +3790,11 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="FamilyHXes">
-            <EntityTypeMapping TypeName="SwiftKareDBModel.FamilyHX">
-              <MappingFragment StoreEntitySet="FamilyHX">
-                <ScalarProperty Name="fhxid" ColumnName="fhxid" />
-                <ScalarProperty Name="questionID" ColumnName="questionID" />
-                <ScalarProperty Name="answer" ColumnName="answer" />
-                <ScalarProperty Name="patientID" ColumnName="patientID" />
-                <ScalarProperty Name="customQuestion" ColumnName="customQuestion" />
-                <ScalarProperty Name="customAnswer" ColumnName="customAnswer" />
-                <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-                <ScalarProperty Name="mb" ColumnName="mb" />
-                <ScalarProperty Name="md" ColumnName="md" />
-                <ScalarProperty Name="active" ColumnName="active" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Languages">
             <EntityTypeMapping TypeName="SwiftKareDBModel.Language">
               <MappingFragment StoreEntitySet="Languages">
                 <ScalarProperty Name="languageID" ColumnName="languageID" />
                 <ScalarProperty Name="languageName" ColumnName="languageName" />
-                <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-                <ScalarProperty Name="mb" ColumnName="mb" />
-                <ScalarProperty Name="md" ColumnName="md" />
-                <ScalarProperty Name="active" ColumnName="active" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="LifeStyles">
-            <EntityTypeMapping TypeName="SwiftKareDBModel.LifeStyle">
-              <MappingFragment StoreEntitySet="LifeStyle">
-                <ScalarProperty Name="liftStyleID" ColumnName="liftStyleID" />
-                <ScalarProperty Name="questionID" ColumnName="questionID" />
-                <ScalarProperty Name="answer" ColumnName="answer" />
-                <ScalarProperty Name="patientID" ColumnName="patientID" />
                 <ScalarProperty Name="cb" ColumnName="cb" />
                 <ScalarProperty Name="cd" ColumnName="cd" />
                 <ScalarProperty Name="mb" ColumnName="mb" />
@@ -3958,20 +3924,6 @@
                 <ScalarProperty Name="mb" ColumnName="mb" />
                 <ScalarProperty Name="md" ColumnName="md" />
                 <ScalarProperty Name="active" ColumnName="active" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Questions">
-            <EntityTypeMapping TypeName="SwiftKareDBModel.Question">
-              <MappingFragment StoreEntitySet="Questions">
-                <ScalarProperty Name="questionID" ColumnName="questionID" />
-                <ScalarProperty Name="question1" ColumnName="question" />
-                <ScalarProperty Name="category" ColumnName="category" />
-                <ScalarProperty Name="active" ColumnName="active" />
-                <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-                <ScalarProperty Name="mb" ColumnName="mb" />
-                <ScalarProperty Name="md" ColumnName="md" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -4559,6 +4511,15 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_SearchDoctor" FunctionName="SwiftKareDBModel.Store.SP_SearchDoctor">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SearchDoctor_Result">
+                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <EntitySetMapping Name="PatientSurgeries">
             <EntityTypeMapping TypeName="SwiftKareDBModel.PatientSurgery">
               <MappingFragment StoreEntitySet="PatientSurgeries">
@@ -4624,15 +4585,102 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_SearchDoctor" FunctionName="SwiftKareDBModel.Store.SP_SearchDoctor">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SearchDoctor_Result">
-                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
-                <ScalarProperty Name="firstName" ColumnName="firstName" />
-                <ScalarProperty Name="lastName" ColumnName="lastName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
+          <EntitySetMapping Name="FamilyHXItems">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.FamilyHXItem">
+              <MappingFragment StoreEntitySet="FamilyHXItems">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="familyHXItemsID" ColumnName="familyHXItemsID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Frequencies">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.Frequency">
+              <MappingFragment StoreEntitySet="Frequency">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="frequencyID" ColumnName="frequencyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LifeStyleQuestions">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.LifeStyleQuestion">
+              <MappingFragment StoreEntitySet="LifeStyleQuestions">
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="category" ColumnName="category" />
+                <ScalarProperty Name="question" ColumnName="question" />
+                <ScalarProperty Name="questionID" ColumnName="questionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PatientLifeStyles">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.PatientLifeStyle">
+              <MappingFragment StoreEntitySet="PatientLifeStyle">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="answer" ColumnName="answer" />
+                <ScalarProperty Name="question" ColumnName="question" />
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
+                <ScalarProperty Name="patientlifestyleID" ColumnName="patientlifestyleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Relationships">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.Relationship">
+              <MappingFragment StoreEntitySet="Relationship">
+                <ScalarProperty Name="activre" ColumnName="activre" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="relationshipID" ColumnName="relationshipID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ROVs">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.ROV">
+              <MappingFragment StoreEntitySet="ROV">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="rov1" ColumnName="rov" />
+                <ScalarProperty Name="rovID" ColumnName="rovID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PatientFamilyHXes">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.PatientFamilyHX">
+              <MappingFragment StoreEntitySet="PatientFamilyHX">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
+                <ScalarProperty Name="relationship" ColumnName="relationship" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="fhxid" ColumnName="fhxid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -4647,7 +4695,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />

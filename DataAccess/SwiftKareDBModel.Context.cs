@@ -47,9 +47,7 @@ namespace DataAccess
         public virtual DbSet<DoctorSpeciality> DoctorSpecialities { get; set; }
         public virtual DbSet<DoctorTiming> DoctorTimings { get; set; }
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
-        public virtual DbSet<FamilyHX> FamilyHXes { get; set; }
         public virtual DbSet<Language> Languages { get; set; }
-        public virtual DbSet<LifeStyle> LifeStyles { get; set; }
         public virtual DbSet<Medication> Medications { get; set; }
         public virtual DbSet<Medicine> Medicines { get; set; }
         public virtual DbSet<Module> Modules { get; set; }
@@ -57,7 +55,6 @@ namespace DataAccess
         public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<PatientAllergy> PatientAllergies { get; set; }
         public virtual DbSet<PatientSystem> PatientSystems { get; set; }
-        public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<RoleModule> RoleModules { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Speciallity> Speciallities { get; set; }
@@ -70,6 +67,13 @@ namespace DataAccess
         public virtual DbSet<Reaction> Reactions { get; set; }
         public virtual DbSet<Severity> Severities { get; set; }
         public virtual DbSet<Surgery> Surgeries { get; set; }
+        public virtual DbSet<FamilyHXItem> FamilyHXItems { get; set; }
+        public virtual DbSet<Frequency> Frequencies { get; set; }
+        public virtual DbSet<LifeStyleQuestion> LifeStyleQuestions { get; set; }
+        public virtual DbSet<PatientLifeStyle> PatientLifeStyles { get; set; }
+        public virtual DbSet<Relationship> Relationships { get; set; }
+        public virtual DbSet<ROV> ROVs { get; set; }
+        public virtual DbSet<PatientFamilyHX> PatientFamilyHXes { get; set; }
     
         public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
         {
@@ -1339,19 +1343,6 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientSurgeries_Result>("SP_GetPatientSurgeries", patientIDParameter);
         }
     
-        public virtual ObjectResult<SP_FetchDoctorTimings_Result> SP_FetchDoctorTimings(Nullable<long> docID, Nullable<System.DateTime> appDate)
-        {
-            var docIDParameter = docID.HasValue ?
-                new ObjectParameter("docID", docID) :
-                new ObjectParameter("docID", typeof(long));
-    
-            var appDateParameter = appDate.HasValue ?
-                new ObjectParameter("appDate", appDate) :
-                new ObjectParameter("appDate", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_FetchDoctorTimings_Result>("SP_FetchDoctorTimings", docIDParameter, appDateParameter);
-        }
-    
         public virtual ObjectResult<SP_SearchDoctor_Result> SP_SearchDoctor(string language, string spec, string name, string appDay, Nullable<System.TimeSpan> appTime, string gender)
         {
             var languageParameter = language != null ?
@@ -1379,6 +1370,19 @@ namespace DataAccess
                 new ObjectParameter("gender", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SearchDoctor_Result>("SP_SearchDoctor", languageParameter, specParameter, nameParameter, appDayParameter, appTimeParameter, genderParameter);
+        }
+    
+        public virtual ObjectResult<SP_FetchDoctorTimings_Result> SP_FetchDoctorTimings(Nullable<long> docID, Nullable<System.DateTime> appDate)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("docID", docID) :
+                new ObjectParameter("docID", typeof(long));
+    
+            var appDateParameter = appDate.HasValue ?
+                new ObjectParameter("appDate", appDate) :
+                new ObjectParameter("appDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_FetchDoctorTimings_Result>("SP_FetchDoctorTimings", docIDParameter, appDateParameter);
         }
     }
 }
