@@ -1,0 +1,636 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Video</title>
+
+    <link href="@Url.Content("~/Content/css/bootstrap.min.css")" rel="stylesheet">
+    <!-- Font Awesome -->
+    @*<link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet" type='text/css'>*@
+    <link href="@Url.Content("~/Content/css/font-awesome.min.css")" rel="stylesheet">
+    <!-- NProgress -->
+    <!-- iCheck -->
+    <link href="@Url.Content("~/Content/css/green.css")" rel="stylesheet">
+    <!-- bootstrap-progressbar -->
+
+    <link href="@Url.Content("~/Content/css/bootstrap-progressbar-3.3.4.min.css")" rel="stylesheet">
+    <link href="@Url.Content("~/Content/css/green.css")" rel="stylesheet">
+
+    <link href="@Url.Content("~/Content/css/scroller.bootstrap.min.css")" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="@Url.Content("~/Content/css/custom.min.css")" rel="stylesheet">
+    <link href="@Url.Content("~/Content/css/style.css")" rel="stylesheet">
+</head>
+<body id="video">
+    <!-- <div class="video_head"></div> -->
+    <div class="video_sec">
+        <img class="img-responsive" src="@Url.Content("~/Content/images/123.jpg")" alt="">
+        <h1 class="video_title">Muhammad Ali</h1>
+        <div class="small_img">
+            <a href="#" id="toggle6"><img class="xs-video-img img-responsive" src="@Url.Content("~/Content/images/img.jpg")" alt=""><img class="video_small_icons" src="@Url.Content("~/Content/images/video_h.png")" alt=""></a>
+            <a href="#"><img id="toggle_6" class="small_video_icon video_small_icons" src="@Url.Content("~/Content/images/video.png")" alt=""></a>
+        </div>
+
+        <div class="video_icon_bg">
+            <ul class="video_icon">
+                <li><a href="#" class="video_pos" id="edit"><i class="fa fa-list-alt list-alt" aria-hidden="true">SOAP</i><!-- <img src="images/list_h.png" alt=""> --></a></li>
+                <li><a href="#" class="video_pos_h"></a></li>
+
+                <li><a href="#" id="toggle1" class="video_pos"><img src="@Url.Content("~/Content/images/phone.png")" alt=""></a></li>
+                <li><a href="#" id="toggle_1" class="video_pos_h"><img src="@Url.Content("~/Content/images/phone_h.png")" alt=""></a></li>
+
+                <li><a href="#" id="toggle2" class="video_pos"><img src="@Url.Content("~/Content/images/mic.png")" alt=""></a></li>
+                <li><a href="#" id="toggle_2" class="video_pos_h"><img src="@Url.Content("~/Content/images/mic_h.png")" alt=""></a></li>
+
+                <li><a href="#" id="toggle3" class="video_pos"><img src="@Url.Content("~/Content/images/video.png")" alt=""></a></li>
+                <li><a href="#" id="toggle_3" class="video_pos_h"><img src="@Url.Content("~/Content/images/video_h.png")" alt=""></a></li>
+
+                <li><a href="#" id="toggle4" class="video_pos"><img src="@Url.Content("~/Content/images/sound.png")" alt=""></a></li>
+                <li><a href="#" id="toggle_4" class="video_pos_h"><img src="@Url.Content("~/Content/images/sound_h.png")" alt=""></a></li>
+
+                <li><a href="#" id="toggle5" class="video_pos"><img src="@Url.Content("~/Content/images/half_screen.png")" alt=""></a></li>
+                <li><a href="#" id="toggle_5" class="video_pos_h"><img src="@Url.Content("~/Content/images/full_screen.png")" alt=""></a></li>
+
+                <li><a href="#" class="video_pos" id="video-message"><i class="fa fa-comments comments" aria-hidden="true"></i></a></li>
+                <li><a href="#" class="video_pos_h"></a></li>
+            </ul>
+            <div class="time_salat">
+                <p>30:45</p>
+            </div>
+        </div>
+    </div>
+    <div class="video_his">
+        <div id="edit-sec">
+            <div class="edit-sec">
+                <div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default penal-style">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <b style="color: #337AB7">Subjective</b>
+                                    <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
+                                    <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                                <textarea class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default penal-style">
+                        <div class="panel-heading" role="tab" id="headingTwo">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <b style="color: #337AB7">Objective</b>
+                                    <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
+                                    <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+                            <div class="panel-body">
+                                <textarea class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default penal-style">
+                        <div class="panel-heading" role="tab" id="headingThree">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    <b style="color: #337AB7">Assessment</b>
+                                    <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
+                                    <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
+                            <div class="panel-body">
+                                <textarea class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default penal-style">
+                        <div class="panel-heading" role="tab" id="headingFour">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    <b style="color: #337AB7">Plan</b>
+                                    <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
+                                    <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour">
+                            <div class="panel-body">
+                                <textarea class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default penal-style">
+                        <div class="panel-heading" role="tab" id="headingFive">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                    <b style="color: #337AB7">Review of Systems</b>
+                                    <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
+                                    <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseFive" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFive">
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td style="border-top: 0">
+                                                <h4 class="m-0">General</h4>
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; fever</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; chills</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; malaise</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; weight loss</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; weight gain</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <h4 class="m-0">Head, Earn, Nose, Throat</h4>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; eye pain</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; vision change</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; ear pain</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; discharge</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; hearing change</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; nasal congestion</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>
+                                                <h4 class="m-0">Heart</h4>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; chest pain</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; SOB</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; palpitations</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; dizziness</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>
+                                                <h4 class="m-0">Respiratory</h4>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; cough</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; wheezing</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>
+                                                <h4 class="m-0">GI</h4>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; abd pain</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; nausea</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; emesis</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; diarrhea</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>
+                                                <h4 class="m-0">Musculoskeletal</h4>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; arthritis</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; back pain</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; muscle pain</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; cramps</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; weakness</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>
+                                                <h4 class="m-0">skin</h4>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; rash or ulcers</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>
+                                                <h4 class="m-0">Psychiatry</h4>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; anxiety</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; depression</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>
+                                                <h4 class="m-0">Hematology</h4>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; bleeding problems</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>
+                                                <h4 class="m-0">Nuerology</h4>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; Siezure</label>
+                                                </div>
+
+
+                                                <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                    <label><input class="flat" type="checkbox">&nbsp; focal weakness</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="messages-sec" class="">
+            <!-- messages-sec -->
+            <div class="msg-sec">
+                <div class="inbox-item m-b-10">
+                    <img src="@Url.Content("~/Content/images/img.jpg")" alt="">
+                    <div class="talk-bubble tri-right left-in">
+                        <div class="talktext">
+                            <p>this is simple text for messages <span> 12:00am</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="sent-item text-right m-b-10">
+                    <img src="@Url.Content("~/Content/images/img.jpg")" alt="">
+                    <div class="talk-bubble tri-right right-in margin-r">
+                        <div class="talktext">
+                            <p>this is simple text for messages <span> 12:01am</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inbox-item m-b-10">
+                    <img src="@Url.Content("~/Content/images/img.jpg")" alt="">
+                    <div class="talk-bubble tri-right left-in">
+                        <div class="talktext">
+                            <p>this is simple text for messages <span> 12:00am</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="sent-item text-right m-b-10">
+                    <img src="@Url.Content("~/Content/images/img.jpg")" alt="">
+                    <div class="talk-bubble tri-right right-in margin-r">
+                        <div class="talktext">
+                            <p>this is simple text for messages <span> 12:01am</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inbox-item m-b-10">
+                    <img src="@Url.Content("~/Content/images/img.jpg")" alt="">
+                    <div class="talk-bubble tri-right left-in">
+                        <div class="talktext">
+                            <p>this is simple text for messages <span> 12:00am</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="sent-item text-right m-b-10">
+                    <img src="@Url.Content("~/Content/images/img.jpg")" alt="">
+                    <div class="talk-bubble tri-right right-in margin-r">
+                        <div class="talktext">
+                            <p>this is simple text for messages <span> 12:01am</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inbox-item m-b-10">
+                    <img src="@Url.Content("~/Content/images/img.jpg")" alt="">
+                    <div class="talk-bubble tri-right left-in">
+                        <div class="talktext">
+                            <p>this is simple text for messages <span> 12:00am</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="sent-item text-right m-b-10">
+                    <img src="@Url.Content("~/Content/images/img.jpg")" alt="">
+                    <div class="talk-bubble tri-right right-in margin-r">
+                        <div class="talktext">
+                            <p>this is simple text for messages <span> 12:01am</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inbox-item m-b-10">
+                    <img src="@Url.Content("~/Content/images/img.jpg")" alt="">
+                    <div class="talk-bubble tri-right left-in">
+                        <div class="talktext">
+                            <p>this is simple text for messages <span> 12:00am</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="sent-item text-right m-b-10">
+                    <img src="@Url.Content("~/Content/images/img.jpg")" alt="">
+                    <div class="talk-bubble tri-right right-in margin-r">
+                        <div class="talktext">
+                            <p>this is simple text for messages <span> 12:01am</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inbox-item m-b-10">
+                    <img src="@Url.Content("~/Content/images/img.jpg")" alt="">
+                    <div class="talk-bubble tri-right left-in">
+                        <div class="talktext">
+                            <p>this is simple text for messages <span> 12:00am</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="sent-item text-right m-b-10">
+                    <img src="@Url.Content("~/Content/images/img.jpg")" alt="">
+                    <div class="talk-bubble tri-right right-in margin-r">
+                        <div class="talktext">
+                            <p>this is simple text for messages <span> 12:01am</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="message-textarea">
+                <textarea name="" placeholder="Type your messages"></textarea>
+                <i class="messages-send fa fa-paper-plane" aria-hidden="true"></i>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- jQuery -->
+    <script src="@Url.Content("~/Scripts/jquery.min.js")"></script>
+    <!-- Bootstrap -->
+    <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+    <!-- iCheck -->
+    <script src="@Url.Content("~/Scripts/icheck.min.js")"></script>
+
+    <script src="@Url.Content("~/Scripts/select2.full.min.js")"></script>
+
+    <script src="@Url.Content("~/Scripts/switchery.min.js")"></script>
+
+    <!-- starrr -->
+    <!-- Custom Theme Scripts -->
+    <script src="@Url.Content("~/Scripts/custom.min.js")"></script>
+
+
+
+    <script>
+      $('#toggle1').click(function(){
+        $('#toggle_1').show();
+        $('#toggle1').hide();
+      return false;
+      });
+    </script>
+    <script>
+      $('#toggle_1').click(function(){
+        $('#toggle1').show();
+        $('#toggle_1').hide();
+      return false;
+      });
+    </script>
+
+    <script>
+      $('#toggle2').click(function(){
+        $('#toggle_2').show();
+        $('#toggle2').hide();
+      return false;
+      });
+    </script>
+    <script>
+      $('#toggle_2').click(function(){
+        $('#toggle_2').hide();
+        $('#toggle2').show();
+      return false;
+      });
+    </script>
+
+    <script>
+      $('#toggle3').click(function(){
+        $('#toggle_3').show();
+        $('#toggle3').hide();
+      return false;
+      });
+    </script>
+    <script>
+      $('#toggle_3').click(function(){
+        $('#toggle_3').hide();
+        $('#toggle3').show();
+      return false;
+      });
+    </script>
+
+    <script>
+      $('#toggle4').click(function(){
+        $('#toggle_4').show();
+        $('#toggle4').hide();
+      return false;
+      });
+    </script>
+    <script>
+      $('#toggle_4').click(function(){
+        $('#toggle_4').hide();
+        $('#toggle4').show();
+      return false;
+      });
+    </script>
+
+    <script>
+      $('#toggle5').click(function(){
+        $('#toggle_5').show();
+        $('#toggle5').hide();
+      return false;
+      });
+    </script>
+    <script>
+      $('#toggle_5').click(function(){
+        $('#toggle_5').hide();
+        $('#toggle5').show();
+      return false;
+      });
+    </script>
+
+    <script>
+      $('#toggle6').click(function(){
+        $('#toggle_6').show();
+        $('#toggle6').hide();
+      return false;
+      });
+    </script>
+    <script>
+      $('#toggle_6').click(function(){
+        $('#toggle_6').hide();
+        $('#toggle6').show();
+      return false;
+      });
+    </script>
+
+    <script>
+      $('#edit').click(function(){
+        $('#edit-sec').show();
+        $('#messages-sec').hide();
+        $('.list-alt').addClass('comments-m');
+        $('.comments').removeClass('comments-m');
+        $('.comments').removeClass('list-alt-m');
+      return false;
+      });
+    </script>
+    <script>
+      $('#video-message').click(function(){
+        $('#messages-sec').show();
+        $('#edit-sec').hide();
+        $('.comments').addClass('comments-m');
+        $('.list-alt').addClass('list-alt-m');
+        $('.list-alt').removeClass('comments-m');
+      return false;
+      });
+    </script>
+
+</body>
+</html>
