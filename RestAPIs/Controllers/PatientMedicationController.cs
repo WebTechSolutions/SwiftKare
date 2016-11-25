@@ -109,7 +109,7 @@ namespace RestAPIs.Controllers
             }
             catch (Exception ex)
             {
-                ThrowError(ex, "AddPatientMedication in PatientMedicationController.");
+                return ThrowError(ex, "AddPatientMedication in PatientMedicationController.");
             }
             response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = medication.medicationID, message = "" });
             return response;

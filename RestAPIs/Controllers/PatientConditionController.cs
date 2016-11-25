@@ -83,7 +83,7 @@ namespace RestAPIs.Controllers
             }
             catch (Exception ex)
             {
-                ThrowError(ex, "AddPatientCondition in PatientConditionController.");
+                return ThrowError(ex, "AddPatientCondition in PatientConditionController.");
             }
             response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = condition.conditionID, message = "" } );
             return response;

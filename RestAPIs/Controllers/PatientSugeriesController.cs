@@ -105,7 +105,7 @@ namespace RestAPIs.Controllers
             }
             catch (Exception ex)
             {
-                ThrowError(ex, "AddPatientSurgery in PatientSurgeriesController.");
+                return ThrowError(ex, "AddPatientSurgery in PatientSurgeriesController.");
             }
 
             response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = psurgery.surgeryID, message = "" });
