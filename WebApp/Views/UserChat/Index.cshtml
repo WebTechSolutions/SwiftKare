@@ -439,8 +439,6 @@
 
     </div>
 
-    @*<script src="@Url.Content("~/Scripts/offline.min.js")"></script>*@
-
     <!-- jQuery -->
     <script src="@Url.Content("~/Scripts/jquery.min.js")"></script>
     <!-- Bootstrap -->
@@ -462,7 +460,6 @@
     <script type="text/javascript">
 
         //Declaration - Starts
-
         var apiKey = '@openTokApi';
         var sessionId = '@openTokSession';
         var token = '@openTokToken';
@@ -613,7 +610,7 @@
 
                 if (error) {
 
-                    console.log('There was an error connecting to the session:', error.code, error.message);
+                    //console.log('There was an error connecting to the session:', error.code, error.message);
 
                     if (error.code == 1006) {
                         alert("You are not connected to the internet. Check your network connection.");
