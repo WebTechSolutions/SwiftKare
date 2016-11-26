@@ -91,7 +91,7 @@ var UserChat = function (apiKey, sessionId, token) {
         showEditSection();
 
         //Log session ended
-        SaveSessionEnd(sessionId, new Date());
+        SaveSessionEnd(sessionId);
     }
 
     function stopAudioPublish() {
@@ -202,15 +202,15 @@ var UserChat = function (apiKey, sessionId, token) {
 
 
     //Database connection end points - Starts
-    function SaveSessionStart(sessionId, startTime, callerId, calleId) {
+    function SaveSessionStart(sessionId, callerId, calleId) {
         //TODO: implement save to database logic here
     }
 
-    function SaveSessionEnd(sessionId, endTime) {
+    function SaveSessionEnd(sessionId) {
         //TODO: implement save to database logic here
     }
 
-    function SaveChatMessage(sessionId, senderId, receiverId, message, receivedTime) {
+    function SaveChatMessage(sessionId, senderId, receiverId, message) {
         //TODO: implement save to database logic here
     }
     //Database connection end points - Ends
@@ -241,7 +241,7 @@ var UserChat = function (apiKey, sessionId, token) {
                 });
 
                 //For callerId use publisher's id; for calle id use subscriber's id
-                SaveSessionStart(sessionId, new Date(), 1, 1);
+                SaveSessionStart(sessionId, 1, 1);
 
             } catch (e) { }
         })
@@ -278,7 +278,7 @@ var UserChat = function (apiKey, sessionId, token) {
                 oMsgHtml += "</span></p> </div> </div> </div>";
 
                 //Log received message
-                SaveChatMessage(sessionId, 1, 1, event.data, new Date());
+                SaveChatMessage(sessionId, 1, 1, event.data);
             }
 
             $("#divMessageContainer").append(oMsgHtml);
