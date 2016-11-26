@@ -439,6 +439,8 @@
 
     </div>
 
+    @*<script src="@Url.Content("~/Scripts/offline.min.js")"></script>*@
+
     <!-- jQuery -->
     <script src="@Url.Content("~/Scripts/jquery.min.js")"></script>
     <!-- Bootstrap -->
@@ -454,6 +456,7 @@
     <!-- Custom Theme Scripts -->
     <script src="@Url.Content("~/Scripts/custom.min.js")"></script>
 
+
     <script src="https://static.opentok.com/v2/js/opentok.js" charset="utf-8"></script>
 
     <script type="text/javascript">
@@ -468,54 +471,73 @@
         var subscriber = null;
         var streamCreateTime = null;
         var callInterval = null;
+        var curStream = null;
 
         // Initialize Session Object
         var session = OT.initSession(apiKey, sessionId)
             .on('streamCreated', function (event) {
-            try {
+                try {
 
-                var curStream = event.stream;
-                streamCreateTime = new Date(curStream.creationTime);
-                callInterval = setInterval(showTimeElapsed, 1000);
+                    curStream = event.stream;
+                    streamCreateTime = new Date(curStream.creationTime);
+                    callInterval = setInterval(showTimeElapsed, 1000);
 
-                subscriber = session.subscribe(event.stream, 'divSecondaryVideo', {
-                    insertMode: 'append',
-                    buttonDisplayMode: 'off',
-                    height: '100%',
-                    width: '100%',
-                    style: { buttonDisplayMode: 'off' }
-                });
-            } catch (e) { }
+                    subscriber = session.subscribe(event.stream, 'divSecondaryVideo', {
+                        insertMode: 'append',
+                        buttonDisplayMode: 'off',
+                        height: '100%',
+                        width: '100%',
+                        style: { buttonDisplayMode: 'off' }
+                    });
+
+                    subscriber.on("disconnected", function (event) {
+                        alert("It seems another user has network issue, please wait till resolution.");
+                    });
+
+                    //For callerId use publisher's id; for calle id use subscriber's id
+                    SaveSessionStart(sessionId, new Date(), 1, 1);
+
+                } catch (e) { }
             })
             .on("streamDestroyed", function (event) {
-            try {
-                stopCall();
-            } catch (e) { }
+                try {
+                    //alert(event.reason);
+
+                    if (event.reason == "networkDisconnected") {
+                        //Try reconnecting till network available
+                    } else {
+                        stopCall();
+                    }
+
+                } catch (e) { }
             })
             .on('signal:chat', function (event) {
 
-            var oMsgHtml = "";
+                var oMsgHtml = "";
 
-            console.log(event);
-            if (event.from.connectionId === session.connection.connectionId) {
-                //my message
-                oMsgHtml = "<div class='sent-item text-right m-b-10'><img src='/Content/images/img.jpg' alt=''><div class='talk-bubble tri-right right-in margin-r'><div class='talktext'><p>";
-                oMsgHtml += event.data;
-                oMsgHtml += " <span> ";
-                oMsgHtml += getFormattedTime(new Date());
-                oMsgHtml += " </span></p> </div> </div> </div>";
-            } else {
-                //their message
-                oMsgHtml += "<div class='inbox-item m-b-10'><img src='/Content/images/img.jpg' alt=''><div class='talk-bubble tri-right left-in'><div class='talktext'> <p>";
-                oMsgHtml += event.data;
-                oMsgHtml += " <span>";
-                oMsgHtml += getFormattedTime(new Date());
-                oMsgHtml += "</span></p> </div> </div> </div>";
-            }
+                //console.log(event);
+                if (event.from.connectionId === session.connection.connectionId) {
+                    //my message
+                    oMsgHtml = "<div class='sent-item text-right m-b-10'><img src='/Content/images/img.jpg' alt=''><div class='talk-bubble tri-right right-in margin-r'><div class='talktext'><p>";
+                    oMsgHtml += event.data;
+                    oMsgHtml += " <span> ";
+                    oMsgHtml += getFormattedTime(new Date());
+                    oMsgHtml += " </span></p> </div> </div> </div>";
+                } else {
+                    //their message
+                    oMsgHtml += "<div class='inbox-item m-b-10'><img src='/Content/images/img.jpg' alt=''><div class='talk-bubble tri-right left-in'><div class='talktext'> <p>";
+                    oMsgHtml += event.data;
+                    oMsgHtml += " <span>";
+                    oMsgHtml += getFormattedTime(new Date());
+                    oMsgHtml += "</span></p> </div> </div> </div>";
 
-            $("#divMessageContainer").append(oMsgHtml);
 
-        });
+                    //Log received message
+                    SaveChatMessage(sessionId, 1, 1, event.data, new Date());
+                }
+
+                $("#divMessageContainer").append(oMsgHtml);
+            });
 
         //Declaration - Ends
 
@@ -569,6 +591,11 @@
             $('.list-alt').removeClass('comments-m');
             return false;
         });
+
+        // Update the online status icon based on connectivity
+        window.addEventListener('online', intentetConnectivityRegain);
+        window.addEventListener('offline', intentetConnectivityLost);
+
         //Event Binding - Ends
 
 
@@ -584,10 +611,16 @@
                     style: { buttonDisplayMode: 'off' }
                 });
 
-                session.publish(publisher);
-
                 if (error) {
+
                     console.log('There was an error connecting to the session:', error.code, error.message);
+
+                    if (error.code == 1006) {
+                        alert("You are not connected to the internet. Check your network connection.");
+                    }
+                }
+                else {
+                    session.publish(publisher);
                 }
             });
         }
@@ -620,6 +653,7 @@
             $("#imgPrimaryVideo").hide();
             $("#divPrimaryVideo").show();
         }
+
         function stopCall() {
             $('#aStrtCall').show();
             $('#aStopCall').hide();
@@ -639,6 +673,9 @@
             $("#pTimeCounter").empty();
 
             showEditSection();
+
+            //Log session ended
+            SaveSessionEnd(sessionId, new Date());
         }
 
         function stopAudioPublish() {
@@ -647,6 +684,7 @@
 
             publisher.publishAudio(false);
         }
+
         function startAudioPublish() {
             $('#aStartAudioPublish').hide();
             $('#aStopAudioPublish').show();
@@ -711,6 +749,7 @@
             }
         }
 
+ 
         function getFormattedTime(date) {
             var hours = date.getHours();
             var minutes = date.getMinutes();
@@ -721,7 +760,34 @@
             var strTime = hours + ':' + minutes + ' ' + ampm;
             return strTime;
         }
+
+        function intentetConnectivityLost() {
+            alert("There is problem with your network connection. Please check your network connection.");
+        }
+
+        function intentetConnectivityRegain() {
+            alert("Network connection has been restored. Conneting your call.");
+            session.connect(token);
+            session.publish(publisher);
+            publisher.publishVideo(true);
+        }
+
         //Functions - Ends
+
+
+        //Database connection end points - Starts
+        function SaveSessionStart(sessionId, startTime, callerId, calleId) {
+            //TODO: implement save to database logic here
+        }
+
+        function SaveSessionEnd(sessionId, endTime) {
+            //TODO: implement save to database logic here
+        }
+
+        function SaveChatMessage(sessionId, senderId, receiverId, message, receivedTime) {
+            //TODO: implement save to database logic here
+        }
+        //Database connection end points - Ends
 
     </script>
 
