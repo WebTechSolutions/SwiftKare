@@ -38,7 +38,7 @@ namespace RestAPIs.Controllers
 
         }
         [Route("api/getSensitivity")]
-        public HttpResponseMessage GetSeverities()
+        public HttpResponseMessage GetSensitivites()
         {
             try
             {
@@ -137,7 +137,7 @@ namespace RestAPIs.Controllers
             }
             catch (Exception ex)
             {
-                ThrowError(ex, "AddPatientAllergy in PatientAllergiesController.");
+                return ThrowError(ex, "AddPatientAllergy in PatientAllergiesController.");
             }
 
          

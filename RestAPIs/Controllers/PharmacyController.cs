@@ -19,6 +19,23 @@ namespace RestAPIs.Controllers
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
         HttpResponseMessage response;
 
+        [Route("api/getPharmacy")]
+        public HttpResponseMessage GetPharmacy(long patientID)
+        {
+            try
+            {
+                var pharmacy = (from l in db.Patients
+                                  where l.patientID== patientID &&  l.active == true
+                                  select new PatientPharmacy_Custom { patientID = l.patientID, pharmacyid=l.pharmacyid, pharmacy = l.pharmacy.Trim() }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, pharmacy);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetAllergies in PatientAllergiesController");
+            }
+
+        }
 
         [Route("api/addPatientPharmacy")]
         [ResponseType(typeof(HttpResponseMessage))]
@@ -65,7 +82,7 @@ namespace RestAPIs.Controllers
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
-            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.ToString(), Encoding.Unicode);
+            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.Message, Encoding.Unicode);
             return response;
         }
         protected override void Dispose(bool disposing)

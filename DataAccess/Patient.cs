@@ -21,12 +21,11 @@ namespace DataAccess
             this.Conditions = new HashSet<Condition>();
             this.Consultations = new HashSet<Consultation>();
             this.ConsultationROS = new HashSet<ConsultationRO>();
-            this.FamilyHXes = new HashSet<FamilyHX>();
-            this.LifeStyles = new HashSet<LifeStyle>();
             this.Medications = new HashSet<Medication>();
             this.PatientAllergies = new HashSet<PatientAllergy>();
             this.UserFiles = new HashSet<UserFile>();
             this.PatientSurgeries = new HashSet<PatientSurgery>();
+            this.PatientFamilyHXes = new HashSet<PatientFamilyHX>();
         }
     
         public long patientID { get; set; }
@@ -66,10 +65,6 @@ namespace DataAccess
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ConsultationRO> ConsultationROS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FamilyHX> FamilyHXes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<LifeStyle> LifeStyles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Medication> Medications { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PatientAllergy> PatientAllergies { get; set; }
@@ -77,5 +72,7 @@ namespace DataAccess
         public virtual ICollection<UserFile> UserFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PatientSurgery> PatientSurgeries { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PatientFamilyHX> PatientFamilyHXes { get; set; }
     }
 }

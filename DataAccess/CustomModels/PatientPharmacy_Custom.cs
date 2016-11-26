@@ -11,6 +11,6 @@ namespace DataAccess.CustomModels
         public long patientID { get; set; }
         public string pharmacy { get; set; }
         public Nullable<long> pharmacyid { get; set; }
-        public string userId { get; set; }
+       
     }
 }
