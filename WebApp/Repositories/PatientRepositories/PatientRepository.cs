@@ -52,10 +52,10 @@ namespace WebApp.Repositories.PatientRepositories
             throw new NotImplementedException();
         }
 
-        public Patient GetByUserId(string userId)
+        public UserModel GetByUserId(string userId)
         {
             var response = ApiConsumerHelper.GetResponseString("api/Patients?userId=" + userId);
-            var result=JsonConvert.DeserializeObject<Patient>(response);
+            var result = JsonConvert.DeserializeObject<UserModel>(response);
             return result;
         }
 

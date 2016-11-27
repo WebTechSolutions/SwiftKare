@@ -105,7 +105,7 @@ namespace WebApp.Controllers
             {
                 case SignInStatus.Success:
                     {
-                        
+
                         //var userId = HttpContext.User.Identity.GetUserId();
                         string userId = UserManager.FindByName(model.LoginViewModel.Email)?.Id;
                         SessionHandler.UserName = model.LoginViewModel.Email;
@@ -113,7 +113,7 @@ namespace WebApp.Controllers
                         SessionHandler.UserId = userId;
 
                         var roles = UserManager.GetRoles(userId);
-                        if(roles.Contains("Doctor"))
+                        if (roles.Contains("Doctor"))
                         {
                             var objRepo = new DoctorRepository();
                             var doctor = objRepo.GetByUserId(userId);
@@ -123,28 +123,28 @@ namespace WebApp.Controllers
                             userModel.FirstName = doctor.firstName;
                             userModel.LastName = doctor.lastName;
                             SessionHandler.UserInfo = userModel;
-                            if(doctor.active==null||(bool)doctor.active)
+                            if (doctor.active == null || (bool)doctor.active)
                                 return RedirectToAction("DoctorTimings", "Doctor");
                         }
-                        else if(roles.Contains("Patient"))
+                        else if (roles.Contains("Patient"))
                         {
                             var objRepo = new PatientRepository();
                             var patient = objRepo.GetByUserId(userId);
                             var userModel = new UserInfoModel();
-                            userModel.Id = patient.patientID;
-                            userModel.Email = patient.email;
-                            userModel.FirstName = patient.firstName;
-                            userModel.LastName = patient.lastName;
+                            userModel.Id = patient.Id;
+                            userModel.Email = patient.Email;
+                            userModel.FirstName = patient.FirstName;
+                            userModel.LastName = patient.LastName;
                             SessionHandler.UserInfo = userModel;
 
-                            if (patient.active == null || (bool)patient.active)
-                                return RedirectToAction("SeeDoctor", "SeeDoctor");
+                            //if (patient.active == null || (bool)patient.active)
+                            //    return RedirectToAction("Index", "Patient");
                         }
-                        else if(roles.Contains("Admin"))
+                        else if (roles.Contains("Admin"))
                         {
                             var user = await UserManager.FindAsync(model.LoginViewModel.Email, model.LoginViewModel.Password);
                             Session["LogedUserID"] = model.LoginViewModel.Email;
-                            Session["LogedUserFullname"] = user.FirstName+ " " + user.LastName;
+                            Session["LogedUserFullname"] = user.FirstName + " " + user.LastName;
                             return RedirectToAction("Default", "Admin");
                         }
                     }
@@ -293,23 +293,23 @@ namespace WebApp.Controllers
                 {
                     PatientRepository objRepo = new PatientRepository();
                     var resultAdd = objRepo.GetByUserId(user.Id);
-                    switch (caseSwitch)
-                    {
-                        case 1:
-                            objModel.SecretQuestion = resultAdd.secretQuestion1;
-                            objModel.SecretAnswerHidden = resultAdd.secretAnswer1;
-                            break;
-                        case 2:
-                            objModel.SecretQuestion = resultAdd.secretQuestion2;
-                            objModel.SecretAnswerHidden = resultAdd.secretAnswer2;
-                            break;
-                        default:
-                            objModel.SecretQuestion = resultAdd.secretQuestion3;
-                            objModel.SecretAnswerHidden = resultAdd.secretAnswer3;
-                            break;
-                    }
+                    //switch (caseSwitch)
+                    //{
+                    //    case 1:
+                    //        objModel.SecretQuestion = resultAdd.secretQuestion1;
+                    //        objModel.SecretAnswerHidden = resultAdd.secretAnswer1;
+                    //        break;
+                    //    case 2:
+                    //        objModel.SecretQuestion = resultAdd.secretQuestion2;
+                    //        objModel.SecretAnswerHidden = resultAdd.secretAnswer2;
+                    //        break;
+                    //    default:
+                    //        objModel.SecretQuestion = resultAdd.secretQuestion3;
+                    //        objModel.SecretAnswerHidden = resultAdd.secretAnswer3;
+                    //        break;
+                    //}
                 }
-                else if(roles.Contains("Doctor"))
+                else if (roles.Contains("Doctor"))
                 {
                     DoctorRepository objRepo = new DoctorRepository();
                     var resultAdd = objRepo.GetByUserId(user.Id);
