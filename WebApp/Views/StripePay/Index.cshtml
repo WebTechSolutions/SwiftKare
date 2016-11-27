@@ -1,0 +1,48 @@
+﻿@{
+    Layout = null;
+    string publisherKey = Convert.ToString(ViewBag.PublisherKey);
+    int amount = Convert.ToInt32(ViewBag.Amount);
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Stripe Pay Demo</title>
+
+    <link href="@Url.Content("~/Content/css/bootstrap.min.css")" rel="stylesheet" />
+</head>
+<body>
+    <div class="container-fluid" style="margin-top:20px;">
+        <div class="row">
+            <div class="col-sm-12">
+                <button type="button" id="btnCheckout" class="btn btn-primary">Purchase</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")"></script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+    <script src="@Url.Content("~/Scripts/StripePay.js")"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            var oStripePayCheckout = new StripePayCheckout({
+                publisherKey: '@publisherKey',
+                amount: @amount,
+                targetButton: "#btnCheckout",
+                actionUrl: '@Url.Action("ProceedWithPay", "StripePay")',
+                handleSuccess: function () {
+                    alert("Payment successful! Now user can be redirected to order detail/ Thank you page.");
+                },
+                handleFailure: function () {
+                    alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
+                }
+            });
+
+            oStripePayCheckout.initialize();
+        });
+    </script>
+
+</body>
+</html>
