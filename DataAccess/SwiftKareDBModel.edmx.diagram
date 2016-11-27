@@ -73,10 +73,8 @@
         <EntityTypeShape EntityType="SwiftKareDBModel.Surgery" Width="1.5" PointX="13.375" PointY="16.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.FamilyHXItem" Width="1.5" PointX="16.375" PointY="15.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.Frequency" Width="1.5" PointX="17.375" PointY="0.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.LifeStyleQuestion" Width="1.5" PointX="18.375" PointY="4.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.PatientLifeStyle" Width="1.5" PointX="18.375" PointY="8.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.Relationship" Width="1.5" PointX="18.375" PointY="12.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.ROV" Width="1.5" PointX="18.375" PointY="16.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.PatientFamilyHX" Width="1.5" PointX="3" PointY="25.875" />
         <AssociationConnector Association="SwiftKareDBModel.FK_FamilyHX_Patient" />
       </Diagram>

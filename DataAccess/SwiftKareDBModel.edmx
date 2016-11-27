@@ -89,6 +89,7 @@
           <Property Name="rov" Type="varchar" MaxLength="500" />
           <Property Name="consultationType" Type="varchar" MaxLength="50" />
           <Property Name="consultationStatus" Type="varchar" MaxLength="10" />
+          <Property Name="rescheduleReqBy" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="AspNetRoles">
           <Key>
@@ -344,19 +345,6 @@
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
         </EntityType>
-        <EntityType Name="LifeStyleQuestions">
-          <Key>
-            <PropertyRef Name="questionID" />
-          </Key>
-          <Property Name="questionID" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="question" Type="varchar" MaxLength="50" />
-          <Property Name="category" Type="varchar" MaxLength="50" />
-          <Property Name="active" Type="bit" />
-          <Property Name="cb" Type="varchar" MaxLength="50" />
-          <Property Name="cd" Type="datetime" />
-          <Property Name="mb" Type="varchar" MaxLength="50" />
-          <Property Name="md" Type="datetime" />
-        </EntityType>
         <EntityType Name="Medications">
           <Key>
             <PropertyRef Name="medicationID" />
@@ -559,18 +547,6 @@
           </Key>
           <Property Name="roleID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="roleName" Type="varchar" MaxLength="50" />
-          <Property Name="cb" Type="varchar" MaxLength="50" />
-          <Property Name="cd" Type="datetime" />
-          <Property Name="mb" Type="varchar" MaxLength="50" />
-          <Property Name="md" Type="datetime" />
-          <Property Name="active" Type="bit" />
-        </EntityType>
-        <EntityType Name="ROV">
-          <Key>
-            <PropertyRef Name="rovID" />
-          </Key>
-          <Property Name="rovID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="rov" Type="varchar" MaxLength="50" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
@@ -1236,7 +1212,7 @@
         </Function>
         <Function Name="SP_FetchDoctorTimings" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="docID" Type="bigint" Mode="In" />
-          <Parameter Name="appDate" Type="date" Mode="In" />
+          <Parameter Name="appDate" Type="datetime" Mode="In" />
         </Function>
         <Function Name="SP_GetPatientAllergies" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="patientID" Type="bigint" Mode="In" />
@@ -1417,7 +1393,6 @@
           <EntitySet Name="FamilyHXItems" EntityType="Self.FamilyHXItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Frequency" EntityType="Self.Frequency" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Languages" EntityType="Self.Languages" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="LifeStyleQuestions" EntityType="Self.LifeStyleQuestions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Medications" EntityType="Self.Medications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Medicine" EntityType="Self.Medicine" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Modules" EntityType="Self.Modules" Schema="dbo" store:Type="Tables" />
@@ -1432,7 +1407,6 @@
           <EntitySet Name="Relationship" EntityType="Self.Relationship" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RoleModules" EntityType="Self.RoleModules" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ROV" EntityType="Self.ROV" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Severity" EntityType="Self.Severity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Speciallity" EntityType="Self.Speciallity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="States" EntityType="Self.States" Schema="dbo" store:Type="Tables" />
@@ -1648,6 +1622,7 @@
           <NavigationProperty Name="Doctor" Relationship="Self.FK_Appointments_Doctor" FromRole="Appointments" ToRole="Doctor" />
           <NavigationProperty Name="Patient" Relationship="Self.FK_Appointments_Patient" FromRole="Appointments" ToRole="Patient" />
           <NavigationProperty Name="Consultations" Relationship="Self.FK_Consultation_Appointments" FromRole="Appointments" ToRole="Consultation" />
+          <Property Name="rescheduleReqBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="AspNetRole">
           <Key>
@@ -2949,10 +2924,8 @@
           </FunctionImport>
           <EntitySet Name="FamilyHXItems" EntityType="SwiftKareDBModel.FamilyHXItem" />
           <EntitySet Name="Frequencies" EntityType="SwiftKareDBModel.Frequency" />
-          <EntitySet Name="LifeStyleQuestions" EntityType="SwiftKareDBModel.LifeStyleQuestion" />
           <EntitySet Name="PatientLifeStyles" EntityType="SwiftKareDBModel.PatientLifeStyle" />
           <EntitySet Name="Relationships" EntityType="SwiftKareDBModel.Relationship" />
-          <EntitySet Name="ROVs" EntityType="SwiftKareDBModel.ROV" />
           <EntitySet Name="PatientFamilyHXes" EntityType="SwiftKareDBModel.PatientFamilyHX" />
           <AssociationSet Name="FK_FamilyHX_Patient" Association="SwiftKareDBModel.FK_FamilyHX_Patient">
             <End Role="Patient" EntitySet="Patients" />
@@ -3394,19 +3367,6 @@
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
         </EntityType>
-        <EntityType Name="LifeStyleQuestion">
-          <Key>
-            <PropertyRef Name="questionID" />
-          </Key>
-          <Property Name="questionID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="question" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="category" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="active" Type="Boolean" />
-          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cd" Type="DateTime" Precision="3" />
-          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="md" Type="DateTime" Precision="3" />
-        </EntityType>
         <EntityType Name="PatientLifeStyle">
           <Key>
             <PropertyRef Name="patientlifestyleID" />
@@ -3432,18 +3392,6 @@
           <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="activre" Type="Boolean" />
-        </EntityType>
-        <EntityType Name="ROV">
-          <Key>
-            <PropertyRef Name="rovID" />
-          </Key>
-          <Property Name="rovID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="rov1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cd" Type="DateTime" Precision="3" />
-          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="md" Type="DateTime" Precision="3" />
-          <Property Name="active" Type="Boolean" />
         </EntityType>
         <EntityType Name="PatientFamilyHX">
           <Key>
@@ -3547,6 +3495,7 @@
           <EntitySetMapping Name="Appointments">
             <EntityTypeMapping TypeName="SwiftKareDBModel.Appointment">
               <MappingFragment StoreEntitySet="Appointments">
+                <ScalarProperty Name="rescheduleReqBy" ColumnName="rescheduleReqBy" />
                 <ScalarProperty Name="appID" ColumnName="appID" />
                 <ScalarProperty Name="doctorID" ColumnName="doctorID" />
                 <ScalarProperty Name="patientID" ColumnName="patientID" />
@@ -4611,20 +4560,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="LifeStyleQuestions">
-            <EntityTypeMapping TypeName="SwiftKareDBModel.LifeStyleQuestion">
-              <MappingFragment StoreEntitySet="LifeStyleQuestions">
-                <ScalarProperty Name="md" ColumnName="md" />
-                <ScalarProperty Name="mb" ColumnName="mb" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-                <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="active" ColumnName="active" />
-                <ScalarProperty Name="category" ColumnName="category" />
-                <ScalarProperty Name="question" ColumnName="question" />
-                <ScalarProperty Name="questionID" ColumnName="questionID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="PatientLifeStyles">
             <EntityTypeMapping TypeName="SwiftKareDBModel.PatientLifeStyle">
               <MappingFragment StoreEntitySet="PatientLifeStyle">
@@ -4650,19 +4585,6 @@
                 <ScalarProperty Name="cb" ColumnName="cb" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="relationshipID" ColumnName="relationshipID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ROVs">
-            <EntityTypeMapping TypeName="SwiftKareDBModel.ROV">
-              <MappingFragment StoreEntitySet="ROV">
-                <ScalarProperty Name="active" ColumnName="active" />
-                <ScalarProperty Name="md" ColumnName="md" />
-                <ScalarProperty Name="mb" ColumnName="mb" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-                <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="rov1" ColumnName="rov" />
-                <ScalarProperty Name="rovID" ColumnName="rovID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
