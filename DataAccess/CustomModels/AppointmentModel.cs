@@ -8,7 +8,7 @@ namespace DataAccess.CommonModels
 {
    public  class AppointmentModel
     {
-        public long appID { get; set; }
+        //public long appID { get; set; }
         public Nullable<long> doctorID { get; set; }
         public Nullable<long> patientID { get; set; }
         public Nullable<System.DateTime> appDate { get; set; }
