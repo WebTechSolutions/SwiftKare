@@ -25,5 +25,6 @@ namespace DataAccess
         public Nullable<bool> active { get; set; }
     
         public virtual Patient Patient { get; set; }
+        public virtual LifeStyleQuestions LifeStyleQuestions { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using WebApp.Helper;
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -25,6 +26,13 @@
 </head>
 
 <body class="nav-md">
+    <div>
+        <input type="text" id="receiverConnectionId" value="" style="display:none;" />
+        Please select the doctor before calling...
+        <select id="ddlAvailableDoctors"></select>
+
+        <input type="button" id="sendmessage" value="Call to Doctor" />
+    </div>
     <div class="container body">
         <div class="main_container">
             <div class="col-md-3 left_col">
@@ -355,8 +363,88 @@
 
         </div>
     </div>
+    <script src="~/Scripts/jquery.cookie.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script type="text/javascript">
+
+        var availableDoctors = {
+            doctor: [
+                {
+                    connectionId: "",
+                    firstName: "",
+                    lastName: "",
+                    userName:""
+                }
+            ]
+        };
 
 
+        function getReceiverConnectionId(receiverConnectionId) {
+            $("input[id$='receiverConnectionId']").val(receiverConnectionId);
+        }
+
+        $(function () {
+            // Proxy created on the fly
+            var chat = $.connection.chatHub;
+            var senderConnectionId;
+            var found = false;
+
+            chat.client.receiveMessage = function (msgFrom, msg, senderid) {
+                if (msgFrom != "ChatHub") {
+                    alert(msg);
+                }
+            };
+
+
+            // Declare a function on the chat hub so the server can invoke it
+            chat.client.showConnected = function (message) {
+                //$('#messages').empty();
+                $('#ddlAvailableDoctors').empty();
+                availableDoctors.doctor = [];
+
+
+
+                $.each(message, function (index, value) {
+                   // $('#messages').append('<li onclick=getReceiverConnectionId("' + value.ConnectionId + '");> Id: ' + value.Id + ', FirstName: ' + value.FirstName + ', LastName: ' + value.LastName + ', Logged On ' + value.Connected + ', Email: ' + value.UserName + ', ConnectionId:' + value.ConnectionId + '</li>');
+                    $('#ddlAvailableDoctors').append('<option value=' + value.ConnectionId + '>' + value.FirstName + ', ' + value.LastName + '---' + value.UserName + '</option>');
+                    //availableDoctors.doctor.push()
+
+                    availableDoctors.doctor.push({
+                        connectionId: value.ConnectionId,
+                        FirstName: value.FirstName,
+                        LastName: value.LastName,
+                        UserName: value.UserName
+                    });
+
+                });
+            };
+
+            // Start the connection
+            $.connection.hub.start().done(function () {
+                var id = $.cookie('Id');
+                chat.server.adminJoin().done(function () {
+                    chat.server.getUsers();
+                });
+
+                $('#sendmessage').click(function () {
+                    // Call the Send method on the hub.
+                    chat.server.sendMessageToDoctor(
+                    {
+                        SenderId: '@SessionHandler.UserInfo.Id',
+                        UserName: '@SessionHandler.UserInfo.Email',
+                        ReceiverConnectionId: $('#ddlAvailableDoctors').val(),
+                        ReceiverId: '20',
+                        SenderType: 'Patient',
+                        Message: 'Calling to doctor',
+                        UserGroup: 'doctors'
+                    });
+                    // Clear text box and reset focus for next comment.
+                });
+
+            });
+        });
+    </script>
    
 
 

@@ -39,6 +39,7 @@ namespace DataAccess
         public string rov { get; set; }
         public string consultationType { get; set; }
         public string consultationStatus { get; set; }
+        public string rescheduleReqBy { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AppAttachment> AppAttachments { get; set; }

@@ -37,16 +37,30 @@ namespace RestAPIs.Controllers
             return Ok(patient);
         }
 
-        [ResponseType(typeof(Patient))]
-        public async Task<IHttpActionResult> GetPatientByUserId(string userId)
-        {
-            Patient patient = await db.Patients.SingleOrDefaultAsync(o => o.userId == userId);
-            if (patient == null)
-            {
-                return NotFound();
-            }
+        //[ResponseType(typeof(Patient))]
+        //public async Task<IHttpActionResult> GetPatientByUserId(string userId)
+        //{
+        //    Patient patient = await db.Patients.SingleOrDefaultAsync(o => o.userId == userId);
+        //    if (patient == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(patient);
+        //    return Ok(patient);
+        //}
+
+        //[ResponseType(typeof(DataAccess.CustomModels.UserModel))]
+        public DataAccess.CustomModels.UserModel GetPatientByUserId(string userId)
+        {
+            Patient patient = db.Patients.SingleOrDefault(o => o.userId == userId);
+            var objModel = new DataAccess.CustomModels.UserModel();
+            objModel.Id = patient.patientID;
+            objModel.FirstName = patient.firstName;
+            objModel.LastName = patient.lastName;
+            objModel.Email = patient.email;
+
+
+            return objModel;
         }
 
         // PUT: api/Patients/5

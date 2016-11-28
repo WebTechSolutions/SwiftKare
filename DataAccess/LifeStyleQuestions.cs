@@ -12,15 +12,24 @@ namespace DataAccess
     using System;
     using System.Collections.Generic;
     
-    public partial class LifeStyleQuestion
+    public partial class LifeStyleQuestions
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public LifeStyleQuestions()
+        {
+            this.PatientFamilyHX = new HashSet<PatientFamilyHX>();
+        }
+    
         public string questionID { get; set; }
         public string question { get; set; }
-        public string category { get; set; }
+        public string answer { get; set; }
         public Nullable<bool> active { get; set; }
         public string cb { get; set; }
         public Nullable<System.DateTime> cd { get; set; }
         public string mb { get; set; }
         public Nullable<System.DateTime> md { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PatientFamilyHX> PatientFamilyHX { get; set; }
     }
 }

@@ -12,10 +12,11 @@ namespace DataAccess
     using System;
     using System.Collections.Generic;
     
-    public partial class ROV
+    public partial class FavouriteDoctor
     {
-        public long rovID { get; set; }
-        public string name { get; set; }
+        public long favID { get; set; }
+        public Nullable<long> doctorID { get; set; }
+        public Nullable<long> patientID { get; set; }
         public string cb { get; set; }
         public Nullable<System.DateTime> cd { get; set; }
         public string mb { get; set; }
