@@ -11,8 +11,8 @@ namespace DataAccess.CommonModels
         public string language { get; set; }
         public string speciality { get; set; }
         public string name { get; set; }
-        public DateTime appDate { get; set; }
-        public TimeSpan appTime { get; set; }
+        public Nullable<DateTime> appDate { get; set; }
+        public Nullable<TimeSpan> appTime { get; set; }
         public string gender { get; set; }
     }
 }
