@@ -24,6 +24,26 @@ namespace RestAPIs.Controllers
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
         private HttpResponseMessage response;
+
+        [Route("api/GetFavouriteDoctors")]
+        public HttpResponseMessage GetFavouriteDoctors(long patientID)
+        {
+            try
+            {
+                var favdoc = (from l in db.FavouriteDoctors
+                                 where l.patientID==patientID && l.active == true
+                                 select new FavouriteDoctorModel { docID = l.doctorID, patID = l.patientID }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, favdoc);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetFavouriteDoctors in SearchDoctorController");
+            }
+
+
+        }
+
         // POST: api/searchDoctor/SeeDoctorViewModel
         [Route("api/searchDoctor")]
         public HttpResponseMessage SeeDoctor(SearchDoctorModel searchModel)
@@ -32,12 +52,25 @@ namespace RestAPIs.Controllers
 
             try
             {
-
-                var result = db.SP_SearchDoctor(searchModel.language, searchModel.speciality, searchModel.name, searchModel.appDate.DayOfWeek.ToString(),
+                if(searchModel.appDate==null)
+                {
+                    var result = db.SP_SearchDoctor(searchModel.language, searchModel.speciality, searchModel.name, null,
                     searchModel.appTime, searchModel.gender).ToList();
+                    response = Request.CreateResponse(HttpStatusCode.OK, result);
+                    //return response;
+                }
 
-                response = Request.CreateResponse(HttpStatusCode.OK, result);
+                if (searchModel.appDate != null)
+                {
+                    DateTime day = new DateTime();
+                    day = Convert.ToDateTime(searchModel.appDate);
+                    var result = db.SP_SearchDoctor(searchModel.language, searchModel.speciality, searchModel.name, day.DayOfWeek.ToString(),
+                    searchModel.appTime, searchModel.gender).ToList();
+                    response = Request.CreateResponse(HttpStatusCode.OK, result);
+                    //return response;
+                }
                 return response;
+
             }
             catch (Exception ex)
             {
@@ -53,7 +86,7 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                var result = db.SP_FetchDoctorTimings(searchModel.doctorID,searchModel.appDate).ToList();
+                var result = db.SP_FetchDoctorTimings(searchModel.doctorID, searchModel.appDate).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, result);
                return response;
                
@@ -66,12 +99,100 @@ namespace RestAPIs.Controllers
 
 
         }
-        
-       
+
+        [Route("api/getDoctorInfo")]
+        public HttpResponseMessage GetDoctorInfo(long doctorID)
+        {
+            try
+            {
+                var doctor = db.SP_GetDoctorInfoforAppointment(doctorID).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, doctor);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetPatientConditions in PatientConditionController");
+            }
+        }
+        [HttpPost]
+        [Route("api/favouriteDoctor")]
+        [ResponseType(typeof(void))]
+        public async Task<HttpResponseMessage> AddFavourite(FavouriteDoctorModel model)
+        {
+            FavouriteDoctor favdoc = new FavouriteDoctor();
+            try
+            {
+                if (model.docID == null || model.docID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
+                    return response;
+                }
+                favdoc.active = true;
+                favdoc.doctorID = model.docID;
+                favdoc.patientID = model.patID;
+                favdoc.cb = model.patID.ToString();
+                favdoc.cd = System.DateTime.Now;
+                db.FavouriteDoctors.Add(favdoc);
+
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                ThrowError(ex, "AddFavourite in SearchDoctorController.");
+            }
+
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = favdoc.favID, message = "" });
+            return response;
+        }
+        [HttpPost]
+        [Route("api/unfavouriteDoctor")]
+        [ResponseType(typeof(void))]
+        public async Task<HttpResponseMessage> UpdateFavourite(FavouriteDoctorModel model)
+        {
+            FavouriteDoctor favdoc = new FavouriteDoctor();
+            try
+            {
+                if (model.docID == null || model.docID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
+                    return response;
+                }
+                if (model.patID == null || model.patID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
+                    return response;
+                }
+                favdoc = db.FavouriteDoctors.Where(m => m.doctorID == model.docID && m.patientID==model.patID).FirstOrDefault();
+                if(favdoc==null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Doctor not found." });
+                    return response;
+                }
+                else
+                {
+                    favdoc.active = false;
+                    favdoc.doctorID = model.docID;
+                    favdoc.patientID = model.patID;
+                    favdoc.mb = model.patID.ToString();
+                    favdoc.md = System.DateTime.Now;
+                    db.FavouriteDoctors.Add(favdoc);
+                    await db.SaveChangesAsync();
+                }
+              
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "UpdateFavourite in SearchDoctorController.");
+            }
+
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = favdoc.favID, message = "" });
+            return response;
+        }
+
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
-            response.Content = new StringContent("Following Error occurred at method. "+ Action+"\n"+ex.ToString(), Encoding.Unicode);
+            response.Content = new StringContent("Following Error occurred at method. "+ Action+"\n"+ex.Message, Encoding.Unicode);
            return response;
         }
     }

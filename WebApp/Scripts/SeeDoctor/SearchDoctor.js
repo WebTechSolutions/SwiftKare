@@ -1,22 +1,28 @@
-﻿var _objAppointment = {}; //appointment data to hold and save at the end
-
-
-function GetROV(patientid) {
+﻿
+function GetROV() {
+    var param = "{}";
+    var listitems;
+    var $select = $('#ROV');
       $.ajax({
         type: 'POST',
-        url: '/SeeDoctor/GetROV',
-        data: { 'patientid': patientid },
+        url: '/SeeDoctor/GetROVList',
+        data: param,
         dataType: 'json',
         success: function (response) {
             if (response.Success == true) {
                 
-                if (response.Object != null){
+                if (response.Object != null) {
+                    $.each(response.Object, function (item) {
+                        listitems += '<option value=' + response.Object[item].rovID + '>' + response.Object[item].rov + '</option>';
+
+                    });
+                    $select.append(listitems);
                     //here I could call the properties of my object, as below:
-                    $("#ROV").val(response.Object.rov);
+                    //$("#ROV").val(response.Object.rov);
                    
                 }
             }
-           // else {alert(data.ErrorMessage);}
+            //else {response.Message;}
       
         return false;
         },
@@ -25,8 +31,63 @@ function GetROV(patientid) {
     });
 
 }
+function GetPatientROV(patientID) {
+    var param = "{}";
+    var listitems;
+    var $select = $('#ROV');
+    $.ajax({
+        type: 'POST',
+        url: '/SeeDoctor/GetPatientROV',
+        data: { 'patientid': patientID },
+        dataType: 'json',
+        success: function (response) {
+            if (response.Success == true) {
 
+                if (response.Object != null) {
+                    
+                    //here I could call the properties of my object, as below:
+                    $("#ROV option:contains(" + response.Object.rov + ")").attr('selected', 'selected');
+                   
+                    //$("#ROV").val(response.Object.rov);
 
+                }
+            }
+            //else {response.Message;}
+
+            return false;
+        },
+        error: errorRes
+
+    });
+
+}
+function GetPatientChiefComplaints(patientID) {
+    var param = "{}";
+    
+    $.ajax({
+        type: 'POST',
+        url: '/SeeDoctor/GetPatientChiefComplaints',
+        data: { 'patientid': patientID },
+        dataType: 'json',
+        success: function (response) {
+            if (response.Success == true) {
+
+                if (response.Object != null) {
+
+                    //here I could call the properties of my object, as below:
+                    $("#chiefcomplaints").val(response.Object.chiefComplaints);
+
+                }
+            }
+            //else {response.Message;}
+
+            return false;
+        },
+        error: errorRes
+
+    });
+
+}
 function GetAllSpecialities() {
     var param = "{}";
     var listitems;
@@ -71,26 +132,101 @@ function GetAllLanguages() {
     });
 
 }
-function toggle(id)
-{
-        document.getElementById(""+id+"nofav").style.display = "none";
-        document.getElementById("" + id + "fav").style.display = "block";
 
-        return false;
-    
+function toggle(docid,patid)
+{
+    alert(docid+' '+patid);
+    _objFav = {};
+    _objFav["docID"] = docid;
+    _objFav["patID"] =patid;
+    $.ajax({
+        type: 'POST',
+        url: '/SeeDoctor/AddFavourite',
+        data: _objFav,
+        dataType: 'json',
+        success: function (response) {
+            if (response.Success == true) {
+                if (response.ApiResultModel.message != "") {
+                    new PNotify({
+                        title: 'Error',
+                        text: response.ApiResultModel.message,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                }
+                else if (response.ApiResultModel.message == "") {
+                    new PNotify({
+                        title: 'Success',
+                        text: "Doctor is made favourite successfully.",
+                        type: 'success',
+                        styling: 'bootstrap3'
+                    });
+                    document.getElementById("" + docid + "nofav").style.display = "none";
+                    document.getElementById("" + docid + "fav").style.display = "block";
+
+                }
+
+
+
+            }
+
+        },
+        error: errorRes
+
+    });
+    return false;
    
 }
-function untoggle(id) {
-    document.getElementById("" + id + "nofav").style.display = "block";
-    document.getElementById("" + id + "fav").style.display = "none";
+function untoggle(docid,patid) {
+    alert(docid + ' ' + patid);
+    _objFav = {};
+    _objFav["docID"] = docid;
+    _objFav["patID"] = patid;
+    $.ajax({
+        type: 'POST',
+        url: '/SeeDoctor/UpdateFavourite',
+        data: _objFav,
+        dataType: 'json',
+        success: function (response) {
+            if (response.Success == true) {
+                if (response.ApiResultModel.message != "") {
+                    new PNotify({
+                        title: 'Error',
+                        text: response.ApiResultModel.message,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                }
+                else if (response.ApiResultModel.message == "") {
+                    new PNotify({
+                        title: 'Success',
+                        text: "Doctor is made unfavourite successfully.",
+                        type: 'success',
+                        styling: 'bootstrap3'
+                    });
+                    document.getElementById("" + docid + "nofav").style.display = "block";
+                    document.getElementById("" + docid + "fav").style.display = "none";
+
+                }
+
+
+
+            }
+
+        },
+        error: errorRes
+
+    });
 
     return false;
 
 
 }
-function SearchDoctor()
+function SearchDoctor(patientID)
 {
-    //var param = "{}";
+    
+
+    $.blockUI({ message: "<h2>test</h2>" });
     var _objSearch = {};
     _objSearch["language"] = $("#Language").find(":selected").text();
     _objSearch["speciality"] = $("#Speciality").find(":selected").text();
@@ -107,46 +243,74 @@ function SearchDoctor()
         dataType: 'json',
         success: function (response) {
             
-            var tableHtml = "";
+            var tableHtml = "";// "<div class='row'>";
             if (response.Success == true)
             {
                 if (response.DoctorModel .length>0) {
 
                     $.each(response.DoctorModel, function (item) {
-                       
-                         tableHtml = tableHtml + " <li>" +
-                                      "<div class='well profile_view p-0' style='display: inline-block'>" +
-                                       "<a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel[item].doctorID + "nofav' class='fa fa-heart-o'  onclick='toggle(" + response.DoctorModel[item].doctorID + ");return false;' style='display:block'></span></a>" +
-                                        "<a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel[item].doctorID + "fav' class='fa fa-heart'  onclick='untoggle(" + response.DoctorModel[item].doctorID + ");return false;' style='display:none'></span></a>" +
-                                       "<i class='crl fa fa-circle' aria-hidden='true' style='color: red; cursor: pointer;font-size: 12px;'></i>" +
-                                        "<img src='../Content/images/img.jpg' alt='' class='img-circle img-responsive m-b-10 m-t-20' style='margin: 0 auto;display: inline-block;'>" +
-                                        "<h2 class='m-0'>"+
-                                         " <a href='' class='thumbnail-col-inner m-b-15' data-toggle='modal' data-target='#myModal2' id='" + response.DoctorModel[item].doctorID + "' onclick='showDoctorTimings(" + response.DoctorModel[item].doctorID + ")'>Dr." +
-                                         response.DoctorModel[item].firstName+"&nbsp;"+ response.DoctorModel[item].lastName+"</a>" +
-                                          "</h2>"+
-                                          "<h4 class='brief m-0' style='color: green'>Available for Call</h4>"+
+                        
+                       // tableHtml = tableHtml + "<div class='col'>" +
+                               tableHtml = tableHtml +"<li><div class='well profile_view'>" +
+                               " <a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel[item].doctorID + "nofav' class='fa fa-heart-o'  onclick='toggle(" + response.DoctorModel[item].doctorID + ","+patientID+");return false;' style='display:block'></span></a>" +
+                               "<a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel[item].doctorID + "fav' class='fa fa-heart'  onclick='untoggle(" + response.DoctorModel[item].doctorID + ","+patientID+");return false;' style='display:none'></span></a>" +
+                                "<i class='crl fa fa-circle' aria-hidden='true' style='color: green; cursor: pointer;font-size: 12px;'></i>" +
+                                "<img src='../Content/images/img.jpg' alt='' class='img-circle img-responsive m-b-10 m-t-0' style='margin: 0 auto;display: inline-block;'>" +
+                                "<h2 class='m-0'>" +
+                                 " <a href='#' class='thumbnail-col-inner m-b-15' data-toggle='modal' data-target='#myModal2' style='word-wrap: break-word;'>Dr." +
+                                  response.DoctorModel[item].firstName + "&nbsp;" + response.DoctorModel[item].lastName + "</a>" +
+                                 "</h2>" +
+                                "<h4 class='brief m-0' style='color: green'>Available for Call</h4>" +
+                                "<p class='ratings m-t-5 m-b-0' style='text-align: center;'>" +
+                                "<a style='word-wrap:word-break;' href='' class='thumbnail-col-inner' data-toggle='modal' data-target='#myModal1' data-todo='{\"id\":" + response.DoctorModel[item].doctorID + ",\"doctorName\":\"" + response.DoctorModel[item].firstName +
+                                "&nbsp;" + response.DoctorModel[item].lastName + "\"}'  onclick='showDoctorTimings(" + response.DoctorModel[item].doctorID +")' id='" + response.DoctorModel[item].doctorID + "'>" +
+                                  "  <i class='fa fa-calendar' aria-hidden='true'></i>" +
+                                  "</a>" +
+                                  "&nbsp;<a href='#'><i class='fa fa-star-o'></i></a>" +
+                                  "&nbsp;<a href='#'><i class='fa fa-star-o'></i></a>" +
+                                  "&nbsp;<a href='#'><i class='fa fa-star-o'></i></a>" +
+                                  "&nbsp;<a href='#'><i class='fa fa-star-o'></i></a>" +
+                                  "&nbsp;<a href='#'><i class='fa fa-star-o'></i></a>" +
+                                  "&nbsp;<a href='#'>" +
+                                  " <i class='fa fa-phone' aria-hidden='true'></i>" +
+                        "</a>" +
+                        "</p>" +
+                              "</div>" +
+                            "</li>";
+                         //tableHtml = tableHtml + " <li>" +
+                         //             "<div class='well profile_view p-0' style='display: inline-block'>" +
+                         //              "<a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel[item].doctorID + "nofav' class='fa fa-heart-o'  onclick='toggle(" + response.DoctorModel[item].doctorID + ");return false;' style='display:block'></span></a>" +
+                         //               "<a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel[item].doctorID + "fav' class='fa fa-heart'  onclick='untoggle(" + response.DoctorModel[item].doctorID + ");return false;' style='display:none'></span></a>" +
+                         //              "<i class='crl fa fa-circle' aria-hidden='true' style='color: red; cursor: pointer;font-size: 12px;'></i>" +
+                         //               "<img src='../Content/images/img.jpg' alt='' class='img-circle img-responsive m-b-10 m-t-20' style='margin: 0 auto;display: inline-block;'>" +
+                         //               "<h2 class='m-0'>"+
+                         //                " <a href='' class='thumbnail-col-inner m-b-15' data-toggle='modal' data-target='#myModal8' id='" + response.DoctorModel[item].doctorID + "' onclick='showDoctorTimings(" + response.DoctorModel[item].doctorID + "," + $("#appdate").val() + ")'>Dr." +
+                         //                response.DoctorModel[item].firstName+"&nbsp;"+ response.DoctorModel[item].lastName+"</a>" +
+                         //                 "</h2>"+
+                         //                 "<h4 class='brief m-0' style='color: green'>Available for Call</h4>"+
 
-                                         "<p class='ratings m-t-5 m-b-0' style='text-align: center;'>"+
-                                         "<a href='' class='thumbnail-col-inner' data-toggle='modal' data-target='#myModal1'>"+
-                                         "<i class='fa fa-calendar' aria-hidden='true'></i>"+
-                                         "</a>"+
-                                  "<a href=''><i class='fa fa-star-o'></i></a>"+
-                                  "<a href=''><i class='fa fa-star-o'></i></a>"+
-                                  "<a href=''><i class='fa fa-star-o'></i></a>"+
-                                  "<a href=''><i class='fa fa-star-o'></i></a>"+
-                                  "<a href=''><i class='fa fa-star-o'></i></a>"+
-                                  "<a href=''>"+
-                                    "<i class='fa fa-phone' aria-hidden='true'></i>"+
-                                  "</a>"+
-                                  "</p>" +
-                                  "</div></li>";
+                         //                "<p class='ratings m-t-5 m-b-0' style='text-align: center;'>"+
+                         //                "<a href='' class='thumbnail-col-inner' data-toggle='modal' data-target='#myModal1' id='" + response.DoctorModel[item].doctorID + "' onclick='showDoctorTimings(" + response.DoctorModel[item].doctorID + "," + $("#appdate").val() + ")'>" +
+                         //                "<i class='fa fa-calendar' aria-hidden='true'></i>"+
+                         //                "</a>"+
+                         //         "<a href=''><i class='fa fa-star-o'></i></a>"+
+                         //         "<a href=''><i class='fa fa-star-o'></i></a>"+
+                         //         "<a href=''><i class='fa fa-star-o'></i></a>"+
+                         //         "<a href=''><i class='fa fa-star-o'></i></a>"+
+                         //         "<a href=''><i class='fa fa-star-o'></i></a>"+
+                         //         "<a href=''>"+
+                         //           "<i class='fa fa-phone' aria-hidden='true'></i>"+
+                         //         "</a>"+
+                         //         "</p>" +
+                         //         "</div></li>";
 
                     });
-                   
+                    //tableHtml = tableHtml+"</div>";
                     if (response.DoctorModel.length > 0) { document.getElementById("docList").innerHTML = tableHtml; }
                     else { document.getElementById("docList").innerHTML = "No record found";; }
 
                     document.getElementById("mainpanel").style.display = "block";
+                   
                 }
             }
             
@@ -154,9 +318,42 @@ function SearchDoctor()
         error: errorRes
 
     });
+   
+    $.unblockUI();
 }
-function showDoctorTimings(doctorID,appDate)
+function fetchTimings()
 {
+     var _objSearch = {};
+    _objSearch["appDate"] = $("#fetchdate").val();
+    _objSearch["doctorID"] = $("#doctorid").val();
+
+    var div = "";
+    $.ajax({
+        type: 'POST',
+        //url: '@Url.Action("GetAllLanguages", "SeeDoctor")',
+        url: '/SeeDoctor/FetchDoctorTimings',
+        data: _objSearch,
+        dataType: 'json',
+        success: function (response) {
+
+            var tablehtml = "";
+            $.each(response.Object, function (item) {
+
+                tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + $("#fetchdate").val() + "\")'>" + response.Object[item] + "</button></li>";
+
+            });
+
+            if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
+            else { document.getElementById("TimingsData").innerHTML = tablehtml; }
+        },
+        error: errorRes
+
+    });
+}
+  
+function showDoctorTimings(doctorID)
+{
+    //document.getElementById("TimingsData").innerHTML = "No record found";
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1; //January is 0!
@@ -170,9 +367,10 @@ function showDoctorTimings(doctorID,appDate)
         mm = '0' + mm
     }
 
-    today = mm + '/' + dd + '/' + yyyy;
+    today = dd + '/' +mm + '/' + yyyy;
     var _objSearch = {};
-    _objSearch["appDate"] = today;
+   _objSearch["appDate"] = today;
+   // _objSearch["appDate"] = '27/11/2016';
     _objSearch["doctorID"] = doctorID;
    
     var div = "";
@@ -184,15 +382,15 @@ function showDoctorTimings(doctorID,appDate)
         dataType: 'json',
         success: function (response) {
             
-            var div = "";
-            $.each(response, function (item) {
-              
-                div = div + "<button id ='" + response[item] + "' type='button' class='btn btn-primary'>"+response[item] +"</button>";
+            var tablehtml = "";
+            $.each(response.Object, function (item) {
+                
+                tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + $("#fetchdate").val() + "\")'>" + response.Object[item] + "</button></li>";
 
             });
            
-            if (div == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
-            else { document.getElementById("TimingsData").innerHTML = div; }
+            if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
+            else { document.getElementById("TimingsData").innerHTML = tablehtml; }
         },
         error: errorRes
 

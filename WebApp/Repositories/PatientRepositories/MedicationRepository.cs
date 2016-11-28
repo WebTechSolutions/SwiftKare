@@ -12,8 +12,15 @@ namespace WebApp.Repositories.PatientRepositories
 {
     public class MedicationRepository
     {
-       
 
+        
+             public List<Frequency> GetFrequency()
+        {
+
+            var response = ApiConsumerHelper.GetResponseString("api/getFrequency");
+            var result = JsonConvert.DeserializeObject<List<Frequency>>(response);
+            return result;
+        }
         public List<MedicineModel> GetMedicines()
         {
 

@@ -39,6 +39,21 @@ namespace RestAPIs.Controllers
             }
 
         }
+        [Route("api/getFrequency")]
+        public HttpResponseMessage GetFrequency()
+        {
+            try
+            {
+                var frequency =db.Frequencies.Where(f=>f.active==true).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, frequency);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetFrequency in PatientMedicationController");
+            }
+
+        }
 
         [Route("api/getPatienMedications")]
         public HttpResponseMessage GetPatientMedications(long patientID)
@@ -47,6 +62,7 @@ namespace RestAPIs.Controllers
             {
                 var medications = (from l in db.Medications
                                    where l.active == true && l.patientId == patientID
+                                   orderby l.medicationID descending
                                    select new GetMedication { medicationID = l.medicationID, patientId=l.patientId, medicineName = l.medicineName.Trim(), frequency = l.frequency.Trim(), reporteddate = l.reportedDate }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, medications);
                 return response;
@@ -74,7 +90,7 @@ namespace RestAPIs.Controllers
                 }
                 if (model.frequency != null || model.frequency != "")
                 {
-                    if (!Regex.IsMatch(model.frequency, @"^[a-zA-Z\s]+$"))
+                    if (!Regex.IsMatch(model.frequency, "^[0-9a-zA-Z ]+$"))
                     {
                         response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Frequency is not valid." });
                         return response;

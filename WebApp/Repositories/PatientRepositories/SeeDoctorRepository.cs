@@ -54,13 +54,83 @@ namespace WebApp.Repositories.DoctorRepositories
             }
 
         }
+        public List<DoctorInfoCustom> GetDoctorInfo(long doctorID)
+        {
+
+            try
+            {
+                //var strContent = JsonConvert.SerializeObject(searchModel);
+                var response = ApiConsumerHelper.GetResponseString("api/getDoctorInfo/?doctorID=" + doctorID);
+                var result = JsonConvert.DeserializeObject<List<DoctorInfoCustom>>(response);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                httpResponseMessage.Content = new StringContent(ex.Message);
+                throw new HttpResponseException(httpResponseMessage);
+            }
+
+        }
+      
         public AppointmentModel LoadROV(long patientid)
         {
 
             try
             {
-                var response = ApiConsumerHelper.GetResponseString("api/ROV/?Id="+patientid);
+                var response = ApiConsumerHelper.GetResponseString("api/ROV/?Id=" + patientid);
                 var result = JsonConvert.DeserializeObject<AppointmentModel>(response);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                httpResponseMessage.Content = new StringContent(ex.Message);
+                throw new HttpResponseException(httpResponseMessage);
+            }
+
+        }
+        public AppointmentModel GetPatientChiefComplaints(long patientid)
+        {
+
+            try
+            {
+                var response = ApiConsumerHelper.GetResponseString("api/GetPatientChiefComplaints/?Id=" + patientid);
+                var result = JsonConvert.DeserializeObject<AppointmentModel>(response);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                httpResponseMessage.Content = new StringContent(ex.Message);
+                throw new HttpResponseException(httpResponseMessage);
+            }
+
+        }
+        public List<ROV_Custom> LoadROVList()
+        {
+
+            try
+            {
+                var response = ApiConsumerHelper.GetResponseString("api/GetROVs");
+                var result = JsonConvert.DeserializeObject<List<ROV_Custom>>(response);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                httpResponseMessage.Content = new StringContent(ex.Message);
+                throw new HttpResponseException(httpResponseMessage);
+            }
+
+        }
+        public List<FavouriteDoctorModel> LoadFavDoctors(long patientID)
+        {
+
+            try
+            {
+                var response = ApiConsumerHelper.GetResponseString("api/GetFavouriteDoctors");
+                var result = JsonConvert.DeserializeObject<List<FavouriteDoctorModel>>(response);
                 return result;
             }
             catch (Exception ex)
@@ -122,15 +192,26 @@ namespace WebApp.Repositories.DoctorRepositories
             }
 
         }
-
-        
-
-
-        public long AddAppointment(AppointmentModel model)
+        public ApiResultModel AddAppointment(AppointmentModel model)
         {
             var strContent = JsonConvert.SerializeObject(model);
-            var response = ApiConsumerHelper.PostData("api/addAppointment/appModel/", strContent);
-            var result = JsonConvert.DeserializeObject<long>(response);
+            var response = ApiConsumerHelper.PostData("api/addAppointment", strContent);
+            var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
+            return result;
+        }
+
+        public ApiResultModel AddFavourite(FavouriteDoctorModel model)
+        {
+            var strContent = JsonConvert.SerializeObject(model);
+            var response = ApiConsumerHelper.PostData("api/favouriteDoctor", strContent);
+            var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
+            return result;
+        }
+        public ApiResultModel UpdateFavourite(FavouriteDoctorModel model)
+        {
+            var strContent = JsonConvert.SerializeObject(model);
+            var response = ApiConsumerHelper.PostData("api/unfavouriteDoctor", strContent);
+            var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
             return result;
         }
     }

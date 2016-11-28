@@ -151,16 +151,15 @@ function ToJavaScriptDateAllergies(value) {
 }
 function editAllergies(objAllergy) {
     $("#myAllergy").val(objAllergy.allergyName);
-    //$('#Sensitivity option[value=' + objAllergy.severity + ']').prop('selected', true);
-    //$('#Reaction option[value=' + objAllergy.reaction + ']').prop('selected', true);
+    $("#Sensitivity option:contains(" + objAllergy.severity + ")").attr('selected', 'selected');
+    $("#Reaction option:contains(" + objAllergy.reaction + ")").attr('selected', 'selected');
     _objUpdate = {};
     _objUpdate["allergyName"] = (objAllergy.allergyName);
     _objUpdate["severity"] = (objAllergy.severity);
     _objUpdate["reaction"] = (objAllergy.reaction);
     _objUpdate["allergiesID"] = (objAllergy.allergiesID);
     _objUpdate["patientID"] = (objAllergy.patientID);
-    $('#Sensitivity').find('option[text="' + objAllergy.severity + '"]').val();
-    $('#Reaction').find('option[text="' + objAllergy.reaction + '"]').val();
+   
     allergyID = objAllergy.allergiesID;
 }
 function resetAllergies() {
