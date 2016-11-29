@@ -6,6 +6,7 @@ var _medicationTable = [];
 var date = new Date();
 var ticks = date.getTime();
 var medicines = null;
+
 function GetMedicines()
 {
     var param = {};
@@ -34,7 +35,36 @@ function GetMedicines()
     });
       
 }
+function GetFrequency() {
+    var param = "{}";
+    var listitems;
+    var $select = $('#myFrequency');
+    $.ajax({
+        type: 'POST',
+        url: '/SeeDoctor/GetFrequency',
+        data: param,
+        dataType: 'json',
+        success: function (response) {
+            if (response.Success == true) {
 
+                if (response.Frequency != null) {
+                    $.each(response.Frequency, function (item) {
+                        listitems += '<option value=' + response.Frequency[item].frequencyID + '>' + response.Frequency[item].name + '</option>';
+
+                    });
+                    $select.append(listitems);
+                  
+                }
+            }
+            //else {response.Message;}
+
+            return false;
+        },
+        error: errorRes
+
+    });
+
+}
 function bindtoTextBoxMedicine(medicines)
 {
 
@@ -81,7 +111,7 @@ function bindMedicinesTable(Medications) {
         $('#medicinestable').dataTable().fnAddData([
                    i + 1,
                    Medications[i].medicineName,
-                    Medications[i].frequency,
+                   Medications[i].frequency,
                     ToJavaScriptDateMedicine(Medications[i].reporteddate),
                     "<div class='btn-group'> <button type='button' class='btn btn-primary'>Action</button>" +
                                                   "<button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>" +
@@ -110,7 +140,8 @@ function ToJavaScriptDateMedicine(value) {
 
 function editMedicine(objMedicine) {
     $("#myMedicine").val(objMedicine.medicineName);
-    $("#myFrequency").val(objMedicine.frequency);
+    $("#myFrequency option:contains(" + objMedicine.frequency + ")").attr('selected', 'selected');
+    //$("#myFrequency option:contains(" + objMedicine.frequency + ")").attr('selected', 'selected');
     $("#medicationID").val(objMedicine.medicationID);
     _objUpdate = {};
     _objUpdate["medicineName"] = (objMedicine.medicineName);
@@ -123,6 +154,8 @@ function editMedicine(objMedicine) {
 function resetMedicine() {
 
     $("#myMedicine").val('');
+    $("#myFrequency").val($("#myFrequency option:first").val());
+   
    // $("#medicationID").val('0');
     _objUpdate = null;
     _objAdd = null;
@@ -141,6 +174,11 @@ function addupdateMedicine(patientid) {
         }
         else {
             _objUpdate.medicineName = $("#myMedicine").val();
+            _objUpdate.frequency = $("#myFrequency option:selected").text();
+            if ($("#myFrequency option:selected").text() == "Choose Frequency") {
+
+                _objUpdate.frequency = "";
+            }
             medication = _objUpdate;
         }
 
@@ -289,7 +327,7 @@ function fillObjMedicine(patientid) {
     if (_objUpdate == null) {
         _objAdd = {};
         _objAdd["medicineName"] = $("#myMedicine").val();
-        _objAdd["frequency"] = $("#myFrequency").val();
+        _objAdd["frequency"] = $("#myFrequency option:selected").text(); 
         _objAdd["patientId"] = patientid;
     }
 

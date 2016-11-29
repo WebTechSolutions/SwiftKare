@@ -37,26 +37,80 @@ namespace RestAPIs.Controllers
 
 
         }
+        [Route("api/GetROVs")]
+        public HttpResponseMessage GetROVs()
+        {
+            try
+            {
+                var rov = (from l in db.ROVs
+                           where l.active == true
+                           orderby l.rovID ascending
+                           select new ROV_Custom {rovID=l.rovID, rov = l.name }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, rov);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetROVs in SearchDcotorController");
+            }
+
+
+        }
+        [Route("api/GetPatientChiefComplaints")]
+        public HttpResponseMessage GetPatientChiefComplaints(long id)
+        {
+            try
+            {
+                var rov = (from l in db.Appointments
+                           where l.active == true && l.patientID == id
+                           orderby l.appID descending
+                           select new AppointmentModel { chiefComplaints = l.chiefComplaints }).FirstOrDefault();
+                response = Request.CreateResponse(HttpStatusCode.OK, rov);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetPatientChiefComplaints in SearchDcotorController");
+            }
+
+
+        }
         [HttpPost]
-        [Route("api/addAppointment/appModel/")]
+        [Route("api/addAppointment")]
         [ResponseType(typeof(void))]
         public async Task<HttpResponseMessage> AddAppointments(AppointmentModel model)
         {
             Appointment app = new Appointment();
             try
             {
-                if (model.appDate==null || model.appTime==null||model.doctorID==null)
+                if (model.appDate==null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Appointment model is not valid." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment date." });
                     return response;
                 }
-               
-               
+               if(model.appTime == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment time." });
+                    return response;
+                }
+               if(model.doctorID == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
+                    return response;
+                }
+                if (model.patientID == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
+                    return response;
+                }
+
                 app.active = true;
                 app.doctorID = model.doctorID;
                 app.patientID = model.patientID;
                 app.appTime = model.appTime;
-                app.appDate = model.appDate;
+                app.appDate = System.DateTime.Now; //model.appDate;
+                app.rov = model.rov;
+                app.chiefComplaints = model.chiefComplaints;
                 app.cb = model.patientID.ToString();
                 app.cd = System.DateTime.Now;
 
@@ -66,10 +120,10 @@ namespace RestAPIs.Controllers
             }
             catch (Exception ex)
             {
-                ThrowError(ex, "AddAppointments in AppointmentController.");
+                return ThrowError(ex, "AddAppointments in AppointmentController.");
             }
 
-            response = Request.CreateResponse(HttpStatusCode.OK, app.appID);
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
             return response;
         }
         [HttpPost]
@@ -121,10 +175,11 @@ namespace RestAPIs.Controllers
             return response;
         }
 
+      
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
-            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.ToString(), Encoding.Unicode);
+            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.Message, Encoding.Unicode);
             return response;
         }
         protected override void Dispose(bool disposing)

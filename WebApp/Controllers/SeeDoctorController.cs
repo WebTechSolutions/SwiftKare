@@ -11,6 +11,7 @@ using DataAccess.CommonModels;
 using WebApp.Repositories.PatientRepositories;
 using DataAccess.CustomModels;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace WebApp.Controllers
 {
@@ -70,6 +71,8 @@ namespace WebApp.Controllers
                 if (model.name == "") { model.name = null; }
                 if (model.language == "ALL") { model.language = null; }
                 if (model.speciality == "ALL") { model.speciality = null; }
+                if (model.appDate.ToString() == "") { model.appDate = null; }
+                if (model.appTime.ToString() == "") { model.appTime = null; }
                 List<DoctorModel> doctorList = objSeeDoctorRepo.SeeDoctor(model);
                 return Json(new { Success = true, DoctorModel = doctorList });
 
@@ -110,9 +113,10 @@ namespace WebApp.Controllers
         {
             try
             {
+                ApiResultModel apiresult = new ApiResultModel();
                 SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
-                long appID = objSeeDoctorRepo.AddAppointment(model);
-                return Json(new { Success = true, appID = appID });
+                apiresult = objSeeDoctorRepo.AddAppointment(model);
+                return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
             catch (Exception ex)
@@ -130,9 +134,9 @@ namespace WebApp.Controllers
 
                 TimeSpan startTime = (TimeSpan)item.from;
                 TimeSpan endTime = (TimeSpan)item.to;
-                if (!(timeSlots.Contains(startTime.ToString())))
+                if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
                 {
-                    timeSlots.Add(startTime.ToString());
+                    timeSlots.Add(startTime.ToString(@"hh\:mm"));
                     TimeSpan tempp = TimeSpan.FromMinutes(15);
                     startTime = startTime.Add(tempp);
 
@@ -141,11 +145,11 @@ namespace WebApp.Controllers
                 bool flag = true;
                 while (flag)
                 {
-                    if (!(timeSlots.Contains(startTime.ToString())))
+                    if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
                     {
                         //if (!(TimeSpan.Equals(slot, item.appTime)))
                         //{
-                        timeSlots.Add(startTime.ToString());
+                        timeSlots.Add(startTime.ToString(@"hh\:mm"));
                         TimeSpan tempp = TimeSpan.FromMinutes(15);
                         startTime = startTime.Add(tempp);
 
@@ -160,9 +164,9 @@ namespace WebApp.Controllers
 
                     if (TimeSpan.Equals(startTime, endTime))
                     {
-                        if (!(timeSlots.Contains(startTime.ToString())))
+                        if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
                         {
-                            timeSlots.Add(startTime.ToString());
+                            timeSlots.Add(startTime.ToString(@"hh\:mm"));
                             TimeSpan tempp = TimeSpan.FromMinutes(15);
                             startTime = startTime.Add(tempp);
 
@@ -185,21 +189,103 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetROV(long patientid)
+        public JsonResult GetPatientROV(long patientid)
         {
             try
             {
                 SeeDoctorRepository objDoctorRepo = new SeeDoctorRepository();
                 AppointmentModel rov = objDoctorRepo.LoadROV(patientid);
                 return Json(new { Success = true, Object = rov });
-                             
+
             }
             catch (Exception ex)
             {
                 return Json(new { Message = ex.Message });
             }
         }
+        [HttpPost]
+        public JsonResult GetPatientChiefComplaints(long patientid)
+        {
+            try
+            {
+                SeeDoctorRepository objDoctorRepo = new SeeDoctorRepository();
+                AppointmentModel chiefComplaints = objDoctorRepo.GetPatientChiefComplaints(patientid);
+                return Json(new { Success = true, Object = chiefComplaints });
 
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+        }
+        [HttpPost]
+        public JsonResult GetFavDoctors(long patientID)
+        {
+            try
+            {
+                SeeDoctorRepository objDoctorRepo = new SeeDoctorRepository();
+                var favdoc = objDoctorRepo.LoadFavDoctors(patientID);
+                return Json(new { Success = true, Object = favdoc });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+        }
+        [HttpPost]
+        public JsonResult GetROVList()
+        {
+            try
+            {
+                SeeDoctorRepository objDoctorRepo = new SeeDoctorRepository();
+                List<ROV_Custom> rov = objDoctorRepo.LoadROVList();
+                return Json(new { Success = true, Object = rov });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+        }
+        [HttpPost]
+        public JsonResult AddFavourite(FavouriteDoctorModel model)
+        {
+            try
+            {
+                
+                SeeDoctorRepository objRepo = new SeeDoctorRepository();
+               
+                    ApiResultModel apiresult = new ApiResultModel();
+                    apiresult = objRepo.AddFavourite(model);
+                    return Json(new { Success = true, ApiResultModel = apiresult });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+
+        }
+        [HttpPost]
+        public JsonResult UpdateFavourite(FavouriteDoctorModel model)
+        {
+            try
+            {
+
+                SeeDoctorRepository objRepo = new SeeDoctorRepository();
+
+                ApiResultModel apiresult = new ApiResultModel();
+                apiresult = objRepo.UpdateFavourite(model);
+                return Json(new { Success = true, ApiResultModel = apiresult });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+
+        }
         [HttpPost]
         public JsonResult GetHealthConditions(long patientid)
         {
@@ -218,12 +304,12 @@ namespace WebApp.Controllers
             }
         }
 
-        
+        [HttpPost]
         public JsonResult AddUpdateCondition(long conditionID, PatientConditions_Custom condition)
         {
             try
             {
-                if (condition.conditionName == null || condition.conditionName == "" || !Regex.IsMatch(condition.conditionName, @"^[a-zA-Z\s]+$"))
+                if (condition.conditionName == null || condition.conditionName == "" || !Regex.IsMatch(condition.conditionName, "^[0-9a-zA-Z ]+$"))
                 {
                     ApiResultModel apiresult = new ApiResultModel();
                     apiresult.message = "Invalid condition name.Only letters and numbers are allowed.";
@@ -251,7 +337,7 @@ namespace WebApp.Controllers
             }
 
         }
-
+        [HttpPost]
         public JsonResult DeleteCondition(long conditionID)
         {
             try
@@ -288,6 +374,40 @@ namespace WebApp.Controllers
             }
         }
         [HttpPost]
+        public JsonResult GetFrequency()
+        {
+            try
+            {
+                MedicationRepository objRepo = new MedicationRepository();
+                List<Frequency> model = objRepo.GetFrequency();
+
+                return Json(new { Success = true, Frequency = model });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+
+            }
+        }
+        [HttpPost]
+        public JsonResult FetchDoctoInfo(long doctorID)
+        {
+            try
+            {
+                SeeDoctorRepository objRepo = new SeeDoctorRepository();
+                List<DoctorInfoCustom> model = objRepo.GetDoctorInfo(doctorID);
+
+                return Json(new { Success = true, Object = model });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+
+            }
+        }
+        [HttpPost]
         public JsonResult GetMedications(long patientid)
         {
             try
@@ -304,12 +424,12 @@ namespace WebApp.Controllers
 
             }
         }
-
+        [HttpPost]
         public JsonResult AddUpdateMedications(long mid,PatientMedication_Custom medication)
         {
             try
             {
-                if (medication.medicineName == null || medication.medicineName == "" || !Regex.IsMatch(medication.medicineName, @"^[a-zA-Z\s]+$"))
+                if (medication.medicineName == null || medication.medicineName == "" || !Regex.IsMatch(medication.medicineName, "^[0-9a-zA-Z ]+$"))
                 {
                     ApiResultModel apiresult = new ApiResultModel();
                     apiresult.message = "Invalid medicine name.Only letters and numbers are allowed.";
@@ -338,7 +458,7 @@ namespace WebApp.Controllers
             }
 
         }
-
+        [HttpPost]
         public JsonResult DeleteMedications(long medicationID)
         {
             try
@@ -427,12 +547,12 @@ namespace WebApp.Controllers
                 return Json(new { Message = ex.Message });
             }
         }
-
+        [HttpPost]
         public JsonResult AddUpdateAllergies(long allergiesID,PatientAllergies_Custom allergy)
         {
             try
             {
-                if (allergy.allergyName == null || allergy.allergyName == "" || !Regex.IsMatch(allergy.allergyName, @"^[a-zA-Z\s]+$"))
+                if (allergy.allergyName == null || allergy.allergyName == "" || !Regex.IsMatch(allergy.allergyName, "^[0-9a-zA-Z ]+$"))
                 {
                     ApiResultModel apiresult = new ApiResultModel();
                     apiresult.message = "Invalid allergy name.Only letters and numbers are allowed.";
@@ -460,7 +580,7 @@ namespace WebApp.Controllers
             }
 
         }
-
+        [HttpPost]
         public JsonResult DeleteAllergy(long allergyID)
         {
             try
@@ -513,6 +633,7 @@ namespace WebApp.Controllers
             }
         }
 
+        [HttpPost]
         public JsonResult AddUpdateSurgeries(long surgeryID, PatientSurgery_Custom surgery)
         {
             try
@@ -544,6 +665,8 @@ namespace WebApp.Controllers
             }
 
         }
+
+        [HttpPost]
         public JsonResult AddUpdatePharmacy(PatientPharmacy_Custom pharmacy)
         {
             ApiResultModel apiresult = new ApiResultModel();
@@ -570,6 +693,8 @@ namespace WebApp.Controllers
             }
 
         }
+
+        [HttpPost]
         public JsonResult DeleteSurgery(long surgeryID)
         {
             try
@@ -585,7 +710,7 @@ namespace WebApp.Controllers
             }
 
         }
-
+     
 
     }
 }
