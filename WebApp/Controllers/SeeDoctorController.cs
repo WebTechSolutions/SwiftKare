@@ -194,7 +194,7 @@ namespace WebApp.Controllers
             try
             {
                 SeeDoctorRepository objDoctorRepo = new SeeDoctorRepository();
-                AppointmentModel rov = objDoctorRepo.LoadROV(patientid);
+                PatientROV rov = objDoctorRepo.LoadROV(patientid);
                 return Json(new { Success = true, Object = rov });
 
             }
@@ -209,7 +209,7 @@ namespace WebApp.Controllers
             try
             {
                 SeeDoctorRepository objDoctorRepo = new SeeDoctorRepository();
-                AppointmentModel chiefComplaints = objDoctorRepo.GetPatientChiefComplaints(patientid);
+                PatientROV chiefComplaints = objDoctorRepo.GetPatientChiefComplaints(patientid);
                 return Json(new { Success = true, Object = chiefComplaints });
 
             }
