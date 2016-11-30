@@ -131,14 +131,14 @@ namespace WebApp.Controllers
                             var objRepo = new PatientRepository();
                             var patient = objRepo.GetByUserId(userId);
                             var userModel = new UserInfoModel();
-                            userModel.Id = patient.Id;
-                            userModel.Email = patient.Email;
-                            userModel.FirstName = patient.FirstName;
-                            userModel.LastName = patient.LastName;
+                            userModel.Id = patient.patientID;
+                            userModel.Email = patient.email;
+                            userModel.FirstName = patient.firstName;
+                            userModel.LastName = patient.lastName;
                             SessionHandler.UserInfo = userModel;
 
-                            //if (patient.active == null || (bool)patient.active)
-                            //    return RedirectToAction("Index", "Patient");
+                            if (patient.active == null || (bool)patient.active)
+                                return RedirectToAction("Index", "Patient");
                         }
                         else if (roles.Contains("Admin"))
                         {

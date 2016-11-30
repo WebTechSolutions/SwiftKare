@@ -72,7 +72,7 @@ namespace WebApp.Controllers
                 if (model.language == "ALL") { model.language = null; }
                 if (model.speciality == "ALL") { model.speciality = null; }
                 if (model.appDate.ToString() == "") { model.appDate = null; }
-                if (model.appTime.ToString() == "") { model.appTime = null; }
+                if (model.appTime.ToString() == "") { model.appTime = null ; }
                 List<DoctorModel> doctorList = objSeeDoctorRepo.SeeDoctor(model);
                 return Json(new { Success = true, DoctorModel = doctorList });
 

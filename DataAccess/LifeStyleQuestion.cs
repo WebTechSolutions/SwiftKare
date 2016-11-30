@@ -16,7 +16,7 @@ namespace DataAccess
     {
         public string questionID { get; set; }
         public string question { get; set; }
-        public string category { get; set; }
+        public string answer { get; set; }
         public Nullable<bool> active { get; set; }
         public string cb { get; set; }
         public Nullable<System.DateTime> cd { get; set; }

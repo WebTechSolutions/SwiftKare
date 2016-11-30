@@ -69,12 +69,12 @@ namespace DataAccess
         public virtual DbSet<Surgery> Surgeries { get; set; }
         public virtual DbSet<FamilyHXItem> FamilyHXItems { get; set; }
         public virtual DbSet<Frequency> Frequencies { get; set; }
-        public virtual DbSet<LifeStyleQuestion> LifeStyleQuestions { get; set; }
         public virtual DbSet<PatientLifeStyle> PatientLifeStyles { get; set; }
         public virtual DbSet<Relationship> Relationships { get; set; }
         public virtual DbSet<PatientFamilyHX> PatientFamilyHXes { get; set; }
         public virtual DbSet<ROV> ROVs { get; set; }
         public virtual DbSet<FavouriteDoctor> FavouriteDoctors { get; set; }
+        public virtual DbSet<LifeStyleQuestion> LifeStyleQuestions { get; set; }
     
         public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
         {
