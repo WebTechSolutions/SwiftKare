@@ -1039,6 +1039,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
         <Function Name="SP_AddAdmin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="lastName" Type="varchar" Mode="In" />
           <Parameter Name="FirstName" Type="varchar" Mode="In" />
@@ -1082,6 +1083,10 @@
           <Parameter Name="typeName" Type="varchar" Mode="In" />
           <Parameter Name="CB" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="sp_addextendedproc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="functname" Type="nvarchar" Mode="In" />
+          <Parameter Name="dllname" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="SP_AddLanguage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="languageName" Type="varchar" Mode="In" />
           <Parameter Name="CB" Type="varchar" Mode="In" />
@@ -1103,6 +1108,33 @@
           <Parameter Name="Email" Type="varchar" Mode="In" />
           <Parameter Name="userId" Type="nvarchar" Mode="In" />
           <Parameter Name="CB" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="SP_AddPatientAllergy" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="allergyName" Type="varchar" Mode="In" />
+          <Parameter Name="Severity" Type="varchar" Mode="In" />
+          <Parameter Name="Reaction" Type="varchar" Mode="In" />
+          <Parameter Name="patientID" Type="bigint" Mode="In" />
+          <Parameter Name="cb" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="SP_AddPatientConditions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="conditionName" Type="varchar" Mode="In" />
+          <Parameter Name="Source" Type="varchar" Mode="In" />
+          <Parameter Name="patientID" Type="bigint" Mode="In" />
+          <Parameter Name="cb" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="SP_AddPatientMedications" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="medicineName" Type="varchar" Mode="In" />
+          <Parameter Name="frequency" Type="varchar" Mode="In" />
+          <Parameter Name="source" Type="varchar" Mode="In" />
+          <Parameter Name="patientId" Type="bigint" Mode="In" />
+          <Parameter Name="cb" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="SP_AddPatientROV" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="appID" Type="bigint" Mode="In" />
+          <Parameter Name="rov" Type="varchar" Mode="In" />
+          <Parameter Name="mb" Type="varchar" Mode="In" />
+          <Parameter Name="md" Type="datetime" Mode="In" />
+          <Parameter Name="notes" Type="varchar" Mode="In" />
         </Function>
         <Function Name="SP_AddRoles" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="roleName" Type="varchar" Mode="In" />
@@ -1227,6 +1259,15 @@
           <Parameter Name="MB" Type="varchar" Mode="In" />
           <Parameter Name="MD" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="SP_DeletePatientAllergy" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="patientAllergyId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="SP_DeletePatientConditions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="conditionId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="SP_DeletePatientMedications" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="medicationId" Type="bigint" Mode="In" />
+        </Function>
         <Function Name="sp_DeleteRole" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="roleID" Type="bigint" Mode="In" />
           <Parameter Name="MB" Type="varchar" Mode="In" />
@@ -1260,6 +1301,13 @@
         <Function Name="SP_DoctorReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="datefrom" Type="datetime" Mode="In" />
           <Parameter Name="dateto" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_dropextendedproc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="functname" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="SP_FetchDoctorTimings" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="docID" Type="bigint" Mode="In" />
@@ -1310,6 +1358,10 @@
         <Function Name="SP_GetUpcomingAppforPatient" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="patientID" Type="bigint" Mode="In" />
         </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
         <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
           <Parameter Name="owner_id" Type="int" Mode="In" />
@@ -1317,6 +1369,11 @@
         <Function Name="SP_PatientReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="datefrom" Type="datetime" Mode="In" />
           <Parameter Name="dateto" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="SP_RescheduleRequest" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="doctorID" Type="bigint" Mode="In" />
@@ -1425,6 +1482,30 @@
           <Parameter Name="MB" Type="varchar" Mode="In" />
           <Parameter Name="MD" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="SP_UpdatePatientAllergy" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="patientallergyid" Type="bigint" Mode="In" />
+          <Parameter Name="allergyName" Type="varchar" Mode="In" />
+          <Parameter Name="Severity" Type="varchar" Mode="In" />
+          <Parameter Name="Reaction" Type="varchar" Mode="In" />
+          <Parameter Name="mb" Type="varchar" Mode="In" />
+          <Parameter Name="md" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="SP_UpdatePatientConditions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="conditionId" Type="bigint" Mode="In" />
+          <Parameter Name="conditionName" Type="varchar" Mode="In" />
+          <Parameter Name="Source" Type="varchar" Mode="In" />
+          <Parameter Name="patientID" Type="bigint" Mode="In" />
+          <Parameter Name="mb" Type="varchar" Mode="In" />
+          <Parameter Name="reportedDate" Type="datetime" Mode="In" />
+          <Parameter Name="md" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="SP_UpdatePatientMedications" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="medicineId" Type="bigint" Mode="In" />
+          <Parameter Name="medicineName" Type="varchar" Mode="In" />
+          <Parameter Name="frequency" Type="varchar" Mode="In" />
+          <Parameter Name="mb" Type="varchar" Mode="In" />
+          <Parameter Name="md" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="sp_UpdateSpeciality" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="speciallityID" Type="bigint" Mode="In" />
           <Parameter Name="specialityName" Type="varchar" Mode="In" />
@@ -1456,6 +1537,7 @@
           <Parameter Name="MB" Type="varchar" Mode="In" />
           <Parameter Name="MD" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="SwiftKareDBModelStoreContainer">
           <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AdminUsers" EntityType="Self.AdminUsers" Schema="dbo" store:Type="Tables" />
@@ -3078,6 +3160,87 @@
             <Parameter Name="appID" Mode="In" Type="Int64" />
           </FunctionImport>
           <EntitySet Name="LifeStyleQuestions" EntityType="SwiftKareDBModel.LifeStyleQuestion" />
+          <FunctionImport Name="sp_addextendedproc">
+            <Parameter Name="functname" Mode="In" Type="String" />
+            <Parameter Name="dllname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_AddPatientAllergy">
+            <Parameter Name="allergyName" Mode="In" Type="String" />
+            <Parameter Name="Severity" Mode="In" Type="String" />
+            <Parameter Name="Reaction" Mode="In" Type="String" />
+            <Parameter Name="patientID" Mode="In" Type="Int64" />
+            <Parameter Name="cb" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_AddPatientConditions">
+            <Parameter Name="conditionName" Mode="In" Type="String" />
+            <Parameter Name="Source" Mode="In" Type="String" />
+            <Parameter Name="patientID" Mode="In" Type="Int64" />
+            <Parameter Name="cb" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_AddPatientMedications">
+            <Parameter Name="medicineName" Mode="In" Type="String" />
+            <Parameter Name="frequency" Mode="In" Type="String" />
+            <Parameter Name="source" Mode="In" Type="String" />
+            <Parameter Name="patientId" Mode="In" Type="Int64" />
+            <Parameter Name="cb" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_AddPatientROV">
+            <Parameter Name="appID" Mode="In" Type="Int64" />
+            <Parameter Name="rov" Mode="In" Type="String" />
+            <Parameter Name="mb" Mode="In" Type="String" />
+            <Parameter Name="md" Mode="In" Type="DateTime" />
+            <Parameter Name="notes" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_DeletePatientAllergy">
+            <Parameter Name="patientAllergyId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_DeletePatientConditions">
+            <Parameter Name="conditionId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_DeletePatientMedications">
+            <Parameter Name="medicationId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropextendedproc">
+            <Parameter Name="functname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_UpdatePatientAllergy">
+            <Parameter Name="patientallergyid" Mode="In" Type="Int64" />
+            <Parameter Name="allergyName" Mode="In" Type="String" />
+            <Parameter Name="Severity" Mode="In" Type="String" />
+            <Parameter Name="Reaction" Mode="In" Type="String" />
+            <Parameter Name="mb" Mode="In" Type="String" />
+            <Parameter Name="md" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="SP_UpdatePatientConditions">
+            <Parameter Name="conditionId" Mode="In" Type="Int64" />
+            <Parameter Name="conditionName" Mode="In" Type="String" />
+            <Parameter Name="Source" Mode="In" Type="String" />
+            <Parameter Name="patientID" Mode="In" Type="Int64" />
+            <Parameter Name="mb" Mode="In" Type="String" />
+            <Parameter Name="reportedDate" Mode="In" Type="DateTime" />
+            <Parameter Name="md" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="SP_UpdatePatientMedications">
+            <Parameter Name="medicineId" Mode="In" Type="Int64" />
+            <Parameter Name="medicineName" Mode="In" Type="String" />
+            <Parameter Name="frequency" Mode="In" Type="String" />
+            <Parameter Name="mb" Mode="In" Type="String" />
+            <Parameter Name="md" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
         </EntityContainer>
         <ComplexType Name="SP_AppointmentReport_Result">
           <Property Type="Int64" Name="appID" Nullable="false" />
@@ -5108,6 +5271,22 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_addextendedproc" FunctionName="SwiftKareDBModel.Store.sp_addextendedproc" />
+          <FunctionImportMapping FunctionImportName="SP_AddPatientAllergy" FunctionName="SwiftKareDBModel.Store.SP_AddPatientAllergy" />
+          <FunctionImportMapping FunctionImportName="SP_AddPatientConditions" FunctionName="SwiftKareDBModel.Store.SP_AddPatientConditions" />
+          <FunctionImportMapping FunctionImportName="SP_AddPatientMedications" FunctionName="SwiftKareDBModel.Store.SP_AddPatientMedications" />
+          <FunctionImportMapping FunctionImportName="SP_AddPatientROV" FunctionName="SwiftKareDBModel.Store.SP_AddPatientROV" />
+          <FunctionImportMapping FunctionImportName="SP_DeletePatientAllergy" FunctionName="SwiftKareDBModel.Store.SP_DeletePatientAllergy" />
+          <FunctionImportMapping FunctionImportName="SP_DeletePatientConditions" FunctionName="SwiftKareDBModel.Store.SP_DeletePatientConditions" />
+          <FunctionImportMapping FunctionImportName="SP_DeletePatientMedications" FunctionName="SwiftKareDBModel.Store.SP_DeletePatientMedications" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="SwiftKareDBModel.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropextendedproc" FunctionName="SwiftKareDBModel.Store.sp_dropextendedproc" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="SwiftKareDBModel.Store.sp_helpdiagramdefinition" />
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="SwiftKareDBModel.Store.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="SP_UpdatePatientAllergy" FunctionName="SwiftKareDBModel.Store.SP_UpdatePatientAllergy" />
+          <FunctionImportMapping FunctionImportName="SP_UpdatePatientConditions" FunctionName="SwiftKareDBModel.Store.SP_UpdatePatientConditions" />
+          <FunctionImportMapping FunctionImportName="SP_UpdatePatientMedications" FunctionName="SwiftKareDBModel.Store.SP_UpdatePatientMedications" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="SwiftKareDBModel.Store.sp_upgraddiagrams" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
