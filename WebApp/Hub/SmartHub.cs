@@ -50,7 +50,7 @@ namespace WebApp.Hub
             message.MsgDate = DateTime.Now.ToString();
             //MessageList.Add(message);
             //Clients.Caller.receiveMessage(message.UserName, message.Message, ConnectionId);
-            Clients.Client(message.ReceiverConnectionId).receiveMessage(message.UserName, message.Message, message.SenderConnectionId);
+            Clients.Client(message.ReceiverConnectionId).receiveMessage(message.UserName, message.Message, message.SenderConnectionId, message.SenderId);
         }
 
         public void SendMessageToPatient(MessageInfo message)
@@ -60,7 +60,7 @@ namespace WebApp.Hub
             message.SenderType = "Doctor";
             message.MsgDate = DateTime.Now.ToString();
             //Clients.Caller.receiveMessage(message.UserName, message.Message, ConnectionId);
-            Clients.Client(message.ReceiverConnectionId).receiveMessage(message.UserName, message.Message, message.SenderConnectionId);
+            Clients.Client(message.ReceiverConnectionId).receiveMessage(message.UserName, message.Message, message.SenderConnectionId, message.SenderId);
         }
 
         public void SendMessage(MessageInfo message)

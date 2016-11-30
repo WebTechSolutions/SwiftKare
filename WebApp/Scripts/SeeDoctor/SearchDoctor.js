@@ -226,7 +226,7 @@ function SearchDoctor(patientID)
 {
     
 
-    $.blockUI({ message: "<h2>test</h2>" });
+    //$.blockUI({ message: "<h2>test</h2>" });
     var _objSearch = {};
     _objSearch["language"] = $("#Language").find(":selected").text();
     _objSearch["speciality"] = $("#Speciality").find(":selected").text();
@@ -251,16 +251,16 @@ function SearchDoctor(patientID)
                     $.each(response.DoctorModel, function (item) {
                         
                        // tableHtml = tableHtml + "<div class='col'>" +
-                               tableHtml = tableHtml +"<li><div class='well profile_view'>" +
+                        tableHtml = tableHtml + "<li><div class='well profile_view clsDivDocList' style='position:relative;'>" +
                                " <a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel[item].doctorID + "nofav' class='fa fa-heart-o'  onclick='toggle(" + response.DoctorModel[item].doctorID + ","+patientID+");return false;' style='display:block'></span></a>" +
                                "<a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel[item].doctorID + "fav' class='fa fa-heart'  onclick='untoggle(" + response.DoctorModel[item].doctorID + ","+patientID+");return false;' style='display:none'></span></a>" +
-                                "<i class='crl fa fa-circle' aria-hidden='true' style='color: green; cursor: pointer;font-size: 12px;'></i>" +
+                                "<i class='crl fa fa-circle clsAvailableSpot' aria-hidden='true' style='color: green; cursor: pointer;font-size: 12px; position:absolute; right:2%; display:none;'></i>" +
                                 "<img src='../Content/images/img.jpg' alt='' class='img-circle img-responsive m-b-10 m-t-0' style='margin: 0 auto;display: inline-block;'>" +
                                 "<h2 class='m-0'>" +
                                  " <a href='#' class='thumbnail-col-inner m-b-15' data-toggle='modal' data-target='#myModal2' style='word-wrap: break-word;'>Dr." +
                                   response.DoctorModel[item].firstName + "&nbsp;" + response.DoctorModel[item].lastName + "</a>" +
                                  "</h2>" +
-                                "<h4 class='brief m-0' style='color: green'>Available for Call</h4>" +
+                                "<h4 class='brief m-0 clsAvailbleForCall' style='color: green; display:none;'>Available for Call</h4><h4 class='brief m-0 clsNotAvailbleForCall' style='color: red'>Not Available for Call</h4>" +
                                 "<p class='ratings m-t-5 m-b-0' style='text-align: center;'>" +
                                 "<a style='word-wrap:word-break;' href='' class='thumbnail-col-inner' data-toggle='modal' data-target='#myModal1' data-todo='{\"id\":" + response.DoctorModel[item].doctorID + ",\"doctorName\":\"" + response.DoctorModel[item].firstName +
                                 "&nbsp;" + response.DoctorModel[item].lastName + "\"}'  onclick='showDoctorTimings(" + response.DoctorModel[item].doctorID +")' id='" + response.DoctorModel[item].doctorID + "'>" +
@@ -271,7 +271,7 @@ function SearchDoctor(patientID)
                                   "&nbsp;<a href='#'><i class='fa fa-star-o'></i></a>" +
                                   "&nbsp;<a href='#'><i class='fa fa-star-o'></i></a>" +
                                   "&nbsp;<a href='#'><i class='fa fa-star-o'></i></a>" +
-                                  "&nbsp;<a href='#'>" +
+                                  "&nbsp;<a class='clsMakeCall' title='Call doctor " + response.DoctorModel[item].firstName + "&nbsp;" + response.DoctorModel[item].lastName + "' onclick='makeCallToDoctor(this)' data-doctorid='" + response.DoctorModel[item].doctorID + "' style='display:none;' href='javascript:'>" +
                                   " <i class='fa fa-phone' aria-hidden='true'></i>" +
                         "</a>" +
                         "</p>" +
@@ -306,7 +306,7 @@ function SearchDoctor(patientID)
 
                     });
                     //tableHtml = tableHtml+"</div>";
-                    if (response.DoctorModel.length > 0) { document.getElementById("docList").innerHTML = tableHtml; }
+                    if (response.DoctorModel.length > 0) { document.getElementById("docList").innerHTML = tableHtml; checkAnyDoctorAvailableNow(); }
                     else { document.getElementById("docList").innerHTML = "No record found";; }
 
                     document.getElementById("mainpanel").style.display = "block";
@@ -319,7 +319,7 @@ function SearchDoctor(patientID)
 
     });
    
-    $.unblockUI();
+    //$.unblockUI();
 }
 function fetchTimings()
 {

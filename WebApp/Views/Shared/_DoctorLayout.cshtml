@@ -377,39 +377,56 @@
 
             });
 
+            chat.client.receiveMessage = function (msgFrom, msg, receiverId, senderid) {
 
-
-            chat.client.receiveMessage = function (msgFrom, msg, receiverId) {
                 $('#messages').empty();
 
                 if (msgFrom != 'ChatHub') {
                     var txt = "";
-                    var confirmCall = confirm(msgFrom + " is calling, Please press OK to accept!");
+                    //alert(msg);
+                    var fromJson = JSON.parse(msg);
+
+                    var confirmCall = confirm(fromJson.name + " want to have a video consultation, Please press OK to accept!");
                     if (confirmCall == true) {
                         txt = "Accepted";
                     } else {
                         txt = "Declined";
                     }
-                    chat.server.sendMessageToPatient(
-                        {
-                            SenderId: '@SessionHandler.UserInfo.Id',
-                            UserName: '@SessionHandler.UserInfo.Email',
-                            ReceiverConnectionId: receiverId,
-                            ReceiverId: '20',
-                            SenderType: 'Doctor',
-                            Message: txt
+
+                    //Save SignalR Information to local storage so that it can be used whenever needed.
+                    var signalRInfo = {
+                        SenderId: '@SessionHandler.UserInfo.Id',
+                        UserName: '@SessionHandler.UserInfo.Email',
+                        ReceiverConnectionId: receiverId,
+                        ReceiverId: senderid
+                    }
+                    var strSignalRInfo = window.JSON.stringify(signalRInfo);
+                    localStorage.setItem('signalRInfo', strSignalRInfo);
+
+                    var doctorName = '@string.Format("{0} {1}", SessionHandler.UserInfo.FirstName, SessionHandler.UserInfo.LastName)';
+
+                    chat.server.sendMessageToPatient({
+                        SenderId: '@SessionHandler.UserInfo.Id',
+                        UserName: '@SessionHandler.UserInfo.Email',
+                        ReceiverConnectionId: receiverId,
+                        ReceiverId: '20',
+                        SenderType: 'Doctor',
+                        Message: JSON.stringify({ status: txt, name: doctorName })
+                    });
+
+                    if (confirmCall == true) {
+                        var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=" + signalRInfo.SenderId + "&userType=Doctor&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + fromJson.name;
+
+                        $.post(cUrlReadyForCall, function (oResp) {
+                            if (oResp == "True") {
+                                //Redirect doctor to call
+                                window.location = '@Url.Action("Index","UserChat")';
+                            }
                         });
+                    }
                 }
-
-
             };
-
-
-
-
-
         });
-
 
 
     </script>

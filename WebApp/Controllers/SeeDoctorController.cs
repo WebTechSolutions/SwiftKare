@@ -12,6 +12,7 @@ using WebApp.Repositories.PatientRepositories;
 using DataAccess.CustomModels;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Configuration;
 
 namespace WebApp.Controllers
 {
@@ -21,6 +22,10 @@ namespace WebApp.Controllers
         public ActionResult SeeDoctor()
         {
             ViewBag.PatienID = 10015;
+
+            ViewBag.PublisherKey = ConfigurationManager.AppSettings["StripePayPublisherKey"].ToString();
+            ViewBag.Amount = 2000;
+
             return View();
         }
 
@@ -710,7 +715,35 @@ namespace WebApp.Controllers
             }
 
         }
-     
 
+
+        #region Stripe Pay
+
+        [HttpPost]
+        public string ProceedWithPay(string tokenId)
+        {
+            var isSuceed = Helper.StripePayHelper.PerformStripeCharge(tokenId, 2000);
+
+            if (isSuceed)
+            {
+                //Send Simple Email
+
+                var sampleEmailBody = @"
+                <h3>Thankyou for payment.</h3>
+                <p>Vivamus et pellentesque velit. Morbi nec nisl at tellus placerat finibus. Pellentesque cursus id dui a dictum. Maecenas at augue sollicitudin, condimentum metus eu, sagittis arcu. Proin quis elit ac neque tincidunt egestas a eget enim. Aliquam a augue faucibus, gravida dui eget, semper ipsum. Mauris et luctus nunc. Cras pretium lorem et erat egestas sagittis.</p>
+                <p>Cras placerat a enim et malesuada. Suspendisse eu sapien ultricies, commodo nulla quis, pharetra metus. Proin tempor eros id dui malesuada malesuada. Vivamus at tempus elit. Aliquam erat volutpat. Donec ultricies tortor tortor, ac aliquam diam pretium dignissim. Sed lobortis libero sed neque luctus, quis pellentesque nulla aliquet. Aliquam a nisi lobortis orci pretium tincidunt. Donec ac erat eget massa volutpat ornare ut id nunc.</p>
+                <p>&nbsp;</p>
+                <p><strong>-Best Regards,<br/>Sender Name</strong></p>
+                ";
+
+                var oSimpleEmail = new Helper.EmailHelper("syed_jamshed_ali@yahoo.com", "Payment successful.", sampleEmailBody);
+                oSimpleEmail.SendMessage();
+            }
+
+            return isSuceed ? "succeed" : "failed";
+        }
+
+        #endregion
+        
     }
 }

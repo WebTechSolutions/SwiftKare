@@ -1,0 +1,33 @@
+﻿@model DateTime
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <script>
+
+        function getLocalDateFromUtcDate(input) {
+
+            if (!input.indexOf("UTC") > 0) {
+                input = input + " UTC";
+            }
+
+            var date = new Date(input);
+            var formattedDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +  date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+
+            document.write(formattedDate);
+        }
+
+    </script>
+</head>
+<body>
+    <div>UTC DateTime is : @Model.ToString("yyyy-MM-dd hh:mm:ss UTC")</div>
+    <div>Local Date is <script>getLocalDateFromUtcDate('@Model.ToString("yyyy-MM-dd hh:mm:ss UTC")');</script></div>
+</body>
+</html>
