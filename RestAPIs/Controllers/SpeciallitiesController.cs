@@ -15,6 +15,7 @@ using System.Text;
 
 namespace RestAPIs.Controllers
 {
+    [Authorize]
     public class SpeciallitiesController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();

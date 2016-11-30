@@ -17,6 +17,7 @@ using System.Text;
 
 namespace RestAPIs.Controllers
 {
+    [Authorize]
     public class LanguagesController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();

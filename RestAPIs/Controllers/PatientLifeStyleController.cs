@@ -12,6 +12,7 @@ using System.Web.Http.Description;
 
 namespace RestAPIs.Controllers
 {
+    [Authorize]
     public class PatientLifeStyleController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
@@ -52,7 +53,7 @@ namespace RestAPIs.Controllers
             }
 
         }
-
+        [HttpPost]
         [Route("api/addPatientLifeStyle")]
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> AddPatientLifeStyle(PatientLifeStyle_Custom model)
@@ -92,35 +93,35 @@ namespace RestAPIs.Controllers
             response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = plifestyle.patientlifestyleID, message = "" });
             return response;
         }
-
+        [HttpPost]
         [Route("api/editPatientLifeStyle")]
         [ResponseType(typeof(HttpResponseMessage))]
-        public async Task<HttpResponseMessage> EditPatientLifeStyle(long patientlifestyleID, long patientID,string answer)
+        public async Task<HttpResponseMessage> EditPatientLifeStyle(PatientLifeStyleModel model)
         {
             PatientLifeStyle pls= new PatientLifeStyle();
             try
             {
-                if (answer == null || answer == "")
+                if (model.answer == null || model.answer == "")
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid answer." });
                     return response;
                 }
-                if (patientlifestyleID == null || patientlifestyleID == 0)
+                if (model.patientlifestyleID == 0)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient life style ID." });
                     return response;
                 }
-                if (patientID == null || patientID == 0)
+                if (model.patientID == 0)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
                     return response;
                 }
-                pls = db.PatientLifeStyles.Where(all => all.patientlifestyleID == patientlifestyleID && all.patientID == patientID).FirstOrDefault();
+                pls = db.PatientLifeStyles.Where(all => all.patientlifestyleID == model.patientlifestyleID && all.patientID == model.patientID).FirstOrDefault();
                 if (pls != null)
                 {
-                    pls.answer = answer;
+                    pls.answer = model.answer;
                     pls.md = System.DateTime.Now;
-                    pls.mb = patientID.ToString();
+                    pls.mb = model.patientID.ToString();
                     db.Entry(pls).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                    
@@ -136,7 +137,7 @@ namespace RestAPIs.Controllers
                 return ThrowError(ex, "EditPatientLifeStyle in PatientLifeStyleController.");
             }
 
-            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = patientlifestyleID, message = "" });
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.patientlifestyleID, message = "" });
             return response;
         }
 
