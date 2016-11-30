@@ -14,6 +14,7 @@ using System.Web.Http.Description;
 
 namespace RestAPIs.Controllers
 {
+    [Authorize]
     public class PharmacyController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
