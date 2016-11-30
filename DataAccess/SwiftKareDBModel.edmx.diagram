@@ -77,10 +77,9 @@
         <EntityTypeShape EntityType="SwiftKareDBModel.Relationship" Width="1.5" PointX="18.375" PointY="12.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.PatientFamilyHX" Width="1.5" PointX="3" PointY="25.875" />
         <AssociationConnector Association="SwiftKareDBModel.FK_FamilyHX_Patient" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.FavouriteDoctor" Width="1.5" PointX="18.375" PointY="4.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.LifeStyleQuestions" Width="1.5" PointX="4.375" PointY="14" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.ROV" Width="1.5" PointX="5.375" PointY="17.75" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_FamilyHX_Questions" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.ROV" Width="1.5" PointX="4.375" PointY="13.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.FavouriteDoctor" Width="1.5" PointX="18.375" PointY="16.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.LifeStyleQuestion" Width="1.5" PointX="18.375" PointY="4.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

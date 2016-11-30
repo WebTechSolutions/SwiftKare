@@ -3,6 +3,7 @@ using DataAccess.CommonModels;
 using DataAccess.CustomModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -13,20 +14,21 @@ using System.Web.Http.Description;
 
 namespace RestAPIs.Controllers
 {
+    [Authorize]
     public class AppointmentController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
         HttpResponseMessage response;
-        
-        [Route("api/ROV")]
-        public HttpResponseMessage GetROV(long id)
+
+        [Route("api/PatientPreviousROV")]
+        public HttpResponseMessage GetROV(long patientID)
         {
             try
             {
                 var rov = (from l in db.Appointments
-                           where l.active == true && l.patientID == id
+                           where l.active == true && l.patientID == patientID
                            orderby l.appID descending
-                           select new AppointmentModel{ rov = l.rov }).FirstOrDefault();
+                           select new PatientROV { rov = l.rov }).FirstOrDefault();
                 response = Request.CreateResponse(HttpStatusCode.OK, rov);
                 return response;
             }
@@ -45,7 +47,7 @@ namespace RestAPIs.Controllers
                 var rov = (from l in db.ROVs
                            where l.active == true
                            orderby l.rovID ascending
-                           select new ROV_Custom {rovID=l.rovID, rov = l.name }).ToList();
+                           select new ROV_Custom { rovID = l.rovID, rov = l.name }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, rov);
                 return response;
             }
@@ -64,7 +66,7 @@ namespace RestAPIs.Controllers
                 var rov = (from l in db.Appointments
                            where l.active == true && l.patientID == id
                            orderby l.appID descending
-                           select new AppointmentModel { chiefComplaints = l.chiefComplaints }).FirstOrDefault();
+                           select new PatientROV { chiefComplaints = l.chiefComplaints }).FirstOrDefault();
                 response = Request.CreateResponse(HttpStatusCode.OK, rov);
                 return response;
             }
@@ -83,17 +85,17 @@ namespace RestAPIs.Controllers
             Appointment app = new Appointment();
             try
             {
-                if (model.appDate==null)
+                if (model.appDate == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment date." });
                     return response;
                 }
-               if(model.appTime == null)
+                if (model.appTime == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment time." });
                     return response;
                 }
-               if(model.doctorID == null)
+                if (model.doctorID == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
                     return response;
@@ -127,7 +129,7 @@ namespace RestAPIs.Controllers
             return response;
         }
         [HttpPost]
-        [Route("api/addRovChiefComplaints/appModel/")]
+        [Route("api/addRovChiefComplaints")]
         [ResponseType(typeof(void))]
         public async Task<HttpResponseMessage> AddROV(Appointment model)
         {
@@ -146,13 +148,13 @@ namespace RestAPIs.Controllers
             }
             catch (Exception ex)
             {
-                ThrowError(ex, "AddROV in AppointmentController.");
+                return ThrowError(ex, "AddROV in AppointmentController.");
             }
 
             response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.appID, message = "" });
             return response;
         }
-        [Route("api/addPatientFiles/appModel/")]
+        [Route("api/addPatientFiles")]
         [ResponseType(typeof(void))]
         public async Task<HttpResponseMessage> AddPatientFiles(UserFile model)
         {
@@ -168,19 +170,221 @@ namespace RestAPIs.Controllers
             }
             catch (Exception ex)
             {
-                ThrowError(ex, "AddROV in AppointmentController.");
+                return ThrowError(ex, "AddROV in AppointmentController.");
             }
 
             response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.fileID, message = "" });
             return response;
         }
 
-      
+        [Route("api/GetRescheduleAppforPatient")]
+        public HttpResponseMessage GetRescheduleAppforPatient(long patientID)
+        {
+            try
+            {
+                if (patientID == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Invalid patient ID" });
+                    return response;
+                }
+                else
+                {
+                    var result = db.SP_GetRescheduleAppforPatient(patientID);
+                    response = Request.CreateResponse(HttpStatusCode.OK, result);
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetRescheduleAppforPatient in AppointmentController");
+            }
+
+
+        }
+        [Route("api/GetRescheduleAppforDoctor")]
+        public HttpResponseMessage GetRescheduleAppforDoctor(long doctorID)
+        {
+            try
+            {
+                if (doctorID == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Invalid doctor ID" });
+                    return response;
+                }
+                else
+                {
+                    var result = db.SP_GetRescheduleAppforDoctor(doctorID);
+                    response = Request.CreateResponse(HttpStatusCode.OK, result);
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetRescheduleAppforDoctor in AppointmentController");
+            }
+
+
+        }
+       
+        [Route("api/GetUpcomingAppforPatient")]
+        public HttpResponseMessage GetUpcomingAppforPatient(long patientID)
+        {
+            try
+            {
+                if (patientID == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Invalid patient ID" });
+                    return response;
+                }
+                else
+                {
+                    var result = db.SP_GetUpcomingAppforPatient(patientID).ToList();
+                    response = Request.CreateResponse(HttpStatusCode.OK, result);
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetUpcomingAppforPatient in AppointmentController");
+            }
+
+
+        }
+        [Route("api/GetUpcomingAppforDoctor")]
+        public HttpResponseMessage GetUpcomingAppforDoctor(long doctorID)
+        {
+            try
+            {
+                if (doctorID == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Invalid doctor ID" });
+                    return response;
+                }
+                else
+                {
+                    var result = db.SP_GetUpcomingAppforDoctor(doctorID);
+                    response = Request.CreateResponse(HttpStatusCode.OK, result);
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetUpcomingAppforDoctor in AppointmentController");
+            }
+
+
+        }
+        [Route("api/GetCancelledAppforPatient")]
+        public HttpResponseMessage GetCancelledAppforPatient(long patientID)
+        {
+            try
+            {
+                if (patientID == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Invalid patient ID" });
+                    return response;
+                }
+                else
+                {
+                    var result = db.SP_GetCancelledAppforPatient(patientID);
+                    response = Request.CreateResponse(HttpStatusCode.OK, result);
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetCancelledAppforPatient in AppointmentController");
+            }
+
+
+        }
+
+        [Route("api/GetCancelledAppforDoctor")]
+        public HttpResponseMessage GetCancelledAppforDoctor(long doctorID)
+        {
+            try
+            {
+                if (doctorID == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Invalid doctor ID" });
+                    return response;
+                }
+                else
+                {
+                    var result = db.SP_GetCancelledAppforDoctor(doctorID);
+                    response = Request.CreateResponse(HttpStatusCode.OK, result);
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetCancelledAppforDoctor in AppointmentController");
+            }
+
+
+        }
+
+       
+
+        [HttpPost]
+        [Route("api/RescheduleRequest")]
+        public async Task<HttpResponseMessage> RescheduleApp(RescheduleRequestModel model)
+        {
+            try
+            {
+                if(model.doctorID==0||model.doctorID==null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
+                    return response;
+                }
+                if (model.appID == 0 || model.appID == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment ID." });
+                    return response;
+                }
+                Appointment result = db.Appointments.Where(app => app.appID == model.appID && app.active==true).FirstOrDefault();
+                if(result==null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Appointment not found" });
+                    return response;
+                }
+                else
+                {
+                    string currDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    string appDateTime = result.appDate.ToString() + result.appTime.ToString();
+                    DateTime cdt = Convert.ToDateTime(currDateTime);
+                    DateTime adt = Convert.ToDateTime(appDateTime);
+                    TimeSpan timediff = cdt - adt;
+                    if (timediff.TotalHours > 24)
+                    {
+                        response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Appointment reschedule is not allowed after 24 hours." });
+                        return response;
+                    }
+                    else
+                    {
+                        result.rescheduleRequiredBy = "D";
+                        result.mb = model.doctorID.ToString();
+                        result.md = System.DateTime.Now;
+                        db.Entry(result).State = EntityState.Modified;
+                        await db.SaveChangesAsync();
+                    }
+                }
+                
+                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = model.appID, message = "" });
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "RescheduleRequest in AppointmentController");
+            }
+
+
+        }
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
-            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.Message, Encoding.Unicode);
+            response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = "Internal server error at"+Action });
             return response;
+          
         }
         protected override void Dispose(bool disposing)
         {

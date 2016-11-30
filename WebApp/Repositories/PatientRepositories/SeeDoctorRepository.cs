@@ -73,13 +73,13 @@ namespace WebApp.Repositories.DoctorRepositories
 
         }
       
-        public AppointmentModel LoadROV(long patientid)
+        public PatientROV LoadROV(long patientid)
         {
 
             try
             {
-                var response = ApiConsumerHelper.GetResponseString("api/ROV/?Id=" + patientid);
-                var result = JsonConvert.DeserializeObject<AppointmentModel>(response);
+                var response = ApiConsumerHelper.GetResponseString("api/PatientPreviousROV/?patientID=" + patientid);
+                var result = JsonConvert.DeserializeObject<PatientROV>(response);
                 return result;
             }
             catch (Exception ex)
@@ -90,13 +90,13 @@ namespace WebApp.Repositories.DoctorRepositories
             }
 
         }
-        public AppointmentModel GetPatientChiefComplaints(long patientid)
+        public PatientROV GetPatientChiefComplaints(long patientid)
         {
 
             try
             {
                 var response = ApiConsumerHelper.GetResponseString("api/GetPatientChiefComplaints/?Id=" + patientid);
-                var result = JsonConvert.DeserializeObject<AppointmentModel>(response);
+                var result = JsonConvert.DeserializeObject<PatientROV>(response);
                 return result;
             }
             catch (Exception ex)

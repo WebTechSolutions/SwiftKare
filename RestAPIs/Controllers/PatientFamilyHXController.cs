@@ -13,6 +13,7 @@ using System.Web.Http.Description;
 
 namespace RestAPIs.Controllers
 {
+    [Authorize]
     public class PatientFamilyHXController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
