@@ -58,6 +58,8 @@ namespace DataAccess
         public string publication { get; set; }
         public string aboutMe { get; set; }
         public string userId { get; set; }
+        public string city { get; set; }
+        public string state { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }
