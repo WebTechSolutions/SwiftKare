@@ -9,20 +9,46 @@ namespace WebApp.Controllers
 {
     public class UserChatController : Controller
     {
+        [HttpPost]
+        public bool ReadyForCall(string senderId, string receiverId, string userType, string recipientName)
+        {
+            try
+            {
+                var openTokSession = UserChatHelper.GetOpenTokSessionInformation(senderId, receiverId, userType, recipientName);
+                openTokSession.RecipientName = recipientName;
+                if (openTokSession == null || string.IsNullOrEmpty(openTokSession.SessionId) || string.IsNullOrEmpty(openTokSession.TokenId))
+                {
+                    return false;
+                }
+
+                HttpContext.Session["MyOpenTokSession"] = openTokSession;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         // GET: UserChat
         public ActionResult Index()
         {
-            if(HttpContext.Application["OpenTokSession"] == null)
+            var openTokSession = (OpenTokSession)(HttpContext.Session["MyOpenTokSession"]);
+
+            if (openTokSession == null || string.IsNullOrEmpty(openTokSession.SessionId) || string.IsNullOrEmpty(openTokSession.TokenId))
             {
-                HttpContext.Application["OpenTokSession"] = UserChatHelper.GenerateOpenTokSession();
-                HttpContext.Application["OpenTokToken"] = UserChatHelper.GenerateOpenTokToken(Convert.ToString(HttpContext.Application["OpenTokSession"]));
+                //Redirect user to appropriate page
             }
 
+            ViewBag.UserType = openTokSession.UserType;
+            ViewBag.RecipientName = openTokSession.RecipientName;
             ViewBag.OpenTokApiKey = UserChatHelper.TokBoxApiKey;
-            ViewBag.OpenTokSession = Convert.ToString(HttpContext.Application["OpenTokSession"]);
-            ViewBag.OpenTokToken = Convert.ToString(HttpContext.Application["OpenTokToken"]);
+            ViewBag.OpenTokSession = openTokSession.SessionId;
+            ViewBag.OpenTokToken = openTokSession.TokenId;
 
             return View();
         }
     }
+
+
 }

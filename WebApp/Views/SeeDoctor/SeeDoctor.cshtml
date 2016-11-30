@@ -1,16 +1,14 @@
-﻿
-@using System.Globalization
+﻿@using System.Globalization
 @{
     ViewBag.Title = "SeeDoctor";
     Layout = "~/Views/Shared/_PatientLayout.cshtml";
+    string publisherKey = Convert.ToString(ViewBag.PublisherKey);
+    int amount = Convert.ToInt32(ViewBag.Amount);
 }
 <style>
-       
     #mainpanel {
         display: none;
-   
     }
-
 </style>
 
 <script src="~/Scripts/Appointment/Appointment.js"></script>
@@ -18,323 +16,325 @@
 <script src="~/Scripts/Medicine/Medicine.js"></script>
 <script src="~/Scripts/PatientAllergies/PateintAllergies.js"></script>
 <script src="~/Scripts/Surgeries/Surgeries.js"></script>
+
+<script src="https://checkout.stripe.com/checkout.js"></script>
 <script src="~/Scripts/SeeDoctor/SearchDoctor.js"></script>
 
-
+<script src="@Url.Content("~/Scripts/StripePay.js")"></script>
 
 <div class="right_col">
     <div class="clearfix"></div>
     <!--Forms-->
     @if (ViewBag.errorMessage == "" && ViewBag.successMessage == "")
     {
-    <script>
-        $(function () {
-            new PNotify({
-                title: 'Information',
-                text: "@ViewBag.infoMessage",
-                type: 'info',
-                styling: 'bootstrap3'
+        <script>
+            $(function () {
+                new PNotify({
+                    title: 'Information',
+                    text: "@ViewBag.infoMessage",
+                    type: 'info',
+                    styling: 'bootstrap3'
+                });
             });
-        });
 
-    </script>
+        </script>
 
     }
     @if (ViewBag.errorMessage == "" && ViewBag.infoMessage == "")
     {
-    <script>
-        $(function () {
-            new PNotify({
-                title: 'Success',
-                text: "@ViewBag.successMessage",
-                type: 'success',
-                styling: 'bootstrap3'
+        <script>
+            $(function () {
+                new PNotify({
+                    title: 'Success',
+                    text: "@ViewBag.successMessage",
+                    type: 'success',
+                    styling: 'bootstrap3'
+                });
             });
-        });
 
-    </script>
+        </script>
     }
     @if (ViewBag.successMessage == "" && ViewBag.infoMessage == "")
     {
 
-    <script>
-        $(function () {
-            new PNotify({
-                title: 'Error',
-                text: "@ViewBag.errorMessage",
-                type: 'error',
-                styling: 'bootstrap3'
+        <script>
+            $(function () {
+                new PNotify({
+                    title: 'Error',
+                    text: "@ViewBag.errorMessage",
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
             });
-        });
-    </script>
+        </script>
     }
     <div id="busy" class="loader" style="display:none"></div>
-        <div class="clearfix"></div>
-        <div class="row">
-            <input type="text" style="display:none" id="userID">
-            <input type="text" style="display:none" id="appointmentID">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="x_panel">
-                    <div class="x_title">
-                        <h2>See a Doctor</h2>
-                        <ul class="nav navbar-right panel_toolbox">
+    <div class="clearfix"></div>
+    <div class="row">
+        <input type="text" style="display:none" id="userID">
+        <input type="text" style="display:none" id="appointmentID">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>See a Doctor</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div id="wizard" class="form_wizard wizard_horizontal">
+                        <ul class="wizard_steps">
                             <li>
-                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                <a href="#step-1">
+                                    <span class="step_no">1</span>
+                                    <span class="step_descr">Search Doctor</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="#step-2">
+                                    <span class="step_no">2</span>
+                                    <span class="step_descr">Reason Of Visit</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="#step-3">
+                                    <span class="step_no">3</span>
+                                    <span class="step_descr">Medical History</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="#step-4">
+                                    <span class="step_no">4</span>
+                                    <span class="step_descr">Pharmacy</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="#step-5">
+                                    <span class="step_no">5</span>
+                                    <span class="step_descr">Appointment Summary</span>
+                                </a>
                             </li>
                         </ul>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="x_content">
-                        <div id="wizard" class="form_wizard wizard_horizontal">
-                            <ul class="wizard_steps">
-                                <li>
-                                    <a href="#step-1">
-                                        <span class="step_no">1</span>
-                                        <span class="step_descr">Search Doctor</span>
-                                    </a>
-                                </li>
 
-                                <li>
-                                    <a href="#step-2">
-                                        <span class="step_no">2</span>
-                                        <span class="step_descr">Reason Of Visit</span>
-                                    </a>
-                                </li>
+                        <div id="step-1">
 
-                                <li>
-                                    <a href="#step-3">
-                                        <span class="step_no">3</span>
-                                        <span class="step_descr">Medical History</span>
-                                    </a>
-                                </li>
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>Search Doctor</h2>
+                                    <ul class="nav navbar-right panel_toolbox">
+                                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                                    </ul>
+                                    <div class="clearfix"></div>
+                                </div>
 
-                                <li>
-                                    <a href="#step-4">
-                                        <span class="step_no">4</span>
-                                        <span class="step_descr">Pharmacy</span>
-                                    </a>
-                                </li>
+                                <div class="x_content">
+                                    <div class="row">
 
-                                <li>
-                                    <a href="#step-5">
-                                        <span class="step_no">5</span>
-                                        <span class="step_descr">Appointment Summary</span>
-                                    </a>
-                                </li>
-                            </ul>
+                                        <div class="col-md-4 col-sm-6 col-xs-12">
+                                            <form class="form-horizontal form-label-left">
+                                                <label class="control-label">Appointment Date:</label>
+                                                <div class="xdisplay_inputx form-group has-feedback">
+                                                    <div class="form-group">
 
-                            <div id="step-1">
+                                                        <input type="text" id="searchdate" class="form-control floating-label" placeholder="Date">
 
-    <div class="x_panel">
-        <div class="x_title">
-            <h2>Search Doctor</h2>
-            <ul class="nav navbar-right panel_toolbox">
-                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-            </ul>
-            <div class="clearfix"></div>
-        </div>
+                                                    </div>
+                                                </div>
 
-        <div class="x_content">
-            <div class="row">
 
-                <div class="col-md-4 col-sm-6 col-xs-12">
-                    <form class="form-horizontal form-label-left">
-                        <label class="control-label">Appointment Date:</label>
-                        <div class="xdisplay_inputx form-group has-feedback">
-                            <div class="form-group">
-                               
-                                <input type="text" id="searchdate" class="form-control floating-label" placeholder="Date">
+                                                <label class="control-label">Perferred Time:</label>
+                                                <div class="form-group">
+
+                                                    <input type="text" id="time" class="form-control floating-label" placeholder="Time">
+
+                                                </div>
+                                            </form>
+
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-6 col-xs-12">
+
+
+                                            <label class="control-label">Specially:</label>
+                                            <div class="form-group">
+                                                <select class="form-control" id="Speciality">
+                                                    <option value="">ALL</option>
+
+                                                </select>
+                                            </div>
+                                            <label class="control-label">Language:</label>
+                                            <div class="form-group">
+                                                <select class="form-control" id="Language">
+                                                    <option value="">ALL</option>
+
+                                                </select>
+                                            </div>
+
+
+
+
+                                        </div>
+                                        <div class="col-md-4 col-sm-6 col-xs-12">
+                                            <label class="control-label">Gender:</label>
+                                            <div class="form-group">
+
+                                                <select class="form-control" id="Gender">
+                                                    <option value="">ALL</option>
+                                                    <option value="">Male</option>
+                                                    <option value="">Female</option>
+
+                                                </select>
+                                            </div>
+                                            <label class="control-label">Provider name:</label>
+                                            <div class="form-group">
+
+                                                <input id="providerName" type="text" class="form-control" placeholder="Search By Name">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="ln_solid"></div>
+                                    <button type="button" class="btn btn-primary pull-right" id="search-click" onclick="searchDoctor();">Search</button>
+
+                                </div>
 
                             </div>
-                        </div>
 
 
-                        <label class="control-label">Perferred Time:</label>
-                        <div class="form-group">
-                           
-                            <input type="text" id="time" class="form-control floating-label" placeholder="Time">
+                            <div id="maindiv"></div>
+                            <div class="x_panel" id="mainpanel">
+                                <div class="x_title">
+                                    <h2>Doctor Result</h2>
+                                    <ul class="nav navbar-right panel_toolbox">
 
-                        </div>
-                    </form>
-
-</div>
-
-                <div class="col-md-4 col-sm-6 col-xs-12">
-
-
-                    <label class="control-label">Specially:</label>
-                    <div class="form-group">
-                        <select class="form-control" id="Speciality">
-                            <option value="">ALL</option>
-
-                        </select>
-                    </div>
-                    <label class="control-label">Language:</label>
-                    <div class="form-group">
-                        <select class="form-control" id="Language">
-                            <option value="">ALL</option>
-
-                        </select>
-                    </div>
-
-
-
-
-                </div>
-                <div class="col-md-4 col-sm-6 col-xs-12">
-                    <label class="control-label">Gender:</label>
-                    <div class="form-group">
-
-                        <select class="form-control" id="Gender">
-                            <option value="">ALL</option>
-                            <option value="">Male</option>
-                            <option value="">Female</option>
-
-                        </select>
-                    </div>
-                    <label class="control-label">Provider name:</label>
-                    <div class="form-group">
-
-                        <input id="providerName" type="text" class="form-control" placeholder="Search By Name">
-                    </div>
-                </div>
-
-            </div>
-            <div class="ln_solid"></div>
-            <button type="button" class="btn btn-primary pull-right" id="search-click" onclick="searchDoctor();">Search</button>
-
-        </div>
-
-    </div>
-
-
-    <div id="maindiv"></div>
-    <div class="x_panel" id="mainpanel">
-        <div class="x_title">
-            <h2>Doctor Result</h2>
-            <ul class="nav navbar-right panel_toolbox">
-                
-                <li>
-                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                </li>
-            </ul>
-            <div class="clearfix"></div>
-        </div>
-        <div class="x_content according-defalut-close" style="float: none;" id="doctorList">
-            <ul class="doctor_details" id="docList"></ul>
-           
-        </div>
-    </div>
-</div>@*step1*@
-                           
-
-                            <div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div><!--/.modal header-->
-
-                                        <div class="modal-body text-left">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <img class="gray-bdr-b-1" src="../Content/images/us_map.jpg" alt="" style="width:100%;">
-                                                </div>
-                                            </div>
-                                            <div class="row p-30">
-                                                <div class="col-lg-4 col-md-4 col-sm-12">
-                                                    <div class="dr_info w-bg box-s">
-                                                        <div class="map-box">
-                                                            <div class="box-inner">
-                                                                <img src="../Content/images/img.jpg" alt="" class="m-b-10 img-circle img-responsive">
-                                                            </div>
-                                                            <a class="hrt" href="#" style="color: #5A738E; left: 10px;"><span class="fa fa-heart-o" aria-hidden="true"></span></a>
-                                                            <a class="hrt1" href="#" style="color: #5A738E; left: 10px;"><span class="fa fa-heart" aria-hidden="true"></span></a>
-                                                            <i class="popup-circle fa fa-circle" aria-hidden="true" style="color: red;"></i>
-                                                            <h2 class="text-center">Dr. susan Diamond</h2>
-                                                            <p class="text-center m-0" style="color: green;">Available for Call</p>
-                                                            <p class="ratings m-t-0 m-b-5" style="text-align: center;">
-
-                                                                <a href="#"><span class="fa fa-star"></span></a>
-                                                                <a href="#"><span class="fa fa-star"></span></a>
-                                                                <a href="#"><span class="fa fa-star"></span></a>
-                                                                <a href="#"><span class="fa fa-star"></span></a>
-                                                                <a href="#"><span class="fa fa-star-o"></span></a>
-                                                            </p>
-                                                            <div class="gray-bdr-b-1"></div>
-                                                            <p class="m-tb-15"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp Location: Dallas, TX</p>
-                                                            <div class="gray-bdr-b-1"></div>
-                                                            <p class="m-tb-15"><i class="fa fa-mobile" aria-hidden="true"></i>&nbsp Mobile: 555-555-5555</p>
-                                                            <div class="gray-bdr-b-1"></div>
-                                                            <div class="row green-bg-sec">
-                                                                <div class="col-lg-6 col-md-12 col-sm-12">
-                                                                    <button type="button" class="m-t-20 btn btn-primary w-100"><i class="fa fa-phone" aria-hidden="true"></i>&nbsp Call</button>
-                                                                </div>
-                                                                <div class="col-lg-6 col-md-12 col-sm-12">
-                                                                    <input type="text" style="display:none" id="docscheduleid">
-                                                                    <a href="#" class="thumbnail-col-inner m-t-20 btn btn-primary w-100" data-toggle="modal" data-target="#myModal1" onclick="showDoctorTimings($('#docscheduleid').val())"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp Schedule</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-8 col-md-8 col-sm-12">
-                                                    <h4><i class="fa fa-user" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>About me:</b></h4>
-                                                    <p style="padding-left: 30px;">I am married and the mother of 5 childern. I regularly exercise, doing weights and resistance training 3 times a week and I swim laps in addition almost every day.</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="gray-bg p-30 gray-light-bdr-t-1">
-                                                <div class="row">
-                                                    <div class="col-md-4"></div>
-                                                    <div class="col-md-8">
-                                                        <h4><i class="fa fa-user-md" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>My Specialties:</b></h4>
-                                                        <p style="padding-left: 30px;">Internal Medicine</p>
-
-                                                        <h4><i class="fa fa-graduation-cap" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>Qualifications:</b></h4>
-                                                        <p style="padding-left: 30px;">TEXAS, UTAH, NEWYORK, VIRGINIA</p>
-
-                                                        <h4><i class="fa fa-map-marker" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>Licensed State(s):</b></h4>
-
-                                                        <h4><i class="fa fa-graduation-cap" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>Education:</b></h4>
-                                                        <p style="padding-left: 30px;">I attended the university of Pennsylvania for undergraduate and medical school. I then went on to University of Taxes Southwestern Medical School in Dallas where I did my internal Medicine training and my Nephrology fellowship.</p>
-
-                                                        <h4><i class="fa fa-book" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>Publications:</b></h4>
-
-                                                        <h4><i class="fa fa-map-marker" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>Location:</b></h4>
-                                                        <p style="padding-left: 30px;">Dallas, TX</p>
-
-                                                        <h4><i class="fa fa-language" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>languages Spoken:</b></h4>
-                                                        <p style="padding-left: 30px;">English</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div><!--/.modal body-->
-                                    </div>
+                                        <li>
+                                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                        </li>
+                                    </ul>
+                                    <div class="clearfix"></div>
                                 </div>
-                            </div><!-- col4 -->
-                            <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            <h4 class="modal-title" id="timingsmodaltitle"></h4>
-                                        </div><!--/.modal header-->
+                                <div class="x_content according-defalut-close" style="float: none;" id="doctorList">
+                                    <ul class="doctor_details" id="docList"></ul>
 
-                                        <div class="modal-body text-left">
-                                            <div class="row" id="docrow">
-                                                <input type="text" style="display:none" id="doctorid">
+                                </div>
+                            </div>
+                        </div>@*step1*@
 
-                                                <form class="form-horizontal form-label-left">
-                                                    <div class="col-sm-offset-4 col-sm-4">
-                                                        <div class="xdisplay_inputx form-group has-feedback">
-                                                            <input type="text"  class="form-control has-feedback-left active" id="fetchdate" placeholder="Choose a Date" aria-describedby="inputSuccess2Status">
-                                                            <span class="fa fa-calendar-o form-control-feedback left date" aria-hidden="true"></span>
-                                                            <span id="inputSuccess2Status" class="sr-only">(success)</span>
+
+                        <div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div><!--/.modal header-->
+
+                                    <div class="modal-body text-left">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <img class="gray-bdr-b-1" src="../Content/images/us_map.jpg" alt="" style="width:100%;">
+                                            </div>
+                                        </div>
+                                        <div class="row p-30">
+                                            <div class="col-lg-4 col-md-4 col-sm-12">
+                                                <div class="dr_info w-bg box-s">
+                                                    <div class="map-box">
+                                                        <div class="box-inner">
+                                                            <img src="../Content/images/img.jpg" alt="" class="m-b-10 img-circle img-responsive">
+                                                        </div>
+                                                        <a class="hrt" href="#" style="color: #5A738E; left: 10px;"><span class="fa fa-heart-o" aria-hidden="true"></span></a>
+                                                        <a class="hrt1" href="#" style="color: #5A738E; left: 10px;"><span class="fa fa-heart" aria-hidden="true"></span></a>
+                                                        <i class="popup-circle fa fa-circle" aria-hidden="true" style="color: red;"></i>
+                                                        <h2 class="text-center">Dr. susan Diamond</h2>
+                                                        <p class="text-center m-0" style="color: green;">Available for Call</p>
+                                                        <p class="ratings m-t-0 m-b-5" style="text-align: center;">
+
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star"></span></a>
+                                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                                        </p>
+                                                        <div class="gray-bdr-b-1"></div>
+                                                        <p class="m-tb-15"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp Location: Dallas, TX</p>
+                                                        <div class="gray-bdr-b-1"></div>
+                                                        <p class="m-tb-15"><i class="fa fa-mobile" aria-hidden="true"></i>&nbsp Mobile: 555-555-5555</p>
+                                                        <div class="gray-bdr-b-1"></div>
+                                                        <div class="row green-bg-sec">
+                                                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                                                <button type="button" class="m-t-20 btn btn-primary w-100"><i class="fa fa-phone" aria-hidden="true"></i>&nbsp Call</button>
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                                                <input type="text" style="display:none" id="docscheduleid">
+                                                                <a href="#" class="thumbnail-col-inner m-t-20 btn btn-primary w-100" data-toggle="modal" data-target="#myModal1" onclick="showDoctorTimings($('#docscheduleid').val())"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp Schedule</a>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </form>
-                                                @*<div class="col-sm-offset-4 col-sm-4">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8 col-md-8 col-sm-12">
+                                                <h4><i class="fa fa-user" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>About me:</b></h4>
+                                                <p style="padding-left: 30px;">I am married and the mother of 5 childern. I regularly exercise, doing weights and resistance training 3 times a week and I swim laps in addition almost every day.</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="gray-bg p-30 gray-light-bdr-t-1">
+                                            <div class="row">
+                                                <div class="col-md-4"></div>
+                                                <div class="col-md-8">
+                                                    <h4><i class="fa fa-user-md" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>My Specialties:</b></h4>
+                                                    <p style="padding-left: 30px;">Internal Medicine</p>
+
+                                                    <h4><i class="fa fa-graduation-cap" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>Qualifications:</b></h4>
+                                                    <p style="padding-left: 30px;">TEXAS, UTAH, NEWYORK, VIRGINIA</p>
+
+                                                    <h4><i class="fa fa-map-marker" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>Licensed State(s):</b></h4>
+
+                                                    <h4><i class="fa fa-graduation-cap" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>Education:</b></h4>
+                                                    <p style="padding-left: 30px;">I attended the university of Pennsylvania for undergraduate and medical school. I then went on to University of Taxes Southwestern Medical School in Dallas where I did my internal Medicine training and my Nephrology fellowship.</p>
+
+                                                    <h4><i class="fa fa-book" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>Publications:</b></h4>
+
+                                                    <h4><i class="fa fa-map-marker" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>Location:</b></h4>
+                                                    <p style="padding-left: 30px;">Dallas, TX</p>
+
+                                                    <h4><i class="fa fa-language" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>languages Spoken:</b></h4>
+                                                    <p style="padding-left: 30px;">English</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!--/.modal body-->
+                                </div>
+                            </div>
+                        </div><!-- col4 -->
+                        <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="timingsmodaltitle"></h4>
+                                    </div><!--/.modal header-->
+
+                                    <div class="modal-body text-left">
+                                        <div class="row" id="docrow">
+                                            <input type="text" style="display:none" id="doctorid">
+
+                                            <form class="form-horizontal form-label-left">
+                                                <div class="col-sm-offset-4 col-sm-4">
+                                                    <div class="xdisplay_inputx form-group has-feedback">
+                                                        <input type="text" class="form-control has-feedback-left active" id="fetchdate" placeholder="Choose a Date" aria-describedby="inputSuccess2Status">
+                                                        <span class="fa fa-calendar-o form-control-feedback left date" aria-hidden="true"></span>
+                                                        <span id="inputSuccess2Status" class="sr-only">(success)</span>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            @*<div class="col-sm-offset-4 col-sm-4">
                                                     <div class="xdisplay_inputx form-group has-feedback">
                                                         @*+ response.DoctorModel[item].doctorID + "," + $('#appdate').val() + "
                                                         <input onchange="fetchTimings(this)" type="text" id="appdate" class="form-control floating-label" placeholder="Choose a Date">
@@ -345,1236 +345,1257 @@
                                                 </div>*@
 
 
-                                                <form class="form-horizontal form-label-left">
-                                                    <div class="col-sm-12 text-center" >
-                                                        <ul class="doctor_time" id="TimingsData">
+                                            <form class="form-horizontal form-label-left">
+                                                <div class="col-sm-12 text-center">
+                                                    <ul class="doctor_time" id="TimingsData"></ul>
+                                                </div>
+                                                @*<button type="button" class="btn btn-primary btn-sm pull-right" id="apply">Apply</button>*@
+                                            </form>
 
-
-                                                        </ul>
-                                                    </div>
-                                                    @*<button type="button" class="btn btn-primary btn-sm pull-right" id="apply">Apply</button>*@
-                                                </form>
-
-                                            </div><!--/.modal body-->
-                                        </div>
+                                        </div><!--/.modal body-->
                                     </div>
                                 </div>
-                            </div><!-- col1 -->
-                            <!--start smartWizard content-->
-                            <div id="step-2">
-                                <form class="form">
-                                    <div class="from-group m-b-20">
-                                        <label for="heard">What is the reason for your appointment? (ex: Sore Thorat):</label>
-                                         <select id="ROV" class="form-control">
-                                          <option value="">Choose ROV</option>
-                                         </select> 
-                                       
-                                    </div>
-
-                                    <div class="form-group m-b-20">
-                                        <label class="ex4">Chief complaints</label>
-                                        <textarea class="form-control" placeholder="" id="chiefcomplaints"></textarea>
-                                    </div>
-                                </form>
-                                <p>Add a photo(helpful for rashes, cut, etc)</p>
-                                @*<form action="test.html" class="dropzone" id="mydropzone">
-                                    
-                                </form>*@
-                                <div id="dZUpload" class="dropzone">
-                                    <div class="dz-default dz-message"></div>
-                                </div>
-                                @*<input type="button" value="Upload Files to Server" id="btnUpload">*@
-                                <p>Only .pdf, .gif, .png, .jpeg formats are allowed</p>
                             </div>
-                           
+                        </div><!-- col1 -->
+                        <!--start smartWizard content-->
+                        <div id="step-2">
+                            <form class="form">
+                                <div class="from-group m-b-20">
+                                    <label for="heard">What is the reason for your appointment? (ex: Sore Thorat):</label>
+                                    <select id="ROV" class="form-control">
+                                        <option value="">Choose ROV</option>
+                                    </select>
 
-                            <div id="step-3">
-                                <div class="x_panel">
-                                    <div class="x_title">
-                                        <h2>My Health Conditions</h2>
-                                        <ul class="nav navbar-right panel_toolbox">
-                                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                        </ul>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                    <input id="conditionID" type="number" style="display:none" value="0" />
-                                    <div class="x_content">
-                                        <div class="table-responsive">
-                                            <table class="table" style="margin-bottom: 5px;">
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="border-top: none; width:78%"><h2>Do you have any health conditions?</h2></td>
-                                                        <td style="border-top: none;float: right;">
-                                                            
-                                                            <div class="text-right" style="vertical-align:bottom">
-                                                                
-                                                                <label>
-                                                                    No <input type="checkbox" class="js-switch" id="conditionCheckbox"/> Yes
-                                                                </label>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <!-- colspan="3" -->
-                                                        <td style="width:78%;">
-                                                            <div style="color:red; display:none;float:right" id="divcondition">Condition name is required.</div> 
-                                                            
-                                                            <div class="input-group" style="width: 100%;">
-                                                                @*<input type="text" name="country" placeholder="Add Conditions" id="autocomplete-custom-append" class="form-control" />*@
-                                                                
-                                                                <input style="display:none" maxlength="50" type="text" name="country" placeholder="Add Conditions" id="myCondition" class="form-control" />
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div style="color:red;display:none" id="btncondition"><label></label></div> 
-                                                            <button class="btn btn-primary" style="max-width: 200px; float: right;display:none" type="button" id="reset">Reset</button>
-                                                            <button class="btn btn-primary" style="max-width: 200px; float: right;display:none" type="button" id="addcondition" >Add Conditions</button>
-                                                           
-                                                        </td>
-                                                       
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                           
-                                            <table id="conditionstable" class="table table-striped table-bordered dt-responsive" cellspacing="0" style="width:100%">
-                                                <thead>
-                                                    <tr class="headings">
-                                                        <th class="column-title">Sr.No </th>
-                                                        <th class="column-title">My conditions </th>
-                                                        <th class="column-title">Reported Date</th>
-                                                        <th class="column-title">Action</th>
-
-                                                    </tr>
-                                                </thead>
-
-                                                <tbody id="conditionsTable"></tbody>
-                                                
-                                            </table>
-                                        </div>
-                                    </div>
                                 </div>
 
-                                <div class="x_panel">
-                                    <div class="x_title">
-                                        <h2>My Medications</h2>
-                                        <ul class="nav navbar-right panel_toolbox">
-                                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                        </ul>
-                                        <div class="clearfix"></div>
-                                    </div>
+                                <div class="form-group m-b-20">
+                                    <label class="ex4">Chief complaints</label>
+                                    <textarea class="form-control" placeholder="" id="chiefcomplaints"></textarea>
+                                </div>
+                            </form>
+                            <p>Add a photo(helpful for rashes, cut, etc)</p>
+                            @*<form action="test.html" class="dropzone" id="mydropzone">
 
-                                    <div class="x_content">
-                                        <div class="table-responsive">
-                                            <table class="table" style="margin-bottom: 5px;">
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="border-top: none" width="50%"><h2>Are you currently taking any medication?</h2></td>
-                                                        <td style="border-top: none" width="25%"></td>
-                                                        <td style="border-top: none">
-                                                            <div class="text-right">
-                                                                <label>
-                                                                    No <input type="checkbox" class="js-switch" id="medicineCheckbox"/> Yes
-                                                                </label>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                </form>*@
+                            <div id="dZUpload" class="dropzone">
+                                <div class="dz-default dz-message"></div>
+                            </div>
+                            @*<input type="button" value="Upload Files to Server" id="btnUpload">*@
+                            <p>Only .pdf, .gif, .png, .jpeg formats are allowed</p>
+                        </div>
 
-                                                    <tr>
-                                                        <td width="50%">
-                                                            <div class="form-group">
-                                                                <div style="color:red; display:none;float:right" id="divmedicine">Medicine name is required.</div> 
-                                                                <input style="display:none" type="text" name="country" placeholder="Search Medicine" id="myMedicine" class="form-control" />
-                                                            </div>
-                                                        </td>
-                                                        <td width="25%">
-                                                            <div class="form-group">
-                                                                <div style="color:red;display:none" id="divfrequency"><label></label></div>
-                                                                <select class="form-control" id="myFrequency" style="display:none">
-                                                                    <option value="">Choose Frequency</option>
 
-                                                                </select>
-                                                                @*<input type="text" name="country" placeholder="Select Frequency" id="autocomplete-custom-append2" class="form-control" />*@
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div style="color:red;display:none" id="btnmedicine"><label></label></div>
-                                                            <button class="btn btn-primary" style="max-width: 200px; float: right;display:none" type="button" id="resetmedicine">Reset</button>
-                                                            <button class="btn btn-primary" style="max-width: 200px; float: right;display:none" type="button" id="addmedicine">Add Medication</button>
+                        <div id="step-3">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>My Health Conditions</h2>
+                                    <ul class="nav navbar-right panel_toolbox">
+                                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                    </ul>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <input id="conditionID" type="number" style="display:none" value="0" />
+                                <div class="x_content">
+                                    <div class="table-responsive">
+                                        <table class="table" style="margin-bottom: 5px;">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="border-top: none; width:78%"><h2>Do you have any health conditions?</h2></td>
+                                                    <td style="border-top: none;float: right;">
 
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                                        <div class="text-right" style="vertical-align:bottom">
 
-                                            <table id="medicinestable" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
-                                                <thead>
-                                                    <tr class="headings">
-                                                        <th class="column-title">Sr.No </th>
-                                                        <th class="column-title">My medication</th>
-                                                        <th class="column-title">Frequency</th>
-                                                        <th class="column-title">Reported Date</th>
-                                                        <th class="column-title">Action</th>
-                                                        
-                                                    </tr>
-                                                </thead>
+                                                            <label>
+                                                                No <input type="checkbox" class="js-switch" id="conditionCheckbox" /> Yes
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
 
-                                                <tbody>
-                                                   
+                                                <tr>
+                                                    <!-- colspan="3" -->
+                                                    <td style="width:78%;">
+                                                        <div style="color:red; display:none;float:right" id="divcondition">Condition name is required.</div>
 
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                        <div class="input-group" style="width: 100%;">
+                                                            @*<input type="text" name="country" placeholder="Add Conditions" id="autocomplete-custom-append" class="form-control" />*@
+
+                                                            <input style="display:none" maxlength="50" type="text" name="country" placeholder="Add Conditions" id="myCondition" class="form-control" />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div style="color:red;display:none" id="btncondition"><label></label></div>
+                                                        <button class="btn btn-primary" style="max-width: 200px; float: right;display:none" type="button" id="reset">Reset</button>
+                                                        <button class="btn btn-primary" style="max-width: 200px; float: right;display:none" type="button" id="addcondition">Add Conditions</button>
+
+                                                    </td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <table id="conditionstable" class="table table-striped table-bordered dt-responsive" cellspacing="0" style="width:100%">
+                                            <thead>
+                                                <tr class="headings">
+                                                    <th class="column-title">Sr.No </th>
+                                                    <th class="column-title">My conditions </th>
+                                                    <th class="column-title">Reported Date</th>
+                                                    <th class="column-title">Action</th>
+
+                                                </tr>
+                                            </thead>
+
+                                            <tbody id="conditionsTable"></tbody>
+
+                                        </table>
                                     </div>
                                 </div>
+                            </div>
 
-
-                                <div class="x_panel">
-                                    <div class="x_title">
-                                        <h2>My Allergies</h2>
-                                        <ul class="nav navbar-right panel_toolbox">
-                                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                        </ul>
-                                        <div class="clearfix"></div>
-                                    </div>
-
-                                    <div class="x_content">
-                                        <div class="table-responsive">
-                                            <table class="table" style="margin-bottom: 5px;" >
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="border-top: none"><h2>Do you have any allergies or Drug Sensitivities?</h2></td>
-                                                        <td style="border-top: none"></td>
-                                                        <td style="border-top: none"></td>
-                                                        <td style="border-top: none">
-                                                            <div class="text-right">
-                                                                <label>
-                                                                    No <input type="checkbox" class="js-switch" id="allergyCheckbox" /> Yes
-                                                                </label>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td>
-                                                            <div class="form-group">
-                                                                <div style="color:red; display:none;float:right" id="divallergy">Allergy name is required.</div> 
-                                                                <input style="display:none" type="text" name="country" placeholder="Add Allergy" id="myAllergy" class="form-control" />
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="form-group">
-                                                                <div style="color:red;display:none" id="divsensitivity"><label></label></div>
-                                                                <select class="form-control" id="Sensitivity" style="display:none">
-                                                                    <option value="">Choose Sensitivity</option>
-
-                                                                </select>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="form-group">
-                                                                <div style="color:red;display:none" id="divreaction"><label></label></div>
-                                                                <select class="form-control" id="Reaction" style="display:none">
-
-                                                                    <option value="">Choose Reaction</option>
-
-                                                                </select>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div style="color:red;display:none" id="btnallergy"><label></label></div>
-                                                            <button id="resetallergy" class="btn btn-primary" style="max-width: 200px; float: right; margin-right: 0;display:none" type="button">Reset</button>
-                                                            <button id="addallergy" class="btn btn-primary" style="max-width: 200px; float: right; margin-right: 0;display:none" type="button">Add Allergy</button>
-                                                            
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-
-                                             <table id="allergiestable" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
-                                                <thead>
-                                                    <tr class="headings">
-                                                        <th class="column-title">Sr.No </th>
-                                                        <th class="column-title">Allergy</th>
-                                                        <th class="column-title">Severity</th>
-                                                        <th class="column-title">Reaction</th>
-                                                        <th class="column-title">Reported Date</th>
-                                                        <th class="column-title">Action</th>
-                                                        
-                                                    </tr>
-                                                </thead>
-
-                                                <tbody>
-                                                   
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>My Medications</h2>
+                                    <ul class="nav navbar-right panel_toolbox">
+                                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                    </ul>
+                                    <div class="clearfix"></div>
                                 </div>
 
+                                <div class="x_content">
+                                    <div class="table-responsive">
+                                        <table class="table" style="margin-bottom: 5px;">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="border-top: none" width="50%"><h2>Are you currently taking any medication?</h2></td>
+                                                    <td style="border-top: none" width="25%"></td>
+                                                    <td style="border-top: none">
+                                                        <div class="text-right">
+                                                            <label>
+                                                                No <input type="checkbox" class="js-switch" id="medicineCheckbox" /> Yes
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
 
-                                <div class="x_panel">
-                                    <div class="x_title">
-                                        <h2>My Surgeries and Procedures</h2>
-                                        <ul class="nav navbar-right panel_toolbox">
-                                            <li>
-                                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                            </li>
-                                        </ul>
-                                        <div class="clearfix"></div>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <div class="form-group">
+                                                            <div style="color:red; display:none;float:right" id="divmedicine">Medicine name is required.</div>
+                                                            <input style="display:none" type="text" name="country" placeholder="Search Medicine" id="myMedicine" class="form-control" />
+                                                        </div>
+                                                    </td>
+                                                    <td width="25%">
+                                                        <div class="form-group">
+                                                            <div style="color:red;display:none" id="divfrequency"><label></label></div>
+                                                            <select class="form-control" id="myFrequency" style="display:none">
+                                                                <option value="">Choose Frequency</option>
+
+                                                            </select>
+                                                            @*<input type="text" name="country" placeholder="Select Frequency" id="autocomplete-custom-append2" class="form-control" />*@
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div style="color:red;display:none" id="btnmedicine"><label></label></div>
+                                                        <button class="btn btn-primary" style="max-width: 200px; float: right;display:none" type="button" id="resetmedicine">Reset</button>
+                                                        <button class="btn btn-primary" style="max-width: 200px; float: right;display:none" type="button" id="addmedicine">Add Medication</button>
+
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <table id="medicinestable" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
+                                            <thead>
+                                                <tr class="headings">
+                                                    <th class="column-title">Sr.No </th>
+                                                    <th class="column-title">My medication</th>
+                                                    <th class="column-title">Frequency</th>
+                                                    <th class="column-title">Reported Date</th>
+                                                    <th class="column-title">Action</th>
+
+                                                </tr>
+                                            </thead>
+
+                                            <tbody></tbody>
+                                        </table>
                                     </div>
-                                    <div class="x_content">
-                                        <div class="table-responsive">
-                                            <table id="surgeriestable" class="table" style="margin-bottom: 5px;">
-                                                <tbody >
-                                                    <tr>
-                                                        <td style="border-top: none">Have you ever had any surgeries or medical procedures?</td>
-                                                        <td style="border-top: none"></td>
-                                                        <td style="border-top: none"></td>
-                                                        <td style="border-top: none">
-                                                            <div class="text-right" style="width: 87px;">
-                                                                <label>
-                                                                    No <input type="checkbox" class="js-switch" id="surgeryCheckbox" /> Yes
-                                                                </label>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                   
-                                                    <tr>
-                                                        <td>
-                                                            
-                                                            <div class="input-group" style="width: 100%;">
-                                                                <div style="color:red; display:none;float:right" id="divsurgery">Surgery name is required.</div> 
-                                                                <input style="display:none" maxlength="50" type="text" name="country" placeholder="Add Surgeries" id="myBodyPart" class="form-control"/>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div style="color:red;display:none" id="btnsurgery"><label></label></div>
-                                                           <button style="display:none" id="addsurgery" class="btn btn-primary" type="button">Add Surgeries</button>
-                                                          
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Have you ever had any of the following? (Check All that Apply)</b></td>
-                                                        <td><b></b></td>
-                                                    </tr>
-                                                    @*<tr>
+                                </div>
+                            </div>
+
+
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>My Allergies</h2>
+                                    <ul class="nav navbar-right panel_toolbox">
+                                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                    </ul>
+                                    <div class="clearfix"></div>
+                                </div>
+
+                                <div class="x_content">
+                                    <div class="table-responsive">
+                                        <table class="table" style="margin-bottom: 5px;">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="border-top: none"><h2>Do you have any allergies or Drug Sensitivities?</h2></td>
+                                                    <td style="border-top: none"></td>
+                                                    <td style="border-top: none"></td>
+                                                    <td style="border-top: none">
+                                                        <div class="text-right">
+                                                            <label>
+                                                                No <input type="checkbox" class="js-switch" id="allergyCheckbox" /> Yes
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <div style="color:red; display:none;float:right" id="divallergy">Allergy name is required.</div>
+                                                            <input style="display:none" type="text" name="country" placeholder="Add Allergy" id="myAllergy" class="form-control" />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <div style="color:red;display:none" id="divsensitivity"><label></label></div>
+                                                            <select class="form-control" id="Sensitivity" style="display:none">
+                                                                <option value="">Choose Sensitivity</option>
+
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <div style="color:red;display:none" id="divreaction"><label></label></div>
+                                                            <select class="form-control" id="Reaction" style="display:none">
+
+                                                                <option value="">Choose Reaction</option>
+
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div style="color:red;display:none" id="btnallergy"><label></label></div>
+                                                        <button id="resetallergy" class="btn btn-primary" style="max-width: 200px; float: right; margin-right: 0;display:none" type="button">Reset</button>
+                                                        <button id="addallergy" class="btn btn-primary" style="max-width: 200px; float: right; margin-right: 0;display:none" type="button">Add Allergy</button>
+
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <table id="allergiestable" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
+                                            <thead>
+                                                <tr class="headings">
+                                                    <th class="column-title">Sr.No </th>
+                                                    <th class="column-title">Allergy</th>
+                                                    <th class="column-title">Severity</th>
+                                                    <th class="column-title">Reaction</th>
+                                                    <th class="column-title">Reported Date</th>
+                                                    <th class="column-title">Action</th>
+
+                                                </tr>
+                                            </thead>
+
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>My Surgeries and Procedures</h2>
+                                    <ul class="nav navbar-right panel_toolbox">
+                                        <li>
+                                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                        </li>
+                                    </ul>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                    <div class="table-responsive">
+                                        <table id="surgeriestable" class="table" style="margin-bottom: 5px;">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="border-top: none">Have you ever had any surgeries or medical procedures?</td>
+                                                    <td style="border-top: none"></td>
+                                                    <td style="border-top: none"></td>
+                                                    <td style="border-top: none">
+                                                        <div class="text-right" style="width: 87px;">
+                                                            <label>
+                                                                No <input type="checkbox" class="js-switch" id="surgeryCheckbox" /> Yes
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>
+
+                                                        <div class="input-group" style="width: 100%;">
+                                                            <div style="color:red; display:none;float:right" id="divsurgery">Surgery name is required.</div>
+                                                            <input style="display:none" maxlength="50" type="text" name="country" placeholder="Add Surgeries" id="myBodyPart" class="form-control" />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div style="color:red;display:none" id="btnsurgery"><label></label></div>
+                                                        <button style="display:none" id="addsurgery" class="btn btn-primary" type="button">Add Surgeries</button>
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Have you ever had any of the following? (Check All that Apply)</b></td>
+                                                    <td><b></b></td>
+                                                </tr>
+                                                @*<tr>
                                                         <td>
                                                             <div class="checkbox" style="display: inline-block; width: 150px;">
                                                                 <label>
                                                                     <input type="checkbox" class="flat" checked="checked">&nbsp Ankle
                                                                 </label>
-                                                               
-                                                                                                                           
+
+
                                                             </div>
-                                                           
+
                                                         </td>
                                                        <td></td>
                                                     </tr>*@
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div id="step-4">
-                                <div class="row" style="margin-bottom: 70px;">
-                                    <div class="col-md-6 col-sm-12 col-xs-12">
-                                        <div class="x_panel">
-                                            <div class="x_title">
-                                                <div class="input-group res-w-input" style="width: 94%; float: left;">
-                                                    <input type="text" name="country" placeholder="Search Pharmacy" id="pharmacy" class="form-control"/>
-                                                    <input type="number" id="pharmacyid" style="display:none" />
-                                                </div>
-                                                <ul class="nav navbar-right panel_toolbox">
-                                                    <li>
-                                                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                                    </li>
-                                                </ul>
-                                                <div class="clearfix"></div>
+                        <div id="step-4">
+                            <div class="row" style="margin-bottom: 70px;">
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="x_panel">
+                                        <div class="x_title">
+                                            <div class="input-group res-w-input" style="width: 94%; float: left;">
+                                                <input type="text" name="country" placeholder="Search Pharmacy" id="pharmacy" class="form-control" />
+                                                <input type="number" id="pharmacyid" style="display:none" />
                                             </div>
-                                            <div class="x_content">
-                                                <h2 class="m-t-0">Current Pharmacy</h2>
-                                                <h2>Wal-Mart Pharmacy 5866</h2>
-                                                <p>8555 PRESTON RD</p>
-                                                <p>FRISCO TX,75034</p>
-                                                <p><strong>Ph:</strong> (469)237-3768</p>
-                                                <p><strong>Fax:</strong>  2144364723</p>
-                                                <p><strong>Pharmacy Hours:</strong> Open 24 hours</p>
-                                            </div>
+                                            <ul class="nav navbar-right panel_toolbox">
+                                                <li>
+                                                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                                </li>
+                                            </ul>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="x_content">
+                                            <h2 class="m-t-0">Current Pharmacy</h2>
+                                            <h2>Wal-Mart Pharmacy 5866</h2>
+                                            <p>8555 PRESTON RD</p>
+                                            <p>FRISCO TX,75034</p>
+                                            <p><strong>Ph:</strong> (469)237-3768</p>
+                                            <p><strong>Fax:</strong>  2144364723</p>
+                                            <p><strong>Pharmacy Hours:</strong> Open 24 hours</p>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="col-md-6">
-                                        <!-- <div id="map" style="height: 330px; width: 100%;"></div>
-                                        <script>
-                                          function initMap() {
-                                            var uluru = {lat: 40.723523, lng: -73.9960463};
-                                            var map = new google.maps.Map(document.getElementById('map'), {
-                                              zoom: 16,
-                                              center: uluru
-                                            });
-                                            var marker = new google.maps.Marker({
-                                              position: uluru,
-                                              map: map
-                                            });
-                                          }
-                                        </script>
-                                        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&callback=initMap" async defer></script>     -->
-                                        <img class="gray-bdr-1 img-responsive" src="../Content/images/us_map.jpg" style="height: 330px;" />
-                                    </div>
+                                <div class="col-md-6">
+                                    <!-- <div id="map" style="height: 330px; width: 100%;"></div>
+                                    <script>
+                                      function initMap() {
+                                        var uluru = {lat: 40.723523, lng: -73.9960463};
+                                        var map = new google.maps.Map(document.getElementById('map'), {
+                                          zoom: 16,
+                                          center: uluru
+                                        });
+                                        var marker = new google.maps.Marker({
+                                          position: uluru,
+                                          map: map
+                                        });
+                                      }
+                                    </script>
+                                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&callback=initMap" async defer></script>     -->
+                                    <img class="gray-bdr-1 img-responsive" src="../Content/images/us_map.jpg" style="height: 330px;" />
                                 </div>
                             </div>
+                        </div>
 
-                            <div id="step-5" style="margin-bottom: 70px;">
-                                <h2>You Appointment has been Scheduled Successfully</h2>
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-12 col-xs-12">
-                                        <div class="x_panel">
-                                            <div class="x_title">
-                                                <h2>Doctor Information</h2>
-                                                <ul class="nav navbar-right panel_toolbox">
-                                                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-                                                </ul>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <div class="x_content" id="docInfo">
-                                                @*<address>
+                        <div id="step-5" style="margin-bottom: 70px;">
+                            <h2>You Appointment has been Scheduled Successfully</h2>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="x_panel">
+                                        <div class="x_title">
+                                            <h2>Doctor Information</h2>
+                                            <ul class="nav navbar-right panel_toolbox">
+                                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                                            </ul>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="x_content" id="docInfo">
+                                            @*<address>
                                                     <strong>Iron Admin, Inc.</strong>
                                                     <br><strong>Specaility: </strong>General Practice
                                                     <br><strong>Phone: </strong> 1 (804) 123-9876
                                                     <br><strong>Email: </strong> ironadmin.com
                                                 </address>*@
-                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-sm-12 col-xs-12">
-                                        <div class="x_panel">
-                                            <div class="x_title">
-                                                <h2>Appotinment Information</h2>
-                                                <ul class="nav navbar-right panel_toolbox">
-                                                    <li>
-                                                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                                    </li>
-                                                </ul>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <div class="x_content" id="appsummary">
-                                                @*<address>
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="x_panel">
+                                        <div class="x_title">
+                                            <h2>Appotinment Information</h2>
+                                            <ul class="nav navbar-right panel_toolbox">
+                                                <li>
+                                                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                                </li>
+                                            </ul>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="x_content" id="appsummary">
+                                            @*<address>
                                                     <strong>Date: </strong>Saturday,October 1, 2016
                                                     <br><strong>Time:</strong> 1:01 am
                                                     <br><strong>Reason for Visit: </strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lobortis, massa non semper posuere, risus diam aliquet metus, eu mollis magna...
                                                 </address>*@
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary" type="button" onclick="CreateAppointment(@ViewBag.PatienID);">Proceed with payment</button>
-
                             </div>
+                            <button class="btn btn-primary" id="btnProceedWithPayment" type="button">Proceed with payment</button>
+
                         </div>
                     </div>
-                    <!-- End SmartWizard Content -->
-
                 </div>
+                <!-- End SmartWizard Content -->
+
             </div>
         </div>
-      </div> @*end class="right_col"*@
-        <script>
-            $(document).ready(function () {
+    </div>
+</div> @*end class="right_col"*@
+<script>
+    $(document).ready(function () {
 
-                GetAllLanguages();
-                GetAllSpecialities();
-                GetROV(@ViewBag.PatienID);
-                GetPatientROV(@ViewBag.PatienID);
-                GetPatientChiefComplaints(@ViewBag.PatienID);
+        GetAllLanguages();
+        GetAllSpecialities();
+        GetROV(@ViewBag.PatienID);
+        GetPatientROV(@ViewBag.PatienID);
+        GetPatientChiefComplaints(@ViewBag.PatienID);
 
-                 //initialize autocomplete with custom appendTo
-                //$('#pharmacy').autocomplete({
-                //    lookup: pharmacyArray
-                //});
+        //initialize autocomplete with custom appendTo
+        //$('#pharmacy').autocomplete({
+        //    lookup: pharmacyArray
+        //});
 
+        var oStripePayCheckout = new StripePayCheckout({
+            publisherKey: '@publisherKey',
+            amount: @amount,
+            targetButton: "#btnProceedWithPayment",
+            actionUrl: '@Url.Action("ProceedWithPay", "seedoctor")',
+            handleSuccess: function () {
+                CreateAppointment(@ViewBag.PatienID);
 
-            });
-            function searchDoctor() {
-               // $.blockUI({ message: "<div class='loader'></div>" });
+                var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
 
-                //if ($("#time").val() == "Time" || $("#time").val() == "") {
-                //    document.getElementById("pt").style.display = "block";
-                //}
-                //else {
-                //    document.getElementById("pt").style.display = "none";
-                //}
-                //if ($("#time").val() != "Time" && $("#time").val() != "")
-                //{
-                //    SearchDoctor();
-                //}
-               
-                SearchDoctor(@ViewBag.PatienID)
-                              
+                var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
 
-            }
-            $(function () {
-                var pharmacy = { 1: "pharmacy 1", 2: "pharmacy 2", 3: "pharmacy 3" };
-
-                var pharmacyArray = $.map(pharmacy, function (value, key) {
-                    return {
-                        value: value,
-                        data: key
-                    };
-                });
-                $("#pharmacy").autocomplete({
-                    lookup: pharmacyArray,
-                    select: function (s, e) {
-                        alert(e.item.value);
-                        //savePharmacy(e.item.value);
-                        //$(this).val(b.item.value);
-                        //$("#pharmacyid").val(a.item.value);
-
-
+                $.post(cUrlReadyForCall, function (oResp) {
+                    if (oResp == "True") {
+                        //Redirect doctor to call
+                        window.location = '@Url.Action("Index","UserChat")';
                     }
                 });
-            });
-            function savePharmacy(name)
-            {
-                alert(name);
+
+                //Redirect User for video chat
+                alert("Payment successful! Now user can be redirected to video chat page with doctor.");
+
+            },
+            handleFailure: function () {
+                alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
             }
-            $('#searchdate').bootstrapMaterialDatePicker
-                    ({
-                        time: false,
-                        clearButton: true,
-                        format: 'DD/MM/YYYY ',
+        });
 
-                    });
-            //$('#searchdate').bootstrapMaterialDatePicker('setDate', moment());
-            //$('#appdate').bootstrapMaterialDatePicker
-            //   ({
-            //       time: false,
-            //       clearButton: true,
-            //       format: 'DD/MM/YYYY ',
+        oStripePayCheckout.initialize();
 
-            //   });
-            //$('#appdate').bootstrapMaterialDatePicker('setDate', moment());
-            //$('#fetchdate').daterangepicker({
-            //    singleDatePicker: true,
-            //    calender_style: "picker_2",
-                
-            //}, function (start, end, label) {
-            //    console.log(start.toISOString(), end.toISOString(), label);
-            //});
-          
-            $("#fetchdate").daterangepicker({
-                singleDatePicker: true,
-                calender_style: "picker_2",
-                format: 'DD/MM/YYYY '
-            });
-            $('#fetchdate').data('daterangepicker').setStartDate();
 
-            //$("#appdate").on('input', function () {
-            //    alert("Selected date: " + this.value);
-            //});
-            //$('#appdate').on("input change", function (e) {
-            //// alert(e.target.value);
-            // //console.log("Date changed: ", e.target.value);
-            // fetchTimings(e.target)
-            //});
+    });
+    function searchDoctor() {
+        // $.blockUI({ message: "<div class='loader'></div>" });
 
-            $('#time').bootstrapMaterialDatePicker
+        //if ($("#time").val() == "Time" || $("#time").val() == "") {
+        //    document.getElementById("pt").style.display = "block";
+        //}
+        //else {
+        //    document.getElementById("pt").style.display = "none";
+        //}
+        //if ($("#time").val() != "Time" && $("#time").val() != "")
+        //{
+        //    SearchDoctor();
+        //}
+
+        SearchDoctor(@ViewBag.PatienID)
+
+
+    }
+    $(function () {
+        var pharmacy = { 1: "pharmacy 1", 2: "pharmacy 2", 3: "pharmacy 3" };
+
+        var pharmacyArray = $.map(pharmacy, function (value, key) {
+            return {
+                value: value,
+                data: key
+            };
+        });
+        $("#pharmacy").autocomplete({
+            lookup: pharmacyArray,
+            select: function (s, e) {
+                alert(e.item.value);
+                //savePharmacy(e.item.value);
+                //$(this).val(b.item.value);
+                //$("#pharmacyid").val(a.item.value);
+
+
+            }
+        });
+    });
+    function savePharmacy(name)
+    {
+        alert(name);
+    }
+    $('#searchdate').bootstrapMaterialDatePicker
             ({
-                date: false,
-                shortTime: false,
-                format: 'HH:mm'
-            });
-            //$('#time').bootstrapMaterialDatePicker('setTime', moment());// update check in sp for null time
-            $("#myModal1").on('show.bs.modal', function (e) {
-                var $modal = $(this);
-                mydocid = e.relatedTarget.id;
-                $("#doctorid").val(mydocid);
-                var todoId = $('#' + mydocid).data('todo').id;
-
-                var docName = $('#' + mydocid).data('todo').doctorName;
-                $("#timingsmodaltitle").text(docName+" Timings");
-            });
-            $("#myModal8").on('show.bs.modal', function (e) {
-                var $modal = $(this);
-                mydocid = e.relatedTarget.id;
-                //alert(mydocid);
-                $("#docscheduleid").val(mydocid);
+                time: false,
+                clearButton: true,
+                format: 'DD/MM/YYYY ',
 
             });
+    //$('#searchdate').bootstrapMaterialDatePicker('setDate', moment());
+    //$('#appdate').bootstrapMaterialDatePicker
+    //   ({
+    //       time: false,
+    //       clearButton: true,
+    //       format: 'DD/MM/YYYY ',
+
+    //   });
+    //$('#appdate').bootstrapMaterialDatePicker('setDate', moment());
+    //$('#fetchdate').daterangepicker({
+    //    singleDatePicker: true,
+    //    calender_style: "picker_2",
+
+    //}, function (start, end, label) {
+    //    console.log(start.toISOString(), end.toISOString(), label);
+    //});
+
+    $("#fetchdate").daterangepicker({
+        singleDatePicker: true,
+        calender_style: "picker_2",
+        format: 'DD/MM/YYYY '
+    });
+    $('#fetchdate').data('daterangepicker').setStartDate();
+
+    //$("#appdate").on('input', function () {
+    //    alert("Selected date: " + this.value);
+    //});
+    //$('#appdate').on("input change", function (e) {
+    //// alert(e.target.value);
+    // //console.log("Date changed: ", e.target.value);
+    // fetchTimings(e.target)
+    //});
+
+    $('#time').bootstrapMaterialDatePicker
+    ({
+        date: false,
+        shortTime: false,
+        format: 'HH:mm'
+    });
+    //$('#time').bootstrapMaterialDatePicker('setTime', moment());// update check in sp for null time
+    $("#myModal1").on('show.bs.modal', function (e) {
+        var $modal = $(this);
+        mydocid = e.relatedTarget.id;
+        $("#doctorid").val(mydocid);
+        var todoId = $('#' + mydocid).data('todo').id;
+
+        var docName = $('#' + mydocid).data('todo').doctorName;
+        $("#timingsmodaltitle").text(docName+" Timings");
+    });
+    $("#myModal8").on('show.bs.modal', function (e) {
+        var $modal = $(this);
+        mydocid = e.relatedTarget.id;
+        //alert(mydocid);
+        $("#docscheduleid").val(mydocid);
+
+    });
 
 
-            //$(function () {
-            //    Dropzone.options.mydropzone = {
-            //        maxFiles: 2,
-            //        addRemoveLinks: true,
-            //        url:'/SeeDoctor/UploadFiles',
-            //        dictResponseError: 'Server not Configured',
-            //        acceptedFiles: ".pdf,.png,.jpg,.gif,.bmp,.jpeg",
-            //        autoDiscover:false,
-            //        uploadMultiple: true,
-            //        autoProcessQueue: false
-            //    };
-            //})
-            $(document).ready(function () {
-                Dropzone.autoDiscover = false;
-                //Simple Dropzonejs
-                $("#dZUpload").dropzone({
-                    url: 'SeeDoctor/ProcessRequest',
-                    addRemoveLinks: true,
-                    success: function (file, response) {
-                        var imgName = response;
-                        file.previewElement.classList.add("dz-success");
-                        console.log("Successfully uploaded :" + imgName);
-                    },
-                    error: function (file, response) {
-                        file.previewElement.classList.add("dz-error");
-                    }
-                });
-            });
-
-        </script>
-
-    @*For Health Conditions*@
-    <script>
-        $(document).ready(function () {
-            GetHealthConditions(@ViewBag.PatienID);
+    //$(function () {
+    //    Dropzone.options.mydropzone = {
+    //        maxFiles: 2,
+    //        addRemoveLinks: true,
+    //        url:'/SeeDoctor/UploadFiles',
+    //        dictResponseError: 'Server not Configured',
+    //        acceptedFiles: ".pdf,.png,.jpg,.gif,.bmp,.jpeg",
+    //        autoDiscover:false,
+    //        uploadMultiple: true,
+    //        autoProcessQueue: false
+    //    };
+    //})
+    $(document).ready(function () {
+        Dropzone.autoDiscover = false;
+        //Simple Dropzonejs
+        $("#dZUpload").dropzone({
+            url: 'SeeDoctor/ProcessRequest',
+            addRemoveLinks: true,
+            success: function (file, response) {
+                var imgName = response;
+                file.previewElement.classList.add("dz-success");
+                console.log("Successfully uploaded :" + imgName);
+            },
+            error: function (file, response) {
+                file.previewElement.classList.add("dz-error");
+            }
         });
-        //For health conditions//
-        $('#addcondition').on('click', function () {
-            if ($("#myCondition").val() == "") {
-                //$("#myCondition").val("Condition name is required.");
-                document.getElementById("divcondition").style.display = "block";
-                document.getElementById("btncondition").style.display = "block";
-            }
-            else {
-                document.getElementById("divcondition").style.display = "none";
-                document.getElementById("btncondition").style.display = "none";
-                addupdateCondition(@ViewBag.PatienID);
-            }
-           
+    });
 
+</script>
+
+@*For Health Conditions*@
+<script>
+    $(document).ready(function () {
+        GetHealthConditions(@ViewBag.PatienID);
+    });
+    //For health conditions//
+    $('#addcondition').on('click', function () {
+        if ($("#myCondition").val() == "") {
+            //$("#myCondition").val("Condition name is required.");
+            document.getElementById("divcondition").style.display = "block";
+            document.getElementById("btncondition").style.display = "block";
+        }
+        else {
+            document.getElementById("divcondition").style.display = "none";
+            document.getElementById("btncondition").style.display = "none";
+            addupdateCondition(@ViewBag.PatienID);
+        }
+
+
+    });
+    $('#reset').on('click', function () {
+        resetCondition();
+
+    });
+    $('#conditionCheckbox').on('click', function () {
+        if ($('#conditionCheckbox')[0].checked) {
+
+            document.getElementById("myCondition").style.display = "block";
+            document.getElementById("addcondition").style.display = "block";
+            document.getElementById("reset").style.display = "block";
+        }
+        else {
+
+            //document.getElementById("healthconditions").style.display = "none";
+            document.getElementById("myCondition").style.display = "none";
+            document.getElementById("addcondition").style.display = "none";
+            document.getElementById("reset").style.display = "none";
+            document.getElementById("divcondition").style.display = "none";
+            document.getElementById("btncondition").style.display = "none";
+
+        }
+
+    });
+
+    //For health conditions//
+</script>
+
+@*For Medicine*@
+<script>
+    $(document).ready(function () {
+        GetMedicines();
+        GetMedications(@ViewBag.PatienID);
+        GetFrequency();
+    });
+    $('#addmedicine').on('click', function () {
+        if ($("#myMedicine").val() == "") {
+            document.getElementById("divmedicine").style.display = "block";
+            document.getElementById("btnmedicine").style.display = "block";
+            document.getElementById("divfrequency").style.display = "block";
+
+        }
+        else
+        {
+            document.getElementById("divmedicine").style.display = "none";
+            document.getElementById("btnmedicine").style.display = "none";
+            document.getElementById("divfrequency").style.display = "none";
+            addupdateMedicine(@ViewBag.PatienID);
+        }
+
+
+    });
+    $('#resetmedicine').on('click', function () {
+        resetMedicine();
+
+    });
+    $('#medicineCheckbox').on('click', function () {
+        if ($('#medicineCheckbox')[0].checked) {
+            document.getElementById("myMedicine").style.display = "block";
+            document.getElementById("myFrequency").style.display = "block";
+            document.getElementById("resetmedicine").style.display = "block";
+            document.getElementById("addmedicine").style.display = "block";
+        }
+        else {
+
+            document.getElementById("myMedicine").style.display = "none";
+            document.getElementById("myFrequency").style.display = "none";
+            document.getElementById("resetmedicine").style.display = "none";
+            document.getElementById("addmedicine").style.display = "none";
+            document.getElementById("divmedicine").style.display = "none";
+            document.getElementById("divfrequency").style.display = "none";
+            document.getElementById("btnmedicine").style.display = "none";
+
+        }
+
+    });
+</script>
+
+@*For Allergies*@
+<script>
+    $(document).ready(function () {
+        GetAllergies();
+        GetSensitivities();
+        GetReactions();
+        GetPatientAllergies(@ViewBag.PatienID);
+
+    });
+    $('#addallergy').on('click', function () {
+        if ($("#myAllergy").val() == "") {
+            document.getElementById("divallergy").style.display = "block";
+            document.getElementById("btnallergy").style.display = "block";
+            document.getElementById("divsensitivity").style.display = "block";
+            document.getElementById("divreaction").style.display = "block";
+        }
+        else {
+            document.getElementById("divallergy").style.display = "none";
+            document.getElementById("btnallergy").style.display = "none";
+            document.getElementById("divsensitivity").style.display = "none";
+            document.getElementById("divreaction").style.display = "none";
+            addupdateAllergies(@ViewBag.PatienID);
+        }
+
+    });
+    $('#resetallergy').on('click', function () {
+        resetAllergies();
+
+    });
+    $('#allergyCheckbox').on('click', function () {
+        if ($('#allergyCheckbox')[0].checked) {
+
+            document.getElementById("myAllergy").style.display = "block";
+            document.getElementById("Sensitivity").style.display = "block";
+            document.getElementById("Reaction").style.display = "block";
+            document.getElementById("resetallergy").style.display = "block";
+            document.getElementById("addallergy").style.display = "block";
+        }
+        else {
+
+            document.getElementById("myAllergy").style.display = "none";
+            document.getElementById("Sensitivity").style.display = "none";
+            document.getElementById("Reaction").style.display = "none";
+            document.getElementById("resetallergy").style.display = "none";
+            document.getElementById("addallergy").style.display = "none";
+            document.getElementById("divallergy").style.display = "none";
+            document.getElementById("divsensitivity").style.display = "none";
+            document.getElementById("divreaction").style.display = "none";
+            document.getElementById("btnallergy").style.display = "none";
+        }
+
+    });
+</script>
+
+
+@*For Surgeries*@
+<script>
+    $(document).ready(function () {
+        GetSurgeries();
+        GetPatientSurgeries(@ViewBag.PatienID);
+
+    });
+    $('#addsurgery').on('click', function () {
+        if ($("#myBodyPart").val() == "") {
+            document.getElementById("divsurgery").style.display = "block";
+            document.getElementById("btnsurgery").style.display = "block";
+        }
+        else {
+            document.getElementById("divsurgery").style.display = "none";
+            document.getElementById("btnsurgery").style.display = "none";
+            addupdateSurgery(@ViewBag.PatienID);
+        }
+
+    });
+    $('#surgeryCheckbox').on('click', function () {
+        if ($('#surgeryCheckbox')[0].checked) {
+
+            document.getElementById("myBodyPart").style.display = "block";
+            document.getElementById("addsurgery").style.display = "block";
+        }
+        else {
+            document.getElementById("myBodyPart").style.display = "none";
+            document.getElementById("addsurgery").style.display = "none";
+            document.getElementById("divsurgery").style.display = "none";
+            document.getElementById("btnsurgery").style.display = "none";
+        }
+
+    });
+
+
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        var handleDataTableButtons = function () {
+            if ($("#datatable-buttons").length) {
+                $("#datatable-buttons").DataTable({
+                    dom: "Bfrtip",
+                    buttons: [
+                      {
+                          extend: "copy",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "csv",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "excel",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "pdfHtml5",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "print",
+                          className: "btn-sm"
+                      },
+                    ],
+                    responsive: true
+                });
+            }
+        };
+
+        TableManageButtons = function () {
+            "use strict";
+            return {
+                init: function () {
+                    handleDataTableButtons();
+                }
+            };
+        }();
+
+        $('#datatable').dataTable();
+
+        $('#datatable-keytable').DataTable({
+            keys: true
         });
-        $('#reset').on('click', function () {
-            resetCondition();
 
-        });
-        $('#conditionCheckbox').on('click', function () {
-            if ($('#conditionCheckbox')[0].checked) {
-               
-                document.getElementById("myCondition").style.display = "block";
-               document.getElementById("addcondition").style.display = "block";
-                document.getElementById("reset").style.display = "block";
-            }
-            else {
-               
-                //document.getElementById("healthconditions").style.display = "none";
-                document.getElementById("myCondition").style.display = "none";
-                document.getElementById("addcondition").style.display = "none";
-               document.getElementById("reset").style.display = "none";
-               document.getElementById("divcondition").style.display = "none";
-               document.getElementById("btncondition").style.display = "none";
-                
-            }
+        $('#datatable-responsive').DataTable();
 
+        $('#datatable-scroller').DataTable({
+            ajax: "js/datatables/json/scroller-demo.json",
+            deferRender: true,
+            scrollY: 380,
+            scrollCollapse: true,
+            scroller: true
         });
 
-        //For health conditions//
-        </script>
-
-    @*For Medicine*@
-    <script>
-        $(document).ready(function () {
-            GetMedicines();
-            GetMedications(@ViewBag.PatienID);
-            GetFrequency();
+        $('#datatable-fixed-header').DataTable({
+            fixedHeader: true
         });
-        $('#addmedicine').on('click', function () {
-            if ($("#myMedicine").val() == "") {
-                document.getElementById("divmedicine").style.display = "block";
-                document.getElementById("btnmedicine").style.display = "block";
-                document.getElementById("divfrequency").style.display = "block";
-                
-            }
-            else
-            {
-                document.getElementById("divmedicine").style.display = "none";
-                document.getElementById("btnmedicine").style.display = "none";
-                document.getElementById("divfrequency").style.display = "none";
-                addupdateMedicine(@ViewBag.PatienID);
-            }
-           
 
+        var $datatable = $('#datatable-checkbox');
+
+        $datatable.dataTable({
+            'order': [[1, 'desc']],
+            "columnDefs": [ {
+                "targets": 0,
+                "orderable": false
+            } ]
         });
-        $('#resetmedicine').on('click', function () {
-            resetMedicine();
-
+        $datatable.on('draw.dt', function () {
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_flat-green'
+            });
         });
-        $('#medicineCheckbox').on('click', function () {
-            if ($('#medicineCheckbox')[0].checked) {
-                document.getElementById("myMedicine").style.display = "block";
-                document.getElementById("myFrequency").style.display = "block";
-                document.getElementById("resetmedicine").style.display = "block";
-                document.getElementById("addmedicine").style.display = "block";
-            }
-            else {
-                
-                document.getElementById("myMedicine").style.display = "none";
-                document.getElementById("myFrequency").style.display = "none";
-                document.getElementById("resetmedicine").style.display = "none";
-                document.getElementById("addmedicine").style.display = "none";
-                document.getElementById("divmedicine").style.display = "none";
-                document.getElementById("divfrequency").style.display = "none";
-                document.getElementById("btnmedicine").style.display = "none";
-              
-            }
 
+        TableManageButtons.init();
+    });
+</script>
+
+<!-- /jQuery Smart Wizard -->
+<script>
+    $(document).ready(function () {
+        $('#wizard').smartWizard();
+
+        $('#wizard_verticle').smartWizard({
+            transitionEffect: 'slide'
         });
-    </script>
 
-    @*For Allergies*@
-    <script>
-        $(document).ready(function () {
-            GetAllergies();
-            GetSensitivities();
-            GetReactions();
-           GetPatientAllergies(@ViewBag.PatienID);
+        $('.buttonNext').addClass('btn btn-primary');
+        $('.buttonPrevious').addClass('btn btn-primary');
+        $('.buttonFinish').addClass('btn btn-default');
+    });
 
+    $('#fetchdate').on('apply.daterangepicker', function (ev, picker) {
+        //do something, like clearing an input
+        fetchTimings();
+    });
+</script>
+
+<script>
+    $('#compose, .compose-close').click(function () {
+        $('.compose').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose1, .compose1-close').click(function () {
+        $('.compose1').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose2, .compose2-close').click(function () {
+        $('.compose2').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose3, .compose3-close').click(function () {
+        $('.compose3').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose4, .compose4-close').click(function () {
+        $('.compose4').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose5, .compose5-close').click(function () {
+        $('.compose5').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose6, .compose6-close').click(function () {
+        $('.compose6').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose7, .compose7-close').click(function () {
+        $('.compose7').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose8, .compose8-close').click(function () {
+        $('.compose8').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose9, .compose9-close').click(function () {
+        $('.compose9').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose10, .compose10-close').click(function () {
+        $('.compose10').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose11, .compose11-close').click(function () {
+        $('.compose11').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose12, .compose12-close').click(function () {
+        $('.compose12').slideToggle();
+    });
+</script>
+
+
+
+<script>
+    $('#search-click').click(function () {
+        $('.according-defalut-close').show();
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+
+
+        $('#single_cal1').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            calender_style: "picker_1",
+
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
         });
-        $('#addallergy').on('click', function () {
-            if ($("#myAllergy").val() == "") {
-                document.getElementById("divallergy").style.display = "block";
-                document.getElementById("btnallergy").style.display = "block";
-                document.getElementById("divsensitivity").style.display = "block";
-                document.getElementById("divreaction").style.display = "block";
-            }
-            else {
-                document.getElementById("divallergy").style.display = "none";
-                document.getElementById("btnallergy").style.display = "none";
-                document.getElementById("divsensitivity").style.display = "none";
-                document.getElementById("divreaction").style.display = "none";
-                 addupdateAllergies(@ViewBag.PatienID);
-            }
-         
+        $('#single_cal2').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_2"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
         });
-        $('#resetallergy').on('click', function () {
-            resetAllergies();
-
+        $('#single_cal3').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_3"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
         });
-        $('#allergyCheckbox').on('click', function () {
-            if ($('#allergyCheckbox')[0].checked) {
-
-                document.getElementById("myAllergy").style.display = "block";
-                document.getElementById("Sensitivity").style.display = "block";
-                document.getElementById("Reaction").style.display = "block";
-                document.getElementById("resetallergy").style.display = "block";
-                document.getElementById("addallergy").style.display = "block";
-            }
-            else {
-
-                document.getElementById("myAllergy").style.display = "none";
-                document.getElementById("Sensitivity").style.display = "none";
-                document.getElementById("Reaction").style.display = "none";
-                document.getElementById("resetallergy").style.display = "none";
-                document.getElementById("addallergy").style.display = "none";
-                document.getElementById("divallergy").style.display = "none";
-                document.getElementById("divsensitivity").style.display = "none";
-                document.getElementById("divreaction").style.display = "none";
-                document.getElementById("btnallergy").style.display = "none";
-            }
-
+        $('#single_cal4').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_4"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
         });
-    </script>
-
-
-    @*For Surgeries*@
-    <script>
-        $(document).ready(function () {
-            GetSurgeries();
-            GetPatientSurgeries(@ViewBag.PatienID);
-
+        $('#single_cal5').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_5"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
         });
-        $('#addsurgery').on('click', function () {
-            if ($("#myBodyPart").val() == "") {
-                document.getElementById("divsurgery").style.display = "block";
-                document.getElementById("btnsurgery").style.display = "block";
-            }
-            else {
-                document.getElementById("divsurgery").style.display = "none";
-                document.getElementById("btnsurgery").style.display = "none";
-                addupdateSurgery(@ViewBag.PatienID);
-            }
-            
+        $('#single_cal6').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_6"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
         });
-        $('#surgeryCheckbox').on('click', function () {
-            if ($('#surgeryCheckbox')[0].checked) {
+        $('#single_cal7').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_7"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+        });
+        $('#single_cal8').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_8"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+        });
+        $('#single_cal9').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_9"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+        });
+        $('#single_cal10').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_10"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+        });
+        $('#single_cal11').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_11"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+        });
+        $('#single_cal12').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_12"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+        });
+        $('#single_cal13,#single_cal14,#single_cal15,#single_cal16,#single_cal17,#single_cal18,#single_cal19,#single_cal20,#single_cal21,#single_cal22,#single_cal23,#single_cal24,#single_cal25,#single_cal26,#single_cal27,#single_cal28,#single_cal29,#single_cal30,#single_cal31,#single_cal32,#single_cal33,#single_cal34,#single_cal35,#single_cal36').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_13,picker_14,picker_15,picker_16,picker_17,picker_18,picker_19,picker_20,picker_21,picker_22,picker_23,picker_24,picker_25,picker_26,picker_27,picker_28,picker_29,picker_30,picker_31,picker_32,picker_33,picker_34,picker_35,picker_36"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+        });
+    });
+</script>
 
-                 document.getElementById("myBodyPart").style.display = "block";
-                 document.getElementById("addsurgery").style.display = "block";
-            }
-            else {
-                document.getElementById("myBodyPart").style.display = "none";
-                 document.getElementById("addsurgery").style.display = "none";
-                 document.getElementById("divsurgery").style.display = "none";
-                 document.getElementById("btnsurgery").style.display = "none";
-            }
+<script>
+    $('#toggle1').on(function () {
 
-         });
+        $('#toggle_1').show();
+        return false;
+    });
+</script>
+<script>
+    $('#toggle_1').on(function () {
 
+        $('#toggle_1').hide();
+        return false;
+    });
+</script>
 
-    </script>
+<script>
+    $('#toggle2').click(function () {
+        $('#toggle_2').show();
+        return false;
+    });
+</script>
+<script>
+    $('#toggle_2').click(function () {
+        $('#toggle_2').hide();
+        return false;
+    });
+</script>
 
-        <script>
-            $(document).ready(function () {
+<script>
+    $('#toggle3').click(function () {
+        $('#toggle_3').show();
+        return false;
+    });
+</script>
+<script>
+    $('#toggle_3').click(function () {
+        $('#toggle_3').hide();
+        return false;
+    });
+</script>
 
-                var handleDataTableButtons = function () {
-                    if ($("#datatable-buttons").length) {
-                        $("#datatable-buttons").DataTable({
-                            dom: "Bfrtip",
-                            buttons: [
-                              {
-                                  extend: "copy",
-                                  className: "btn-sm"
-                              },
-                              {
-                                  extend: "csv",
-                                  className: "btn-sm"
-                              },
-                              {
-                                  extend: "excel",
-                                  className: "btn-sm"
-                              },
-                              {
-                                  extend: "pdfHtml5",
-                                  className: "btn-sm"
-                              },
-                              {
-                                  extend: "print",
-                                  className: "btn-sm"
-                              },
-                            ],
-                            responsive: true
-                        });
-                    }
-                };
+<script>
+    $('#toggle4').click(function () {
+        $('#toggle_4').show();
+        return false;
+    });
+</script>
+<script>
+    $('#toggle_4').click(function () {
+        $('#toggle_4').hide();
+        return false;
+    });
+</script>
 
-                TableManageButtons = function () {
-                    "use strict";
-                    return {
-                        init: function () {
-                            handleDataTableButtons();
-                        }
-                    };
-                }();
+<script>
+    $('#toggle5').click(function () {
+        $('#toggle_5').show();
+        return false;
+    });
+</script>
+<script>
+    $('#toggle_5').click(function () {
+        $('#toggle_5').hide();
+        return false;
+    });
+</script>
 
-                $('#datatable').dataTable();
+<script>
+    $('#toggle6').click(function () {
+        $('#toggle_6').show();
+        return false;
+    });
+</script>
+<script>
+    $('#toggle_6').click(function () {
+        $('#toggle_6').hide();
+        return false;
+    });
+</script>
 
-                $('#datatable-keytable').DataTable({
-                    keys: true
-                });
+<script>
+    $('#toggle7').click(function () {
+        $('#toggle_7').show();
+        return false;
+    });
+</script>
+<script>
+    $('#toggle_7').click(function () {
+        $('#toggle_7').hide();
+        return false;
+    });
+</script>
 
-                $('#datatable-responsive').DataTable();
+<script>
+    $('#toggle8').click(function () {
+        $('#toggle_8').show();
+        return false;
+    });
+</script>
+<script>
+    $('#toggle_8').click(function () {
+        $('#toggle_8').hide();
+        return false;
+    });
+</script>
 
-                $('#datatable-scroller').DataTable({
-                    ajax: "js/datatables/json/scroller-demo.json",
-                    deferRender: true,
-                    scrollY: 380,
-                    scrollCollapse: true,
-                    scroller: true
-                });
+<script>
+    $('#toggle9').click(function () {
+        $('#toggle_9').show();
+        return false;
+    });
+</script>
+<script>
+    $('#toggle_9').click(function () {
+        $('#toggle_9').hide();
+        return false;
+    });
+</script>
 
-                $('#datatable-fixed-header').DataTable({
-                    fixedHeader: true
-                });
+<script>
+    $('#toggle10').click(function () {
+        $('#toggle_10').show();
+        return false;
+    });
+</script>
+<script>
+    $('#toggle_10').click(function () {
+        $('#toggle_10').hide();
+        return false;
+    });
+</script>
 
-                var $datatable = $('#datatable-checkbox');
+<script>
+    $('#toggle11').click(function () {
+        $('#toggle_11').show();
+        return false;
+    });
+</script>
+<script>
+    $('#toggle_11').click(function () {
+        $('#toggle_11').hide();
+        return false;
+    });
+</script>
 
-                $datatable.dataTable({
-                   'order': [[1, 'desc']],
-                "columnDefs": [ {
-                    "targets": 0,
-                    "orderable": false
-                } ]
-                });
-                $datatable.on('draw.dt', function () {
-                    $('input').iCheck({
-                        checkboxClass: 'icheckbox_flat-green'
-                    });
-                });
-
-                TableManageButtons.init();
-            });
-        </script>
-
-        <!-- /jQuery Smart Wizard -->
-        <script>
-            $(document).ready(function () {
-                $('#wizard').smartWizard();
-
-                $('#wizard_verticle').smartWizard({
-                    transitionEffect: 'slide'
-                });
-
-                $('.buttonNext').addClass('btn btn-primary');
-                $('.buttonPrevious').addClass('btn btn-primary');
-                $('.buttonFinish').addClass('btn btn-default');
-            });
-
-            $('#fetchdate').on('apply.daterangepicker', function (ev, picker) {
-                //do something, like clearing an input
-                fetchTimings();
-            });
-        </script>
-
-        <script>
-            $('#compose, .compose-close').click(function () {
-                $('.compose').slideToggle();
-            });
-        </script>
-
-        <script>
-            $('#compose1, .compose1-close').click(function () {
-                $('.compose1').slideToggle();
-            });
-        </script>
-
-        <script>
-            $('#compose2, .compose2-close').click(function () {
-                $('.compose2').slideToggle();
-            });
-        </script>
-
-        <script>
-            $('#compose3, .compose3-close').click(function () {
-                $('.compose3').slideToggle();
-            });
-        </script>
-
-        <script>
-            $('#compose4, .compose4-close').click(function () {
-                $('.compose4').slideToggle();
-            });
-        </script>
-
-        <script>
-            $('#compose5, .compose5-close').click(function () {
-                $('.compose5').slideToggle();
-            });
-        </script>
-
-        <script>
-            $('#compose6, .compose6-close').click(function () {
-                $('.compose6').slideToggle();
-            });
-        </script>
-
-        <script>
-            $('#compose7, .compose7-close').click(function () {
-                $('.compose7').slideToggle();
-            });
-        </script>
-
-        <script>
-            $('#compose8, .compose8-close').click(function () {
-                $('.compose8').slideToggle();
-            });
-        </script>
-
-        <script>
-            $('#compose9, .compose9-close').click(function () {
-                $('.compose9').slideToggle();
-            });
-        </script>
-
-        <script>
-            $('#compose10, .compose10-close').click(function () {
-                $('.compose10').slideToggle();
-            });
-        </script>
-
-        <script>
-            $('#compose11, .compose11-close').click(function () {
-                $('.compose11').slideToggle();
-            });
-        </script>
-
-        <script>
-            $('#compose12, .compose12-close').click(function () {
-                $('.compose12').slideToggle();
-            });
-        </script>
-
-        
-
-         <script>
-            $('#search-click').click(function () {
-                $('.according-defalut-close').show();
-            });
-        </script>
-
-        <script>
-            $(document).ready(function () {
+<script>
+    $('#toggle12').click(function () {
+        $('#toggle_12').show();
+        return false;
+    });
+</script>
+<script>
+    $('#toggle_12').click(function () {
+        $('#toggle_12').hide();
+        return false;
+    });
+</script>
 
 
-                $('#single_cal1').daterangepicker({
-                    singleDatePicker: true,
-                    showDropdowns: true,
-                    calender_style: "picker_1",
-
-                }, function (start, end, label) {
-                    console.log(start.toISOString(), end.toISOString(), label);
-                });
-                $('#single_cal2').daterangepicker({
-                    singleDatePicker: true,
-                    calender_style: "picker_2"
-                }, function (start, end, label) {
-                    console.log(start.toISOString(), end.toISOString(), label);
-                });
-                $('#single_cal3').daterangepicker({
-                    singleDatePicker: true,
-                    calender_style: "picker_3"
-                }, function (start, end, label) {
-                    console.log(start.toISOString(), end.toISOString(), label);
-                });
-                $('#single_cal4').daterangepicker({
-                    singleDatePicker: true,
-                    calender_style: "picker_4"
-                }, function (start, end, label) {
-                    console.log(start.toISOString(), end.toISOString(), label);
-                });
-                $('#single_cal5').daterangepicker({
-                    singleDatePicker: true,
-                    calender_style: "picker_5"
-                }, function (start, end, label) {
-                    console.log(start.toISOString(), end.toISOString(), label);
-                });
-                $('#single_cal6').daterangepicker({
-                    singleDatePicker: true,
-                    calender_style: "picker_6"
-                }, function (start, end, label) {
-                    console.log(start.toISOString(), end.toISOString(), label);
-                });
-                $('#single_cal7').daterangepicker({
-                    singleDatePicker: true,
-                    calender_style: "picker_7"
-                }, function (start, end, label) {
-                    console.log(start.toISOString(), end.toISOString(), label);
-                });
-                $('#single_cal8').daterangepicker({
-                    singleDatePicker: true,
-                    calender_style: "picker_8"
-                }, function (start, end, label) {
-                    console.log(start.toISOString(), end.toISOString(), label);
-                });
-                $('#single_cal9').daterangepicker({
-                    singleDatePicker: true,
-                    calender_style: "picker_9"
-                }, function (start, end, label) {
-                    console.log(start.toISOString(), end.toISOString(), label);
-                });
-                $('#single_cal10').daterangepicker({
-                    singleDatePicker: true,
-                    calender_style: "picker_10"
-                }, function (start, end, label) {
-                    console.log(start.toISOString(), end.toISOString(), label);
-                });
-                $('#single_cal11').daterangepicker({
-                    singleDatePicker: true,
-                    calender_style: "picker_11"
-                }, function (start, end, label) {
-                    console.log(start.toISOString(), end.toISOString(), label);
-                });
-                $('#single_cal12').daterangepicker({
-                    singleDatePicker: true,
-                    calender_style: "picker_12"
-                }, function (start, end, label) {
-                    console.log(start.toISOString(), end.toISOString(), label);
-                });
-                $('#single_cal13,#single_cal14,#single_cal15,#single_cal16,#single_cal17,#single_cal18,#single_cal19,#single_cal20,#single_cal21,#single_cal22,#single_cal23,#single_cal24,#single_cal25,#single_cal26,#single_cal27,#single_cal28,#single_cal29,#single_cal30,#single_cal31,#single_cal32,#single_cal33,#single_cal34,#single_cal35,#single_cal36').daterangepicker({
-                    singleDatePicker: true,
-                    calender_style: "picker_13,picker_14,picker_15,picker_16,picker_17,picker_18,picker_19,picker_20,picker_21,picker_22,picker_23,picker_24,picker_25,picker_26,picker_27,picker_28,picker_29,picker_30,picker_31,picker_32,picker_33,picker_34,picker_35,picker_36"
-                }, function (start, end, label) {
-                    console.log(start.toISOString(), end.toISOString(), label);
-                });
-            });
-        </script>
-
-        <script>
-            $('#toggle1').on(function () {
-                
-                $('#toggle_1').show();
-                return false;
-            });
-        </script>
-        <script>
-            $('#toggle_1').on(function () {
-               
-                $('#toggle_1').hide();
-                return false;
-            });
-        </script>
-
-        <script>
-            $('#toggle2').click(function () {
-                $('#toggle_2').show();
-                return false;
-            });
-        </script>
-        <script>
-            $('#toggle_2').click(function () {
-                $('#toggle_2').hide();
-                return false;
-            });
-        </script>
-
-        <script>
-            $('#toggle3').click(function () {
-                $('#toggle_3').show();
-                return false;
-            });
-        </script>
-        <script>
-            $('#toggle_3').click(function () {
-                $('#toggle_3').hide();
-                return false;
-            });
-        </script>
-
-        <script>
-            $('#toggle4').click(function () {
-                $('#toggle_4').show();
-                return false;
-            });
-        </script>
-        <script>
-            $('#toggle_4').click(function () {
-                $('#toggle_4').hide();
-                return false;
-            });
-        </script>
-
-        <script>
-            $('#toggle5').click(function () {
-                $('#toggle_5').show();
-                return false;
-            });
-        </script>
-        <script>
-            $('#toggle_5').click(function () {
-                $('#toggle_5').hide();
-                return false;
-            });
-        </script>
-
-        <script>
-            $('#toggle6').click(function () {
-                $('#toggle_6').show();
-                return false;
-            });
-        </script>
-        <script>
-            $('#toggle_6').click(function () {
-                $('#toggle_6').hide();
-                return false;
-            });
-        </script>
-
-        <script>
-            $('#toggle7').click(function () {
-                $('#toggle_7').show();
-                return false;
-            });
-        </script>
-        <script>
-            $('#toggle_7').click(function () {
-                $('#toggle_7').hide();
-                return false;
-            });
-        </script>
-
-        <script>
-            $('#toggle8').click(function () {
-                $('#toggle_8').show();
-                return false;
-            });
-        </script>
-        <script>
-            $('#toggle_8').click(function () {
-                $('#toggle_8').hide();
-                return false;
-            });
-        </script>
-
-        <script>
-            $('#toggle9').click(function () {
-                $('#toggle_9').show();
-                return false;
-            });
-        </script>
-        <script>
-            $('#toggle_9').click(function () {
-                $('#toggle_9').hide();
-                return false;
-            });
-        </script>
-
-        <script>
-            $('#toggle10').click(function () {
-                $('#toggle_10').show();
-                return false;
-            });
-        </script>
-        <script>
-            $('#toggle_10').click(function () {
-                $('#toggle_10').hide();
-                return false;
-            });
-        </script>
-
-        <script>
-            $('#toggle11').click(function () {
-                $('#toggle_11').show();
-                return false;
-            });
-        </script>
-        <script>
-            $('#toggle_11').click(function () {
-                $('#toggle_11').hide();
-                return false;
-            });
-        </script>
-
-        <script>
-            $('#toggle12').click(function () {
-                $('#toggle_12').show();
-                return false;
-            });
-        </script>
-        <script>
-            $('#toggle_12').click(function () {
-                $('#toggle_12').hide();
-                return false;
-            });
-        </script>
-
-
-        <script>
-            function showdiv() {
-                document.getElementById("mainpanel").style.display = "block";
-                //$("#maindiv").appendTo("#mainpanel");
-            }
-        </script>
+<script>
+    function showdiv() {
+        document.getElementById("mainpanel").style.display = "block";
+        //$("#maindiv").appendTo("#mainpanel");
+    }
+</script>
 
 
 
-        <script>
-            $('#next').click(function () {
-                alert('next');
-               $('#step-2').show();
-            });
-        </script>
+<script>
+    $('#next').click(function () {
+        alert('next');
+        $('#step-2').show();
+    });
+</script>
 
 
-        <!-- /jQuery autocomplete -->
+<!-- /jQuery autocomplete -->

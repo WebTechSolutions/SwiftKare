@@ -1,4 +1,22 @@
-﻿
+﻿$(document).ready(function () {
+
+    $.fn.animateHighlight = function (highlightColor, duration) {
+        var highlightBg = highlightColor || "#4198e6";
+        var animateMs = duration || 500;
+        var originalBg = this.css("background-color");
+
+        if (!originalBg || originalBg == highlightBg)
+            originalBg = "#1266B1"; // default to white
+
+        jQuery(this)
+            .css("backgroundColor", highlightBg)
+            .animate({ backgroundColor: originalBg }, animateMs, null, function () {
+                //jQuery(this).css("backgroundColor", originalBg);
+                jQuery(this).removeAttr("style");
+            });
+    };
+});
+
 var UserChat = function (apiKey, sessionId, token) {
 
     //Declaration - Starts
@@ -207,7 +225,10 @@ var UserChat = function (apiKey, sessionId, token) {
     }
 
     function SaveSessionEnd(sessionId) {
-        //TODO: implement save to database logic here
+        //TODO: implement save to database logic here, and redirect.
+        alert("Call has ended. implement database save and redirect here.")
+
+        history.back(-1);
     }
 
     function SaveChatMessage(sessionId, senderId, receiverId, message) {
@@ -225,7 +246,9 @@ var UserChat = function (apiKey, sessionId, token) {
             try {
 
                 curStream = event.stream;
-                streamCreateTime = new Date(curStream.creationTime);
+                //streamCreateTime = new Date(curStream.creationTime);
+                streamCreateTime = new Date();
+
                 callInterval = setInterval(showTimeElapsed, 1000);
 
                 subscriber = session.subscribe(event.stream, 'divSecondaryVideo', {
@@ -235,6 +258,8 @@ var UserChat = function (apiKey, sessionId, token) {
                     width: '100%',
                     style: { buttonDisplayMode: 'off' }
                 });
+
+                $("#h1Name").html($("#h1Name").data("name"));
 
                 subscriber.on("disconnected", function (event) {
                     alert("It seems another user has network issue, please wait till resolution.");
@@ -276,6 +301,10 @@ var UserChat = function (apiKey, sessionId, token) {
                 oMsgHtml += " <span>";
                 oMsgHtml += getFormattedTime(new Date());
                 oMsgHtml += "</span></p> </div> </div> </div>";
+
+                if (!$("#messages-sec").is(":visible")) {
+                    $('#video-message i').animateHighlight();
+                }
 
                 //Log received message
                 SaveChatMessage(sessionId, 1, 1, event.data);
@@ -331,8 +360,8 @@ var UserChat = function (apiKey, sessionId, token) {
         window.addEventListener('offline', intentetConnectivityLost);
 
         //Event Binding - Ends
+
+        startCall();
     }
     //External Functions - Ends
-
-
 }

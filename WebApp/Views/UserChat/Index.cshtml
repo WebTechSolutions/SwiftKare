@@ -1,6 +1,9 @@
 ﻿@{
     Layout = null;
 
+    string userType = Convert.ToString(ViewBag.UserType);
+    string recipientName = Convert.ToString(ViewBag.RecipientName);
+
     string openTokApi = Convert.ToString(ViewBag.OpenTokApiKey);
     string openTokSession = Convert.ToString(ViewBag.OpenTokSession);
     string openTokToken = Convert.ToString(ViewBag.OpenTokToken);
@@ -49,6 +52,7 @@
             width: 100% !important;
             height: 100% !important;
             position: absolute;
+            min-height: 561px;
         }
 
         .video_icon_bg {
@@ -64,8 +68,13 @@
     <!-- <div class="video_head"></div> -->
     <div class="video_sec">
         <div id="divSecondaryVideo"></div>
-        <img id="imgSecondaryVideo" class="img-responsive" src="@Url.Content("~/Content/images/123.jpg")" alt="">
-        <h1 class="video_title">Muhammad Ali</h1>
+        <div id="imgSecondaryVideo" style="display:block; max-width:100%">
+            <img style="margin-top:30%; margin-left:40%;" class="img-responsive" src="@Url.Content("~/Content/images/loaderImage.gif")" alt="">
+        </div>
+
+       
+        @*<img id="imgSecondaryVideo" class="img-responsive" src="@Url.Content("~/Content/images/123.jpg")" alt="">*@
+        <h1 id="h1Name" data-name="@recipientName" class="video_title"> @(userType.ToLower() == "patient" ? ("Please wait , while "+ recipientName +" will join you after doing payment !") : ("Please wait , while " + recipientName + " will join you!"))</h1>
         <div class="small_img">
             <a href="#" id="aHideMyCamera" style="display:none;">
                 <div id="divPrimaryVideo" class="xs-video-img img-responsive" style="display:block;"></div>
