@@ -60,6 +60,7 @@ namespace DataAccess
         public string userId { get; set; }
         public string city { get; set; }
         public string state { get; set; }
+        public Nullable<long> consultCharges { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }

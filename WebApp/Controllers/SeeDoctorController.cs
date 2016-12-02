@@ -13,6 +13,7 @@ using DataAccess.CustomModels;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Configuration;
+using WebApp.Helper;
 
 namespace WebApp.Controllers
 {
@@ -21,7 +22,8 @@ namespace WebApp.Controllers
        // GET: SeeDoctor
         public ActionResult SeeDoctor()
         {
-            ViewBag.PatienID = 10015;
+
+            ViewBag.PatienID = SessionHandler.UserInfo.Id;
 
             ViewBag.PublisherKey = ConfigurationManager.AppSettings["StripePayPublisherKey"].ToString();
             ViewBag.Amount = 2000;
@@ -76,7 +78,6 @@ namespace WebApp.Controllers
                 if (model.name == "") { model.name = null; }
                 if (model.language == "ALL") { model.language = null; }
                 if (model.speciality == "ALL") { model.speciality = null; }
-                if (model.appDate.ToString() == "") { model.appDate = null; }
                 if (model.appTime.ToString() == "") { model.appTime = null ; }
                 List<DoctorModel> doctorList = objSeeDoctorRepo.SeeDoctor(model);
                 return Json(new { Success = true, DoctorModel = doctorList });
@@ -114,13 +115,13 @@ namespace WebApp.Controllers
 
         }
         [HttpPost]
-        public JsonResult SaveAppointment(AppointmentModel model)
+        public JsonResult SaveAppointment(AppointmentModel _objAppointment)
         {
             try
             {
                 ApiResultModel apiresult = new ApiResultModel();
                 SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
-                apiresult = objSeeDoctorRepo.AddAppointment(model);
+                apiresult = objSeeDoctorRepo.AddAppointment(_objAppointment);
                 return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
@@ -185,9 +186,29 @@ namespace WebApp.Controllers
 
             foreach (var app in appList)
             {
-                if (timeSlots.Contains(app.appTime.ToString()))
+                if(app.appTime.HasValue)
                 {
-                    timeSlots.Remove(app.appTime.ToString());
+                    TimeSpan apptime = TimeSpan.Parse(app.appTime.Value.ToString());
+                    if (timeSlots.Contains(apptime.ToString(@"hh\:mm")))
+                    {
+                        timeSlots.Remove(apptime.ToString(@"hh\:mm"));
+                    }
+                }
+               
+               
+            }
+           for(var i=0;i<timeSlots.Count;i++)
+            {
+                TimeSpan doctimings = TimeSpan.Parse(timeSlots[i]); 
+                if (doctimings.Hours<12)
+                {
+                    timeSlots.RemoveAt(i);
+                    timeSlots.Insert(i, doctimings.ToString(@"hh\:mm") + " AM");
+                }
+               else if(doctimings.Hours >= 12)
+                {
+                    timeSlots.RemoveAt(i);
+                    timeSlots.Insert(i, doctimings.ToString(@"hh\:mm") + " PM");
                 }
             }
             return timeSlots;
@@ -401,7 +422,7 @@ namespace WebApp.Controllers
             try
             {
                 SeeDoctorRepository objRepo = new SeeDoctorRepository();
-                List<DoctorInfoCustom> model = objRepo.GetDoctorInfo(doctorID);
+                List<SP_GetDoctorInfoforAppointment_Result> model = objRepo.GetDoctorInfo(doctorID);
 
                 return Json(new { Success = true, Object = model });
 

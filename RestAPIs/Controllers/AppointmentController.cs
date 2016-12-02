@@ -66,7 +66,7 @@ namespace RestAPIs.Controllers
                 var rov = (from l in db.Appointments
                            where l.active == true && l.patientID == id
                            orderby l.appID descending
-                           select new PatientROV { chiefComplaints = l.chiefComplaints }).FirstOrDefault();
+                           select new PatientROV { rov=l.rov,chiefComplaints = l.chiefComplaints }).FirstOrDefault();
                 response = Request.CreateResponse(HttpStatusCode.OK, rov);
                 return response;
             }
@@ -110,7 +110,7 @@ namespace RestAPIs.Controllers
                 app.doctorID = model.doctorID;
                 app.patientID = model.patientID;
                 app.appTime = model.appTime;
-                app.appDate = System.DateTime.Now; //model.appDate;
+                app.appDate =Convert.ToDateTime(model.appDate);
                 app.rov = model.rov;
                 app.chiefComplaints = model.chiefComplaints;
                 app.cb = model.patientID.ToString();
