@@ -22,7 +22,8 @@
 
     <link href="@Url.Content("~/Content/css/bootstrap.min.css")" rel="stylesheet">
     <!-- Font Awesome -->
-    @*<link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet" type='text/css'>*@
+    @*
+        <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet" type='text/css'>*@
     <link href="@Url.Content("~/Content/css/font-awesome.min.css")" rel="stylesheet">
     <!-- NProgress -->
     <!-- iCheck -->
@@ -36,7 +37,7 @@
 
     <!-- Custom Theme Style -->
     <link href="@Url.Content("~/Content/css/custom.min.css")" rel="stylesheet">
-    <link href="@Url.Content("~/Content/css/style.css")" rel="stylesheet">
+    <link href="@Url.Content("~/Content/css/style_tokbox.css")" rel="stylesheet">
 
     <style type="text/css">
         #divPrimaryVideo {
@@ -72,9 +73,9 @@
             <img style="margin-top:30%; margin-left:40%;" class="img-responsive" src="@Url.Content("~/Content/images/loaderImage.gif")" alt="">
         </div>
 
-       
+
         @*<img id="imgSecondaryVideo" class="img-responsive" src="@Url.Content("~/Content/images/123.jpg")" alt="">*@
-        <h1 id="h1Name" data-name="@recipientName" class="video_title"> @(userType.ToLower() == "patient" ? ("Please wait , while "+ recipientName +" will join you after doing payment !") : ("Please wait , while " + recipientName + " will join you!"))</h1>
+        <h1 id="h1Name" data-name="@recipientName" class="video_title"> @(userType.ToLower() == "patient" ? ("Please wait , while " + recipientName + " will join you after doing payment !") : ("Please wait , while " + recipientName + " will join you!"))</h1>
         <div class="small_img">
             <a href="#" id="aHideMyCamera" style="display:none;">
                 <div id="divPrimaryVideo" class="xs-video-img img-responsive" style="display:block;"></div>
@@ -88,8 +89,12 @@
 
         <div class="video_icon_bg">
             <ul class="video_icon">
-                <li><a href="#" class="video_pos" id="edit"><i class="fa fa-list-alt list-alt" aria-hidden="true">SOAP</i><!-- <img src="images/list_h.png" alt=""> --></a></li>
-                <li><a href="#" class="video_pos_h"></a></li>
+
+                @if (userType.ToLower() != "patient")
+                {
+                    <li><a href="#" class="video_pos" id="edit"><i class="fa fa-list-alt list-alt" aria-hidden="true">SOAP</i><!-- <img src="images/list_h.png" alt=""> --></a></li>
+                    <li><a href="#" class="video_pos_h"></a></li>
+                }
 
                 <li><a href="#" id="aStrtCall" class="video_pos"><img src="@Url.Content("~/Content/images/phone.png")" alt=""></a></li>
                 <li><a href="#" id="aStopCall" class="video_pos_h"><img src="@Url.Content("~/Content/images/phone_h.png")" alt=""></a></li>
@@ -115,327 +120,329 @@
         </div>
     </div>
     <div class="video_his">
-        <div id="edit-sec">
-            <div class="edit-sec">
-                <div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="true">
-                    <div class="panel panel-default penal-style">
-                        <div class="panel-heading" role="tab" id="headingOne">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    <b style="color: #337AB7">Subjective</b>
-                                    <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
-                                    <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                            <div class="panel-body">
-                                <textarea class="form-control" rows="2"></textarea>
+        @if (userType.ToLower() != "patient")
+        {
+            <div id="edit-sec">
+                <div class="edit-sec">
+                    <div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default penal-style">
+                            <div class="panel-heading" role="tab" id="headingOne">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <b style="color: #337AB7">Subjective</b>
+                                        <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
+                                        <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                <div class="panel-body">
+                                    <textarea class="form-control" rows="2"></textarea>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="panel panel-default penal-style">
-                        <div class="panel-heading" role="tab" id="headingTwo">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    <b style="color: #337AB7">Objective</b>
-                                    <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
-                                    <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
-                            <div class="panel-body">
-                                <textarea class="form-control" rows="2"></textarea>
+                        <div class="panel panel-default penal-style">
+                            <div class="panel-heading" role="tab" id="headingTwo">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <b style="color: #337AB7">Objective</b>
+                                        <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
+                                        <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+                                <div class="panel-body">
+                                    <textarea class="form-control" rows="2"></textarea>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="panel panel-default penal-style">
-                        <div class="panel-heading" role="tab" id="headingThree">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                    <b style="color: #337AB7">Assessment</b>
-                                    <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
-                                    <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
-                            <div class="panel-body">
-                                <textarea class="form-control" rows="2"></textarea>
+                        <div class="panel panel-default penal-style">
+                            <div class="panel-heading" role="tab" id="headingThree">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        <b style="color: #337AB7">Assessment</b>
+                                        <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
+                                        <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
+                                <div class="panel-body">
+                                    <textarea class="form-control" rows="2"></textarea>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="panel panel-default penal-style">
-                        <div class="panel-heading" role="tab" id="headingFour">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                    <b style="color: #337AB7">Plan</b>
-                                    <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
-                                    <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour">
-                            <div class="panel-body">
-                                <textarea class="form-control" rows="2"></textarea>
+                        <div class="panel panel-default penal-style">
+                            <div class="panel-heading" role="tab" id="headingFour">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                        <b style="color: #337AB7">Plan</b>
+                                        <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
+                                        <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour">
+                                <div class="panel-body">
+                                    <textarea class="form-control" rows="2"></textarea>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="panel panel-default penal-style">
-                        <div class="panel-heading" role="tab" id="headingFive">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                                    <b style="color: #337AB7">Review of Systems</b>
-                                    <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
-                                    <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="collapseFive" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFive">
-                            <div class="panel-body">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td style="border-top: 0">
-                                                <h4 class="m-0">General</h4>
+                        <div class="panel panel-default penal-style">
+                            <div class="panel-heading" role="tab" id="headingFive">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                        <b style="color: #337AB7">Review of Systems</b>
+                                        <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
+                                        <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseFive" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFive">
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td style="border-top: 0">
+                                                    <h4 class="m-0">General</h4>
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; fever</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input checked="checked" class="flat" type="checkbox">&nbsp; fever</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; chills</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; chills</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; malaise</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; malaise</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; weight loss</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; weight loss</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; weight gain</label>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; weight gain</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
 
-                                        <tr>
-                                            <td>
-                                                <h4 class="m-0">Head, Earn, Nose, Throat</h4>
+                                            <tr>
+                                                <td>
+                                                    <h4 class="m-0">Head, Earn, Nose, Throat</h4>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; eye pain</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input checked="checked" class="flat" type="checkbox">&nbsp; eye pain</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; vision change</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; vision change</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; ear pain</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; ear pain</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; discharge</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; discharge</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; hearing change</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; hearing change</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; nasal congestion</label>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; nasal congestion</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
 
 
-                                        <tr>
-                                            <td>
-                                                <h4 class="m-0">Heart</h4>
+                                            <tr>
+                                                <td>
+                                                    <h4 class="m-0">Heart</h4>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; chest pain</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input checked="checked" class="flat" type="checkbox">&nbsp; chest pain</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; SOB</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; SOB</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; palpitations</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; palpitations</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; dizziness</label>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; dizziness</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
 
 
-                                        <tr>
-                                            <td>
-                                                <h4 class="m-0">Respiratory</h4>
+                                            <tr>
+                                                <td>
+                                                    <h4 class="m-0">Respiratory</h4>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; cough</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input checked="checked" class="flat" type="checkbox">&nbsp; cough</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; wheezing</label>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; wheezing</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
 
 
-                                        <tr>
-                                            <td>
-                                                <h4 class="m-0">GI</h4>
+                                            <tr>
+                                                <td>
+                                                    <h4 class="m-0">GI</h4>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; abd pain</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input checked="checked" class="flat" type="checkbox">&nbsp; abd pain</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; nausea</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; nausea</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; emesis</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; emesis</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; diarrhea</label>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; diarrhea</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
 
 
-                                        <tr>
-                                            <td>
-                                                <h4 class="m-0">Musculoskeletal</h4>
+                                            <tr>
+                                                <td>
+                                                    <h4 class="m-0">Musculoskeletal</h4>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; arthritis</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input checked="checked" class="flat" type="checkbox">&nbsp; arthritis</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; back pain</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; back pain</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; muscle pain</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; muscle pain</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; cramps</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; cramps</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; weakness</label>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; weakness</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
 
 
-                                        <tr>
-                                            <td>
-                                                <h4 class="m-0">skin</h4>
+                                            <tr>
+                                                <td>
+                                                    <h4 class="m-0">skin</h4>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; rash or ulcers</label>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input checked="checked" class="flat" type="checkbox">&nbsp; rash or ulcers</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
 
 
-                                        <tr>
-                                            <td>
-                                                <h4 class="m-0">Psychiatry</h4>
+                                            <tr>
+                                                <td>
+                                                    <h4 class="m-0">Psychiatry</h4>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; anxiety</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input checked="checked" class="flat" type="checkbox">&nbsp; anxiety</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; depression</label>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; depression</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
 
 
-                                        <tr>
-                                            <td>
-                                                <h4 class="m-0">Hematology</h4>
+                                            <tr>
+                                                <td>
+                                                    <h4 class="m-0">Hematology</h4>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; bleeding problems</label>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input checked="checked" class="flat" type="checkbox">&nbsp; bleeding problems</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
 
 
-                                        <tr>
-                                            <td>
-                                                <h4 class="m-0">Nuerology</h4>
+                                            <tr>
+                                                <td>
+                                                    <h4 class="m-0">Nuerology</h4>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input checked="checked" class="flat" type="checkbox">&nbsp; Siezure</label>
-                                                </div>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input checked="checked" class="flat" type="checkbox">&nbsp; Siezure</label>
+                                                    </div>
 
 
-                                                <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                    <label><input class="flat" type="checkbox">&nbsp; focal weakness</label>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                                        <label><input class="flat" type="checkbox">&nbsp; focal weakness</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div id="messages-sec" class="">
+        }
+        <div id="messages-sec" @(userType.ToLower() == "patient" ? "style=display:block;" : "") class="">
             <!-- messages-sec -->
             <div id="divMessageContainer" class="msg-sec">
             </div>
