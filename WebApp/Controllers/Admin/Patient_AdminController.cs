@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using SwiftKare.Models.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -198,12 +199,23 @@ namespace SwiftKare.Controllers
                     {
                         id = Request.Form["id"].ToString();
                         userid = Request.Form["userid"].ToString();
-                        db.sp_DeletePatient(Convert.ToInt64(id), Session["LogedUserID"].ToString(), System.DateTime.Now);
-                        AspNetUser patient = db.AspNetUsers.Find(userid);
-                        db.AspNetUsers.Remove(patient);
-                        db.SaveChanges();
-                        ViewBag.successMessage = "Record has been deleted successfully";
-                        ViewBag.errorMessage = "";
+                        Patient patient = db.Patients.Where(a => a.userId == userid).FirstOrDefault();
+                        if (patient != null)
+                        {
+                            //Update AdminUsers table
+                            patient.active = false;
+                            patient.mb = Session["LogedUserID"].ToString();
+                            patient.md = DateTime.Now;
+                            db.Patients.Add(patient);
+                            db.Entry(patient).State = EntityState.Modified;
+                            ViewBag.successMessage = "Record has been deleted successfully";
+                            ViewBag.errorMessage = "";
+                        }
+                        else
+                        {
+                            ViewBag.successMessage = "";
+                            ViewBag.errorMessage = "Patient not found.";
+                        }
 
                     }
 

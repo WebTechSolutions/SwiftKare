@@ -54,14 +54,14 @@ namespace WebApp.Repositories.DoctorRepositories
             }
 
         }
-        public List<DoctorInfoCustom> GetDoctorInfo(long doctorID)
+        public List<SP_GetDoctorInfoforAppointment_Result> GetDoctorInfo(long doctorID)
         {
 
             try
             {
                 //var strContent = JsonConvert.SerializeObject(searchModel);
                 var response = ApiConsumerHelper.GetResponseString("api/getDoctorInfo/?doctorID=" + doctorID);
-                var result = JsonConvert.DeserializeObject<List<DoctorInfoCustom>>(response);
+                var result = JsonConvert.DeserializeObject<List<SP_GetDoctorInfoforAppointment_Result>>(response);
                 return result;
             }
             catch (Exception ex)
@@ -129,7 +129,7 @@ namespace WebApp.Repositories.DoctorRepositories
 
             try
             {
-                var response = ApiConsumerHelper.GetResponseString("api/GetFavouriteDoctors");
+                var response = ApiConsumerHelper.GetResponseString("api/GetFavouriteDoctors/?patientID=" + patientID);
                 var result = JsonConvert.DeserializeObject<List<FavouriteDoctorModel>>(response);
                 return result;
             }

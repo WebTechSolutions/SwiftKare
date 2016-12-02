@@ -140,7 +140,19 @@ function ToJavaScriptDateMedicine(value) {
 
 function editMedicine(objMedicine) {
     $("#myMedicine").val(objMedicine.medicineName);
-    $("#myFrequency option:contains(" + objMedicine.frequency + ")").attr('selected', 'selected');
+    if (objMedicine.frequency != "")
+    {
+        //$("#myFrequency option:contains(" + objMedicine.frequency + ")").attr('selected', 'selected');
+        $("#myFrequency option").filter(function () {
+            //may want to use $.trim in here
+            return $(this).text() == objMedicine.frequency;
+        }).prop('selected', true);
+    }
+    else
+    {
+        $("#myFrequency").val($("#myFrequency option:first").val());
+    }
+   
     //$("#myFrequency option:contains(" + objMedicine.frequency + ")").attr('selected', 'selected');
     $("#medicationID").val(objMedicine.medicationID);
     _objUpdate = {};
@@ -213,7 +225,8 @@ function addupdateMedicine(patientid) {
                             _newObj["reporteddate"] = "/Date(" + ticks + ")/";
                             _medicationTable.splice(0, 0, _newObj);
                             bindMedicinesTable(_medicationTable);
-                           _objAdd = null;
+                            _objAdd = null;
+                            resetMedicine();
 
 
                         }
@@ -221,6 +234,7 @@ function addupdateMedicine(patientid) {
                             changeMedicine(response.ApiResultModel.ID, _objUpdate.medicineName, _objUpdate.frequency);
                             bindMedicinesTable(_medicationTable);
                             _objUpdate = null;
+                             resetMedicine();
 
                         }
 

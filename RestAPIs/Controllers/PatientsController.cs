@@ -50,14 +50,14 @@ namespace RestAPIs.Controllers
         //}
 
         //[ResponseType(typeof(DataAccess.CustomModels.UserModel))]
-        public DataAccess.CustomModels.UserModel GetPatientByUserId(string userId)
+        public DataAccess.CustomModels.PatientModel GetPatientByUserId(string userId)
         {
             Patient patient = db.Patients.SingleOrDefault(o => o.userId == userId);
-            var objModel = new DataAccess.CustomModels.UserModel();
-            objModel.Id = patient.patientID;
-            objModel.FirstName = patient.firstName;
-            objModel.LastName = patient.lastName;
-            objModel.Email = patient.email;
+            var objModel = new DataAccess.CustomModels.PatientModel();
+            objModel.patientID = patient.patientID;
+            objModel.firstName = patient.firstName;
+            objModel.lastName = patient.lastName;
+            objModel.email = patient.email;
 
 
             return objModel;

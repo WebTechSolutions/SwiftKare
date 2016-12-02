@@ -80,16 +80,16 @@ function bindingSurgeriesTable(PSurgeries, GSurgeries) {
     var tableHtml = "<tr><td>";
     for (var i = 0; i < PSurgeries.length; i++) {
         tableHtml=tableHtml+"<div class='checkbox' style='display: inline-block; width: 150px;'>"+
-                                                                "<label>"+
-                                                                "<input onclick='deleteObjSurgery(" + PSurgeries[i].surgeryID + ")' style='margin-left:-15px' id='" + PSurgeries[i].surgeryID + "' type='checkbox' class='flat' checked='checked'>&nbsp" + PSurgeries[i].bodyPart +
+                                                                "<label style='word-wrap:break-word'>" +
+                                                                "<input onclick='deleteObjSurgery(" + PSurgeries[i].surgeryID + ")' style='margin-left:-15px' id='" + PSurgeries[i].surgeryID + "' type='checkbox' class='icheck' checked='checked'>&nbsp" + PSurgeries[i].bodyPart +
                                                                 "</label></div>";
                                                            
        
     }
     for (var i = 0; i < GSurgeries.length; i++) {
         var existingSurgery = GSurgeries[i].surgeryName;
-        tableHtml = tableHtml + "<div class='checkbox' style='display: inline-block; width: 150px;'><label>" +
-                                "<input  onclick='addupdatepredefinedSurgery(this,\"" + existingSurgery + "\")' style='margin-left:-15px' id='" + GSurgeries[i].surgeryName + "' type='checkbox' class='flat'>&nbsp " + GSurgeries[i].surgeryName +
+        tableHtml = tableHtml + "<div class='checkbox' style='display: inline-block; width: 150px;'><label style='word-wrap:break-word'>" +
+                                "<input  onclick='addupdatepredefinedSurgery(this,\"" + existingSurgery + "\")' style='margin-left:-15px' id='" + GSurgeries[i].surgeryName + "' type='checkbox' class='icheck'>&nbsp " + GSurgeries[i].surgeryName +
                                 "</label></div>";
                                 
     }
@@ -98,6 +98,7 @@ function bindingSurgeriesTable(PSurgeries, GSurgeries) {
     $('#surgeriestable tr:last').after(tableHtml);
     //$("tbody[id$='surgeriestable']").append(tableHtml);
     //$("#surgeriestable").append(tableHtml);
+    
 }
 
 function removeDuplicateSurgeries(surgeries)

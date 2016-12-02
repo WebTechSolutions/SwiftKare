@@ -126,7 +126,7 @@ function bindAllergiesTable(Allergies) {
                     Allergies[i].severity,
                     Allergies[i].reaction,
                     ToJavaScriptDateAllergies(Allergies[i].reporteddate),
-                    "<div class='btn-group'> <button type='button' class='btn btn-primary'>Action</button>" +
+                    "<div class='btn-group'> <button style='width:60px'type='button' class='btn btn-primary'>Action</button>" +
                                                   "<button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>" +
                                                       "<span class='caret'></span>" +
                                                       "<span class='sr-only'>Toggle Dropdown</span>" +
@@ -151,8 +151,31 @@ function ToJavaScriptDateAllergies(value) {
 }
 function editAllergies(objAllergy) {
     $("#myAllergy").val(objAllergy.allergyName);
-    $("#Sensitivity option:contains(" + objAllergy.severity + ")").attr('selected', 'selected');
-    $("#Reaction option:contains(" + objAllergy.reaction + ")").attr('selected', 'selected');
+    if (objAllergy.severity != "")
+    {
+        //alert(objAllergy.severity);
+        //$("#Sensitivity option:contains(" + objAllergy.severity + ")").attr('selected', 'selected');
+        $("#Sensitivity option").filter(function () {
+            //may want to use $.trim in here
+            return $(this).text() == objAllergy.severity;
+        }).prop('selected', true);
+    }
+    else
+    {
+        $("#Sensitivity").val($("#Sensitivity option:first").val());
+    }
+    if (objAllergy.reaction != "") {
+        //alert(objAllergy.reaction);
+        //$("#Reaction option:contains(" + objAllergy.reaction + ")").attr('selected', 'selected');
+        $("#Reaction option").filter(function () {
+            //may want to use $.trim in here
+            return $(this).text() == objAllergy.reaction;
+        }).prop('selected', true);
+    }
+    else {
+        $("#Reaction").val($("#Reaction option:first").val());
+    }
+   
     _objUpdate = {};
     _objUpdate["allergyName"] = (objAllergy.allergyName);
     _objUpdate["severity"] = (objAllergy.severity);
