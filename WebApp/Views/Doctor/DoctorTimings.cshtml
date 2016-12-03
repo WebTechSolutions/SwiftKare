@@ -100,12 +100,8 @@
 
           });
 
-            try {
-                $.material.init();
-            } catch (e) {
 
-            }
-
+            $.material.init()
         });
 
 
@@ -128,7 +124,8 @@
 
         function GetTimings() {
             $("tbody[id$='timingTable']").html('');
-            $("div[id$='divLoader']").show();
+            // $("div[id$='divLoader']").show();
+            blockUI();
             var param = "{}";
             $.ajax({
                 type: 'POST',
@@ -136,11 +133,18 @@
                 data: param,
                 dataType: 'json',
                 success: function (response) {
-                    _objUpdate = response.DoctorTiming;
-                    _doctorId = response.DoctorId;
-                    //bindTimingsTable(response.DoctorTimingsList);
-                    bindTimingsDayWise(response.DayWiseTimings);
-                    test = response.DayWiseTimings;
+                    if (response.isRedirect) {
+                        alert("Session has been expired, please login again!");
+                        window.location.href = response.redirectUrl;
+                    }
+                    else {
+                        _objUpdate = response.DoctorTiming;
+                        _doctorId = response.DoctorId;
+                        //bindTimingsTable(response.DoctorTimingsList);
+                        bindTimingsDayWise(response.DayWiseTimings);
+                        test = response.DayWiseTimings;
+                    }
+
                 },
                 error: errorRes
 
@@ -162,39 +166,38 @@
                 tableHtml = tableHtml + "<td><a href='#'  onclick='editObj(" + JSON.stringify(doctorTimingList[i]) + ",this);'> Edit</a> | <a href='#' onclick='deleteObj(" + doctorTimingList[i].doctorTimingsID + ")'>Delete</a></td>";
                 tableHtml = tableHtml + "</tr>";
             }
-            $("div[id$='divLoader']").hide();
+            //$("div[id$='divLoader']").hide();
             $("tbody[id$='timingTable']").html(tableHtml);
+            $.unblockUI();
 
 
         }
 
         function bindTimingsDayWise(daywiseList) {
-            var divHtml ="";
-           
-            for (var i = 0; i < daywiseList.length; i++)
-            {
+            var divHtml = "";
+
+            for (var i = 0; i < daywiseList.length; i++) {
                 divHtml = divHtml + "<div class='table-responsive'>";
                 divHtml = divHtml + "<h2>" + daywiseList[i].Day + "</h2>";
                 divHtml = divHtml + "<table class='table table-striped table-bordered dataTable no-footer'>";
                 divHtml = divHtml + "<tbody>";
 
-                if (daywiseList[i].Timings.length > 0)
-                {
+                if (daywiseList[i].Timings.length > 0) {
                     for (var j = 0; j < daywiseList[i].Timings.length; j++) {
                         divHtml = divHtml + "<tr class='time_btn'>";
                         divHtml = divHtml + "<td class='time-remove'><span>" + daywiseList[i].Timings[j].from + " To " + daywiseList[i].Timings[j].to + "</span><button class='btn btn-primary' onclick='deleteObj(" + daywiseList[i].Timings[j].doctorTimingsID + ");' type='button'>Delete</button></td>";
                         divHtml = divHtml + "</tr>";
                     }
                 }
-                else
-                {
+                else {
                     divHtml = divHtml + "<p>There is no time Slot available</p>";
                 }
                 divHtml = divHtml + "</tbody></table><div>";
             }
             $("div[id$='divDayWiseTiming']").html(divHtml);
-            $("div[id$='divLoader']").hide();
-            
+            $.unblockUI();
+            //$("div[id$='divLoader']").hide();
+
         }
 
 
@@ -231,15 +234,29 @@
                 else {
                     _data = _objUpdate;
                 }
-                $("div[id$='divLoader']").show();
+                blockUI();
+                //$("div[id$='divLoader']").show();
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Action("CreateEditTimings", "Doctor")',
                     data: _data,
                     dataType: 'json',
                     success: function (response) {
-                        reset();
-                        GetTimings();
+                        testResp = response;
+
+                        if (response.isRedirect) {
+                            alert("Session has been expired, please login again!");
+                            window.location.href = response.redirectUrl;
+                        }
+
+                        if (response == "overlapped")
+                        { alert("Timings can not be overlapped across each other"); $.unblockUI(); }
+                        else
+                        {
+                            reset();
+                            GetTimings();
+                        }
+
                         _objUpdate = null;
                     },
                     error: errorRes
@@ -253,13 +270,13 @@
 
 
         }
-
+        var testResp;
         function deleteObj(doctorTimingsID) {
             var confirmMessage = confirm("Are you sure you want to delete?");
             if (confirmMessage == false)
                 return false;
-
-            $("div[id$='divLoader']").show();
+            blockUI();
+            // $("div[id$='divLoader']").show();
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action("DeleteDoctorTiming", "Doctor")',
@@ -292,9 +309,32 @@
             }
         }
 
+        //Center the element
+        $.fn.center = function () {
+            this.css("position", "absolute");
+            this.css("top", ($(window).height() - this.height()) / 2 + $(window).scrollTop() + "px");
+            this.css("left", ($(window).width() - this.width()) / 2 + $(window).scrollLeft() + "px");
+            return this;
+        }
+        //blockUI
+        function blockUI() {
+            $.blockUI({
+                css: {
+                    backgroundColor: 'transparent',
+                    border: 'none'
+                },
+                message: '<div class="loader"></div>',
+                baseZ: 1500,
+                overlayCSS: {
+                    backgroundColor: '#FFFFFF',
+                    opacity: 0.7,
+                    cursor: 'wait'
+                }
+            });
+            $('.blockUI.blockMsg').center();
+        }//end Blockui
 
 
-
-    </script>
+</script>
 }
 
