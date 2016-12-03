@@ -389,15 +389,14 @@
         function checkAnyDoctorAvailableNow() {
 
             $(".clsDivDocList .clsAvailbleForCall").hide();
+
             $(".clsDivDocList .clsNotAvailbleForCall").show();
 
-            $(".clsDivDocList .clsAvailableSpot").hide();
-            //$(".clsDivDocList .clsNotAvailableSpot").show();
-
             $(".clsDivDocList .clsMakeCall").hide();
+            $(".clsDivDocList .clsNotMakePhone").show();
 
-            //$(".clsDivDocList .clsAvailableSpot").hide();
-            
+            $(".clsDivDocList .clsAvailableSpot").css('color', 'red');
+
 
             for (var i = 0; i < availableDoctors.doctor.length; i++) {
                 if ($(".clsDivDocList .clsMakeCall[data-doctorid = " + availableDoctors.doctor[i].docId + "]").length > 0) {
@@ -407,11 +406,11 @@
 
                     elem.data("connId", availableDoctors.doctor[i].connectionId);
 
+                    elem.closest(".clsDivDocList").find(".clsNotMakePhone").hide();
+
                     elem.closest(".clsDivDocList").find(".clsNotAvailbleForCall").hide();
                     elem.closest(".clsDivDocList").find(".clsAvailbleForCall").show();
-                    elem.closest(".clsDivDocList").find(".clsAvailableSpot").show();
-                   // elem.closest(".clsDivDocList").find(".clsNotAvailableSpot").hide();
-                  
+                    elem.closest(".clsDivDocList").find(".clsAvailableSpot").css('color', 'green');
                 }
             }
         }
