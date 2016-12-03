@@ -248,6 +248,11 @@ namespace WebApp.Controllers
                         SessionHandler.UserId = userId;
                         var objRepo = new DoctorRepository();
                         var doctor = objRepo.GetByUserId(userId);
+                        if (doctor == null)
+                        {
+                            ModelState.AddModelError("", "Invalid login attempt.");
+                            return View(model);
+                        }
                         var userModel = new UserInfoModel();
                         userModel.Id = doctor.doctorID;
                         userModel.Email = doctor.email;
