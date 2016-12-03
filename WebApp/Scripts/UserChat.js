@@ -17,6 +17,7 @@
     };
 });
 
+
 var UserChat = function (apiKey, sessionId, token) {
 
     //Declaration - Starts
@@ -26,6 +27,10 @@ var UserChat = function (apiKey, sessionId, token) {
     var streamCreateTime = null;
     var callInterval = null;
     var curStream = null;
+
+    var audioInputDevices;
+    var videoInputDevices;
+
     //Declaration - Ends
 
 
@@ -216,6 +221,57 @@ var UserChat = function (apiKey, sessionId, token) {
         publisher.publishVideo(true);
     }
 
+
+    function showVideoMessages() {
+        $('#messages-sec').show();
+        $('#edit-sec').hide();
+        $('.comments').addClass('comments-m');
+        $('.list-alt').addClass('list-alt-m');
+        $('.list-alt').removeClass('comments-m');
+        return false;
+    }
+
+    function cancelFullScreen(el) {
+        var requestMethod = el.cancelFullScreen || el.webkitCancelFullScreen || el.mozCancelFullScreen || el.exitFullscreen;
+        if (requestMethod) { // cancel full screen.
+            requestMethod.call(el);
+        } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+            var wscript = new ActiveXObject("WScript.Shell");
+            if (wscript !== null) {
+                wscript.SendKeys("{F11}");
+            }
+        }
+    }
+
+    function requestFullScreen(el) {
+        // Supports most browsers and their versions.
+        var requestMethod = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+
+        if (requestMethod) { // Native full screen.
+            requestMethod.call(el);
+        } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+            var wscript = new ActiveXObject("WScript.Shell");
+            if (wscript !== null) {
+                wscript.SendKeys("{F11}");
+            }
+        }
+        return false
+    }
+
+    function toggleFullScreen() {
+        var elem = document.body; // Make the body go full screen.
+        var isInFullScreen = (document.fullScreenElement && document.fullScreenElement !== null) || (document.mozFullScreen || document.webkitIsFullScreen);
+
+        if (isInFullScreen) {
+            cancelFullScreen(document);
+        } else {
+            requestFullScreen(elem);
+        }
+        return false;
+    }
+
+
+
     //Functions - Ends
 
 
@@ -303,7 +359,7 @@ var UserChat = function (apiKey, sessionId, token) {
                 oMsgHtml += "</span></p> </div> </div> </div>";
 
                 if (!$("#messages-sec").is(":visible")) {
-                    $('#video-message i').animateHighlight();
+                    showVideoMessages();
                 }
 
                 //Log received message
@@ -311,6 +367,27 @@ var UserChat = function (apiKey, sessionId, token) {
             }
 
             $("#divMessageContainer").append(oMsgHtml);
+        });
+
+        //Check whether device is connected to audio-video devices
+        OT.getDevices(function (error, devices) {
+            audioInputDevices = devices.filter(function (element) {
+                return element.kind == "audioInput";
+            });
+            videoInputDevices = devices.filter(function (element) {
+                return element.kind == "videoInput";
+            });
+
+
+            if (audioInputDevices.length == 0 && videoInputDevices.length == 0) {
+                alert("Your computer is not connected to any audio or video device. Please connect these devices.");
+            }
+            else if (audioInputDevices.length == 0) {
+                alert("Your computer is not connected to any audio device.");
+            }
+            else if (videoInputDevices.length == 0) {
+                alert("Your computer is not connected to any video device.");
+            }
         });
 
         //Event Binding - Starts
@@ -331,12 +408,14 @@ var UserChat = function (apiKey, sessionId, token) {
         $("#btnSendMsg").click(sendChatMessage);
 
         $('#aExpandVideo').click(function () {
+            toggleFullScreen();
             $('#aShrinkExpandVideo').show();
             $('#aExpandVideo').hide();
             return false;
         });
 
         $('#aShrinkExpandVideo').click(function () {
+            toggleFullScreen();
             $('#aShrinkExpandVideo').hide();
             $('#aExpandVideo').show();
             return false;
@@ -346,14 +425,7 @@ var UserChat = function (apiKey, sessionId, token) {
 
         $('#aShowMyCamera').click(showMyCamera);
 
-        $('#video-message').click(function () {
-            $('#messages-sec').show();
-            $('#edit-sec').hide();
-            $('.comments').addClass('comments-m');
-            $('.list-alt').addClass('list-alt-m');
-            $('.list-alt').removeClass('comments-m');
-            return false;
-        });
+        $('#video-message').click(showVideoMessages);
 
         // Update the online status icon based on connectivity
         window.addEventListener('online', intentetConnectivityRegain);
