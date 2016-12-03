@@ -211,7 +211,8 @@ namespace WebApp.Controllers
                         userModel.FirstName = patient.firstName;
                         userModel.LastName = patient.lastName;
                         SessionHandler.UserInfo = userModel;
-
+                        if (patient.active == null || (bool)patient.active)
+                            return RedirectToAction("Index", "Patient");
                     }
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:

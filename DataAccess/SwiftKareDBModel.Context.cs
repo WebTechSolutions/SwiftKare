@@ -47,34 +47,34 @@ namespace DataAccess
         public virtual DbSet<DoctorSpeciality> DoctorSpecialities { get; set; }
         public virtual DbSet<DoctorTiming> DoctorTimings { get; set; }
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
+        public virtual DbSet<FamilyHXItem> FamilyHXItems { get; set; }
+        public virtual DbSet<FavouriteDoctor> FavouriteDoctors { get; set; }
+        public virtual DbSet<Frequency> Frequencies { get; set; }
         public virtual DbSet<Language> Languages { get; set; }
+        public virtual DbSet<LifeStyleQuestion> LifeStyleQuestions { get; set; }
         public virtual DbSet<Medication> Medications { get; set; }
         public virtual DbSet<Medicine> Medicines { get; set; }
         public virtual DbSet<Module> Modules { get; set; }
         public virtual DbSet<News> News { get; set; }
         public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<PatientAllergy> PatientAllergies { get; set; }
+        public virtual DbSet<PatientFamilyHX> PatientFamilyHXes { get; set; }
+        public virtual DbSet<PatientLifeStyle> PatientLifeStyles { get; set; }
+        public virtual DbSet<PatientSurgery> PatientSurgeries { get; set; }
         public virtual DbSet<PatientSystem> PatientSystems { get; set; }
+        public virtual DbSet<Reaction> Reactions { get; set; }
+        public virtual DbSet<Relationship> Relationships { get; set; }
         public virtual DbSet<RoleModule> RoleModules { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<ROV> ROVs { get; set; }
+        public virtual DbSet<Severity> Severities { get; set; }
         public virtual DbSet<Speciallity> Speciallities { get; set; }
         public virtual DbSet<State> States { get; set; }
+        public virtual DbSet<Surgery> Surgeries { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<SystemItemss> SystemItemsses { get; set; }
         public virtual DbSet<UserFile> UserFiles { get; set; }
         public virtual DbSet<Zip> Zips { get; set; }
-        public virtual DbSet<PatientSurgery> PatientSurgeries { get; set; }
-        public virtual DbSet<Reaction> Reactions { get; set; }
-        public virtual DbSet<Severity> Severities { get; set; }
-        public virtual DbSet<Surgery> Surgeries { get; set; }
-        public virtual DbSet<FamilyHXItem> FamilyHXItems { get; set; }
-        public virtual DbSet<Frequency> Frequencies { get; set; }
-        public virtual DbSet<PatientLifeStyle> PatientLifeStyles { get; set; }
-        public virtual DbSet<Relationship> Relationships { get; set; }
-        public virtual DbSet<PatientFamilyHX> PatientFamilyHXes { get; set; }
-        public virtual DbSet<ROV> ROVs { get; set; }
-        public virtual DbSet<FavouriteDoctor> FavouriteDoctors { get; set; }
-        public virtual DbSet<LifeStyleQuestion> LifeStyleQuestions { get; set; }
     
         public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
         {
@@ -602,7 +602,7 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_DeleteDoctor", iDParameter, mBParameter, mDParameter);
         }
     
-        public virtual ObjectResult<DocumentType> sp_DeleteDocumentType(Nullable<long> docTypeID, string mB, Nullable<System.DateTime> mD)
+        public virtual int sp_DeleteDocumentType(Nullable<long> docTypeID, string mB, Nullable<System.DateTime> mD)
         {
             var docTypeIDParameter = docTypeID.HasValue ?
                 new ObjectParameter("docTypeID", docTypeID) :
@@ -616,24 +616,7 @@ namespace DataAccess
                 new ObjectParameter("MD", mD) :
                 new ObjectParameter("MD", typeof(System.DateTime));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<DocumentType>("sp_DeleteDocumentType", docTypeIDParameter, mBParameter, mDParameter);
-        }
-    
-        public virtual ObjectResult<DocumentType> sp_DeleteDocumentType(Nullable<long> docTypeID, string mB, Nullable<System.DateTime> mD, MergeOption mergeOption)
-        {
-            var docTypeIDParameter = docTypeID.HasValue ?
-                new ObjectParameter("docTypeID", docTypeID) :
-                new ObjectParameter("docTypeID", typeof(long));
-    
-            var mBParameter = mB != null ?
-                new ObjectParameter("MB", mB) :
-                new ObjectParameter("MB", typeof(string));
-    
-            var mDParameter = mD.HasValue ?
-                new ObjectParameter("MD", mD) :
-                new ObjectParameter("MD", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<DocumentType>("sp_DeleteDocumentType", mergeOption, docTypeIDParameter, mBParameter, mDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_DeleteDocumentType", docTypeIDParameter, mBParameter, mDParameter);
         }
     
         public virtual int sp_DeleteLanguage(Nullable<long> languageID, string mB, Nullable<System.DateTime> mD)
@@ -704,7 +687,7 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_DeletePatient", iDParameter, mBParameter, mDParameter);
         }
     
-        public virtual ObjectResult<AspNetRole> sp_DeleteRole(Nullable<long> roleID, string mB, Nullable<System.DateTime> mD)
+        public virtual int sp_DeleteRole(Nullable<long> roleID, string mB, Nullable<System.DateTime> mD)
         {
             var roleIDParameter = roleID.HasValue ?
                 new ObjectParameter("roleID", roleID) :
@@ -718,24 +701,7 @@ namespace DataAccess
                 new ObjectParameter("MD", mD) :
                 new ObjectParameter("MD", typeof(System.DateTime));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<AspNetRole>("sp_DeleteRole", roleIDParameter, mBParameter, mDParameter);
-        }
-    
-        public virtual ObjectResult<AspNetRole> sp_DeleteRole(Nullable<long> roleID, string mB, Nullable<System.DateTime> mD, MergeOption mergeOption)
-        {
-            var roleIDParameter = roleID.HasValue ?
-                new ObjectParameter("roleID", roleID) :
-                new ObjectParameter("roleID", typeof(long));
-    
-            var mBParameter = mB != null ?
-                new ObjectParameter("MB", mB) :
-                new ObjectParameter("MB", typeof(string));
-    
-            var mDParameter = mD.HasValue ?
-                new ObjectParameter("MD", mD) :
-                new ObjectParameter("MD", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<AspNetRole>("sp_DeleteRole", mergeOption, roleIDParameter, mBParameter, mDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_DeleteRole", roleIDParameter, mBParameter, mDParameter);
         }
     
         public virtual int sp_DeleteSpeciality(Nullable<long> speciallityID, string mB, Nullable<System.DateTime> mD)
@@ -914,24 +880,14 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectAlerts_Result>("SP_SelectAlerts");
         }
     
-        public virtual ObjectResult<Allergy> SP_SelectAllergy()
+        public virtual int SP_SelectAllergy()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Allergy>("SP_SelectAllergy");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectAllergy");
         }
     
-        public virtual ObjectResult<Allergy> SP_SelectAllergy(MergeOption mergeOption)
+        public virtual int SP_SelectCity()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Allergy>("SP_SelectAllergy", mergeOption);
-        }
-    
-        public virtual ObjectResult<City> SP_SelectCity()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<City>("SP_SelectCity");
-        }
-    
-        public virtual ObjectResult<City> SP_SelectCity(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<City>("SP_SelectCity", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectCity");
         }
     
         public virtual ObjectResult<SP_SelectConsultation_Result> SP_SelectConsultation()
@@ -939,24 +895,14 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectConsultation_Result>("SP_SelectConsultation");
         }
     
-        public virtual ObjectResult<Doctor> SP_SelectDoctor()
+        public virtual int SP_SelectDoctor()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("SP_SelectDoctor");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectDoctor");
         }
     
-        public virtual ObjectResult<Doctor> SP_SelectDoctor(MergeOption mergeOption)
+        public virtual int SP_SelectDoctorsForApproval()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("SP_SelectDoctor", mergeOption);
-        }
-    
-        public virtual ObjectResult<Doctor> SP_SelectDoctorsForApproval()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("SP_SelectDoctorsForApproval");
-        }
-    
-        public virtual ObjectResult<Doctor> SP_SelectDoctorsForApproval(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("SP_SelectDoctorsForApproval", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectDoctorsForApproval");
         }
     
         public virtual ObjectResult<SP_SelectDocType_Result> SP_SelectDocType()
@@ -964,74 +910,39 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectDocType_Result>("SP_SelectDocType");
         }
     
-        public virtual ObjectResult<Language> SP_SelectLanguages()
+        public virtual int SP_SelectLanguages()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Language>("SP_SelectLanguages");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectLanguages");
         }
     
-        public virtual ObjectResult<Language> SP_SelectLanguages(MergeOption mergeOption)
+        public virtual int SP_SelectMedicine()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Language>("SP_SelectLanguages", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectMedicine");
         }
     
-        public virtual ObjectResult<Medicine> SP_SelectMedicine()
+        public virtual int SP_SelectNewss()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Medicine>("SP_SelectMedicine");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectNewss");
         }
     
-        public virtual ObjectResult<Medicine> SP_SelectMedicine(MergeOption mergeOption)
+        public virtual int SP_SelectPatient()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Medicine>("SP_SelectMedicine", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectPatient");
         }
     
-        public virtual ObjectResult<News> SP_SelectNewss()
+        public virtual int SP_SelectRole()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<News>("SP_SelectNewss");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectRole");
         }
     
-        public virtual ObjectResult<News> SP_SelectNewss(MergeOption mergeOption)
+        public virtual int SP_SelectSpeciality()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<News>("SP_SelectNewss", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectSpeciality");
         }
     
-        public virtual ObjectResult<Patient> SP_SelectPatient()
+        public virtual int SP_SelectStates()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Patient>("SP_SelectPatient");
-        }
-    
-        public virtual ObjectResult<Patient> SP_SelectPatient(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Patient>("SP_SelectPatient", mergeOption);
-        }
-    
-        public virtual ObjectResult<Role> SP_SelectRole()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Role>("SP_SelectRole");
-        }
-    
-        public virtual ObjectResult<Role> SP_SelectRole(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Role>("SP_SelectRole", mergeOption);
-        }
-    
-        public virtual ObjectResult<Speciallity> SP_SelectSpeciality()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Speciallity>("SP_SelectSpeciality");
-        }
-    
-        public virtual ObjectResult<Speciallity> SP_SelectSpeciality(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Speciallity>("SP_SelectSpeciality", mergeOption);
-        }
-    
-        public virtual ObjectResult<State> SP_SelectStates()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<State>("SP_SelectStates");
-        }
-    
-        public virtual ObjectResult<State> SP_SelectStates(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<State>("SP_SelectStates", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectStates");
         }
     
         public virtual ObjectResult<SP_SelectSystemItems_Result> SP_SelectSystemItems()
@@ -1049,14 +960,9 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_selectTransactionHistory_Result>("SP_selectTransactionHistory");
         }
     
-        public virtual ObjectResult<Zip> SP_SelectZipCode()
+        public virtual int SP_SelectZipCode()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Zip>("SP_SelectZipCode");
-        }
-    
-        public virtual ObjectResult<Zip> SP_SelectZipCode(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Zip>("SP_SelectZipCode", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectZipCode");
         }
     
         public virtual int sp_UpdateAlerts(Nullable<long> alertID, string alertText, string alertFor, string mB, Nullable<System.DateTime> mD)
@@ -1904,6 +1810,28 @@ namespace DataAccess
                 new ObjectParameter("gender", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SearchDoctor_Result>("SP_SearchDoctor", languageParameter, specParameter, nameParameter, appDayParameter, appTimeParameter, genderParameter);
+        }
+    
+        public virtual int sp_addextendedproc1(string functname, string dllname)
+        {
+            var functnameParameter = functname != null ?
+                new ObjectParameter("functname", functname) :
+                new ObjectParameter("functname", typeof(string));
+    
+            var dllnameParameter = dllname != null ?
+                new ObjectParameter("dllname", dllname) :
+                new ObjectParameter("dllname", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_addextendedproc1", functnameParameter, dllnameParameter);
+        }
+    
+        public virtual int sp_dropextendedproc1(string functname)
+        {
+            var functnameParameter = functname != null ?
+                new ObjectParameter("functname", functname) :
+                new ObjectParameter("functname", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_dropextendedproc1", functnameParameter);
         }
     }
 }
