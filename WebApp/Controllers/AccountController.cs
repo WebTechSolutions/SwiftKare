@@ -66,6 +66,28 @@ namespace WebApp.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
+        // GET: /Account/PatientLogin
+        [AllowAnonymous]
+        public ActionResult PatientLogin(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+        // GET: /Account/DoctorLogin
+        [AllowAnonymous]
+        public ActionResult DoctorLogin(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+        // GET: /Account/AdminLogin
+        [AllowAnonymous]
+        public ActionResult AdminLogin(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+
 
         private ApplicationSignInManager _signInManager;
 
@@ -147,6 +169,95 @@ namespace WebApp.Controllers
                             Session["LogedUserFullname"] = user.FirstName + " " + user.LastName;
                             return RedirectToAction("Default", "Admin");
                         }
+                    }
+                    return RedirectToLocal(returnUrl);
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View(model);
+            }
+        }
+
+        // POST: /Account/PatientLogin
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> PatientLogin(LoginRegisterViewModel model, string returnUrl)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var result = await SignInManager.PasswordSignInAsync(model.LoginViewModel.Email, model.LoginViewModel.Password, model.LoginViewModel.RememberMe, shouldLockout: false);
+
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    {
+                        //var userId = HttpContext.User.Identity.GetUserId();
+                        string userId = UserManager.FindByName(model.LoginViewModel.Email)?.Id;
+                        SessionHandler.UserName = model.LoginViewModel.Email;
+                        SessionHandler.Password = model.LoginViewModel.Password;
+                        SessionHandler.UserId = userId;
+
+                        var objRepo = new PatientRepository();
+                        var patient = objRepo.GetByUserId(userId);
+                        var userModel = new UserInfoModel();
+                        userModel.Id = patient.patientID;
+                        userModel.Email = patient.email;
+                        userModel.FirstName = patient.firstName;
+                        userModel.LastName = patient.lastName;
+                        SessionHandler.UserInfo = userModel;
+
+                    }
+                    return RedirectToLocal(returnUrl);
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View(model);
+            }
+        }
+
+
+        // POST: /Account/DoctorLogin
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DoctorLogin(LoginRegisterViewModel model, string returnUrl)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var result = await SignInManager.PasswordSignInAsync(model.LoginViewModel.Email, model.LoginViewModel.Password, model.LoginViewModel.RememberMe, shouldLockout: false);
+
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    {
+                        //var userId = HttpContext.User.Identity.GetUserId();
+                        string userId = UserManager.FindByName(model.LoginViewModel.Email)?.Id;
+                        SessionHandler.UserName = model.LoginViewModel.Email;
+                        SessionHandler.Password = model.LoginViewModel.Password;
+                        SessionHandler.UserId = userId;
+                        var objRepo = new DoctorRepository();
+                        var doctor = objRepo.GetByUserId(userId);
+                        var userModel = new UserInfoModel();
+                        userModel.Id = doctor.doctorID;
+                        userModel.Email = doctor.email;
+                        userModel.FirstName = doctor.firstName;
+                        userModel.LastName = doctor.lastName;
+                        SessionHandler.UserInfo = userModel;
+
+
+                        if (doctor.active == null || (bool)doctor.active)
+                            return RedirectToAction("DoctorTimings", "Doctor");
+
                     }
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
