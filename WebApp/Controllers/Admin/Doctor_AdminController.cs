@@ -11,6 +11,7 @@ using System.Web;
 using Microsoft.AspNet.Identity.Owin;
 using System.Linq;
 using WebApp;
+using System.Data.Entity;
 
 namespace SwiftKare.Controllers
 {
@@ -195,12 +196,23 @@ namespace SwiftKare.Controllers
                     {
                         id = Request.Form["id"].ToString();
                         userid = Request.Form["userid"].ToString();
-                        db.sp_DeleteDoctor(Convert.ToInt64(id), Session["LogedUserID"].ToString(), System.DateTime.Now);
-                        AspNetUser doctor = db.AspNetUsers.Find(userid);
-                        db.AspNetUsers.Remove(doctor);
-                        db.SaveChanges();
-                        ViewBag.successMessage = "Record has been deleted successfully";
-                        ViewBag.errorMessage = "";
+                        Doctor doc = db.Doctors.Where(a => a.userId == userid).FirstOrDefault();
+                        if (doc != null)
+                        {
+                           
+                            doc.active = false;
+                            doc.mb = Session["LogedUserID"].ToString();
+                            doc.md = DateTime.Now;
+                            db.Doctors.Add(doc);
+                            db.Entry(doc).State = EntityState.Modified;
+                            ViewBag.successMessage = "Record has been deleted successfully";
+                            ViewBag.errorMessage = "";
+                        }
+                        else
+                        {
+                            ViewBag.successMessage = "";
+                            ViewBag.errorMessage = "Doctor not found.";
+                        }
 
                     }
 

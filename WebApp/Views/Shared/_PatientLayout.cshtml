@@ -394,9 +394,9 @@
 
             $(".clsDivDocList .clsMakeCall").hide();
             $(".clsDivDocList .clsNotMakePhone").show();
-            
-            $(".clsDivDocList .clsAvailableSpot").css('color','red');
-            
+
+            $(".clsDivDocList .clsAvailableSpot").css('color', 'red');
+
 
             for (var i = 0; i < availableDoctors.doctor.length; i++) {
                 if ($(".clsDivDocList .clsMakeCall[data-doctorid = " + availableDoctors.doctor[i].docId + "]").length > 0) {
@@ -410,7 +410,7 @@
 
                     elem.closest(".clsDivDocList").find(".clsNotAvailbleForCall").hide();
                     elem.closest(".clsDivDocList").find(".clsAvailbleForCall").show();
-                    elem.closest(".clsDivDocList").find(".clsAvailableSpot").css('color','green');
+                    elem.closest(".clsDivDocList").find(".clsAvailableSpot").css('color', 'green');
                 }
             }
         }
@@ -446,7 +446,9 @@
 
                     if (msgJson.status == 'Accepted') {
                         alert("Doctor " + msgJson.name + " accepted your request please continue with payment process.");
-
+                        $('#wizard').smartWizard('goToStep', 2);
+                        $('.buttonNext').show();
+                        $('.buttonPrevious').show();
                         //Save SignalR Information to local storage so that it can be used whenever needed.
                         var signalRInfo = {
                             SenderId: '@SessionHandler.UserInfo.Id',

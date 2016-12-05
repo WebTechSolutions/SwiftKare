@@ -287,7 +287,8 @@
             var table = $('#datatable-responsive').DataTable();
             $('#datatable-responsive tbody').on('click', 'tr', function () {
                 $("#id").val(table.row(this).data()[0]);
-
+                $("#userid").val(table.row(this).data()[1]);
+               
             });
 
             //$("#efirstname").val(firstName);

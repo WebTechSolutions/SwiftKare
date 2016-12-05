@@ -97,6 +97,9 @@ namespace RestAPIs.Controllers
             {
 
                 Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
+                if (doctor == null)
+                    return null;
+
                 var objModel = new DoctorModel();
                 objModel.doctorID = doctor.doctorID;
                 objModel.firstName = doctor.firstName;

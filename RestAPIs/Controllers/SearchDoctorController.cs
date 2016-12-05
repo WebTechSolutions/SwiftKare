@@ -16,6 +16,7 @@ using Microsoft.AspNet.Identity;
 using System.Text;
 using DataAccess.CommonModels;
 using DataAccess.CustomModels;
+using System.Data.Entity;
 
 namespace RestAPIs.Controllers
 {
@@ -86,7 +87,7 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                var result = db.SP_FetchDoctorTimings(searchModel.doctorID, searchModel.appDate).ToList();
+                var result = db.SP_FetchDoctorTimings(searchModel.doctorID, Convert.ToDateTime(searchModel.appDate)).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, result);
                return response;
                
@@ -111,7 +112,7 @@ namespace RestAPIs.Controllers
             }
             catch (Exception ex)
             {
-                return ThrowError(ex, "GetPatientConditions in PatientConditionController");
+                return ThrowError(ex, "GetDoctorInfo in SearchDoctorController");
             }
         }
         [HttpPost]
@@ -122,19 +123,39 @@ namespace RestAPIs.Controllers
             FavouriteDoctor favdoc = new FavouriteDoctor();
             try
             {
-                if (model.docID == null || model.docID == 0)
+                if (model.docID == 0)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
                     return response;
                 }
-                favdoc.active = true;
-                favdoc.doctorID = model.docID;
-                favdoc.patientID = model.patID;
-                favdoc.cb = model.patID.ToString();
-                favdoc.cd = System.DateTime.Now;
-                db.FavouriteDoctors.Add(favdoc);
-
-                await db.SaveChangesAsync();
+                if (model.patID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
+                    return response;
+                }
+                 favdoc = db.FavouriteDoctors.Where(fav=>fav.doctorID==model.docID && fav.patientID==model.patID && fav.active==false).FirstOrDefault();
+                 if(favdoc!=null)
+                {
+                    favdoc.active = true;
+                    favdoc.doctorID = model.docID;
+                    favdoc.patientID = model.patID;
+                    favdoc.mb = model.patID.ToString();
+                    favdoc.md = System.DateTime.Now;
+                    db.Entry(favdoc).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                }
+                 else
+                {
+                    favdoc = new FavouriteDoctor();
+                    favdoc.active = true;
+                    favdoc.doctorID = model.docID;
+                    favdoc.patientID = model.patID;
+                    favdoc.mb = model.patID.ToString();
+                    favdoc.md = System.DateTime.Now;
+                    db.FavouriteDoctors.Add(favdoc);
+                    await db.SaveChangesAsync();
+                }             
+               
             }
             catch (Exception ex)
             {
@@ -152,20 +173,20 @@ namespace RestAPIs.Controllers
             FavouriteDoctor favdoc = new FavouriteDoctor();
             try
             {
-                if (model.docID == null || model.docID == 0)
+                if (model.docID == 0)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
                     return response;
                 }
-                if (model.patID == null || model.patID == 0)
+                if (model.patID == 0)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
                     return response;
                 }
-                favdoc = db.FavouriteDoctors.Where(m => m.doctorID == model.docID && m.patientID==model.patID).FirstOrDefault();
+                favdoc = db.FavouriteDoctors.Where(m => m.doctorID == model.docID && m.patientID==model.patID && m.active==true).FirstOrDefault();
                 if(favdoc==null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Doctor not found." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Record not found." });
                     return response;
                 }
                 else
@@ -175,7 +196,7 @@ namespace RestAPIs.Controllers
                     favdoc.patientID = model.patID;
                     favdoc.mb = model.patID.ToString();
                     favdoc.md = System.DateTime.Now;
-                    db.FavouriteDoctors.Add(favdoc);
+                    db.Entry(favdoc).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                 }
               

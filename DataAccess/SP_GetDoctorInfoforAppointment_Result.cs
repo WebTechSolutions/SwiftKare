@@ -14,10 +14,13 @@ namespace DataAccess
     public partial class SP_GetDoctorInfoforAppointment_Result
     {
         public long doctorID { get; set; }
-        public string firstName { get; set; }
-        public string lastName { get; set; }
+        public string doctorName { get; set; }
+        public string gender { get; set; }
         public string email { get; set; }
+        public string state { get; set; }
+        public Nullable<long> consultCharges { get; set; }
         public string cellPhone { get; set; }
         public string specialityName { get; set; }
+        public string languageName { get; set; }
     }
 }

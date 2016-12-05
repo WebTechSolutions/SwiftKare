@@ -2,6 +2,7 @@
 var _objAppointment = {}; //appointment data to hold and save at the end
 var _objPharmacy = {}; //pharmacy data to hold and save at the end
 var _selecteddoctorID;
+var myappTime;
 function uploadFiles() {
     var form = $('#mydropzone')[0];
     var dataString = new FormData(form);
@@ -37,8 +38,14 @@ function setDateTime(myappTime,myappDate)
     _selecteddoctorID = $("#doctorid").val();
     $('#myModal1').modal('hide');
     $('#wizard').smartWizard('goToStep', 2);
+    if ($("#wizard").smartWizard('currentStep', '2')) {
+        //alert('2');
+        $('.buttonNext').show();
+        $('.buttonPrevious').show();
+
+    }
     showDoctorInfo();
-    showApppointmentSummary(myappTime, myappDate);
+    //showApppointmentSummary(myappTime, myappDate);
     return false;
    // $('#step-2').show();
 }
@@ -53,19 +60,36 @@ function showDoctorInfo()
         dataType: 'json',
         success: function (response) {
             var spec = "";
-           
-           
+               
             $.each(response.Object, function (item) {
                 spec = spec+response.Object[item].specialityName +",";
           
             });
+            var lang = "";
+
+            $.each(response.Object, function (item) {
+                lang = lang + response.Object[item].languageName + ",";
+
+            });
            
-            var result = spec.substring(0, spec.length - 1);
+            var specresult = spec.substring(0, spec.length - 1);
+            var langresult = lang.substring(0, lang.length - 1);
+            var doccell = "";
+            var docemail = "";
+            var cc = "";
+            var docstate = "";
+            if (response.Object[0].cellPhone != null) { doccell = response.Object[0].cellPhone; }
+            if (response.Object[0].email != null) { docemail = response.Object[0].email; }
+            if (response.Object[0].consultCharges != null) { cc = response.Object[0].consultCharges; }
+            if (response.Object[0].state != null) { docstate = response.Object[0].state; }
             tableHtml = "<address>" +
-                     "<strong>" + response.Object[0].firstName + response.Object[0].lastName + "</strong>" +
-                     "<br><strong>Specaility: </strong>&nbsp;" + result +
-                     "<br><strong>Phone: </strong>&nbsp;" + response.Object[0].cellPhone +
-                      "<br><strong>Email: </strong>&nbsp; " + response.Object[0].email +
+                     "<strong>Dr. " + response.Object[0].doctorName + " (" + response.Object[0].gender + ")</strong>" +
+                     "<br><strong>Specaility: </strong>&nbsp;" + specresult +
+                     "<br><strong>Languages: </strong>&nbsp;" + langresult +
+                     "<br><strong>State: </strong>&nbsp;" + docstate +
+                     "<br><strong>Phone: </strong>&nbsp;" + doccell +
+                     "<br><strong>Email: </strong>&nbsp; " + docemail +
+                     "<br><strong>Consult Charges: </strong>&nbsp; " + cc +
                       "</address>";
             document.getElementById("docInfo").innerHTML = tableHtml;
         },
@@ -74,17 +98,21 @@ function showDoctorInfo()
     });
    
 }
-function showApppointmentSummary(myappTime, myappDate) {
+function showApppointmentSummary() {
     var ROV = $("#ROV option:selected").text()
     if (ROV == "Choose ROV") {
 
         ROV = "";
     }
-    customDateFormat(myappDate);
+   // _objAppointment["appDate"] = myappDate;
+   // _objAppointment["appTime"] = myappTime;
+    customDateFormat(_objAppointment["appDate"]);
     var tableHtml = "<address>" +
-                     "<strong>Date: </strong>&nbsp;" +customDateFormat(myappDate) +
-                     "<br><strong>Time:</strong>&nbsp;" + myappTime+
-                     "<br><strong>Reason for Visit: </strong>&nbsp;" + ROV;
+                     "<strong>Date: </strong>&nbsp;" + customDateFormat(_objAppointment["appDate"]) +
+                     "<br><strong>Time:</strong>&nbsp;" + _objAppointment["appTime"] +
+                     "<br><strong>Reason for Visit: </strong>&nbsp;" + ROV +
+                     "<br><strong>Chief Complaints: </strong>&nbsp;" + $("#chiefcomplaints").val() +
+                     "<br><strong>Pharmacy: </strong>&nbsp;" + $("#pharmacy").val() +
                     "</address>";
                     document.getElementById("appsummary").innerHTML = tableHtml;
        
@@ -111,7 +139,8 @@ function customDateFormat(s) {
            months[d.getMonth()] + ' ' + d.getFullYear();
 }
 function CreateAppointment(patientID) {
-
+    
+    _objAppointment["appDate"] = $("#fetchdate").val();
     _objAppointment["doctorID"] = $("#doctorid").val();
     _objAppointment["patientID"] = patientID;
     _objAppointment["rov"] = $("#ROV option:selected").text();
@@ -122,7 +151,8 @@ function CreateAppointment(patientID) {
     $.ajax({
         type: 'POST',
         url: '/SeeDoctor/SaveAppointment',
-        data: _objAppointment,
+        data: JSON.stringify(_objAppointment),
+        contentType: "application/json",
         dataType: 'json',
         success: function (response) {
 
@@ -138,7 +168,7 @@ function CreateAppointment(patientID) {
                 else if (response.ApiResultModel.message == "") {
                     new PNotify({
                         title: 'Success',
-                        text: "Appointment is created successfully.",
+                        text: "Appointment is scheduled successfully.",
                         type: 'success',
                         styling: 'bootstrap3'
                     });

@@ -147,7 +147,7 @@ namespace RestAPIs.Controllers
                 }
                 if(model.frequency != null && model.frequency != "")
                 {
-                    if(!Regex.IsMatch(model.frequency, @"^[a-zA-Z\s]+$"))
+                    if(!Regex.IsMatch(model.frequency, "^[0-9a-zA-Z ]+$"))
                     {
                         response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Frequency is not valid." });
                         return response;

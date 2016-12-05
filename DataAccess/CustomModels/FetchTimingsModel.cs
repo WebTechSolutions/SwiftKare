@@ -8,7 +8,7 @@ namespace DataAccess.CommonModels
 {
     public class FetchTimingsModel
     {
-        public DateTime appDate { get; set; }
+        public string appDate { get; set; }
         public long doctorID { get; set; }
     }
 }

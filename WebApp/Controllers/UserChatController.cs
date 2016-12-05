@@ -23,6 +23,8 @@ namespace WebApp.Controllers
                 
                 openTokSession.UserType = userType;
 
+                openTokSession.UserType = userType;
+
                 HttpContext.Session["MyOpenTokSession"] = openTokSession;
                 return true;
             }
