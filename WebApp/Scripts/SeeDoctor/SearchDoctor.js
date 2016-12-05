@@ -139,7 +139,7 @@ function GetAllLanguages() {
 
 }
 function favDoctors(patientID) {
-
+    blockUI();
     $.ajax({
         type: 'POST',
         //url: '@Url.Action("GetAllLanguages", "SeeDoctor")',
@@ -157,6 +157,7 @@ function favDoctors(patientID) {
         error: errorRes
 
     });
+   // $.unblockUI();
 }
 function toggle(docid, patid) {
 
@@ -248,7 +249,7 @@ function untoggle(docid, patid) {
 }
 function SearchDoctor(patientID) {
 
-
+    //blockUI();
     //$.blockUI({ message: "<h2>test</h2>" });
     var _objSearch = {};
     _objSearch["language"] = $("#Language").find(":selected").text();
@@ -335,7 +336,7 @@ function SearchDoctor(patientID) {
                 else { document.getElementById("docList").innerHTML = "No record found";; }
 
                 document.getElementById("mainpanel").style.display = "block";
-
+                $.unblockUI();
             }
 
         },
@@ -343,7 +344,7 @@ function SearchDoctor(patientID) {
 
     });
 
-    //$.unblockUI();
+    $.unblockUI();
 }
 function fetchTimings(fetchdate) {
 

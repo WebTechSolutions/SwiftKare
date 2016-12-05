@@ -41,7 +41,6 @@ namespace DataAccess
         public virtual DbSet<Condition> Conditions { get; set; }
         public virtual DbSet<Consultation> Consultations { get; set; }
         public virtual DbSet<ConsultationRO> ConsultationROS { get; set; }
-        public virtual DbSet<Doctor> Doctors { get; set; }
         public virtual DbSet<DoctorLanguage> DoctorLanguages { get; set; }
         public virtual DbSet<DoctorLicenseState> DoctorLicenseStates { get; set; }
         public virtual DbSet<DoctorSpeciality> DoctorSpecialities { get; set; }
@@ -52,7 +51,6 @@ namespace DataAccess
         public virtual DbSet<Medicine> Medicines { get; set; }
         public virtual DbSet<Module> Modules { get; set; }
         public virtual DbSet<News> News { get; set; }
-        public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<PatientAllergy> PatientAllergies { get; set; }
         public virtual DbSet<PatientSystem> PatientSystems { get; set; }
         public virtual DbSet<RoleModule> RoleModules { get; set; }
@@ -61,7 +59,6 @@ namespace DataAccess
         public virtual DbSet<State> States { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<SystemItemss> SystemItemsses { get; set; }
-        public virtual DbSet<UserFile> UserFiles { get; set; }
         public virtual DbSet<Zip> Zips { get; set; }
         public virtual DbSet<PatientSurgery> PatientSurgeries { get; set; }
         public virtual DbSet<Reaction> Reactions { get; set; }
@@ -75,6 +72,12 @@ namespace DataAccess
         public virtual DbSet<ROV> ROVs { get; set; }
         public virtual DbSet<FavouriteDoctor> FavouriteDoctors { get; set; }
         public virtual DbSet<LifeStyleQuestion> LifeStyleQuestions { get; set; }
+        public virtual DbSet<UserFile> UserFiles { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<Doctor> Doctors { get; set; }
+        public virtual DbSet<Patient> Patients { get; set; }
+        public virtual DbSet<MessageFile> MessageFiles { get; set; }
+        public virtual DbSet<FileType> FileTypes { get; set; }
     
         public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
         {
@@ -939,24 +942,14 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectConsultation_Result>("SP_SelectConsultation");
         }
     
-        public virtual ObjectResult<Doctor> SP_SelectDoctor()
+        public virtual int SP_SelectDoctor()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("SP_SelectDoctor");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectDoctor");
         }
     
-        public virtual ObjectResult<Doctor> SP_SelectDoctor(MergeOption mergeOption)
+        public virtual int SP_SelectDoctorsForApproval()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("SP_SelectDoctor", mergeOption);
-        }
-    
-        public virtual ObjectResult<Doctor> SP_SelectDoctorsForApproval()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("SP_SelectDoctorsForApproval");
-        }
-    
-        public virtual ObjectResult<Doctor> SP_SelectDoctorsForApproval(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("SP_SelectDoctorsForApproval", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectDoctorsForApproval");
         }
     
         public virtual ObjectResult<SP_SelectDocType_Result> SP_SelectDocType()
@@ -994,14 +987,9 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<News>("SP_SelectNewss", mergeOption);
         }
     
-        public virtual ObjectResult<Patient> SP_SelectPatient()
+        public virtual int SP_SelectPatient()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Patient>("SP_SelectPatient");
-        }
-    
-        public virtual ObjectResult<Patient> SP_SelectPatient(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Patient>("SP_SelectPatient", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectPatient");
         }
     
         public virtual ObjectResult<Role> SP_SelectRole()
@@ -1904,6 +1892,15 @@ namespace DataAccess
                 new ObjectParameter("gender", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SearchDoctor_Result>("SP_SearchDoctor", languageParameter, specParameter, nameParameter, appDayParameter, appTimeParameter, genderParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetPatientConsultations1_Result> SP_GetPatientConsultations1(Nullable<long> patientID)
+        {
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConsultations1_Result>("SP_GetPatientConsultations1", patientIDParameter);
         }
     }
 }

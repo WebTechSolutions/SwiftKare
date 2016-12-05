@@ -128,55 +128,7 @@ namespace RestAPIs.Controllers
             response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
             return response;
         }
-        [HttpPost]
-        [Route("api/addRovChiefComplaints")]
-        [ResponseType(typeof(void))]
-        public async Task<HttpResponseMessage> AddROV(Appointment model)
-        {
-            try
-            {
-                    if (!ModelState.IsValid)
-                {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "ROV model Model is not valid." });
-                    return response;
-                }
-
-
-                db.Appointments.Add(model);
-           
-                await db.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                return ThrowError(ex, "AddROV in AppointmentController.");
-            }
-
-            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.appID, message = "" });
-            return response;
-        }
-        [Route("api/addPatientFiles")]
-        [ResponseType(typeof(void))]
-        public async Task<HttpResponseMessage> AddPatientFiles(UserFile model)
-        {
-            if (!ModelState.IsValid)
-            {
-                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "UserFile model is not valid." });
-                return response;
-            }
-            db.UserFiles.Add(model);
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                return ThrowError(ex, "AddROV in AppointmentController.");
-            }
-
-            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.fileID, message = "" });
-            return response;
-        }
-
+      
         [Route("api/GetRescheduleAppforPatient")]
         public HttpResponseMessage GetRescheduleAppforPatient(long patientID)
         {
