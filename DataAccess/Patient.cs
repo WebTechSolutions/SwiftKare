@@ -55,6 +55,13 @@ namespace DataAccess
         public string userId { get; set; }
         public string pharmacy { get; set; }
         public Nullable<long> pharmacyid { get; set; }
+        public string title { get; set; }
+        public string suffix { get; set; }
+        public Nullable<long> height { get; set; }
+        public Nullable<long> weight { get; set; }
+        public string timezone { get; set; }
+        public string city { get; set; }
+        public string state { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }

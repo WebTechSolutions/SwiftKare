@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using DataAccess;
+using DataAccess.CustomModels;
+using System.Text.RegularExpressions;
 
 namespace RestAPIs.Controllers
 {
@@ -17,6 +19,7 @@ namespace RestAPIs.Controllers
     public class PatientsController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
+        HttpResponseMessage response;
 
         // GET: api/Patients
         public IQueryable<Patient> GetPatients()
@@ -37,30 +40,16 @@ namespace RestAPIs.Controllers
             return Ok(patient);
         }
 
-        //[ResponseType(typeof(Patient))]
-        //public async Task<IHttpActionResult> GetPatientByUserId(string userId)
-        //{
-        //    Patient patient = await db.Patients.SingleOrDefaultAsync(o => o.userId == userId);
-        //    if (patient == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return Ok(patient);
-        //}
-
-        //[ResponseType(typeof(DataAccess.CustomModels.UserModel))]
-        public DataAccess.CustomModels.PatientModel GetPatientByUserId(string userId)
+        [ResponseType(typeof(Patient))]
+        public async Task<IHttpActionResult> GetPatientByUserId(string userId)
         {
-            Patient patient = db.Patients.SingleOrDefault(o => o.userId == userId);
-            var objModel = new DataAccess.CustomModels.PatientModel();
-            objModel.patientID = patient.patientID;
-            objModel.firstName = patient.firstName;
-            objModel.lastName = patient.lastName;
-            objModel.email = patient.email;
+            Patient patient = await db.Patients.SingleOrDefaultAsync(o => o.userId == userId);
+            if (patient == null)
+            {
+                return NotFound();
+            }
 
-
-            return objModel;
+            return Ok(patient);
         }
 
         // PUT: api/Patients/5
@@ -158,5 +147,168 @@ namespace RestAPIs.Controllers
         {
             return db.Patients.Count(e => e.patientID == id) > 0;
         }
+
+        //[HttpPost]
+        //[Route("api/updatePatientProfile")]
+        //[ResponseType(typeof(HttpResponseMessage))]
+        //public async Task<HttpResponseMessage> UpdatePatientProfile(long patientID,PatientProfileModel model)
+        //{
+
+        //    Patient patient = new Patient();
+        //    try
+        //    {
+
+        //        if (model.firstName == null || model.firstName == "" || !Regex.IsMatch(model.firstName, "^[0-9a-zA-Z ]+$"))
+        //        {
+        //            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "First name is not valid. Only letter and numbers are allowed." });
+        //            return response;
+        //        }
+        //        if (model.lastName != null || model.lastName != "")
+        //        {
+        //            if (!Regex.IsMatch(model.lastName, "^[0-9a-zA-Z ]+$"))                    //@"^[a-zA-Z\s]+$"
+        //            {
+        //                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Last name is not valid. Only letter and numbers are allowed." });
+        //                return response;
+        //            }
+        //        }
+        //        if (patientID == 0)
+        //        {
+        //            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient ID is not valid." });
+        //            return response;
+        //        }
+        //        patient = db.Patients.Where(m => m.patientID == patientID && m.active == true).FirstOrDefault();
+        //        if (patient == null)
+        //        {
+        //            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient not found." });
+        //            return response;
+        //        }
+        //        else
+        //        {
+        //            patient.active = true;
+        //            patient.firstName = model.firstName;
+        //            patient.lastName = model.lastName;
+        //            patient.cd = System.DateTime.Now;
+        //            patient.homePhone = model.homePhone;
+        //            patient.cellPhone = model.cellPhone;
+        //            patient.address1 = model.address1;
+        //            patient.address2 = model.address2;
+        //            patient.gender = model.gender;
+        //            patient.dob = model.dob;
+        //            patient.picture = model.picture;
+        //            //patient.timezone = model.timezone;
+        //            //patient.city = model.city;
+        //            //patient.suffix = model.suffix;
+        //            //patient.title = model.title;
+        //            //patient.height = model.height;
+        //            //patient.weight = model.weight;
+
+        //            db.Entry(patient).State = EntityState.Modified;
+        //            await db.SaveChangesAsync();
+        //            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = patient.patientID, message = "" });
+        //            return response;
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return ThrowError(ex, "UpdatePatientProfile in PatientController.");
+        //    }
+            
+        //}
+
+        //[HttpGet]
+        //[Route("api/getPatientProfile")]
+        //[ResponseType(typeof(HttpResponseMessage))]
+        //public HttpResponseMessage GetPatientProfile(long patientID)
+        //{
+
+        //    Patient patient = new Patient();
+        //    try
+        //    {
+
+        //        if (patientID == 0)
+        //        {
+        //            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient ID is not valid." });
+        //            return response;
+        //        }
+        //        patient = db.Patients.Where(m => m.patientID == patientID && m.active == true).FirstOrDefault();
+        //        if (patient == null)
+        //        {
+        //            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient does not exist." });
+        //            return response;
+        //        }
+        //        else
+        //        {
+        //            var profile = (from l in db.Patients
+        //        where l.active == true && l.patientID == patientID
+        //        select new PatientProfileModel { firstName = l.firstName,
+        //        lastName = l.lastName, gender = l.gender.Trim(), address1 = l.address1.Trim(),
+        //        address2 = l.address2.Trim(),cellPhone=l.cellPhone,homePhone=l.homePhone,city=l.city,
+        //        dob=l.dob,height=l.height,weight=l.weight,picture=l.picture,title=l.title,suffix=l.suffix,
+        //        timezone=l.timezone,state=l.state,zip=l.zip}).FirstOrDefault();
+        //            response = Request.CreateResponse(HttpStatusCode.OK, profile);
+        //            return response;
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return ThrowError(ex, "UpdatePatientProfile in PatientController.");
+        //    }
+
+        //}
+        //[Route("api/updatePatientPicture")]
+        //[ResponseType(typeof(HttpResponseMessage))]
+        //public async Task<HttpResponseMessage> UpdatePatientPicture(UpdatePatientPicture model)
+        //{
+        //    Patient patient = new Patient();
+        //    try
+        //    {
+        //        if (model.patientID == 0)
+        //        {
+        //            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
+        //            return response;
+        //        }
+        //        if (model.picture == null )
+        //        {
+        //            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid picture." });
+        //            return response;
+        //        }
+                
+        //        //check for duplicate names
+        //        patient = db.Patients.Where(m => m.patientID == model.patientID && m.active == true).FirstOrDefault();
+        //        if (patient == null)
+        //        {
+                    
+        //            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient not found." });
+        //            return response;
+        //        }
+
+        //       else
+        //        {
+        //            patient.picture = model.picture;
+        //            patient.md = System.DateTime.Now;
+        //            patient.mb = model.patientID.ToString();
+        //            db.Entry(patient).State = EntityState.Modified;
+        //            await db.SaveChangesAsync();
+        //            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.patientID, message = "" });
+        //            return response;
+
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return ThrowError(ex, "UpdatePatientPicture in PatientController.");
+        //    }
+
+        //}
+        
+        //private HttpResponseMessage ThrowError(Exception ex, string Action)
+        //{
+            
+        //    response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = "Following Error occurred at method: " + Action + "\n" + ex.Message });
+        //    return response;
+        //}
     }
 }
