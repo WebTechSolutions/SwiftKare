@@ -5,85 +5,82 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="4d36abb2f49a47c18a8ca7fb1a61b785" Name="Diagram1">
-        <EntityTypeShape EntityType="SwiftKareDBModel.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.AdminUser" Width="1.5" PointX="8" PointY="10" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Alert" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Allergy" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.AppAttachment" Width="1.5" PointX="8.25" PointY="26.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Appointment" Width="1.5" PointX="6" PointY="20.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.AspNetRole" Width="1.5" PointX="5.75" PointY="2.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.AspNetUserClaim" Width="1.5" PointX="10.25" PointY="1.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.AspNetUserLogin" Width="1.5" PointX="10.25" PointY="4.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.AspNetUser" Width="1.5" PointX="8" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.City" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Condition" Width="1.5" PointX="3" PointY="21.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Consultation" Width="1.5" PointX="11.25" PointY="19.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.ConsultationRO" Width="1.5" PointX="3" PointY="17.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.DoctorLanguage" Width="1.5" PointX="6" PointY="27.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.DoctorLicenseState" Width="1.5" PointX="6" PointY="7" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.DoctorSpeciality" Width="1.5" PointX="6" PointY="30.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.DoctorTiming" Width="1.5" PointX="6" PointY="34.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.DocumentType" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Language" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Medication" Width="1.5" PointX="3" PointY="37.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Medicine" Width="1.5" PointX="12.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Module" Width="1.5" PointX="8.75" PointY="14.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.News" Width="1.5" PointX="13.75" PointY="8.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.PatientAllergy" Width="1.5" PointX="3" PointY="41.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.PatientSystem" Width="1.5" PointX="1.5" PointY="11.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.RoleModule" Width="1.5" PointX="11" PointY="10.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Role" Width="1.5" PointX="5.75" PointY="10.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Speciallity" Width="1.5" PointX="13.75" PointY="12.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.State" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.sysdiagram" Width="1.5" PointX="14.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.SystemItemss" Width="1.5" PointX="0.75" PointY="15" IsExpanded="true" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Zip" Width="1.5" PointX="10.75" PointY="14.75" IsExpanded="true" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_AdminUsers_Roles" ManuallyRouted="false" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_AppAttachment_Appointments" ManuallyRouted="false" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Appointments" ManuallyRouted="false" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_ConsultationROS" ManuallyRouted="false" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_ConsultationROS_SystemItems" ManuallyRouted="false" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_RoleModules_Modules" ManuallyRouted="false" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_SystemItems_Systems" ManuallyRouted="false" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_RoleModules_Roles" ManuallyRouted="false" />
-        <AssociationConnector Association="SwiftKareDBModel.AspNetUserRoles" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.PatientSurgery" Width="1.5" PointX="3" PointY="31" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Reaction" Width="1.5" PointX="16.375" PointY="7.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Severity" Width="1.5" PointX="16.375" PointY="11.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Surgery" Width="1.5" PointX="13.375" PointY="16.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.FamilyHXItem" Width="1.5" PointX="16.375" PointY="15.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Frequency" Width="1.5" PointX="17.375" PointY="0.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.PatientLifeStyle" Width="1.5" PointX="18.375" PointY="8.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Relationship" Width="1.5" PointX="18.375" PointY="12.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.PatientFamilyHX" Width="1.5" PointX="3" PointY="25.875" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.ROV" Width="1.5" PointX="4.375" PointY="13.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.FavouriteDoctor" Width="1.5" PointX="18.375" PointY="16.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.LifeStyleQuestion" Width="1.5" PointX="5.375" PointY="17.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.UserFile" Width="1.5" PointX="9" PointY="21" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Message" Width="1.5" PointX="19.375" PointY="0.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Doctor" Width="1.5" PointX="3.75" PointY="19" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Patient" Width="1.5" PointX="0.75" PointY="24" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.AdminUser" Width="1.5" PointX="8" PointY="10" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Alert" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Allergy" Width="1.5" PointX="10.75" PointY="6.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.AppAttachment" Width="1.5" PointX="5.25" PointY="32.5" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Appointment" Width="1.5" PointX="3" PointY="24.5" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.AspNetRole" Width="1.5" PointX="5.75" PointY="2.625" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.AspNetUserClaim" Width="1.5" PointX="10.25" PointY="1.375" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.AspNetUserLogin" Width="1.5" PointX="10.25" PointY="4.125" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.AspNetUser" Width="1.5" PointX="8" PointY="1.125" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.City" Width="1.5" PointX="12.75" PointY="0.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Condition" Width="1.5" PointX="3" PointY="42.5" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Consultation" Width="1.5" PointX="8.25" PointY="19.875" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.ConsultationRO" Width="1.5" PointX="3" PointY="15.5" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Doctor" Width="1.5" PointX="3.75" PointY="1.625" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.DoctorLanguage" Width="1.5" PointX="6" PointY="7.25" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.DoctorLicenseState" Width="1.5" PointX="6" PointY="28.875" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.DoctorSpeciality" Width="1.5" PointX="6" PointY="14.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.DoctorTiming" Width="1.5" PointX="6" PointY="24.25" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.DocumentType" Width="1.5" PointX="12.75" PointY="4.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.FamilyHXItem" Width="1.5" PointX="13.75" PointY="8.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.FavouriteDoctor" Width="1.5" PointX="13.75" PointY="12.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Frequency" Width="1.5" PointX="14.75" PointY="0.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Language" Width="1.5" PointX="14.75" PointY="4.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.LifeStyleQuestion" Width="1.5" PointX="10.75" PointY="14.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Medication" Width="1.5" PointX="3" PointY="34.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Medicine" Width="1.5" PointX="15.75" PointY="8.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Module" Width="1.5" PointX="8.75" PointY="14.375" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.News" Width="1.5" PointX="15.75" PointY="12.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Patient" Width="1.5" PointX="0.75" PointY="17.25" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.PatientAllergy" Width="1.5" PointX="3" PointY="19.875" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.PatientFamilyHX" Width="1.5" PointX="3" PointY="38.875" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.PatientLifeStyle" Width="1.5" PointX="16.75" PointY="0.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.PatientSurgery" Width="1.5" PointX="3" PointY="11.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.PatientSystem" Width="1.5" PointX="1.5" PointY="8" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Reaction" Width="1.5" PointX="16.75" PointY="4.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Relationship" Width="1.5" PointX="12.75" PointY="16.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.RoleModule" Width="1.5" PointX="11" PointY="10.25" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Role" Width="1.5" PointX="5.75" PointY="10.25" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.ROV" Width="1.5" PointX="14.75" PointY="16.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Severity" Width="1.5" PointX="16.75" PointY="16.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Speciallity" Width="1.5" PointX="17.75" PointY="8.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.State" Width="1.5" PointX="17.75" PointY="12.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Surgery" Width="1.5" PointX="18.75" PointY="0.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.sysdiagram" Width="1.5" PointX="18.75" PointY="4.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.SystemItemss" Width="1.5" PointX="0.75" PointY="12.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.UserFile" Width="1.5" PointX="6" PointY="19.375" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Zip" Width="1.5" PointX="18.75" PointY="16.75" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_AdminUsers_Roles" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_AppAttachment_Appointments" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Appointments_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Appointments_Patient" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Appointments" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Conditions_Patient" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_ConsultationROS" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_ConsultationROS_Patient" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_ConsultationROS_SystemItems" />
         <AssociationConnector Association="SwiftKareDBModel.FK_DoctorLanguages_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_DoctorLicenseStates_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_DoctorSpeciality_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_DoctorTimings_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_UserFiles_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Medications_Patient" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_RoleModules_Modules" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Allergies_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_FamilyHX_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Surgeries_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_UserFiles_Patient" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.MessageFile" Width="1.5" PointX="17.375" PointY="4.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.FileType" Width="1.5" PointX="7.375" PointY="17.75" />
-        </Diagram>
+        <AssociationConnector Association="SwiftKareDBModel.FK_SystemItems_Systems" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_RoleModules_Roles" />
+        <AssociationConnector Association="SwiftKareDBModel.AspNetUserRoles" />
+      </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

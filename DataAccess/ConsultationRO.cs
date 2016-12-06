@@ -28,8 +28,8 @@ namespace DataAccess
         public Nullable<System.DateTime> mb { get; set; }
         public string md { get; set; }
         public Nullable<bool> active { get; set; }
-        public Nullable<long> consultationID { get; set; }
         public string systemItemName { get; set; }
+        public Nullable<long> consultationID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Consultation> Consultations { get; set; }

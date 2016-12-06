@@ -4,6 +4,18 @@ namespace WebApp.Helper
 {
     public static class SessionHandler
     {
+        public static bool IsExpired
+        {
+            get
+            {
+
+                return HttpContext.Current.Session["username"] == null || string.IsNullOrEmpty(HttpContext.Current.Session["username"].ToString());
+            }
+            set
+            {
+                HttpContext.Current.Session["username"] = value;
+            }
+        }
         public static string UserName
         {
             get

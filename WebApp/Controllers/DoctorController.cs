@@ -6,6 +6,8 @@ using WebApp.Repositories.DoctorRepositories;
 using WebApp.Models;
 using DataAccess.CustomModels;
 using WebApp.Helper;
+using System;
+using System.Globalization;
 
 namespace WebApp.Controllers
 {
@@ -26,27 +28,39 @@ namespace WebApp.Controllers
         // GET: Doctor Timings
         public JsonResult GetDoctorTimings()
         {
-            var Model = new DoctorTimingsViewModel();
-            var objRepo = new DoctorRepository();
-            Model.DoctorId = SessionHandler.UserInfo.Id;
-            Model.DoctorTimingsList = objTimingRepo.GetListByDoctorId(Model.DoctorId).ToList();
+            if (SessionHandler.IsExpired)
+            {
+                return Json(new
+                {
+                    redirectUrl = Url.Action("DoctorLogin", "Account"),
+                    isRedirect = true
+                });
+            }
+            else
+            {
+                var Model = new DoctorTimingsViewModel();
+                var objRepo = new DoctorRepository();
+                Model.DoctorId = SessionHandler.UserInfo.Id;
+                Model.DoctorTimingsList = objTimingRepo.GetListByDoctorId(Model.DoctorId).ToList();
 
-            Model.DayWiseTimings = GetList(Model.DoctorTimingsList);
+                Model.DayWiseTimings = GetList(Model.DoctorTimingsList);
 
 
 
-            Model.DoctorTiming = new DoctorTimingsModel();
-            Model.DoctorTiming.doctorID = Model.DoctorId;
-            Model.DoctorTiming.doctorTimingsID = 0;
-            return Json(Model, JsonRequestBehavior.AllowGet);
+                Model.DoctorTiming = new DoctorTimingsModel();
+                Model.DoctorTiming.doctorID = Model.DoctorId;
+                Model.DoctorTiming.doctorTimingsID = 0;
+                return Json(Model, JsonRequestBehavior.AllowGet);
+            }
         }
 
         private List<DoctorTimingsListModel> GetList(List<DoctorTimingsModel> list)
         {
+
             var daywiseList = new List<DoctorTimingsListModel>();
             var obj = new DoctorTimingsListModel();
             obj.Day = "Monday";
-            obj.Timings = list.Count(o => o.day.ToLower() == obj.Day.ToLower())>0? list.Where(o => o.day.ToLower() == obj.Day.ToLower()).ToList(): new List<DoctorTimingsModel>();
+            obj.Timings = list.Count(o => o.day.ToLower() == obj.Day.ToLower()) > 0 ? list.Where(o => o.day.ToLower() == obj.Day.ToLower()).ToList() : new List<DoctorTimingsModel>();
             daywiseList.Add(obj);
 
             obj = new DoctorTimingsListModel();
@@ -91,10 +105,70 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult CreateEditTimings(DoctorTimingsModel model)
         {
+            var arrFrom = model.from.Split(':');
+            var arrTo = model.to.Split(':');
+
+            var strHoursFrom = arrFrom[0];
+            var strHoursTo = arrTo[0];
+
+            var hoursFrom = Convert.ToInt32(arrFrom[0]);
+            var hoursTo = Convert.ToInt32(arrTo[0]);
+
+            if (hoursFrom > 12)
+                hoursFrom = hoursFrom - 12;
+
+            if (hoursTo > 12)
+                hoursTo = hoursTo - 12;
+
+            model.from = model.from.Replace(strHoursFrom, hoursFrom.ToString());
+            model.to = model.to.Replace(strHoursTo, hoursTo.ToString());
+            if (model.from.Length < 8)
+                model.from = "0" + model.from;
+
+            if (model.to.Length < 8)
+                model.to = "0" + model.to;
+            if (SessionHandler.IsExpired)
+            {
+                return Json(new
+                {
+                    redirectUrl = Url.Action("DoctorLogin", "Account"),
+                    isRedirect = true
+                });
+            }
             //jam
             var timingsList = objTimingRepo.GetListByDoctorId(model.doctorID);
-            var alreadItems = timingsList.Where(o => o.day == model.day && o.from == model.from && o.to == model.to).ToList();
-            if(alreadItems.Count<=0)
+            var alreadItems = timingsList
+                .Where(o => o.day == model.day &&
+                (o.from == model.from || o.to == model.to
+                ||
+                (
+                DateTime.ParseExact(model.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
+                DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                &&
+                DateTime.ParseExact(model.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
+                DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+
+                )
+                ||
+                (
+                DateTime.ParseExact(model.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
+                DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                &&
+                DateTime.ParseExact(model.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
+                DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                )
+
+                ||
+                (
+                DateTime.ParseExact(model.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
+                DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                &&
+                DateTime.ParseExact(model.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
+                DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                )
+
+                )).ToList();
+            if (alreadItems.Count <= 0)
             {
                 var userName = SessionHandler.UserName;
 
@@ -108,9 +182,14 @@ namespace WebApp.Controllers
                     model.username = userName;
                     objTimingRepo.Put(model.doctorTimingsID, model);
                 }
+                return Json(model, JsonRequestBehavior.AllowGet);
             }
-            
-            return Json(model, JsonRequestBehavior.AllowGet);
+            else
+            {
+                return Json("overlapped", JsonRequestBehavior.AllowGet);
+            }
+
+
         }
 
         [HttpPost]
