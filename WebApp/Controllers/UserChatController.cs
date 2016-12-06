@@ -7,6 +7,7 @@ using WebApp.Helper;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class UserChatController : Controller
     {
         [HttpPost]
