@@ -1,0 +1,125 @@
+﻿@model WebApp.Models.LoginRegisterViewModel
+
+@{
+    ViewBag.Title = "Log in";
+    Layout = "~/Views/Shared/_AccountsLayout.cshtml";
+    ViewBag.IsPatient = false;
+}
+
+
+
+
+<a class="hiddenanchor" id="signup"></a>
+<a class="hiddenanchor" id="signin"></a>
+<div class="login_wrapper">
+
+    <div class="animate form login_form">
+        <section id="loginForm" class="login_content">
+
+
+            <img src="~/Content/images/Logos.png" />
+
+            @using (Html.BeginForm("DoctorLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <h1>Login</h1>
+                <p>@ViewBag.SuccessMessage</p>
+                <br />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div>
+                    @Html.TextBoxFor(m => m.LoginViewModel.Email, new { @class = "form-control", @placeholder = "Email Address" })
+                    @Html.ValidationMessageFor(m => m.LoginViewModel.Email, "", new { @class = "text-danger" })
+                </div>
+                <div>
+                    @Html.PasswordFor(m => m.LoginViewModel.Password, new { @class = "form-control", @placeholder = "Password" })
+                    @Html.ValidationMessageFor(m => m.LoginViewModel.Password, "", new { @class = "text-danger" })
+                </div>
+                <div>
+                    @Html.CheckBoxFor(m => m.LoginViewModel.RememberMe)
+                    @Html.LabelFor(m => m.LoginViewModel.RememberMe)
+                </div>
+
+
+                <div>
+                    <input type="submit" value="Log in" class="btn btn-primary submit" />
+
+                    <br />
+                    @Html.ActionLink("Lost your password?", "ForgotPassword")
+                </div>
+
+                <div class="clearfix"></div>
+                <div class="separator">
+                    <p class="change_link">
+                        <a href="#signup" class="to_register"> Create Account </a>
+                    </p>
+                    <div class="clearfix"></div>
+                </div>
+
+            }
+
+
+        </section>
+    </div>
+
+    <div id="register" class="animate form registration_form">
+        <section class="login_content">
+            <img src="~/Content/images/Logos.png" />
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <h1>Create Account</h1>
+                @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                <div>
+                    @Html.TextBoxFor(m => m.RegisterViewModel.FirstName, new { @class = "form-control", @placeholder = "First Name" })
+                </div>
+                <div>
+                    @Html.TextBoxFor(m => m.RegisterViewModel.LastName, new { @class = "form-control", @placeholder = "Last Name" })
+                </div>
+
+                <div>
+                    @Html.TextBoxFor(m => m.RegisterViewModel.Email, new { @class = "form-control", @placeholder = "Email Address" })
+                </div>
+                <div>
+                    @Html.PasswordFor(m => m.RegisterViewModel.Password, new { @class = "form-control", @placeholder = "Password" })
+                </div>
+                <div>
+                    @Html.PasswordFor(m => m.RegisterViewModel.ConfirmPassword, new { @class = "form-control", @placeholder = "Confirm Password" })
+                </div>
+                    <div>
+                        <input type="submit" class="btn btn-primary submit" value="Submit" />
+                    </div>
+                    <div>
+                        @Html.CheckBoxFor(m => m.IsPatient, new { @onChange = "chkChange()", @id = "chkIsPatient" })
+                        <label for="chkIsPatient" id="lblIsPatient">Register as a Patient</label>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <div class="separator">
+                        <p class="change_link">
+                            <a href="#signin" class="to_register"> Log in </a>
+                        </p>
+                        <div class="clearfix"></div>
+                    </div>
+            }
+
+
+        </section>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script language="javascript">
+    function chkChange() {
+        if ($("#chkIsPatient").prop("checked")) {
+            $("label[id$='lblIsPatient']").html("Register as a Patient");
+        } else {
+            $("label[id$='lblIsPatient']").html("Register as a Doctor");
+        }
+    }
+</script>
