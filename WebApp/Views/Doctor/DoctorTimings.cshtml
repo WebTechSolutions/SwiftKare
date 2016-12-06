@@ -5,7 +5,7 @@
 }
 
 <!-- page content -->
-
+<link rel="stylesheet" href="~/Content/css/bootstrap-datetimepicker.css" />
 <div class="right_col" style="min-height: 1779px;">
     <div class="x_panel">
 
@@ -20,7 +20,7 @@
             <div class="row">
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <label class="control-label">Day:</label>
-                    <div class="form-group">
+                    <div class="form-group input-group date">
                         <select id="DoctorTiming_day" class="form-control">
                             <option>Monday</option>
                             <option>Tuesday</option>
@@ -33,24 +33,29 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="form-control-wrapper">
-                        <div class="form-group label-floating is-empty">
-                            <label for="time" class="control-label">From Time</label>
-                            <input id="DoctorTiming_from" class="form-control" data-dtp="dtp_0Gd9z" type="text">
-                        </div>
+                    <label for="time" class="control-label">From Time</label>
+                    <div class='input-group date' id='div_DoctorTiming_from'>
+                        <input type='time' class="form-control" id="DoctorTiming_from" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
+                        </span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="form-control-wrapper">
-                        <div class="form-group label-floating is-empty">
-                            <label for="time" class="control-label">To Time</label>
-                            <input id="DoctorTiming_to" class="form-control" data-dtp="dtp_bTytq" type="text">
-                        </div>
+                    <label for="time" class="control-label">To Time</label>
+                    <div class='input-group date' id='div_DoctorTiming_to'>
+                        <input type='time' class="form-control" id="DoctorTiming_to" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
+                        </span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <button class="btn btn-primary" onclick="addUpdate();" style="margin-top: 26px;" type="button">Add</button>
-                    <button class="btn btn-primary" onclick="reset();" style="margin-top: 26px;" type="button">Reset</button>
+
+                    <div class="form-group input-group date">
+                        <button class="btn btn-primary" onclick="addUpdate();" style="margin-top: 26px;" type="button">Add</button>
+                        <button class="btn btn-primary" onclick="reset();" style="margin-top: 26px;" type="button">Reset</button>
+                    </div>
                 </div>
             </div>
 
@@ -75,6 +80,9 @@
 </div>
 
 @section Scripts {
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+
+
     <script type="text/javascript">
         var _objUpdate = null;
         var _objAdd = null;
@@ -82,26 +90,13 @@
 
         $(document).ready(function () {
             GetTimings();
+            $('#div_DoctorTiming_from').datetimepicker({
+                format: 'LT'
+            });
+            $('#div_DoctorTiming_to').datetimepicker({
+                format: 'LT'
+            });
 
-
-            $('#DoctorTiming_from').bootstrapMaterialDatePicker
-          ({
-              date: false,
-              shortTime: true,
-              format: 'HH:mm A',
-
-          });
-
-            $('#DoctorTiming_to').bootstrapMaterialDatePicker
-          ({
-              date: false,
-              shortTime: true,
-              format: 'HH:mm A',
-
-          });
-
-
-            $.material.init()
         });
 
 
@@ -134,7 +129,6 @@
                 dataType: 'json',
                 success: function (response) {
                     if (response.isRedirect) {
-                        alert("Session has been expired, please login again!");
                         window.location.href = response.redirectUrl;
                     }
                     else {
@@ -185,7 +179,7 @@
                 if (daywiseList[i].Timings.length > 0) {
                     for (var j = 0; j < daywiseList[i].Timings.length; j++) {
                         divHtml = divHtml + "<tr class='time_btn'>";
-                        divHtml = divHtml + "<td class='time-remove'><span>" + daywiseList[i].Timings[j].from + " To " + daywiseList[i].Timings[j].to + "</span><button class='btn btn-primary pull-right' onclick='deleteObj(" + daywiseList[i].Timings[j].doctorTimingsID + ");' type='button'>Delete</button></td>";
+                        divHtml = divHtml + "<td class='time-remove'><span>" + daywiseList[i].Timings[j].from + " To " + daywiseList[i].Timings[j].to + "</span><button class='btn btn-primary' onclick='deleteObj(" + daywiseList[i].Timings[j].doctorTimingsID + ");' type='button'>Delete</button></td>";
                         divHtml = divHtml + "</tr>";
                     }
                 }
@@ -282,8 +276,14 @@
                 url: '@Url.Action("DeleteDoctorTiming", "Doctor")',
                 data: { 'id': doctorTimingsID },
                 dataType: 'json',
-                success: function () {
-                    GetTimings();
+                success: function (response) {
+                    if (response.isRedirect) {
+                        window.location.href = response.redirectUrl;
+                    }
+                    else {
+                        GetTimings();
+                    }
+
                 },
                 error: errorRes
 
@@ -335,6 +335,6 @@
         }//end Blockui
 
 
-</script>
+    </script>
 }
 
