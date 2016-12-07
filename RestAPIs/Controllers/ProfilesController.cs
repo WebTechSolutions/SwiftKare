@@ -18,6 +18,28 @@ namespace RestAPIs.Controllers
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
         HttpResponseMessage response;
 
+        [HttpGet]
+        [Route("api/getSecretQuestionList")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage GetSecretQuestionList()
+        {
+
+            
+            try
+            {
+                var secretquests = (from sq in db.SecretQuestions where sq.active == true select new { sq.secretQuestionID, sq.secretQuestionn }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, secretquests);
+                return response;
+                
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetSecretQuestionList in ProfilesController.");
+            }
+
+        }
+
+        
         //Doctor Profile Section
         [Route("api/updateDoctorPicture")]
         [ResponseType(typeof(HttpResponseMessage))]
@@ -101,6 +123,16 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Doctor not found." });
                     return response;
                 }
+                if (model.zip.Length >10)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Zip is too long. Keep it below ten characters." });
+                    return response;
+                }
+                if (model.gender.Length > 10)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Gender is too long. Keep it below ten characters." });
+                    return response;
+                }
                 else
                 {
 
@@ -128,18 +160,31 @@ namespace RestAPIs.Controllers
                     doctor.title = model.title;
                     doctor.workexperience = model.workExperience;
                     doctor.consultCharges = model.consultCharges;
-                  
-
+                    doctor.mb = doctorID.ToString();
+                    doctor.md = System.DateTime.Now;
                     db.Entry(doctor).State = EntityState.Modified;
                     await db.SaveChangesAsync();
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = doctorID, message = "" });
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = doctorID, message = "" });
                     return response;
+                    //if(model.licensedState!=null)
+                    //{
+                    //   List<DoctorLicenseState> doclic = new List<DoctorLicenseState>();
+                    //   doclic = db.DoctorLicenseStates.Where(l => l.doctorID == doctorID).ToList();
+                    //   foreach (var item in model.licensedState)
+                    //   {
+                    //    DoctorLicenseState record = doclic.Where(dl => dl.doctorLicenseStateID == item.doctorLicenseStateID).FirstOrDefault();
+                    //    record.stateName = item.stateName;
+                    //    db.Entry(record).State = EntityState.Modified;
+                    //   }
+
+                    //}
+
                 }
 
             }
             catch (Exception ex)
             {
-                return ThrowError(ex, "UpdateDoctorProfile in DoctorController.");
+                return ThrowError(ex, "UpdateDoctorProfile in ProfileController.");
             }
 
         }
@@ -185,8 +230,122 @@ namespace RestAPIs.Controllers
                                        suffix = l.suffix,
                                        timezone = l.timezone,
                                        state = l.state,
-                                       zip = l.zip
+                                       zip = l.zip,
+                                       licensedState=db.DoctorLicenseStates.Where(lic=>lic.doctorID==doctorID).ToArray(),
                                    }).FirstOrDefault();
+                    response = Request.CreateResponse(HttpStatusCode.OK, profile);
+                    return response;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetDoctorProfile in ProfilesController.");
+            }
+
+        }
+
+        [HttpGet]
+        [Route("api/viewDoctorProfile")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage ViewDoctorProfile(long doctorID)
+        {
+
+            Doctor doctor = new Doctor();
+            try
+            {
+
+                if (doctorID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Doctor ID is not valid." });
+                    return response;
+                }
+                doctor = db.Doctors.Where(m => m.doctorID == doctorID && m.active == true).FirstOrDefault();
+                if (doctor == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Doctor does not exist." });
+                    return response;
+                }
+                else
+                {
+                    var profile = (from l in db.Doctors
+                                   where l.active == true && l.doctorID == doctorID
+                                   select new DoctorProfileModel
+                                   {
+                                       firstName = l.firstName,
+                                       lastName = l.lastName,
+                                       gender = l.gender.Trim(),
+                                       address1 = l.address1.Trim(),
+                                       address2 = l.address2.Trim(),
+                                       cellPhone = l.cellPhone,
+                                       homePhone = l.homePhone,
+                                       city = l.city,
+                                       dob = l.dob,
+                                       picture = l.picture,
+                                       title = l.title,
+                                       suffix = l.suffix,
+                                       timezone = l.timezone,
+                                       state = l.state,
+                                       zip = l.zip,
+                                       licensedState = db.DoctorLicenseStates.Where(lic => lic.doctorID == doctorID).ToArray(),
+                                   }).FirstOrDefault();
+                    response = Request.CreateResponse(HttpStatusCode.OK, profile);
+                    return response;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "ViewDoctorProfile in ProfilesController.");
+            }
+
+        }
+
+        [HttpGet]
+        [Route("api/viewPatientProfile")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage ViewPatientProfile(long patientID)
+        {
+
+            Patient patient = new Patient();
+            try
+            {
+
+                if (patientID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Doctor ID is not valid." });
+                    return response;
+                }
+                patient = db.Patients.Where(m => m.patientID == patientID && m.active == true).FirstOrDefault();
+                if (patient == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient does not exist." });
+                    return response;
+                }
+                else
+                {
+                    var profile = (from l in db.Patients
+                                   where l.active == true && l.patientID == patientID
+
+                                   select new ViewPatientProfile
+                                   {
+                                       firstName = l.firstName,
+                                       lastName = l.lastName,
+                                       gender = l.gender.Trim(),
+                                       cellPhone = l.cellPhone,
+                                       dob = l.dob,
+                                       picture = l.picture,
+                                       age = 12,
+                                       patallergy=db.PatientAllergies.Where(pall=>pall.active==true && pall.patientID==l.patientID).ToList(),
+                                       patcond= db.Conditions.Where(cond => cond.active == true && cond.patientID == l.patientID).ToList(),
+                                       patfamilyhx=db.PatientFamilyHXes.Where(f => f.active == true && f.patientID == l.patientID).ToList(),
+                                       patlang=db.PatientLanguages.Where(patl => patl.active == true && patl.patientID == patientID).ToList(),
+                                       patmedication = db.Medications.Where(med => med.active == true && med.patientId == patientID).ToList(),
+                                       patsurgery= db.PatientSurgeries.Where(surg => surg.active == true && surg.patientID == patientID).ToList(),
+                                       title=l.title,
+                                       suffix=l.suffix,
+                                       zip = l.zip,
+                                      }).FirstOrDefault();
                     response = Request.CreateResponse(HttpStatusCode.OK, profile);
                     return response;
                 }
@@ -230,6 +389,7 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient ID is not valid." });
                     return response;
                 }
+               
                 patient = db.Patients.Where(m => m.patientID == patientID && m.active == true).FirstOrDefault();
                 if (patient == null)
                 {
@@ -249,16 +409,17 @@ namespace RestAPIs.Controllers
                     patient.gender = model.gender;
                     patient.dob = model.dob;
                     patient.picture = model.picture;
-                    //patient.timezone = model.timezone;
-                    //patient.city = model.city;
-                    //patient.suffix = model.suffix;
-                    //patient.title = model.title;
-                    //patient.height = model.height;
-                    //patient.weight = model.weight;
-
+                    patient.timezone = model.timezone;
+                    patient.city = model.city;
+                    patient.suffix = model.suffix;
+                    patient.title = model.title;
+                    patient.height = model.height;
+                    patient.weight = model.weight;
+                    patient.mb = patientID.ToString();
+                    patient.md = System.DateTime.Now;
                     db.Entry(patient).State = EntityState.Modified;
                     await db.SaveChangesAsync();
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = patient.patientID, message = "" });
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = patient.patientID, message = "" });
                     return response;
                 }
 
@@ -327,6 +488,7 @@ namespace RestAPIs.Controllers
 
         }
 
+        [HttpPost]
         [Route("api/updatePatientPicture")]
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> UpdatePatientPicture(UpdatePatientPicture model)
@@ -373,12 +535,393 @@ namespace RestAPIs.Controllers
             }
 
         }
-       
+
+        [HttpPost]
+        [Route("api/updatePatientLanguages")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public async Task<HttpResponseMessage> UpdatePatientLanguages(long patlangID ,PatientLanguages model)
+        {
+            PatientLanguage patlang = new PatientLanguage();
+            try
+            {
+                if (model.patientID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
+                    return response;
+                }
+                if (model.languageName == null || model.languageName == "" || !Regex.IsMatch(model.languageName, "^[0-9a-zA-Z ]+$"))
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Language is not valid. Only letter and numbers are allowed." });
+                    return response;
+                }
+
+                patlang = db.PatientLanguages.Where(m => m.patientLanguageID == patlangID && m.active == true).FirstOrDefault();
+                if (patlang == null)
+                {
+
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Language not found." });
+                    return response;
+                }
+
+                else
+                {
+                    patlang.languageName = model.languageName;
+                    patlang.md = System.DateTime.Now;
+                    patlang.mb = model.patientID.ToString();
+                    db.Entry(patlang).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.patientID, message = "" });
+                    return response;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "UpdatePatientLanguages in ProfilesController.");
+            }
+
+        }
+
+        [Route("api/insertPatientLanguages")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public async Task<HttpResponseMessage> InsertPatientLanguages(PatientLanguages model)
+        {
+            PatientLanguage patlang = new PatientLanguage();
+            try
+            {
+                if (model.patientID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
+                    return response;
+                }
+                if (model.languageName == null || model.languageName == "" || !Regex.IsMatch(model.languageName, "^[0-9a-zA-Z ]+$"))
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Language is not valid. Only letter and numbers are allowed." });
+                    return response;
+                }
+
+                patlang = db.PatientLanguages.Where(m => m.patientID == model.patientID && m.languageName == model.languageName && m.active == true).FirstOrDefault();
+                if (patlang != null)
+                {
+
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Language already exists." });
+                    return response;
+                }
+               
+                else
+                {
+                    patlang.languageName = model.languageName;
+                    patlang.cd = System.DateTime.Now;
+                    patlang.cb = model.patientID.ToString();
+                    db.PatientLanguages.Add(patlang);
+                    await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = patlang.patientLanguageID, message = "" });
+                    return response;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "AddPatientLanguages in ProfilesController.");
+            }
+
+        }
+
+        [Route("api/deletePatientLanguages")]
+        public async Task<HttpResponseMessage> DeletePatientLanguages(long langID)
+        {
+            try
+            {
+                Patient patient = new Patient();
+               
+                PatientLanguage patlang = db.PatientLanguages.Where(lang => lang.patientLanguageID == langID && lang.active == true).FirstOrDefault();
+                if (patlang != null) { patient = await db.Patients.FindAsync(patlang.patientID); }
+                if (patlang == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Language not found." });
+                    return response;
+                }
+                patlang.active = false;//Delete Operation changed
+                patlang.mb = patlang.patientID.ToString();
+                patlang.md = System.DateTime.Now;
+                db.Entry(patlang).State = EntityState.Modified;
+
+
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "DeletePatientLanguages in ProfilesController.");
+            }
+
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = langID, message = "" });
+            return response;
+        }
+
+        [HttpPost]
+        [Route("api/updateDoctorLanguages")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public async Task<HttpResponseMessage> UpdateDoctorLanguages(long doclangID, DoctorLanguages model)
+        {
+            DoctorLanguage doclang = new DoctorLanguage();
+            try
+            {
+                if (model.doctorID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
+                    return response;
+                }
+                if (model.languageName == null || model.languageName == "" || !Regex.IsMatch(model.languageName, "^[0-9a-zA-Z ]+$"))
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Language is not valid. Only letter and numbers are allowed." });
+                    return response;
+                }
+
+                doclang = db.DoctorLanguages.Where(m => m.doctorLanguageID == doclangID && m.active == true).FirstOrDefault();
+                if (doclang == null)
+                {
+
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Language not found." });
+                    return response;
+                }
+
+                else
+                {
+                    doclang.languageName = model.languageName;
+                    doclang.md = System.DateTime.Now;
+                    doclang.mb = model.doctorID.ToString();
+                    db.Entry(doclang).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = doclangID, message = "" });
+                    return response;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "UpdatePatientLanguages in ProfilesController.");
+            }
+
+        }
+
+        [HttpPost]
+        [Route("api/insertDoctorLanguages")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public async Task<HttpResponseMessage> InsertDoctorLanguages(DoctorLanguages model)
+        {
+            DoctorLanguage doclang = new DoctorLanguage();
+            try
+            {
+                if (model.doctorID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
+                    return response;
+                }
+                if (model.languageName == null || model.languageName == "" || !Regex.IsMatch(model.languageName, "^[0-9a-zA-Z ]+$"))
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Language is not valid. Only letter and numbers are allowed." });
+                    return response;
+                }
+
+                doclang = db.DoctorLanguages.Where(m => m.doctorID == model.doctorID && m.languageName == model.languageName && m.active == true).FirstOrDefault();
+                if (doclang != null)
+                {
+
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Language already exists." });
+                    return response;
+                }
+
+                else
+                {
+                    doclang.languageName = model.languageName;
+                    doclang.cd = System.DateTime.Now;
+                    doclang.cb = model.doctorID.ToString();
+                    db.DoctorLanguages.Add(doclang);
+                    await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = doclang.doctorLanguageID, message = "" });
+                    return response;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "AddPatientLanguages in ProfilesController.");
+            }
+
+        }
+
+        [Route("api/deleteDoctorLanguages")]
+        public async Task<HttpResponseMessage> DeleteDoctorLanguages(long langID)
+        {
+            try
+            {
+                Doctor doc = new Doctor();
+
+               DoctorLanguage doclang = db.DoctorLanguages.Where(lang => lang.doctorLanguageID == langID && lang.active == true).FirstOrDefault();
+                if (doclang != null) { doc = await db.Doctors.FindAsync(doclang.doctorID); }
+                if (doclang == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Language not found." });
+                    return response;
+                }
+                doclang.active = false;//Delete Operation changed
+                doclang.mb = doclang.doctorID.ToString();
+                doclang.md = System.DateTime.Now;
+                db.Entry(doclang).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "DeleteDoctorLanguages in ProfilesController.");
+            }
+
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = langID, message = "" });
+            return response;
+        }
+
+        [HttpPost]
+        [Route("api/insertDoctorLicensedStates")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public async Task<HttpResponseMessage> InsertDoctorLicensedStates(DoctorLicStatesModel model)
+        {
+            DoctorLicenseState doclic = new DoctorLicenseState();
+            try
+            {
+                if (model.doctorID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
+                    return response;
+                }
+                if (model.licstateName == null || model.licstateName == "")
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Licensed state name is not valid." });
+                    return response;
+                }
+
+                doclic = db.DoctorLicenseStates.Where(m => m.doctorID == model.doctorID && m.stateName == model.licstateName && m.active == true).FirstOrDefault();
+                if (doclic != null)
+                {
+
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Licensed state already exists." });
+                    return response;
+                }
+
+                else
+                {
+                    doclic.stateName = model.licstateName;
+                    doclic.cd = System.DateTime.Now;
+                    doclic.cb = model.doctorID.ToString();
+                    db.DoctorLicenseStates.Add(doclic);
+                    await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = doclic.doctorLicenseStateID, message = "" });
+                    return response;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "AddPatientLanguages in ProfilesController.");
+            }
+
+        }
+
+        [HttpPost]
+        [Route("api/updateDoctorLicensedStates")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public async Task<HttpResponseMessage> UpdateDoctorLicensedStates(long licstateID, DoctorLicStatesModel model)
+        {
+            DoctorLicenseState doclicst = new DoctorLicenseState();
+            try
+            {
+                if (model.doctorID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
+                    return response;
+                }
+                if (model.licstateName == null || model.licstateName == "")
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Provide state name." });
+                    return response;
+                }
+
+                doclicst = db.DoctorLicenseStates.Where(m => m.doctorLicenseStateID != licstateID && m.doctorID==model.doctorID && m.active == true && m.stateName==
+                model.licstateName).FirstOrDefault();
+                if (doclicst != null)
+                {
+
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "State already exists." });
+                    return response;
+                }
+                doclicst = db.DoctorLicenseStates.Where(m => m.doctorLicenseStateID == licstateID && m.active == true).FirstOrDefault();
+                if (doclicst == null)
+                {
+
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "State not found." });
+                    return response;
+                }
+
+                else
+                {
+                    doclicst.stateName = model.licstateName;
+                    doclicst.md = System.DateTime.Now;
+                    doclicst.mb = model.doctorID.ToString();
+                    db.Entry(doclicst).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = licstateID, message = "" });
+                    return response;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "UpdatePatientLanguages in ProfilesController.");
+            }
+
+        }
+
+        [Route("api/deleteDoctorLicensedStates")]
+        public async Task<HttpResponseMessage> DeleteDoctorLicensedStates(long lsID)
+        {
+            try
+            {
+                Doctor doctor = new Doctor();
+
+                DoctorLicenseState docls = db.DoctorLicenseStates.Where(lics => lics.doctorLicenseStateID == lsID && lics.active == true).FirstOrDefault();
+                if (docls != null) { doctor = await db.Doctors.FindAsync(docls.doctorID); }
+                if (docls == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Licensed state not found." });
+                    return response;
+                }
+                docls.active = false;//Delete Operation changed
+                docls.mb = docls.doctorID.ToString();
+                docls.md = System.DateTime.Now;
+                db.Entry(docls).State = EntityState.Modified;
+
+
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "DeleteDoctorLicensedStates in ProfilesController.");
+            }
+
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = lsID, message = "" });
+            return response;
+        }
 
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
             response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Following Error occurred at method: " + Action + "\n" + ex.Message });
             return response;
         }
+
+
     }
 }

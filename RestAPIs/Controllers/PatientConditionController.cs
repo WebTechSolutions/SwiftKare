@@ -58,8 +58,8 @@ namespace RestAPIs.Controllers
                     return response;
                 }
 
-                condition = db.Conditions.Where(m => m.conditionName == model.conditionName.Trim() && m.active==true).FirstOrDefault();
-                if(condition==null)
+                condition = db.Conditions.Where(m => m.patientID == model.patientID && m.conditionName == model.conditionName.Trim() && m.active == true).FirstOrDefault();
+                if (condition==null)
                 {
                     condition = new Condition();
                     condition.active = true;
@@ -114,7 +114,7 @@ namespace RestAPIs.Controllers
                     return response;
                 }
                 //check for duplicate names
-                condition = db.Conditions.Where(m => m.conditionID != conditionID && m.conditionName == model.conditionName.Trim() && m.active==true).FirstOrDefault();
+                condition = db.Conditions.Where(m => m.patientID == model.patientID && m.conditionID != conditionID && m.conditionName == model.conditionName.Trim() && m.active==true).FirstOrDefault();
                 if (condition != null)
                 {
                     //conditionID = -1;

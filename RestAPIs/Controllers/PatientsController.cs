@@ -12,6 +12,7 @@ using System.Web.Http.Description;
 using DataAccess;
 using DataAccess.CustomModels;
 using System.Text.RegularExpressions;
+using RestAPIs.Extensions;
 
 namespace RestAPIs.Controllers
 {
@@ -40,16 +41,54 @@ namespace RestAPIs.Controllers
             return Ok(patient);
         }
 
-        [ResponseType(typeof(Patient))]
-        public async Task<IHttpActionResult> GetPatientByUserId(string userId)
+        [ResponseType(typeof(PatientModel))]
+        public PatientModel GetPatientByUserId(string userId, HttpRequestMessage request)
         {
-            Patient patient = await db.Patients.SingleOrDefaultAsync(o => o.userId == userId);
-            if (patient == null)
+            if (!request.IsValidClient())
             {
-                return NotFound();
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent("Unauthorized, Client is not valid"),
+                    ReasonPhrase = "Bad Request"
+                };
+                throw new HttpResponseException(resp);
+            }
+            try
+            {
+
+                Patient patient = db.Patients.SingleOrDefault(o => o.userId == userId);
+                if (patient == null)
+                    return null;
+
+                var objModel = new PatientModel();
+                objModel.patientID = patient.patientID;
+                objModel.firstName = patient.firstName;
+                objModel.lastName = patient.lastName;
+                objModel.userId = patient.userId;
+                objModel.email = patient.email;
+                objModel.active = patient.active;
+
+                objModel.secretQuestion1 = patient.secretQuestion1;
+                objModel.secretQuestion2 = patient.secretQuestion2;
+                objModel.secretQuestion3 = patient.secretQuestion3;
+
+
+                objModel.secretAnswer1 = patient.secretAnswer1;
+                objModel.secretAnswer2 = patient.secretAnswer2;
+                objModel.secretAnswer3 = patient.secretAnswer3;
+
+                return objModel;
             }
 
-            return Ok(patient);
+            catch (Exception)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent("An error occurred, please try again or contact the administrator."),
+                    ReasonPhrase = "Critical Exception"
+                });
+            }
+
         }
 
         // PUT: api/Patients/5
