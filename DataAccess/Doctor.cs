@@ -22,8 +22,8 @@ namespace DataAccess
             this.DoctorLicenseStates = new HashSet<DoctorLicenseState>();
             this.DoctorSpecialities = new HashSet<DoctorSpeciality>();
             this.DoctorTimings = new HashSet<DoctorTiming>();
-            this.UserFiles = new HashSet<UserFile>();
             this.Consultations = new HashSet<Consultation>();
+            this.UserFiles = new HashSet<UserFile>();
         }
     
         public long doctorID { get; set; }
@@ -80,8 +80,8 @@ namespace DataAccess
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DoctorTiming> DoctorTimings { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserFile> UserFiles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Consultation> Consultations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserFile> UserFiles { get; set; }
     }
 }
