@@ -17,7 +17,6 @@
         <EntityTypeShape EntityType="SwiftKareDBModel.AspNetUser" Width="1.5" PointX="8" PointY="1.125" />
         <EntityTypeShape EntityType="SwiftKareDBModel.City" Width="1.5" PointX="12.75" PointY="0.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.Condition" Width="1.5" PointX="3" PointY="42.5" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Consultation" Width="1.5" PointX="8.25" PointY="19.875" />
         <EntityTypeShape EntityType="SwiftKareDBModel.ConsultationRO" Width="1.5" PointX="3" PointY="15.5" />
         <EntityTypeShape EntityType="SwiftKareDBModel.Doctor" Width="1.5" PointX="3.75" PointY="1.625" />
         <EntityTypeShape EntityType="SwiftKareDBModel.DoctorLanguage" Width="1.5" PointX="6" PointY="7.25" />
@@ -57,13 +56,9 @@
         <AssociationConnector Association="SwiftKareDBModel.FK_AppAttachment_Appointments" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Appointments_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Appointments_Patient" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Appointments" />
         <AssociationConnector Association="SwiftKareDBModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="SwiftKareDBModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Conditions_Patient" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_ConsultationROS" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Doctor" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_ConsultationROS_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_ConsultationROS_SystemItems" />
         <AssociationConnector Association="SwiftKareDBModel.FK_DoctorLanguages_Doctor" />
@@ -80,10 +75,16 @@
         <AssociationConnector Association="SwiftKareDBModel.FK_SystemItems_Systems" />
         <AssociationConnector Association="SwiftKareDBModel.FK_RoleModules_Roles" />
         <AssociationConnector Association="SwiftKareDBModel.AspNetUserRoles" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.FileType" Width="1.5" PointX="20.375" PointY="7.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.MessageFile" Width="1.5" PointX="10.375" PointY="20.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.Message" Width="1.5" PointX="20.375" PointY="11.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.PatientLanguage" Width="1.5" PointX="12.375" PointY="20.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Consultation" Width="1.5" PointX="9" PointY="19" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.FileType" Width="1.5" PointX="20.375" PointY="7.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.MessageFile" Width="1.5" PointX="14.375" PointY="20.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.SecretQuestion" Width="1.5" PointX="16.375" PointY="20.75" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Appointments" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_ConsultationROS" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Doctor" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Patient" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -12,10 +12,10 @@ namespace DataAccess
     using System;
     using System.Collections.Generic;
     
-    public partial class FileType
+    public partial class SecretQuestion
     {
-        public long fileTypeID { get; set; }
-        public string typeName { get; set; }
+        public long secretQuestionID { get; set; }
+        public string secretQuestionn { get; set; }
         public string cb { get; set; }
         public Nullable<System.DateTime> cd { get; set; }
         public string mb { get; set; }

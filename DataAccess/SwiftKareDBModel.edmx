@@ -184,7 +184,7 @@
           <Property Name="consultID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="appID" Type="bigint" />
           <Property Name="duration" Type="int" />
-          <Property Name="review" Type="varchar" MaxLength="100" />
+          <Property Name="review" Type="varchar" MaxLength="1000" />
           <Property Name="reviewStar" Type="int" />
           <Property Name="reviewStatus" Type="bit" />
           <Property Name="doctorID" Type="bigint" />
@@ -361,7 +361,7 @@
             <PropertyRef Name="fileTypeID" />
           </Key>
           <Property Name="fileTypeID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="fileType" Type="varchar" MaxLength="50" />
+          <Property Name="typeName" Type="varchar" MaxLength="50" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
@@ -439,6 +439,8 @@
           <Property Name="msgFileID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="msgID" Type="bigint" />
           <Property Name="fileContent" Type="varbinary(max)" />
+          <Property Name="fileName" Type="varchar" MaxLength="50" />
+          <Property Name="cd" Type="datetime" />
         </EntityType>
         <EntityType Name="Messages">
           <Key>
@@ -663,6 +665,18 @@
           </Key>
           <Property Name="rovID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="cb" Type="varchar" MaxLength="50" />
+          <Property Name="cd" Type="datetime" />
+          <Property Name="mb" Type="varchar" MaxLength="50" />
+          <Property Name="md" Type="datetime" />
+          <Property Name="active" Type="bit" />
+        </EntityType>
+        <EntityType Name="SecretQuestions">
+          <Key>
+            <PropertyRef Name="secretQuestionID" />
+          </Key>
+          <Property Name="secretQuestionID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="secretQuestionn" Type="varchar" MaxLength="100" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
@@ -1650,6 +1664,7 @@
           <EntitySet Name="RoleModules" EntityType="Self.RoleModules" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ROV" EntityType="Self.ROV" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SecretQuestions" EntityType="Self.SecretQuestions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Severity" EntityType="Self.Severity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Speciallity" EntityType="Self.Speciallity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="States" EntityType="Self.States" Schema="dbo" store:Type="Tables" />
@@ -2289,7 +2304,6 @@
           <EntitySet Name="AspNetUsers" EntityType="SwiftKareDBModel.AspNetUser" />
           <EntitySet Name="Cities" EntityType="SwiftKareDBModel.City" />
           <EntitySet Name="Conditions" EntityType="SwiftKareDBModel.Condition" />
-          <EntitySet Name="Consultations" EntityType="SwiftKareDBModel.Consultation" />
           <EntitySet Name="ConsultationROS" EntityType="SwiftKareDBModel.ConsultationRO" />
           <EntitySet Name="Doctors" EntityType="SwiftKareDBModel.Doctor" />
           <EntitySet Name="DoctorLanguages" EntityType="SwiftKareDBModel.DoctorLanguage" />
@@ -2341,10 +2355,6 @@
             <End Role="Patient" EntitySet="Patients" />
             <End Role="Appointment" EntitySet="Appointments" />
           </AssociationSet>
-          <AssociationSet Name="FK_Consultation_Appointments" Association="SwiftKareDBModel.FK_Consultation_Appointments">
-            <End Role="Appointment" EntitySet="Appointments" />
-            <End Role="Consultation" EntitySet="Consultations" />
-          </AssociationSet>
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="SwiftKareDBModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
@@ -2356,18 +2366,6 @@
           <AssociationSet Name="FK_Conditions_Patient" Association="SwiftKareDBModel.FK_Conditions_Patient">
             <End Role="Patient" EntitySet="Patients" />
             <End Role="Condition" EntitySet="Conditions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Consultation_ConsultationROS" Association="SwiftKareDBModel.FK_Consultation_ConsultationROS">
-            <End Role="ConsultationRO" EntitySet="ConsultationROS" />
-            <End Role="Consultation" EntitySet="Consultations" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Consultation_Doctor" Association="SwiftKareDBModel.FK_Consultation_Doctor">
-            <End Role="Doctor" EntitySet="Doctors" />
-            <End Role="Consultation" EntitySet="Consultations" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Consultation_Patient" Association="SwiftKareDBModel.FK_Consultation_Patient">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="Consultation" EntitySet="Consultations" />
           </AssociationSet>
           <AssociationSet Name="FK_ConsultationROS_Patient" Association="SwiftKareDBModel.FK_ConsultationROS_Patient">
             <End Role="Patient" EntitySet="Patients" />
@@ -2440,10 +2438,28 @@
           <FunctionImport Name="sp_dropextendedproc1">
             <Parameter Name="functname" Mode="In" Type="String" />
           </FunctionImport>
-          <EntitySet Name="FileTypes" EntityType="SwiftKareDBModel.FileType" />
-          <EntitySet Name="MessageFiles" EntityType="SwiftKareDBModel.MessageFile" />
           <EntitySet Name="Messages" EntityType="SwiftKareDBModel.Message" />
           <EntitySet Name="PatientLanguages" EntityType="SwiftKareDBModel.PatientLanguage" />
+          <EntitySet Name="Consultations" EntityType="SwiftKareDBModel.Consultation" />
+          <EntitySet Name="FileTypes" EntityType="SwiftKareDBModel.FileType" />
+          <EntitySet Name="MessageFiles" EntityType="SwiftKareDBModel.MessageFile" />
+          <EntitySet Name="SecretQuestions" EntityType="SwiftKareDBModel.SecretQuestion" />
+          <AssociationSet Name="FK_Consultation_Appointments" Association="SwiftKareDBModel.FK_Consultation_Appointments">
+            <End Role="Appointment" EntitySet="Appointments" />
+            <End Role="Consultation" EntitySet="Consultations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Consultation_ConsultationROS" Association="SwiftKareDBModel.FK_Consultation_ConsultationROS">
+            <End Role="ConsultationRO" EntitySet="ConsultationROS" />
+            <End Role="Consultation" EntitySet="Consultations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Consultation_Doctor" Association="SwiftKareDBModel.FK_Consultation_Doctor">
+            <End Role="Doctor" EntitySet="Doctors" />
+            <End Role="Consultation" EntitySet="Consultations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Consultation_Patient" Association="SwiftKareDBModel.FK_Consultation_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="Consultation" EntitySet="Consultations" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="SP_AppointmentReport_Result">
           <Property Type="Int64" Name="appID" Nullable="false" />
@@ -3093,35 +3109,6 @@
           <Property Name="reportedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_Conditions_Patient" FromRole="Condition" ToRole="Patient" />
         </EntityType>
-        <EntityType Name="Consultation">
-          <Key>
-            <PropertyRef Name="consultID" />
-          </Key>
-          <Property Name="consultID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="appID" Type="Int64" />
-          <Property Name="duration" Type="Int32" />
-          <Property Name="review" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="reviewStar" Type="Int32" />
-          <Property Name="reviewStatus" Type="Boolean" />
-          <Property Name="doctorID" Type="Int64" />
-          <Property Name="patientID" Type="Int64" />
-          <Property Name="startTime" Type="Int32" />
-          <Property Name="endTime" Type="Int32" />
-          <Property Name="consultationRosID" Type="Int64" />
-          <Property Name="subjective" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="objective" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="assessment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="plans" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cd" Type="DateTime" Precision="3" />
-          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="md" Type="DateTime" Precision="3" />
-          <Property Name="active" Type="Boolean" />
-          <NavigationProperty Name="Appointment" Relationship="SwiftKareDBModel.FK_Consultation_Appointments" FromRole="Consultation" ToRole="Appointment" />
-          <NavigationProperty Name="ConsultationRO" Relationship="SwiftKareDBModel.FK_Consultation_ConsultationROS" FromRole="Consultation" ToRole="ConsultationRO" />
-          <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_Consultation_Doctor" FromRole="Consultation" ToRole="Doctor" />
-          <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_Consultation_Patient" FromRole="Consultation" ToRole="Patient" />
-        </EntityType>
         <EntityType Name="ConsultationRO">
           <Key>
             <PropertyRef Name="consultationRosID" />
@@ -3136,9 +3123,9 @@
           <Property Name="active" Type="Boolean" />
           <Property Name="systemItemName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="consultationID" Type="Int64" />
-          <NavigationProperty Name="Consultations" Relationship="SwiftKareDBModel.FK_Consultation_ConsultationROS" FromRole="ConsultationRO" ToRole="Consultation" />
           <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_ConsultationROS_Patient" FromRole="ConsultationRO" ToRole="Patient" />
           <NavigationProperty Name="SystemItemss" Relationship="SwiftKareDBModel.FK_ConsultationROS_SystemItems" FromRole="ConsultationRO" ToRole="SystemItemss" />
+          <NavigationProperty Name="Consultations" Relationship="SwiftKareDBModel.FK_Consultation_ConsultationROS" FromRole="ConsultationRO" ToRole="Consultation" />
         </EntityType>
         <EntityType Name="Doctor">
           <Key>
@@ -3180,7 +3167,6 @@
           <Property Name="state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="consultCharges" Type="Int64" />
           <NavigationProperty Name="Appointments" Relationship="SwiftKareDBModel.FK_Appointments_Doctor" FromRole="Doctor" ToRole="Appointment" />
-          <NavigationProperty Name="Consultations" Relationship="SwiftKareDBModel.FK_Consultation_Doctor" FromRole="Doctor" ToRole="Consultation" />
           <NavigationProperty Name="DoctorLanguages" Relationship="SwiftKareDBModel.FK_DoctorLanguages_Doctor" FromRole="Doctor" ToRole="DoctorLanguage" />
           <NavigationProperty Name="DoctorLicenseStates" Relationship="SwiftKareDBModel.FK_DoctorLicenseStates_Doctor" FromRole="Doctor" ToRole="DoctorLicenseState" />
           <NavigationProperty Name="DoctorSpecialities" Relationship="SwiftKareDBModel.FK_DoctorSpeciality_Doctor" FromRole="Doctor" ToRole="DoctorSpeciality" />
@@ -3193,6 +3179,7 @@
           <Property Name="specialization" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="speciality" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="timezone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Consultations" Relationship="SwiftKareDBModel.FK_Consultation_Doctor" FromRole="Doctor" ToRole="Consultation" />
         </EntityType>
         <EntityType Name="DoctorLanguage">
           <Key>
@@ -3417,7 +3404,6 @@
           <Property Name="pharmacyid" Type="Int64" />
           <NavigationProperty Name="Appointments" Relationship="SwiftKareDBModel.FK_Appointments_Patient" FromRole="Patient" ToRole="Appointment" />
           <NavigationProperty Name="Conditions" Relationship="SwiftKareDBModel.FK_Conditions_Patient" FromRole="Patient" ToRole="Condition" />
-          <NavigationProperty Name="Consultations" Relationship="SwiftKareDBModel.FK_Consultation_Patient" FromRole="Patient" ToRole="Consultation" />
           <NavigationProperty Name="ConsultationROS" Relationship="SwiftKareDBModel.FK_ConsultationROS_Patient" FromRole="Patient" ToRole="ConsultationRO" />
           <NavigationProperty Name="Medications" Relationship="SwiftKareDBModel.FK_Medications_Patient" FromRole="Patient" ToRole="Medication" />
           <NavigationProperty Name="PatientAllergies" Relationship="SwiftKareDBModel.FK_Allergies_Patient" FromRole="Patient" ToRole="PatientAllergy" />
@@ -3431,6 +3417,7 @@
           <Property Name="timezone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Consultations" Relationship="SwiftKareDBModel.FK_Consultation_Patient" FromRole="Patient" ToRole="Consultation" />
         </EntityType>
         <EntityType Name="PatientAllergy">
           <Key>
@@ -3725,18 +3712,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Consultation_Appointments">
-          <End Type="SwiftKareDBModel.Appointment" Role="Appointment" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.Consultation" Role="Consultation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Appointment">
-              <PropertyRef Name="appID" />
-            </Principal>
-            <Dependent Role="Consultation">
-              <PropertyRef Name="appID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Type="SwiftKareDBModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -3773,42 +3748,6 @@
               <PropertyRef Name="patientID" />
             </Principal>
             <Dependent Role="Condition">
-              <PropertyRef Name="patientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Consultation_ConsultationROS">
-          <End Type="SwiftKareDBModel.ConsultationRO" Role="ConsultationRO" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.Consultation" Role="Consultation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ConsultationRO">
-              <PropertyRef Name="consultationRosID" />
-            </Principal>
-            <Dependent Role="Consultation">
-              <PropertyRef Name="consultationRosID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Consultation_Doctor">
-          <End Type="SwiftKareDBModel.Doctor" Role="Doctor" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.Consultation" Role="Consultation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Doctor">
-              <PropertyRef Name="doctorID" />
-            </Principal>
-            <Dependent Role="Consultation">
-              <PropertyRef Name="doctorID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Consultation_Patient">
-          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.Consultation" Role="Consultation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="patientID" />
-            </Principal>
-            <Dependent Role="Consultation">
               <PropertyRef Name="patientID" />
             </Dependent>
           </ReferentialConstraint>
@@ -3997,26 +3936,6 @@
           <End Type="SwiftKareDBModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
           <End Type="SwiftKareDBModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
         </Association>
-        <EntityType Name="FileType">
-          <Key>
-            <PropertyRef Name="fileTypeID" />
-          </Key>
-          <Property Name="fileTypeID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="fileType1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cd" Type="DateTime" Precision="3" />
-          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="md" Type="DateTime" Precision="3" />
-          <Property Name="active" Type="Boolean" />
-        </EntityType>
-        <EntityType Name="MessageFile">
-          <Key>
-            <PropertyRef Name="msgFileID" />
-          </Key>
-          <Property Name="msgFileID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="msgID" Type="Int64" />
-          <Property Name="fileContent" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
         <EntityType Name="Message">
           <Key>
             <PropertyRef Name="msgID" />
@@ -4047,6 +3966,117 @@
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
         </EntityType>
+        <EntityType Name="Consultation">
+          <Key>
+            <PropertyRef Name="consultID" />
+          </Key>
+          <Property Name="consultID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="appID" Type="Int64" />
+          <Property Name="duration" Type="Int32" />
+          <Property Name="review" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="reviewStar" Type="Int32" />
+          <Property Name="reviewStatus" Type="Boolean" />
+          <Property Name="doctorID" Type="Int64" />
+          <Property Name="patientID" Type="Int64" />
+          <Property Name="startTime" Type="Int32" />
+          <Property Name="endTime" Type="Int32" />
+          <Property Name="consultationRosID" Type="Int64" />
+          <Property Name="subjective" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="objective" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="assessment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="plans" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+          <NavigationProperty Name="Appointment" Relationship="SwiftKareDBModel.FK_Consultation_Appointments" FromRole="Consultation" ToRole="Appointment" />
+          <NavigationProperty Name="ConsultationRO" Relationship="SwiftKareDBModel.FK_Consultation_ConsultationROS" FromRole="Consultation" ToRole="ConsultationRO" />
+          <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_Consultation_Doctor" FromRole="Consultation" ToRole="Doctor" />
+          <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_Consultation_Patient" FromRole="Consultation" ToRole="Patient" />
+        </EntityType>
+        <EntityType Name="FileType">
+          <Key>
+            <PropertyRef Name="fileTypeID" />
+          </Key>
+          <Property Name="fileTypeID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="typeName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="MessageFile">
+          <Key>
+            <PropertyRef Name="msgFileID" />
+          </Key>
+          <Property Name="msgFileID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="msgID" Type="Int64" />
+          <Property Name="fileContent" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="fileName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="SecretQuestion">
+          <Key>
+            <PropertyRef Name="secretQuestionID" />
+          </Key>
+          <Property Name="secretQuestionID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="secretQuestionn" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+        </EntityType>
+        <Association Name="FK_Consultation_Appointments">
+          <End Type="SwiftKareDBModel.Appointment" Role="Appointment" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.Consultation" Role="Consultation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Appointment">
+              <PropertyRef Name="appID" />
+            </Principal>
+            <Dependent Role="Consultation">
+              <PropertyRef Name="appID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Consultation_ConsultationROS">
+          <End Type="SwiftKareDBModel.ConsultationRO" Role="ConsultationRO" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.Consultation" Role="Consultation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConsultationRO">
+              <PropertyRef Name="consultationRosID" />
+            </Principal>
+            <Dependent Role="Consultation">
+              <PropertyRef Name="consultationRosID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Consultation_Doctor">
+          <End Type="SwiftKareDBModel.Doctor" Role="Doctor" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.Consultation" Role="Consultation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctor">
+              <PropertyRef Name="doctorID" />
+            </Principal>
+            <Dependent Role="Consultation">
+              <PropertyRef Name="doctorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Consultation_Patient">
+          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.Consultation" Role="Consultation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="patientID" />
+            </Principal>
+            <Dependent Role="Consultation">
+              <PropertyRef Name="patientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4716,32 +4746,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Consultations">
-            <EntityTypeMapping TypeName="SwiftKareDBModel.Consultation">
-              <MappingFragment StoreEntitySet="Consultation">
-                <ScalarProperty Name="active" ColumnName="active" />
-                <ScalarProperty Name="md" ColumnName="md" />
-                <ScalarProperty Name="mb" ColumnName="mb" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-                <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="plans" ColumnName="plans" />
-                <ScalarProperty Name="assessment" ColumnName="assessment" />
-                <ScalarProperty Name="objective" ColumnName="objective" />
-                <ScalarProperty Name="subjective" ColumnName="subjective" />
-                <ScalarProperty Name="consultationRosID" ColumnName="consultationRosID" />
-                <ScalarProperty Name="endTime" ColumnName="endTime" />
-                <ScalarProperty Name="startTime" ColumnName="startTime" />
-                <ScalarProperty Name="patientID" ColumnName="patientID" />
-                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
-                <ScalarProperty Name="reviewStatus" ColumnName="reviewStatus" />
-                <ScalarProperty Name="reviewStar" ColumnName="reviewStar" />
-                <ScalarProperty Name="review" ColumnName="review" />
-                <ScalarProperty Name="duration" ColumnName="duration" />
-                <ScalarProperty Name="appID" ColumnName="appID" />
-                <ScalarProperty Name="consultID" ColumnName="consultID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ConsultationROS">
             <EntityTypeMapping TypeName="SwiftKareDBModel.ConsultationRO">
               <MappingFragment StoreEntitySet="ConsultationROS">
@@ -5301,28 +5305,6 @@
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
           </AssociationSetMapping>
-          <EntitySetMapping Name="FileTypes">
-            <EntityTypeMapping TypeName="SwiftKareDBModel.FileType">
-              <MappingFragment StoreEntitySet="FileType">
-                <ScalarProperty Name="active" ColumnName="active" />
-                <ScalarProperty Name="md" ColumnName="md" />
-                <ScalarProperty Name="mb" ColumnName="mb" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-                <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="fileType1" ColumnName="fileType" />
-                <ScalarProperty Name="fileTypeID" ColumnName="fileTypeID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="MessageFiles">
-            <EntityTypeMapping TypeName="SwiftKareDBModel.MessageFile">
-              <MappingFragment StoreEntitySet="MessageFiles">
-                <ScalarProperty Name="fileContent" ColumnName="fileContent" />
-                <ScalarProperty Name="msgID" ColumnName="msgID" />
-                <ScalarProperty Name="msgFileID" ColumnName="msgFileID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Messages">
             <EntityTypeMapping TypeName="SwiftKareDBModel.Message">
               <MappingFragment StoreEntitySet="Messages">
@@ -5352,6 +5334,69 @@
                 <ScalarProperty Name="patientID" ColumnName="patientID" />
                 <ScalarProperty Name="languageName" ColumnName="languageName" />
                 <ScalarProperty Name="patientLanguageID" ColumnName="patientLanguageID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Consultations">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.Consultation">
+              <MappingFragment StoreEntitySet="Consultation">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="plans" ColumnName="plans" />
+                <ScalarProperty Name="assessment" ColumnName="assessment" />
+                <ScalarProperty Name="objective" ColumnName="objective" />
+                <ScalarProperty Name="subjective" ColumnName="subjective" />
+                <ScalarProperty Name="consultationRosID" ColumnName="consultationRosID" />
+                <ScalarProperty Name="endTime" ColumnName="endTime" />
+                <ScalarProperty Name="startTime" ColumnName="startTime" />
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
+                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+                <ScalarProperty Name="reviewStatus" ColumnName="reviewStatus" />
+                <ScalarProperty Name="reviewStar" ColumnName="reviewStar" />
+                <ScalarProperty Name="review" ColumnName="review" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="appID" ColumnName="appID" />
+                <ScalarProperty Name="consultID" ColumnName="consultID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FileTypes">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.FileType">
+              <MappingFragment StoreEntitySet="FileType">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="typeName" ColumnName="typeName" />
+                <ScalarProperty Name="fileTypeID" ColumnName="fileTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MessageFiles">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.MessageFile">
+              <MappingFragment StoreEntitySet="MessageFiles">
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="fileName" ColumnName="fileName" />
+                <ScalarProperty Name="fileContent" ColumnName="fileContent" />
+                <ScalarProperty Name="msgID" ColumnName="msgID" />
+                <ScalarProperty Name="msgFileID" ColumnName="msgFileID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SecretQuestions">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.SecretQuestion">
+              <MappingFragment StoreEntitySet="SecretQuestions">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="secretQuestionn" ColumnName="secretQuestionn" />
+                <ScalarProperty Name="secretQuestionID" ColumnName="secretQuestionID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

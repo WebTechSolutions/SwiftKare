@@ -17,5 +17,7 @@ namespace DataAccess
         public long msgFileID { get; set; }
         public Nullable<long> msgID { get; set; }
         public byte[] fileContent { get; set; }
+        public string fileName { get; set; }
+        public Nullable<System.DateTime> cd { get; set; }
     }
 }
