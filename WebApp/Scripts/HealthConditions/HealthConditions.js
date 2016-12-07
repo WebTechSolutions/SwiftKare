@@ -91,7 +91,7 @@ function resetCondition() {
 
 //
 function addupdateCondition(_patientId) {
-    blockUI();
+   
     var msg = ValidateFormHealthConditions();
     if (msg == "" || msg == undefined) {
         fillObjHealthConditions(_patientId);
