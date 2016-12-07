@@ -30,6 +30,11 @@ function uploadFiles() {
         processData: false
     });
 }
+function setDoctorID(doctorID)
+{
+   
+    _selecteddoctorID = doctorID;// $("#doctorid").val();
+}
 function setDateTime(myappTime,myappDate)
 {
    
@@ -74,10 +79,10 @@ function showDoctorInfo()
            
             var specresult = spec.substring(0, spec.length - 1);
             var langresult = lang.substring(0, lang.length - 1);
-            var doccell = "";
-            var docemail = "";
-            var cc = "";
-            var docstate = "";
+            var doccell = "NA";
+            var docemail = "NA";
+            var cc = "NA";
+            var docstate = "NA";
             if (response.Object[0].cellPhone != null) { doccell = response.Object[0].cellPhone; }
             if (response.Object[0].email != null) { docemail = response.Object[0].email; }
             if (response.Object[0].consultCharges != null) { cc = response.Object[0].consultCharges; }
@@ -119,7 +124,24 @@ function showApppointmentSummary() {
 
 }
 function customDateFormat(s) {
+    if (s == null) {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
 
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+
+        today = dd + '/' + mm + '/' + yyyy;
+        s = today;
+    }
+   
     var b = s.split(/\D/);
     
     var d = new Date(b[2], --b[1], b[0]);
@@ -138,11 +160,40 @@ function customDateFormat(s) {
     return days[d.getDay()] + ' ' + d.getDate() + ' ' +
            months[d.getMonth()] + ' ' + d.getFullYear();
 }
-function CreateAppointment(patientID) {
-    
+function getClockTime()
+{
+    var now    = new Date();
+    var hour   = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var ap = "AM";
+    if (hour   > 11) { ap = "PM";             }
+    if (hour   > 12) { hour = hour - 12;      }
+    if (hour   == 0) { hour = 12;             }
+    if (hour   < 10) { hour   = "0" + hour;   }
+    if (minute < 10) { minute = "0" + minute; }
+    if (second < 10) { second = "0" + second; }
+    var timeString = hour +
+                     ':' +
+                     minute+
+                     //':' +
+                     //second +
+                     //" " +
+                     ap;
+    return timeString;
+} // function getClockTime()
+
+//-->
+function CreateAppointment(patientID,amount) {
+    if (_objAppointment["appTime"] == null)
+    {
+        //alert('ct');
+        _objAppointment["appTime"]=getClockTime();
+    }
     _objAppointment["appDate"] = $("#fetchdate").val();
     _objAppointment["doctorID"] = $("#doctorid").val();
     _objAppointment["patientID"] = patientID;
+    _objAppointment["paymentAmt"] = amount;
     _objAppointment["rov"] = $("#ROV option:selected").text();
     _objAppointment["chiefComplaints"] = $("#chiefcomplaints").val();
     

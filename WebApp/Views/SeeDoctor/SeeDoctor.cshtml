@@ -790,37 +790,7 @@
 </div> @*end class="right_col"*@
 
 
-<script type="text/javascript">
-  //Blockui plugin...this causes the blockui to run
-  //Spinner* 
-  //Page = Sys.WebForms.PageRequestManager.getInstance();
-  //Page.add_beginRequest(OnBeginRequest);
-  //Page.add_endRequest(endRequest);
 
-  //function OnBeginRequest(sender, args) {
-  //  blockUI();
-  //}
-  //function endRequest(sender, args) {
-  //  $.unblockUI();
-  //}
-
-  //Center the element
-  //$.fn.center = function () {
-  //  this.css("position", "absolute");
-  //  this.css("top", ($(window).height() - this.height()) / 2 + $(window).scrollTop() + "px");
-  //  this.css("left", ($(window).width() - this.width()) / 2 + $(window).scrollLeft() + "px");
-  //  return this;
-  //}
-
-  //blockUI
-  function blockUI() {
-     
-    $.blockUI({
-      message: '<div id="loader"></div>',
-      });
-    $('.blockUI.blockMsg').center();
-  }//end Blockui
-</script>
 <script>
     $(document).ready(function () {
         if($("#wizard").smartWizard('currentStep','1'))
@@ -848,8 +818,8 @@
             targetButton: "#btnProceedWithPayment",
             actionUrl: '@Url.Action("ProceedWithPay", "seedoctor")',
             handleSuccess: function () {
-                CreateAppointment(@ViewBag.PatienID);
-
+                
+                CreateAppointment(@ViewBag.PatienID,@amount);
                 var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
 
                 var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
@@ -888,7 +858,7 @@
         //{
         //    SearchDoctor();
         //}
-        blockUI();
+        
         SearchDoctor(@ViewBag.PatienID)
         
 
@@ -1350,7 +1320,9 @@
             //alert('load appointment detaul');
             // Your step validation logic
             // set isStepValid = false if has errors
+            showDoctorInfo();
             showApppointmentSummary();
+           
         }
         return true;
         // ...      

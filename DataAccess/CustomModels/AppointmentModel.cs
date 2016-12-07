@@ -12,7 +12,7 @@ namespace DataAccess.CommonModels
         public Nullable<long> doctorID { get; set; }
         public Nullable<long> patientID { get; set; }
         public string appDate { get; set; }
-        public Nullable<System.TimeSpan> appTime { get; set; }
+        public string appTime { get; set; }
         public string notes { get; set; }
         public string paymentID { get; set; }
         public Nullable<int> paymentAmt { get; set; }
