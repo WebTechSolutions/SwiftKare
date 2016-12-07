@@ -40,6 +40,8 @@ namespace DataAccess
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Condition> Conditions { get; set; }
         public virtual DbSet<ConsultationRO> ConsultationROS { get; set; }
+        public virtual DbSet<Doctor> Doctors { get; set; }
+        public virtual DbSet<DoctorLanguage> DoctorLanguages { get; set; }
         public virtual DbSet<DoctorLicenseState> DoctorLicenseStates { get; set; }
         public virtual DbSet<DoctorSpeciality> DoctorSpecialities { get; set; }
         public virtual DbSet<DoctorTiming> DoctorTimings { get; set; }
@@ -71,15 +73,13 @@ namespace DataAccess
         public virtual DbSet<SystemItemss> SystemItemsses { get; set; }
         public virtual DbSet<Zip> Zips { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<PatientLanguage> PatientLanguages { get; set; }
         public virtual DbSet<Consultation> Consultations { get; set; }
         public virtual DbSet<FileType> FileTypes { get; set; }
         public virtual DbSet<MessageFile> MessageFiles { get; set; }
         public virtual DbSet<SecretQuestion> SecretQuestions { get; set; }
-        public virtual DbSet<PatientLanguage> PatientLanguages { get; set; }
-        public virtual DbSet<DoctorLanguage> DoctorLanguages { get; set; }
         public virtual DbSet<LifeStyleQuestion> LifeStyleQuestions { get; set; }
         public virtual DbSet<UserFile> UserFiles { get; set; }
-        public virtual DbSet<Doctor> Doctors { get; set; }
     
         public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
         {

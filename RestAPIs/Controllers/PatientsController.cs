@@ -16,7 +16,7 @@ using RestAPIs.Extensions;
 
 namespace RestAPIs.Controllers
 {
-    [Authorize]
+   
     public class PatientsController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
@@ -80,7 +80,7 @@ namespace RestAPIs.Controllers
                 return objModel;
             }
 
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
                 {
