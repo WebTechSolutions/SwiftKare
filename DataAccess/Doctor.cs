@@ -18,11 +18,11 @@ namespace DataAccess
         public Doctor()
         {
             this.Appointments = new HashSet<Appointment>();
+            this.Consultations = new HashSet<Consultation>();
             this.DoctorLanguages = new HashSet<DoctorLanguage>();
             this.DoctorLicenseStates = new HashSet<DoctorLicenseState>();
             this.DoctorSpecialities = new HashSet<DoctorSpeciality>();
             this.DoctorTimings = new HashSet<DoctorTiming>();
-            this.Consultations = new HashSet<Consultation>();
             this.UserFiles = new HashSet<UserFile>();
         }
     
@@ -66,11 +66,12 @@ namespace DataAccess
         public string education { get; set; }
         public string workexperience { get; set; }
         public string specialization { get; set; }
-        public string speciality { get; set; }
         public string timezone { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Consultation> Consultations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DoctorLanguage> DoctorLanguages { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -79,8 +80,6 @@ namespace DataAccess
         public virtual ICollection<DoctorSpeciality> DoctorSpecialities { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DoctorTiming> DoctorTimings { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Consultation> Consultations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserFile> UserFiles { get; set; }
     }
