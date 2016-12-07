@@ -17,8 +17,8 @@ namespace DataAccess
         public long doctorLanguageID { get; set; }
         public string languageName { get; set; }
         public Nullable<long> doctorID { get; set; }
-        public Nullable<System.DateTime> cd { get; set; }
         public string cb { get; set; }
+        public Nullable<System.DateTime> cd { get; set; }
         public string mb { get; set; }
         public Nullable<System.DateTime> md { get; set; }
         public Nullable<bool> active { get; set; }
