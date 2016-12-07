@@ -64,7 +64,7 @@ namespace DataAccess
         public string title { get; set; }
         public string suffix { get; set; }
         public string education { get; set; }
-        public Nullable<long> workexperience { get; set; }
+        public string workexperience { get; set; }
         public string specialization { get; set; }
         public string speciality { get; set; }
         public string timezone { get; set; }

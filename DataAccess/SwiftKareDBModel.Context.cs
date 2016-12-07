@@ -75,6 +75,10 @@ namespace DataAccess
         public virtual DbSet<SystemItemss> SystemItemsses { get; set; }
         public virtual DbSet<UserFile> UserFiles { get; set; }
         public virtual DbSet<Zip> Zips { get; set; }
+        public virtual DbSet<FileType> FileTypes { get; set; }
+        public virtual DbSet<MessageFile> MessageFiles { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<PatientLanguage> PatientLanguages { get; set; }
     
         public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
         {

@@ -214,8 +214,8 @@
           <Property Name="mb" Type="datetime" />
           <Property Name="md" Type="varchar" MaxLength="50" />
           <Property Name="active" Type="bit" />
-          <Property Name="systemItemName" Type="varchar" MaxLength="50" />
           <Property Name="consultationID" Type="bigint" />
+          <Property Name="systemItemName" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Doctor">
           <Key>
@@ -256,6 +256,13 @@
           <Property Name="city" Type="varchar" MaxLength="50" />
           <Property Name="state" Type="varchar" MaxLength="50" />
           <Property Name="consultCharges" Type="bigint" />
+          <Property Name="title" Type="varchar" MaxLength="10" />
+          <Property Name="suffix" Type="varchar" MaxLength="10" />
+          <Property Name="education" Type="varchar(max)" />
+          <Property Name="workexperience" Type="varchar(max)" />
+          <Property Name="specialization" Type="varchar" MaxLength="100" />
+          <Property Name="speciality" Type="varchar" MaxLength="50" />
+          <Property Name="timezone" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="DoctorLanguages">
           <Key>
@@ -264,6 +271,11 @@
           <Property Name="doctorLanguageID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="languageName" Type="varchar" MaxLength="50" />
           <Property Name="doctorID" Type="bigint" />
+          <Property Name="cd" Type="datetime" />
+          <Property Name="cb" Type="varchar" MaxLength="50" />
+          <Property Name="mb" Type="varchar" MaxLength="50" />
+          <Property Name="md" Type="datetime" />
+          <Property Name="active" Type="bit" />
         </EntityType>
         <EntityType Name="DoctorLicenseStates">
           <Key>
@@ -272,6 +284,11 @@
           <Property Name="doctorLicenseStateID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="doctorID" Type="bigint" />
           <Property Name="stateName" Type="varchar" MaxLength="50" />
+          <Property Name="cb" Type="varchar" MaxLength="50" />
+          <Property Name="cd" Type="datetime" />
+          <Property Name="mb" Type="varchar" MaxLength="50" />
+          <Property Name="md" Type="datetime" />
+          <Property Name="active" Type="bit" />
         </EntityType>
         <EntityType Name="DoctorSpeciality">
           <Key>
@@ -339,6 +356,18 @@
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
         </EntityType>
+        <EntityType Name="FileType">
+          <Key>
+            <PropertyRef Name="fileTypeID" />
+          </Key>
+          <Property Name="fileTypeID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="fileType" Type="varchar" MaxLength="50" />
+          <Property Name="cb" Type="varchar" MaxLength="50" />
+          <Property Name="cd" Type="datetime" />
+          <Property Name="mb" Type="varchar" MaxLength="50" />
+          <Property Name="md" Type="datetime" />
+          <Property Name="active" Type="bit" />
+        </EntityType>
         <EntityType Name="Frequency">
           <Key>
             <PropertyRef Name="frequencyID" />
@@ -367,9 +396,8 @@
           <Key>
             <PropertyRef Name="questionID" />
           </Key>
-          <Property Name="questionID" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="questionID" Type="bigint" Nullable="false" />
           <Property Name="question" Type="varchar" MaxLength="50" />
-          <Property Name="answer" Type="varchar" MaxLength="50" />
           <Property Name="active" Type="bit" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
@@ -403,6 +431,31 @@
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
+        </EntityType>
+        <EntityType Name="MessageFiles">
+          <Key>
+            <PropertyRef Name="msgFileID" />
+          </Key>
+          <Property Name="msgFileID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="msgID" Type="bigint" />
+          <Property Name="fileContent" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Messages">
+          <Key>
+            <PropertyRef Name="msgID" />
+          </Key>
+          <Property Name="msgID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="mesage" Type="varchar(max)" />
+          <Property Name="from" Type="varchar" MaxLength="50" />
+          <Property Name="to" Type="varchar" MaxLength="50" />
+          <Property Name="status" Type="varchar" MaxLength="10" />
+          <Property Name="isRead" Type="bit" />
+          <Property Name="replyLink" Type="bigint" />
+          <Property Name="subject" Type="varchar" MaxLength="100" />
+          <Property Name="senderName" Type="varchar" MaxLength="50" />
+          <Property Name="cd" Type="datetime" />
+          <Property Name="hasAttachment" Type="bit" />
+          <Property Name="md" Type="datetime" />
         </EntityType>
         <EntityType Name="Modules">
           <Key>
@@ -462,6 +515,13 @@
           <Property Name="userId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="pharmacy" Type="varchar" MaxLength="1000" />
           <Property Name="pharmacyid" Type="bigint" />
+          <Property Name="title" Type="varchar" MaxLength="10" />
+          <Property Name="suffix" Type="varchar" MaxLength="10" />
+          <Property Name="height" Type="int" />
+          <Property Name="weight" Type="int" />
+          <Property Name="timezone" Type="varchar" MaxLength="50" />
+          <Property Name="city" Type="varchar" MaxLength="50" />
+          <Property Name="state" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="PatientAllergies">
           <Key>
@@ -491,6 +551,19 @@
           <Property Name="patientID" Type="bigint" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
+          <Property Name="mb" Type="varchar" MaxLength="50" />
+          <Property Name="md" Type="datetime" />
+          <Property Name="active" Type="bit" />
+        </EntityType>
+        <EntityType Name="PatientLanguages">
+          <Key>
+            <PropertyRef Name="patientLanguageID" />
+          </Key>
+          <Property Name="patientLanguageID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="languageName" Type="varchar" MaxLength="50" />
+          <Property Name="patientID" Type="bigint" />
+          <Property Name="cd" Type="datetime" />
+          <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
@@ -680,7 +753,6 @@
           <Property Name="active" Type="bit" />
           <Property Name="FileName" Type="varchar" MaxLength="50" />
           <Property Name="fileContent" Type="varbinary(max)" />
-          <Property Name="fileurl" Type="varchar" MaxLength="50" />
           <Property Name="patientID" Type="bigint" />
           <Property Name="doctorID" Type="bigint" />
         </EntityType>
@@ -1084,10 +1156,6 @@
           <Parameter Name="typeName" Type="varchar" Mode="In" />
           <Parameter Name="CB" Type="varchar" Mode="In" />
         </Function>
-        <Function Name="sp_addextendedproc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="functname" Type="nvarchar" Mode="In" />
-          <Parameter Name="dllname" Type="varchar" Mode="In" />
-        </Function>
         <Function Name="SP_AddLanguage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="languageName" Type="varchar" Mode="In" />
           <Parameter Name="CB" Type="varchar" Mode="In" />
@@ -1306,9 +1374,6 @@
         <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
           <Parameter Name="owner_id" Type="int" Mode="In" />
-        </Function>
-        <Function Name="sp_dropextendedproc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="functname" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="SP_FetchDoctorTimings" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="docID" Type="bigint" Mode="In" />
@@ -1563,16 +1628,20 @@
           <EntitySet Name="DocumentType" EntityType="Self.DocumentType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FamilyHXItems" EntityType="Self.FamilyHXItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FavouriteDoctor" EntityType="Self.FavouriteDoctor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FileType" EntityType="Self.FileType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Frequency" EntityType="Self.Frequency" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Languages" EntityType="Self.Languages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LifeStyleQuestions" EntityType="Self.LifeStyleQuestions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Medications" EntityType="Self.Medications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Medicine" EntityType="Self.Medicine" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MessageFiles" EntityType="Self.MessageFiles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Messages" EntityType="Self.Messages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Modules" EntityType="Self.Modules" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="News" EntityType="Self.News" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Patient" EntityType="Self.Patient" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PatientAllergies" EntityType="Self.PatientAllergies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PatientFamilyHX" EntityType="Self.PatientFamilyHX" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PatientLanguages" EntityType="Self.PatientLanguages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PatientLifeStyle" EntityType="Self.PatientLifeStyle" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PatientSurgeries" EntityType="Self.PatientSurgeries" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PatientSystems" EntityType="Self.PatientSystems" Schema="dbo" store:Type="Tables" />
@@ -2371,6 +2440,10 @@
           <FunctionImport Name="sp_dropextendedproc1">
             <Parameter Name="functname" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="FileTypes" EntityType="SwiftKareDBModel.FileType" />
+          <EntitySet Name="MessageFiles" EntityType="SwiftKareDBModel.MessageFile" />
+          <EntitySet Name="Messages" EntityType="SwiftKareDBModel.Message" />
+          <EntitySet Name="PatientLanguages" EntityType="SwiftKareDBModel.PatientLanguage" />
         </EntityContainer>
         <ComplexType Name="SP_AppointmentReport_Result">
           <Property Type="Int64" Name="appID" Nullable="false" />
@@ -3113,6 +3186,13 @@
           <NavigationProperty Name="DoctorSpecialities" Relationship="SwiftKareDBModel.FK_DoctorSpeciality_Doctor" FromRole="Doctor" ToRole="DoctorSpeciality" />
           <NavigationProperty Name="DoctorTimings" Relationship="SwiftKareDBModel.FK_DoctorTimings_Doctor" FromRole="Doctor" ToRole="DoctorTiming" />
           <NavigationProperty Name="UserFiles" Relationship="SwiftKareDBModel.FK_UserFiles_Doctor" FromRole="Doctor" ToRole="UserFile" />
+          <Property Name="title" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="suffix" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="education" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="workexperience" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="specialization" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="speciality" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="timezone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="DoctorLanguage">
           <Key>
@@ -3122,6 +3202,11 @@
           <Property Name="languageName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="doctorID" Type="Int64" />
           <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_DoctorLanguages_Doctor" FromRole="DoctorLanguage" ToRole="Doctor" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
         </EntityType>
         <EntityType Name="DoctorLicenseState">
           <Key>
@@ -3131,6 +3216,11 @@
           <Property Name="doctorID" Type="Int64" />
           <Property Name="stateName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_DoctorLicenseStates_Doctor" FromRole="DoctorLicenseState" ToRole="Doctor" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
         </EntityType>
         <EntityType Name="DoctorSpeciality">
           <Key>
@@ -3228,7 +3318,7 @@
           <Key>
             <PropertyRef Name="questionID" />
           </Key>
-          <Property Name="questionID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="questionID" Type="String" Nullable="false" />
           <Property Name="question" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="answer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="active" Type="Boolean" />
@@ -3334,6 +3424,13 @@
           <NavigationProperty Name="PatientFamilyHXes" Relationship="SwiftKareDBModel.FK_FamilyHX_Patient" FromRole="Patient" ToRole="PatientFamilyHX" />
           <NavigationProperty Name="PatientSurgeries" Relationship="SwiftKareDBModel.FK_Surgeries_Patient" FromRole="Patient" ToRole="PatientSurgery" />
           <NavigationProperty Name="UserFiles" Relationship="SwiftKareDBModel.FK_UserFiles_Patient" FromRole="Patient" ToRole="UserFile" />
+          <Property Name="title" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="suffix" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="height" Type="Int32" />
+          <Property Name="weight" Type="Int32" />
+          <Property Name="timezone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="PatientAllergy">
           <Key>
@@ -3900,6 +3997,56 @@
           <End Type="SwiftKareDBModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
           <End Type="SwiftKareDBModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
         </Association>
+        <EntityType Name="FileType">
+          <Key>
+            <PropertyRef Name="fileTypeID" />
+          </Key>
+          <Property Name="fileTypeID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="fileType1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="MessageFile">
+          <Key>
+            <PropertyRef Name="msgFileID" />
+          </Key>
+          <Property Name="msgFileID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="msgID" Type="Int64" />
+          <Property Name="fileContent" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="msgID" />
+          </Key>
+          <Property Name="msgID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="mesage" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="from" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="to" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="isRead" Type="Boolean" />
+          <Property Name="replyLink" Type="Int64" />
+          <Property Name="subject" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="senderName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="hasAttachment" Type="Boolean" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="PatientLanguage">
+          <Key>
+            <PropertyRef Name="patientLanguageID" />
+          </Key>
+          <Property Name="patientLanguageID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="languageName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="patientID" Type="Int64" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4614,6 +4761,13 @@
           <EntitySetMapping Name="Doctors">
             <EntityTypeMapping TypeName="SwiftKareDBModel.Doctor">
               <MappingFragment StoreEntitySet="Doctor">
+                <ScalarProperty Name="timezone" ColumnName="timezone" />
+                <ScalarProperty Name="speciality" ColumnName="speciality" />
+                <ScalarProperty Name="specialization" ColumnName="specialization" />
+                <ScalarProperty Name="workexperience" ColumnName="workexperience" />
+                <ScalarProperty Name="education" ColumnName="education" />
+                <ScalarProperty Name="suffix" ColumnName="suffix" />
+                <ScalarProperty Name="title" ColumnName="title" />
                 <ScalarProperty Name="consultCharges" ColumnName="consultCharges" />
                 <ScalarProperty Name="state" ColumnName="state" />
                 <ScalarProperty Name="city" ColumnName="city" />
@@ -4655,6 +4809,11 @@
           <EntitySetMapping Name="DoctorLanguages">
             <EntityTypeMapping TypeName="SwiftKareDBModel.DoctorLanguage">
               <MappingFragment StoreEntitySet="DoctorLanguages">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
                 <ScalarProperty Name="doctorID" ColumnName="doctorID" />
                 <ScalarProperty Name="languageName" ColumnName="languageName" />
                 <ScalarProperty Name="doctorLanguageID" ColumnName="doctorLanguageID" />
@@ -4664,6 +4823,11 @@
           <EntitySetMapping Name="DoctorLicenseStates">
             <EntityTypeMapping TypeName="SwiftKareDBModel.DoctorLicenseState">
               <MappingFragment StoreEntitySet="DoctorLicenseStates">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
                 <ScalarProperty Name="stateName" ColumnName="stateName" />
                 <ScalarProperty Name="doctorID" ColumnName="doctorID" />
                 <ScalarProperty Name="doctorLicenseStateID" ColumnName="doctorLicenseStateID" />
@@ -4775,7 +4939,6 @@
                 <ScalarProperty Name="cd" ColumnName="cd" />
                 <ScalarProperty Name="cb" ColumnName="cb" />
                 <ScalarProperty Name="active" ColumnName="active" />
-                <ScalarProperty Name="answer" ColumnName="answer" />
                 <ScalarProperty Name="question" ColumnName="question" />
                 <ScalarProperty Name="questionID" ColumnName="questionID" />
               </MappingFragment>
@@ -4843,6 +5006,13 @@
           <EntitySetMapping Name="Patients">
             <EntityTypeMapping TypeName="SwiftKareDBModel.Patient">
               <MappingFragment StoreEntitySet="Patient">
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="timezone" ColumnName="timezone" />
+                <ScalarProperty Name="weight" ColumnName="weight" />
+                <ScalarProperty Name="height" ColumnName="height" />
+                <ScalarProperty Name="suffix" ColumnName="suffix" />
+                <ScalarProperty Name="title" ColumnName="title" />
                 <ScalarProperty Name="pharmacyid" ColumnName="pharmacyid" />
                 <ScalarProperty Name="pharmacy" ColumnName="pharmacy" />
                 <ScalarProperty Name="userId" ColumnName="userId" />
@@ -5098,7 +5268,6 @@
               <MappingFragment StoreEntitySet="UserFiles">
                 <ScalarProperty Name="doctorID" ColumnName="doctorID" />
                 <ScalarProperty Name="patientID" ColumnName="patientID" />
-                <ScalarProperty Name="fileurl" ColumnName="fileurl" />
                 <ScalarProperty Name="fileContent" ColumnName="fileContent" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="active" ColumnName="active" />
@@ -5132,9 +5301,61 @@
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
           </AssociationSetMapping>
-          <FunctionImportMapping FunctionImportName="sp_addextendedproc1" FunctionName="SwiftKareDBModel.Store.sp_addextendedproc" />
-          <FunctionImportMapping FunctionImportName="sp_dropextendedproc1" FunctionName="SwiftKareDBModel.Store.sp_dropextendedproc" />
-        </EntityContainerMapping>
+          <EntitySetMapping Name="FileTypes">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.FileType">
+              <MappingFragment StoreEntitySet="FileType">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="fileType1" ColumnName="fileType" />
+                <ScalarProperty Name="fileTypeID" ColumnName="fileTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MessageFiles">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.MessageFile">
+              <MappingFragment StoreEntitySet="MessageFiles">
+                <ScalarProperty Name="fileContent" ColumnName="fileContent" />
+                <ScalarProperty Name="msgID" ColumnName="msgID" />
+                <ScalarProperty Name="msgFileID" ColumnName="msgFileID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Messages">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.Message">
+              <MappingFragment StoreEntitySet="Messages">
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="hasAttachment" ColumnName="hasAttachment" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="senderName" ColumnName="senderName" />
+                <ScalarProperty Name="subject" ColumnName="subject" />
+                <ScalarProperty Name="replyLink" ColumnName="replyLink" />
+                <ScalarProperty Name="isRead" ColumnName="isRead" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="to" ColumnName="to" />
+                <ScalarProperty Name="from" ColumnName="from" />
+                <ScalarProperty Name="mesage" ColumnName="mesage" />
+                <ScalarProperty Name="msgID" ColumnName="msgID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PatientLanguages">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.PatientLanguage">
+              <MappingFragment StoreEntitySet="PatientLanguages">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
+                <ScalarProperty Name="languageName" ColumnName="languageName" />
+                <ScalarProperty Name="patientLanguageID" ColumnName="patientLanguageID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

@@ -277,8 +277,7 @@ function SearchDoctor(patientID) {
                         tableHtml = tableHtml + "<li><div class='well profile_view clsDivDocList' style='position:relative;'>" +
                                " <a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel[item].doctorID + "nofav' class='fa fa-heart-o'  onclick='toggle(" + response.DoctorModel[item].doctorID + "," + patientID + ");return false;' style='display:block'></span></a>" +
                                "<a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel[item].doctorID + "fav' class='fa fa-heart'  onclick='untoggle(" + response.DoctorModel[item].doctorID + "," + patientID + ");return false;' style='display:none'></span></a>" +
-                                "<i class='crl fa fa-circle clsAvailableSpot' aria-hidden='true' style='color: green; cursor: pointer;font-size: 12px; position:absolute; right:2%; display:none;'></i>" +
-                                //"<i class='crl fa fa-circle clsNotAvailableSpot' aria-hidden='true' style='color: red; cursor: pointer;font-size: 12px; position:absolute; right:2%;'></i>" +
+                                "<i class='crl fa fa-circle clsAvailableSpot' aria-hidden='true' style='color: red; cursor: pointer;font-size: 12px; position:absolute; right:2%;'></i>" +
                                 "<img src='../Content/images/img.jpg' alt='' class='img-circle img-responsive m-b-10 m-t-0' style='margin: 0 auto;display: inline-block;'>" +
                                 "<h2 class='m-0'>" +
                                  " <a href='#' class='thumbnail-col-inner m-b-15' data-toggle='modal' data-target='#myModal2' style='word-wrap: break-word;font-size: 15px'>Dr." +
@@ -295,7 +294,7 @@ function SearchDoctor(patientID) {
                                   "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
                                   "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
                                   "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
-                                  "&nbsp;<a class='clsMakeCall' title='Call doctor " + response.DoctorModel[item].firstName + "&nbsp;" + response.DoctorModel[item].lastName + "' onclick='makeCallToDoctor(this)' data-doctorid='" + response.DoctorModel[item].doctorID + "' style='display:none;' href='javascript:'>" +
+                                  "&nbsp;<i class='fa fa-phone clsNotMakePhone' aria-hidden='true'></i><a class='clsMakeCall' title='Call doctor " + response.DoctorModel[item].firstName + "&nbsp;" + response.DoctorModel[item].lastName + "' onclick='makeCallToDoctor(this)' data-doctorid='" + response.DoctorModel[item].doctorID + "' style='display:none;' href='javascript:'>" +
                                   " <i class='fa fa-phone' aria-hidden='true'></i>" +
                         "</a>" +
                         "</p>" +

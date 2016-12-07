@@ -33,7 +33,7 @@ namespace DataAccess
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Consultation> Consultations { get; set; }
-        public virtual SystemItemss SystemItemss { get; set; }
         public virtual Patient Patient { get; set; }
+        public virtual SystemItemss SystemItemss { get; set; }
     }
 }
