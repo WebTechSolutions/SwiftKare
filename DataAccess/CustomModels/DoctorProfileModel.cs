@@ -23,7 +23,7 @@ namespace DataAccess.CustomModels
         public string state { get; set; }
         public string timezone { get; set; }
         public string secretQuestion1 { get; set; }
-        public DoctorLicenseState[] licensedState { get; set; }
+        public List<DoctorLicenseState> licensedState { get; set; }
         public string secretQuestion2 { get; set; }
         public string secretQuestion3 { get; set; }
         public string secretAnswer1 { get; set; }
