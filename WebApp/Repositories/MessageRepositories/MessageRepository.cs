@@ -38,6 +38,28 @@ namespace WebApp.Repositories.DoctorRepositories
             }
         }
 
+        /// <summary>
+        /// Gets message content based on message id
+        /// </summary>
+        /// <param name="msgID"></param>
+        /// <returns></returns>
+        public GetMessageModel GetMessageContent(long msgID)
+        {
+            try
+            {
+                string emailId = SessionHandler.UserInfo.Email;
+
+                var request = ApiConsumerHelper.GetResponseString("api/getMessageContent?msgID=" + msgID);
+                var result = JsonConvert.DeserializeObject<IEnumerable<GetMessageModel>>(request).FirstOrDefault();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                httpResponseMessage.Content = new StringContent(ex.Message);
+                throw new HttpResponseException(httpResponseMessage);
+            }
+        }
 
     }
 

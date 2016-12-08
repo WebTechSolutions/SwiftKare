@@ -49,103 +49,23 @@
                                                                             <div class="mail_list">
                                                                                 <div class="left">
                                                                                     <i class="fa fa-circle"></i>
-                                                                                    @if (item.hasAttachment ?? false)
+                                                                                    @if (item.hasAttachment)
                                                                                     {
                                                                                         <i class="fa fa-paperclip"></i>
                                                                                     }
-                                                                                   
                                                                                 </div>
                                                                                 <div class="right">
-                                                                                    <h3>@item.fromName <small>@item.sendTimeUtc.ToShortDateString()</small></h3>
+                                                                                    <h3>@item.senderName <small>@item.sentTime.Value.ToShortDateString()</small></h3>
                                                                                     <p>@item.subject</p>
                                                                                 </div>
                                                                             </div>
                                                                         </a>
                                                                     }
-
-                                                                    @*<a href="#">
-                                                                        <div class="mail_list">
-                                                                            <div class="left">
-                                                                                <i class="fa fa-circle"></i> <i class="fa fa-edit"></i>
-                                                                            </div>
-                                                                            <div class="right">
-                                                                                <h3>Dennis Mugo <small>3.00 PM</small></h3>
-                                                                                <p>Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </a>
-                                                                    <a href="#">
-                                                                        <div class="mail_list">
-                                                                            <div class="left">
-                                                                                <i class="fa fa-star" aria-hidden="true"></i>
-                                                                            </div>
-                                                                            <div class="right">
-                                                                                <h3>Jane Nobert <small>4.09 PM</small></h3>
-                                                                                <p><span class="badge">To</span> Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </a>
-                                                                    <a href="#">
-                                                                        <div class="mail_list">
-                                                                            <div class="left">
-                                                                                <i class="fa fa-circle-o"></i><i class="fa fa-paperclip"></i>
-                                                                            </div>
-                                                                            <div class="right">
-                                                                                <h3>Musimbi Anne <small>4.09 PM</small></h3>
-                                                                                <p><span class="badge">CC</span> Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </a>
-                                                                    <a href="#">
-                                                                        <div class="mail_list">
-                                                                            <div class="left">
-                                                                                <i class="fa fa-paperclip"></i>
-                                                                            </div>
-                                                                            <div class="right">
-                                                                                <h3>Jon Dibbs <small>4.09 PM</small></h3>
-                                                                                <p>Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </a>
-                                                                    <a href="#">
-                                                                        <div class="mail_list">
-                                                                            <div class="left">
-                                                                                <i class="fa fa-circle"></i> <i class="fa fa-edit"></i>
-                                                                            </div>
-                                                                            <div class="right">
-                                                                                <h3>Dennis Mugo <small>3.00 PM</small></h3>
-                                                                                <p>Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </a>
-                                                                    <a href="#">
-                                                                        <div class="mail_list">
-                                                                            <div class="left">
-                                                                                <i class="fa fa-star" aria-hidden="true"></i>
-                                                                            </div>
-                                                                            <div class="right">
-                                                                                <h3>Jane Nobert <small>4.09 PM</small></h3>
-                                                                                <p><span class="badge">To</span> Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </a>
-                                                                    <a href="#">
-                                                                        <div class="mail_list">
-                                                                            <div class="left">
-                                                                                <i class="fa fa-circle-o"></i><i class="fa fa-paperclip"></i>
-                                                                            </div>
-                                                                            <div class="right">
-                                                                                <h3>Musimbi Anne <small>4.09 PM</small></h3>
-                                                                                <p><span class="badge">CC</span> Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </a>*@
                                                                 </div><!-- compose -->
                                                                 <!-- /MAIL LIST -->
                                                                 <!-- CONTENT MAIL -->
                                                                 <div class="col-sm-9 mail_view">
                                                                     <div id="divInboxMsgBody" class="inbox-body">
-
                                                                     </div>
                                                                 </div>
                                                                 <!-- /CONTENT MAIL -->
@@ -1748,24 +1668,24 @@
 
     <script>
         //$(document).ready(function () {
-            $('#compose, .compose-close').click(function () {
-                $('.compose').slideToggle();
-            });
+        $('#compose, .compose-close').click(function () {
+            $('.compose').slideToggle();
+        });
 
-            $('#reply, .reply-close').click(function () {
-                $('.reply').slideToggle();
-            });
+        $('#reply, .reply-close').click(function () {
+            $('.reply').slideToggle();
+        });
 
-            $('#reply1, .reply1-close').click(function () {
-                $('.reply1').slideToggle();
-            });
+        $('#reply1, .reply1-close').click(function () {
+            $('.reply1').slideToggle();
+        });
 
-            $("[data-msgid]").click(function () {
-                var cUrl = "@Url.Action("GetMessageDetails","Messages")?msgId=" + $(this).data("msgid");
-                $.post(cUrl, function (oResp) {
-                    $("#divInboxMsgBody").html(oResp);
-                });
+        $("[data-msgid]").click(function () {
+            var cUrl = "@Url.Action("GetMessageDetails","Messages")?msgId=" + $(this).data("msgid");
+            $.post(cUrl, function (oResp) {
+                $("#divInboxMsgBody").html(oResp);
             });
+        });
 
         //});
 
