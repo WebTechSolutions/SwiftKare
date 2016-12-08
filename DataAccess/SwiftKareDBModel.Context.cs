@@ -1410,15 +1410,6 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetDcotorConsultations_Result>("SP_GetDcotorConsultations", doctorIDParameter);
         }
     
-        public virtual ObjectResult<SP_GetPatientConsultations_Result> SP_GetPatientConsultations(Nullable<long> patientID)
-        {
-            var patientIDParameter = patientID.HasValue ?
-                new ObjectParameter("patientID", patientID) :
-                new ObjectParameter("patientID", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConsultations_Result>("SP_GetPatientConsultations", patientIDParameter);
-        }
-    
         public virtual ObjectResult<SP_GetRescheduleAppforDoctor_Result> SP_GetRescheduleAppforDoctor(Nullable<long> doctorID)
         {
             var doctorIDParameter = doctorID.HasValue ?
@@ -1837,6 +1828,24 @@ namespace DataAccess
                 new ObjectParameter("functname", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_dropextendedproc1", functnameParameter);
+        }
+    
+        public virtual ObjectResult<SP_ViewPatientProfile_Result> SP_ViewPatientProfile(Nullable<long> patID)
+        {
+            var patIDParameter = patID.HasValue ?
+                new ObjectParameter("patID", patID) :
+                new ObjectParameter("patID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ViewPatientProfile_Result>("SP_ViewPatientProfile", patIDParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetPatientConsultations_Result> SP_GetPatientConsultations(Nullable<long> patientID)
+        {
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConsultations_Result>("SP_GetPatientConsultations", patientIDParameter);
         }
     }
 }
