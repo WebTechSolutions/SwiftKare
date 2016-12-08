@@ -11,8 +11,9 @@ namespace DataAccess.CustomModels
         public string message { get; set; }
         public string @from { get; set; }
         public string to { get; set; }
-       public Nullable<long> replyLink { get; set; }
-       public MessageFileModel[] msgFile { get; set; }
+        public Nullable<long> replyLink { get; set; }
+        public string subject { get; set; }
+        public MessageFileModel[] msgFile { get; set; }
 
     }
 }

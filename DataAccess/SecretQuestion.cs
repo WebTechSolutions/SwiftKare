@@ -10,15 +10,16 @@
 namespace DataAccess
 {
     using System;
+    using System.Collections.Generic;
     
-    public partial class SP_GetPatientConsultations1_Result
+    public partial class SecretQuestion
     {
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public Nullable<int> duration { get; set; }
-        public string review { get; set; }
-        public Nullable<int> reviewStar { get; set; }
-        public Nullable<System.TimeSpan> appTime { get; set; }
-        public Nullable<System.DateTime> appDate { get; set; }
+        public long secretQuestionID { get; set; }
+        public string secretQuestionn { get; set; }
+        public string cb { get; set; }
+        public Nullable<System.DateTime> cd { get; set; }
+        public string mb { get; set; }
+        public Nullable<System.DateTime> md { get; set; }
+        public Nullable<bool> active { get; set; }
     }
 }

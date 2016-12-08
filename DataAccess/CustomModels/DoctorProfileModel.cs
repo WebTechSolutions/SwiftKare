@@ -14,17 +14,16 @@ namespace DataAccess.CustomModels
         public string suffix { get; set; }
         public string city { get; set; }
         public string speciality { get; set; }
-        public string licensedState { get; set; }
         public string aboutMe { get; set; }
         public string specialization { get; set; }
-        public long workExperience { get; set; }
+        public string workExperience { get; set; }
         public string education { get; set; }
         public string publication { get; set; }
         public Nullable<long> consultCharges { get; set; }
         public string state { get; set; }
         public string timezone { get; set; }
-        public string email { get; set; }
         public string secretQuestion1 { get; set; }
+        public DoctorLicenseState[] licensedState { get; set; }
         public string secretQuestion2 { get; set; }
         public string secretQuestion3 { get; set; }
         public string secretAnswer1 { get; set; }

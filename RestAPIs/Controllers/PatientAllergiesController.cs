@@ -109,8 +109,9 @@ namespace RestAPIs.Controllers
                     return response;
                 }
 
-                pallergy = db.PatientAllergies.Where(all => all.allergyName.Trim() == model.allergyName.Trim() && all.active == true).FirstOrDefault();
-                if(pallergy== null)
+                pallergy = db.PatientAllergies.Where(all => all.patientID == model.patientID && all.allergyName.Trim() == model.allergyName.Trim() && all.active == true).FirstOrDefault();
+               
+                if (pallergy== null)
                 {
                     pallergy = new PatientAllergy();
                     pallergy.active = true;
@@ -167,7 +168,7 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid allergies ID." });
                     return response;
                 }
-                pallergy = db.PatientAllergies.Where(all => all.allergyName.Trim() == model.allergyName.Trim() && all.allergiesID != allergyID && all.active == true).FirstOrDefault();
+                pallergy = db.PatientAllergies.Where(all => all.patientID == model.patientID && all.allergyName.Trim() == model.allergyName.Trim() && all.allergiesID != allergyID && all.active == true).FirstOrDefault();
                 if (pallergy != null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Allergy already exists." });

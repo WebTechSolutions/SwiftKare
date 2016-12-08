@@ -12,12 +12,13 @@ namespace DataAccess
     using System;
     using System.Collections.Generic;
     
-    public partial class FileType
+    public partial class PatientLanguage
     {
-        public long fileTypeID { get; set; }
-        public string typeName { get; set; }
-        public string cb { get; set; }
+        public long patientLanguageID { get; set; }
+        public string languageName { get; set; }
+        public Nullable<long> patientID { get; set; }
         public Nullable<System.DateTime> cd { get; set; }
+        public string cb { get; set; }
         public string mb { get; set; }
         public Nullable<System.DateTime> md { get; set; }
         public Nullable<bool> active { get; set; }

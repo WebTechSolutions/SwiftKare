@@ -54,7 +54,7 @@ namespace WebApp.Repositories.PatientRepositories
 
         public PatientModel GetByUserId(string userId)
         {
-            var response = ApiConsumerHelper.GetResponseString("api/Patients?userId=" + userId);
+            var response = ApiConsumerHelper.GetResponseString("api/Patients?userId=" + userId,false);
             var result = JsonConvert.DeserializeObject<PatientModel>(response);
             return result;
         }

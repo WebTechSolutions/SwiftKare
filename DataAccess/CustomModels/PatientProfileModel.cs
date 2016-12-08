@@ -15,8 +15,8 @@ namespace DataAccess.CustomModels
         public string city { get; set; }
         public string state { get; set; }
         public string timezone { get; set; }
-        public Nullable<long> height { get; set; }
-        public Nullable<long> weight { get; set; }
+        public Nullable<int> height { get; set; }
+        public Nullable<int> weight { get; set; }
         public string email { get; set; }
         public string secretQuestion1 { get; set; }
         public string secretQuestion2 { get; set; }

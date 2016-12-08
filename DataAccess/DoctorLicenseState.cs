@@ -17,6 +17,11 @@ namespace DataAccess
         public long doctorLicenseStateID { get; set; }
         public Nullable<long> doctorID { get; set; }
         public string stateName { get; set; }
+        public string cb { get; set; }
+        public Nullable<System.DateTime> cd { get; set; }
+        public string mb { get; set; }
+        public Nullable<System.DateTime> md { get; set; }
+        public Nullable<bool> active { get; set; }
     
         public virtual Doctor Doctor { get; set; }
     }

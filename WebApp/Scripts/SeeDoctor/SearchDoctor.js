@@ -139,7 +139,7 @@ function GetAllLanguages() {
 
 }
 function favDoctors(patientID) {
-    blockUI();
+    
     $.ajax({
         type: 'POST',
         //url: '@Url.Action("GetAllLanguages", "SeeDoctor")',
@@ -294,7 +294,7 @@ function SearchDoctor(patientID) {
                                   "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
                                   "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
                                   "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
-                                  "&nbsp;<i class='fa fa-phone clsNotMakePhone' aria-hidden='true'></i><a class='clsMakeCall' title='Call doctor " + response.DoctorModel[item].firstName + "&nbsp;" + response.DoctorModel[item].lastName + "' onclick='makeCallToDoctor(this)' data-doctorid='" + response.DoctorModel[item].doctorID + "' style='display:none;' href='javascript:'>" +
+                                  "&nbsp;<i class='fa fa-phone clsNotMakePhone' aria-hidden='true'></i><a  class='clsMakeCall' title='Call doctor " + response.DoctorModel[item].firstName + "&nbsp;" + response.DoctorModel[item].lastName + "' onclick='makeCallToDoctor(this)' data-doctorid='" + response.DoctorModel[item].doctorID + "' style='display:none;' href='javascript:'>" +
                                   " <i class='fa fa-phone' aria-hidden='true'></i>" +
                         "</a>" +
                         "</p>" +

@@ -21,5 +21,10 @@ namespace DataAccess
         public string status { get; set; }
         public Nullable<bool> isRead { get; set; }
         public Nullable<long> replyLink { get; set; }
+        public string subject { get; set; }
+        public string senderName { get; set; }
+        public Nullable<System.DateTime> cd { get; set; }
+        public Nullable<bool> hasAttachment { get; set; }
+        public Nullable<System.DateTime> md { get; set; }
     }
 }

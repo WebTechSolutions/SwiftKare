@@ -101,7 +101,7 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient ID is not valid." });
                     return response;
                 }
-                medication = db.Medications.Where(m => m.medicineName == model.medicineName && m.active == true).FirstOrDefault();
+                medication = db.Medications.Where(m => m.patientId == model.patientId && m.medicineName.Trim() == model.medicineName.Trim() && m.active == true).FirstOrDefault();
                 if (medication == null)
                 {
                     medication = new Medication();
@@ -118,7 +118,7 @@ namespace RestAPIs.Controllers
                 }
                 else
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medicine name already exists." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medicine already exists." });
                     return response;
                 }
                
@@ -164,11 +164,11 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient ID is not valid." });
                     return response;
                 }
-                medication = db.Medications.Where(m => m.medicationID != medicationID && m.medicineName.Trim() == model.medicineName.Trim() && m.active == true).FirstOrDefault();
+                medication = db.Medications.Where(m => m.patientId == model.patientId && m.medicationID != medicationID && m.medicineName.Trim() == model.medicineName.Trim() && m.active == true).FirstOrDefault();
                 if (medication != null)
                 {
                     //conditionID = -1;
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medication name already exists." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medication already exists." });
                     return response;
                 }
 

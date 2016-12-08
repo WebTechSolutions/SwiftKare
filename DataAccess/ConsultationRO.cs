@@ -31,9 +31,9 @@ namespace DataAccess
         public string systemItemName { get; set; }
         public Nullable<long> consultationID { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Consultation> Consultations { get; set; }
         public virtual Patient Patient { get; set; }
         public virtual SystemItemss SystemItemss { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Consultation> Consultations { get; set; }
     }
 }

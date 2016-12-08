@@ -36,13 +36,30 @@ namespace RestAPIs.Controllers
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> SendMessage(MessageCustomModel model)
         {
-            Message email = new Message();
-
             try
             {
-               if(model.to == "" || model.to == null)
+                Message email = new Message();
+                string fromName = "";
+                var docsender = (from doc in db.Doctors where doc.email == model.@from select new DoctorModel { firstName = doc.firstName, lastName = doc.lastName }).FirstOrDefault();
+                var patsender = (from pat in db.Patients where pat.email == model.@from select new PatientModel { firstName = pat.firstName, lastName = pat.lastName }).FirstOrDefault();
+
+            if(docsender!=null)
+            {
+                fromName = docsender.firstName + " " + docsender.lastName;
+            }
+            if (patsender != null)
+            {
+                fromName = patsender.firstName + " " + patsender.lastName;
+            }
+           
+                if(model.to=="0")
                 {
                     model.to = "support@swiftkare.com";
+                }
+               if(model.to == "" || model.to == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Reciever's email address is invalid." });
+                    return response;
                 }
                 if (!(IsValid(model.to)))
                 {
@@ -60,22 +77,26 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Empty message is not allowed." });
                     return response;
                 }
-                
+
+                email.cd = System.DateTime.Now;
+                email.senderName = fromName;
+                email.subject = model.subject;
                 email.mesage = model.message;
                 email.from = model.from;
                 email.to = model.to;
                 email.isRead = false;
                 email.status = "1";
                 email.replyLink = model.replyLink;
+                if (model.msgFile != null)
+                {
+                    email.hasAttachment = true;
+                }
+                if (model.msgFile == null)
+                {
+                    email.hasAttachment = false;
+                }
                 db.Messages.Add(email);
                 await db.SaveChangesAsync();
-                //byte[] cover = null;
-                //var img = from temp in db.News where temp.newsID == 1 select temp.newsThumbnail;
-                //cover = img.First();
-                
-                //model.msgFile[0].fileContent = cover;
-                //model.msgFile[1].fileContent = cover;
-                //model.msgFile[2].fileContent = cover;
                 if (model.msgFile!=null)
                 {
                    
@@ -84,6 +105,7 @@ namespace RestAPIs.Controllers
                         MessageFile emailattch = new MessageFile();
                         emailattch.msgID = email.msgID;
                         emailattch.fileContent = item.fileContent;
+                        emailattch.fileName = item.fileName;
                         db.MessageFiles.Add(emailattch);
                         await db.SaveChangesAsync();
                     }
@@ -121,6 +143,7 @@ namespace RestAPIs.Controllers
                     return response;
                 }
                 email.isRead = true;
+                email.md = System.DateTime.Now;
                 db.Entry(email).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = msgID, message = "" });
@@ -129,6 +152,84 @@ namespace RestAPIs.Controllers
             catch (Exception ex)
             {
                 return ThrowError(ex, "ReadMessage in MessagesController.");
+            }
+
+
+        }
+
+        [Route("api/saveMessage")]
+        public async Task<HttpResponseMessage> SaveMessage(MessageCustomModel model)
+        {
+            Message email = new Message();
+
+            try
+            {
+                string fromName = "";
+                var docsender = (from doc in db.Doctors where doc.email == model.@from select new DoctorModel { firstName = doc.firstName, lastName = doc.lastName }).FirstOrDefault();
+                var patsender = (from pat in db.Patients where pat.email == model.@from select new PatientModel { firstName = pat.firstName, lastName = pat.lastName }).FirstOrDefault();
+
+                if (docsender != null)
+                {
+                    fromName = docsender.firstName + " " + docsender.lastName;
+                }
+                if (patsender != null)
+                {
+                    fromName = patsender.firstName + " " + patsender.lastName;
+                }
+
+                if (model.from == null || model.from == "" || !(IsValid(model.from)))
+
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Sender's email address is invalid." });
+                    return response;
+                }
+                if (model.message == null || model.message == "")
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Empty message is not allowed." });
+                    return response;
+                }
+
+                email.cd = System.DateTime.Now;
+                email.senderName = fromName;
+                email.subject = model.subject;
+                email.mesage = model.message;
+                email.from = model.from;
+                email.to = model.to;
+                email.isRead = true;
+                email.status = "2";
+                email.replyLink = model.replyLink;
+                if (model.msgFile != null)
+                {
+                    email.hasAttachment = true;
+                }
+                if (model.msgFile == null)
+                {
+                    email.hasAttachment = false;
+                }
+                db.Messages.Add(email);
+                await db.SaveChangesAsync();
+                
+                if (model.msgFile != null)
+                {
+
+                    foreach (var item in model.msgFile)
+                    {
+                        MessageFile emailattch = new MessageFile();
+                        emailattch.msgID = email.msgID;
+                        emailattch.fileContent = item.fileContent;
+                        emailattch.fileName = item.fileName;
+                        db.MessageFiles.Add(emailattch);
+                        await db.SaveChangesAsync();
+                    }
+                }
+
+                response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = email.msgID, message = "" });
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "SaveMessage in MessagesController.");
             }
 
 
@@ -153,6 +254,7 @@ namespace RestAPIs.Controllers
                     return response;
                 }
                 email.status = "3";
+                email.md = System.DateTime.Now;
                 db.Entry(email).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = msgID, message = "" });
@@ -170,20 +272,26 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                var mesgs = (from l in db.Messages
-                                  where l.status != "3" && l.to == email
-                                  orderby l.msgID descending
-                                  select new GetMessageModel
-                                  {
-                                      msgID = l.msgID,
-                                      @from = l.@from,
-                                      to = l.to,
-                                      isRead = l.isRead,
-                                      message=l.mesage,
-                                      replyLink=l.replyLink,
-                                      status=l.status,
-                                      msgFiles = db.MessageFiles.Where(f=>f.msgID==l.msgID).ToList()
+                if(!(IsValid(email)))
+                    {
+                        response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid email address." });
+                        return response;
 
+                     }
+                var mesgs = (from l in db.Messages
+                                  where l.status != "3" && l.status != "2" && l.to == email
+                                  orderby l.msgID descending
+                                  select new MessageListModel
+                                  {
+                                      messageID = l.msgID,
+                                      @from = l.@from,
+                                      senderName=l.senderName,
+                                      isRead = l.isRead,
+                                      subject=l.subject,
+                                      hasAttachment=l.hasAttachment,
+                                      replyLink=l.replyLink,
+                                      sentTime=l.cd
+                                      
                                   }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, mesgs);
                 return response;
@@ -200,19 +308,26 @@ namespace RestAPIs.Controllers
         {
             try
             {
+                if (!(IsValid(email)))
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid email address." });
+                    return response;
+
+                }
                 var mesgs = (from l in db.Messages
                              where l.@from == email && l.status=="2"
                              orderby l.msgID descending
-                             select new GetMessageModel
+                             select new MessageListModel
                              {
-                                 msgID = l.msgID,
+                                 messageID = l.msgID,
                                  @from = l.@from,
-                                 to = l.to,
+                                 senderName = l.senderName,
                                  isRead = l.isRead,
-                                 message = l.mesage,
+                                 subject = l.subject,
+                                 hasAttachment = l.hasAttachment,
                                  replyLink = l.replyLink,
-                                 status = "Draft",
-                                 msgFiles = db.MessageFiles.Where(f=>f.msgID==l.msgID).ToList()
+                                 sentTime = l.cd
+
                              }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, mesgs);
                 return response;
@@ -228,18 +343,26 @@ namespace RestAPIs.Controllers
         {
             try
             {
+                if (!(IsValid(email)))
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid email address." });
+                    return response;
+
+                }
                 var mesgs = (from l in db.Messages
                              where l.@from == email && l.status == "1"
                              orderby l.msgID descending
-                             select new GetMessageModel
+                             select new MessageListModel
                              {
-                                 msgID = l.msgID,
+                                 messageID = l.msgID,
                                  @from = l.@from,
-                                 to = l.to,
-                                 message = l.mesage,
+                                 senderName = l.senderName,
+                                 isRead = l.isRead,
+                                 subject = l.subject,
+                                 hasAttachment = l.hasAttachment,
                                  replyLink = l.replyLink,
-                                 status ="Sent",
-                                 msgFiles = db.MessageFiles.Where(f => f.msgID == l.msgID).ToList()
+                                 sentTime = l.cd
+
                              }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, mesgs);
                 return response;
@@ -255,19 +378,26 @@ namespace RestAPIs.Controllers
         {
             try
             {
+                if (!(IsValid(email)))
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid email address." });
+                    return response;
+
+                }
                 var mesgs = (from l in db.Messages
                              where l.to == email && l.status == "3"
                              orderby l.msgID descending
-                             select new GetMessageModel
+                             select new MessageListModel
                              {
-                                 msgID = l.msgID,
+                                 messageID = l.msgID,
                                  @from = l.@from,
-                                 to = l.to,
-                                 message = l.mesage,
-                                 isRead=l.isRead,
+                                 senderName = l.senderName,
+                                 isRead = l.isRead,
+                                 subject = l.subject,
+                                 hasAttachment = l.hasAttachment,
                                  replyLink = l.replyLink,
-                                 status = "Deleted",
-                                 msgFiles = db.MessageFiles.Where(f => f.msgID == l.msgID).ToList()
+                                 sentTime = l.cd
+
                              }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, mesgs);
                 return response;
@@ -278,6 +408,74 @@ namespace RestAPIs.Controllers
             }
         }
 
+        [Route("api/getMessageContent")]
+        public HttpResponseMessage GetMessageContent(long msgID)
+        {
+            try
+            {
+                
+                var mesgs = (from l in db.Messages
+                             where l.status != "3" && l.status != "2" && l.msgID==msgID
+                             orderby l.msgID descending
+                             select new GetMessageModel
+                             {
+                                 msgID = l.msgID,
+                                 message = l.mesage,
+                                 senderName = l.senderName,
+                                 subject = l.subject,
+                                 sentTime = l.cd,
+                                 @from=l.@from,
+                                 msgFiles=(from mf in db.MessageFiles where mf.msgID==l.msgID select new MessageFileModel{ msgFileID=mf.msgFileID,msgID=mf.msgID,
+                                     fileName = mf.fileName,fileContent=mf.fileContent })
+                                 .ToList()
+
+                             }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, mesgs);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetInboxMessages in MessagesController");
+            }
+        }
+
+        [Route("api/getDoctorEmails")]
+        public HttpResponseMessage GetDoctorEmails(string search)
+        {
+            try
+            {
+
+                var result = (from doc in db.Doctors
+                              where doc.email.ToLower().Contains(search.ToLower())
+                              select doc.email).Distinct().Take(10);
+                
+                response = Request.CreateResponse(HttpStatusCode.OK, result);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetDoctorEmails in MessagesController");
+            }
+        }
+
+        [Route("api/getPatientEmails")]
+        public HttpResponseMessage GetPatientEmails(string search)
+        {
+            try
+            {
+
+                var result = (from pat in db.Patients
+                              where pat.email.ToLower().Contains(search.ToLower())
+                              select pat.email).Distinct().Take(10);
+
+                response = Request.CreateResponse(HttpStatusCode.OK, result);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetPatientEmails in MessagesController");
+            }
+        }
 
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {

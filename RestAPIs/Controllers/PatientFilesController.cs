@@ -24,7 +24,7 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                var files = db.FileTypes.Where(f => f.active == true).ToList();
+                var files = (from f in db.FileTypes where f.active==true select new { f.fileTypeID,f.typeName}).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, files);
                 return response;
             }
@@ -164,7 +164,7 @@ namespace RestAPIs.Controllers
                 }
                 
                 //check for duplicate names
-                patFile = db.UserFiles.Where(m => m.fileID != fileID && m.FileName == model.FileName.Trim() && m.active == true).FirstOrDefault();
+                patFile = db.UserFiles.Where(m => m.fileID != fileID && m.patientID==model.patientID && m.FileName == model.FileName.Trim() && m.active == true).FirstOrDefault();
                 if (patFile != null)
                 {
                     
@@ -183,12 +183,6 @@ namespace RestAPIs.Controllers
                     patFile.active = true;
                     patFile.FileName = model.FileName;
                     patFile.md = System.DateTime.Now;
-                    //static files for testing api
-                    byte[] cover = null;
-                    var img = from temp in db.News where temp.newsID == 1 select temp.newsThumbnail;
-                    cover = img.First();
-                    model.fileContent = cover;
-                    //static files for testing api
                     patFile.fileContent = model.fileContent;
                     patFile.documentType = model.documentType;
                     patFile.mb = model.patientID.ToString();
@@ -249,7 +243,7 @@ namespace RestAPIs.Controllers
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
            
-            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Following Error occurred at method:" + Action + "\n" + ex.Message });
+            response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = "Following Error occurred at method:" + Action + "\n" + ex.Message });
             return response;
         }
 

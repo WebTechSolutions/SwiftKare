@@ -105,11 +105,19 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
                     return response;
                 }
-
+                string outputTime = "";
                 app.active = true;
                 app.doctorID = model.doctorID;
                 app.patientID = model.patientID;
-                app.appTime = model.appTime;
+                if (model.appTime.Contains("AM"))
+                {
+                    outputTime = model.appTime.Replace("AM", "");
+                }
+                if (model.appTime.Contains("PM"))
+                {
+                    outputTime = model.appTime.Replace("PM", "");
+                }
+                app.appTime = TimeSpan.Parse(outputTime);
                 app.appDate =Convert.ToDateTime(model.appDate);
                 app.rov = model.rov;
                 app.chiefComplaints = model.chiefComplaints;
