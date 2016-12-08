@@ -420,21 +420,21 @@ namespace WebApp.Controllers
             {
                 PatientRepository objRepo = new PatientRepository();
                 var resultAdd = objRepo.GetByUserId(user.Id);
-                //switch (caseSwitch)
-                //{
-                //    case 1:
-                //        objModel.SecretQuestion = resultAdd.secretQuestion1;
-                //        objModel.SecretAnswerHidden = resultAdd.secretAnswer1;
-                //        break;
-                //    case 2:
-                //        objModel.SecretQuestion = resultAdd.secretQuestion2;
-                //        objModel.SecretAnswerHidden = resultAdd.secretAnswer2;
-                //        break;
-                //    default:
-                //        objModel.SecretQuestion = resultAdd.secretQuestion3;
-                //        objModel.SecretAnswerHidden = resultAdd.secretAnswer3;
-                //        break;
-                //}
+                switch (caseSwitch)
+                {
+                    case 1:
+                        objModel.SecretQuestion = resultAdd.secretQuestion1;
+                        objModel.SecretAnswerHidden = resultAdd.secretAnswer1;
+                        break;
+                    case 2:
+                        objModel.SecretQuestion = resultAdd.secretQuestion2;
+                        objModel.SecretAnswerHidden = resultAdd.secretAnswer2;
+                        break;
+                    default:
+                        objModel.SecretQuestion = resultAdd.secretQuestion3;
+                        objModel.SecretAnswerHidden = resultAdd.secretAnswer3;
+                        break;
+                }
             }
             else if (roles.Contains("Doctor"))
             {
