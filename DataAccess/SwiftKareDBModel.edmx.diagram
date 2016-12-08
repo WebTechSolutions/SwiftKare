@@ -80,6 +80,9 @@
         <AssociationConnector Association="SwiftKareDBModel.FK_SystemItems_Systems" />
         <AssociationConnector Association="SwiftKareDBModel.FK_RoleModules_Roles" />
         <AssociationConnector Association="SwiftKareDBModel.AspNetUserRoles" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.FileType" Width="1.5" PointX="20.375" PointY="7.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.MessageFile" Width="1.5" PointX="10.375" PointY="20.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Message" Width="1.5" PointX="20.375" PointY="11.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

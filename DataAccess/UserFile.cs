@@ -23,6 +23,7 @@ namespace DataAccess
         public Nullable<bool> active { get; set; }
         public string FileName { get; set; }
         public byte[] fileContent { get; set; }
+        public string fileurl { get; set; }
         public Nullable<long> patientID { get; set; }
         public Nullable<long> doctorID { get; set; }
     

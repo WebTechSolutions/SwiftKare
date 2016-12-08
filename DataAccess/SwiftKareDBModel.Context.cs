@@ -75,6 +75,9 @@ namespace DataAccess
         public virtual DbSet<SystemItemss> SystemItemsses { get; set; }
         public virtual DbSet<UserFile> UserFiles { get; set; }
         public virtual DbSet<Zip> Zips { get; set; }
+        public virtual DbSet<FileType> FileTypes { get; set; }
+        public virtual DbSet<MessageFile> MessageFiles { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
     
         public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
         {
@@ -1832,6 +1835,15 @@ namespace DataAccess
                 new ObjectParameter("functname", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_dropextendedproc1", functnameParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetPatientConsultations1_Result> SP_GetPatientConsultations1(Nullable<long> patientID)
+        {
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConsultations1_Result>("SP_GetPatientConsultations1", patientIDParameter);
         }
     }
 }
