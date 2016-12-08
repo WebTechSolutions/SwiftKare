@@ -34,6 +34,9 @@ function setDoctorID(doctorID)
 {
    
     _selecteddoctorID = doctorID;// $("#doctorid").val();
+    $("#doctorid").val(_selecteddoctorID);
+    _objAppointment["appTime"] = getClockTime();
+   
 }
 function setDateTime(myappTime,myappDate)
 {
@@ -109,6 +112,11 @@ function showApppointmentSummary() {
 
         ROV = "";
     }
+    if (_objAppointment["appTime"] == null) {
+
+        _objAppointment["appTime"] = getClockTime();
+        //alert(_objAppointment["appTime"]);
+    }
    // _objAppointment["appDate"] = myappDate;
    // _objAppointment["appTime"] = myappTime;
     customDateFormat(_objAppointment["appDate"]);
@@ -178,18 +186,14 @@ function getClockTime()
                      minute+
                      //':' +
                      //second +
-                     //" " +
+                     " " +
                      ap;
     return timeString;
 } // function getClockTime()
 
 //-->
 function CreateAppointment(patientID,amount) {
-    if (_objAppointment["appTime"] == null)
-    {
-        //alert('ct');
-        _objAppointment["appTime"]=getClockTime();
-    }
+   
     _objAppointment["appDate"] = $("#fetchdate").val();
     _objAppointment["doctorID"] = $("#doctorid").val();
     _objAppointment["patientID"] = patientID;

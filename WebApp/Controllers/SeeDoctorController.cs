@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System.Configuration;
 using WebApp.Helper;
+using System.Globalization;
 
 namespace WebApp.Controllers
 {
@@ -131,6 +132,7 @@ namespace WebApp.Controllers
             }
 
         }
+       
         private List<string> displayTimeSlots(IEnumerable<FetchDoctorTimingModel> appList)
         {
             List<string> timeSlots = new List<string> { };
@@ -199,17 +201,21 @@ namespace WebApp.Controllers
             }
            for(var i=0;i<timeSlots.Count;i++)
             {
-                TimeSpan doctimings = TimeSpan.Parse(timeSlots[i]); 
-                if (doctimings.Hours<12)
-                {
-                    timeSlots.RemoveAt(i);
-                    timeSlots.Insert(i, doctimings.ToString(@"hh\:mm") + " AM");
-                }
-               else if(doctimings.Hours >= 12)
-                {
-                    timeSlots.RemoveAt(i);
-                    timeSlots.Insert(i, doctimings.ToString(@"hh\:mm") + " PM");
-                }
+                TimeSpan doctimings = TimeSpan.Parse(timeSlots[i]);
+                var dateTime = new DateTime(doctimings.Ticks); // Date part is 01-01-0001
+                var formattedTime = dateTime.ToString("h:mm tt", CultureInfo.InvariantCulture);
+                timeSlots.RemoveAt(i);
+                timeSlots.Insert(i, formattedTime);
+                // if (doctimings.Hours<12)
+                // {
+                //     timeSlots.RemoveAt(i);
+                //     timeSlots.Insert(i, doctimings.ToString(@"hh\:mm") + " AM");
+                // }
+                //else if(doctimings.Hours >= 12)
+                // {
+                //     timeSlots.RemoveAt(i);
+                //     timeSlots.Insert(i, doctimings.ToString(@"hh\:mm") + " PM");
+                // }
             }
             return timeSlots;
         }

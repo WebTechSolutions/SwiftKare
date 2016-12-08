@@ -420,9 +420,7 @@
         }
 
         function makeCallToDoctor(e) {
-            //var test = $(this).attr("data-doctorid");
-            //alert(test);
-            //setDoctorID(e.target.id);
+            setDoctorID($(e).attr("data-doctorid"));
             var curElem = $(e);
             var PatientName = "Patient";
             //alert("calling");
