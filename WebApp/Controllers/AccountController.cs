@@ -551,8 +551,15 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            var roles = UserManager.GetRoles(SessionHandler.UserId);
+            var actionName = "Login";
+            if (roles.Contains("Doctor"))
+                actionName = "DoctorLogin";
+            else if (roles.Contains("Patient"))
+                actionName = "PatientLogin";
+
             AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(actionName, "Account");
         }
 
 
