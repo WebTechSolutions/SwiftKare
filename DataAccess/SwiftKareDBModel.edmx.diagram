@@ -85,7 +85,7 @@
         <AssociationConnector Association="SwiftKareDBModel.FK_DoctorSpeciality_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_DoctorTimings_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_UserFiles_Doctor" />
-      </Diagram>
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>
