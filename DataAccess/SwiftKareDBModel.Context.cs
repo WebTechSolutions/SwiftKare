@@ -1410,15 +1410,6 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetDcotorConsultations_Result>("SP_GetDcotorConsultations", doctorIDParameter);
         }
     
-        public virtual ObjectResult<SP_GetPatientConsultations_Result> SP_GetPatientConsultations(Nullable<long> patientID)
-        {
-            var patientIDParameter = patientID.HasValue ?
-                new ObjectParameter("patientID", patientID) :
-                new ObjectParameter("patientID", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConsultations_Result>("SP_GetPatientConsultations", patientIDParameter);
-        }
-    
         public virtual ObjectResult<SP_GetRescheduleAppforDoctor_Result> SP_GetRescheduleAppforDoctor(Nullable<long> doctorID)
         {
             var doctorIDParameter = doctorID.HasValue ?
@@ -1839,35 +1830,22 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_dropextendedproc1", functnameParameter);
         }
     
-        public virtual int sp_addextendedproc2(string functname, string dllname)
+        public virtual ObjectResult<SP_ViewPatientProfile_Result> SP_ViewPatientProfile(Nullable<long> patID)
         {
-            var functnameParameter = functname != null ?
-                new ObjectParameter("functname", functname) :
-                new ObjectParameter("functname", typeof(string));
+            var patIDParameter = patID.HasValue ?
+                new ObjectParameter("patID", patID) :
+                new ObjectParameter("patID", typeof(long));
     
-            var dllnameParameter = dllname != null ?
-                new ObjectParameter("dllname", dllname) :
-                new ObjectParameter("dllname", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_addextendedproc2", functnameParameter, dllnameParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ViewPatientProfile_Result>("SP_ViewPatientProfile", patIDParameter);
         }
     
-        public virtual int sp_dropextendedproc2(string functname)
-        {
-            var functnameParameter = functname != null ?
-                new ObjectParameter("functname", functname) :
-                new ObjectParameter("functname", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_dropextendedproc2", functnameParameter);
-        }
-    
-        public virtual ObjectResult<SP_GetPatientConsultations1_Result> SP_GetPatientConsultations1(Nullable<long> patientID)
+        public virtual ObjectResult<SP_GetPatientConsultations_Result> SP_GetPatientConsultations(Nullable<long> patientID)
         {
             var patientIDParameter = patientID.HasValue ?
                 new ObjectParameter("patientID", patientID) :
                 new ObjectParameter("patientID", typeof(long));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConsultations1_Result>("SP_GetPatientConsultations1", patientIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConsultations_Result>("SP_GetPatientConsultations", patientIDParameter);
         }
     }
 }

@@ -23,6 +23,7 @@ namespace WebApp.Models
         private ApplicationGlobalVariables()
         {
             ApiBaseUrl = "http://localhost:13040/";
+            // ApiBaseUrl = "http://13.91.42.71:8079/";
             ClientId = "abc";
             Secret = "ddddddddd";
         }
