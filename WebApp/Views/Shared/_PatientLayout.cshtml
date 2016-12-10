@@ -17,10 +17,49 @@
 
     @*@Scripts.Render("~/bundles/jquery")*@
     @Scripts.Render("~/bundles/js")
+    <script src="@Url.Content("~/Scripts/blockUI.js")"></script>
 
-    <style>
+    <style type="text/css">
         body {
             background-image: url("../../Content/images/bg.jpg");
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+            padding: 0px;
+            border-radius: 100%;
+            border: 6px solid;
+            border-top-color: #005a9c;
+            border-bottom-color: #005a9c;
+            border-left-color: rgba(0, 90, 156, 0.15);
+            border-right-color: rgba(0, 90, 156, 0.15);
+            -webkit-animation: spinner 0.8s ease-in-out infinite alternate;
+            animation: spinner 0.8s ease-in-out infinite alternate;
+        }
+
+        @@keyframes spinner {
+            from {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @@-webkit-keyframes spinner {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -83,10 +122,7 @@
                                     <a href="my_health.html"><img src="~/Content/images/my-health.png" alt=""> &nbsp <span class="menu-txt">My Health</span> </a>
                                 </li>
                                 <li class="message">
-                                    <a href="#"><img src="~/Content/images/my-files.png" alt=""> &nbsp <span class="menu-txt">My Files</span> </a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="file.html">My Files</a></li>
-                                    </ul>
+                                    <a href="@Url.Action("Index","PatientFiles")"><img src="~/Content/images/my-files.png" alt=""> &nbsp <span class="menu-txt">My Files</span> </a>
                                 </li>
                                 <li class="call_history">
                                     <a href="#"><img src="~/Content/images/my-doctors1.png" alt="">  &nbsp <span class="menu-txt">My Doctors</span> </a>
@@ -519,13 +555,14 @@
                     // Clear text box and reset focus for next comment.
                 });
 
-                
+
 
             });
         });
     </script>
 
 
+    @RenderSection("scripts", required: false)
 
 </body>
 </html>
