@@ -34,8 +34,8 @@
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <label for="time" class="control-label">From Time</label>
-                    <div class='input-group date' id='div_DoctorTiming_from'>
-                        <input type='time' class="form-control" id="DoctorTiming_from" />
+                    <div class='input-group date'>
+                        <input type='text' class="form-control" id="DoctorTiming_from" />
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-time"></span>
                         </span>
@@ -44,7 +44,7 @@
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <label for="time" class="control-label">To Time</label>
                     <div class='input-group date' id='div_DoctorTiming_to'>
-                        <input type='time' class="form-control" id="DoctorTiming_to" />
+                        <input type='text' class="form-control" id="DoctorTiming_to" />
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-time"></span>
                         </span>
@@ -90,10 +90,10 @@
 
         $(document).ready(function () {
             GetTimings();
-            $('#div_DoctorTiming_from').datetimepicker({
+            $('#DoctorTiming_from').datetimepicker({
                 format: 'LT'
             });
-            $('#div_DoctorTiming_to').datetimepicker({
+            $('#DoctorTiming_to').datetimepicker({
                 format: 'LT'
             });
 
