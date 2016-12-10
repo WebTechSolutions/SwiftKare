@@ -497,6 +497,7 @@
             };
 
             // Start the connection
+            $.connection.hub.logging = true;
             $.connection.hub.start().done(function () {
                 var id = $.cookie('Id');
                 chat.server.adminJoin().done(function () {
