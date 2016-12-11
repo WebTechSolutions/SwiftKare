@@ -34,6 +34,9 @@ namespace WebApp.Controllers
         // GET: Patient
         public ActionResult Index()
         {
+            var oAllFileTypes = oPatientFilesRepository.GetPatientFileTypes();
+            ViewBag.drpFileTypes = oAllFileTypes.Select(x => new SelectListItem { Text = x.typeName, Value = x.typeName });
+
             return View();
         }
 
@@ -75,8 +78,8 @@ namespace WebApp.Controllers
 
                         oPatientFilesRepository.AddPatientFiles(new DataAccess.CustomModels.FilesCustomModel
                         {
-                            documentType = System.IO.Path.GetExtension(fileName).Trim('.'),
-                            FileName = RemoveSpecialCharacters(Path.GetFileNameWithoutExtension(fileName)),
+                            documentType = Convert.ToString(Request["fileType"]),
+                            FileName = Path.GetFileName(fileName),
                             fileContent = oByteStream.ToArray(),
                             patientID = SessionHandler.UserInfo.Id,
                             doctorID = -1
@@ -109,10 +112,10 @@ namespace WebApp.Controllers
         {
             var oFileToDownload = oPatientFilesRepository.GetPatientFile(SessionHandler.UserInfo.Id, fileId);
 
-            string fileName = string.Format("{0}.{1}", oFileToDownload.FileName, oFileToDownload.documentType);
+            string fileName = oFileToDownload.FileName;
             string contentType = string.Empty;
 
-            switch (oFileToDownload.documentType.ToLower())
+            switch (Path.GetExtension(oFileToDownload.FileName).Trim('.').ToLower())
             {
                 case "txt":
                     contentType = "text/plain";

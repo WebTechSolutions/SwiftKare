@@ -95,11 +95,11 @@ namespace RestAPIs.Controllers
             try
             {
 
-                if (model.FileName == null || model.FileName == "" || !Regex.IsMatch(model.FileName.Trim(), "^[0-9a-zA-Z ]+$"))
-                {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid file name. Only letters and numbers are allowed." });
-                    return response;
-                }
+                //if (model.FileName == null || model.FileName == "" || !Regex.IsMatch(model.FileName.Trim(), "^[0-9a-zA-Z ]+$"))
+                //{
+                //    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid file name. Only letters and numbers are allowed." });
+                //    return response;
+                //}
                 if (model.patientID == null || model.patientID == 0)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });

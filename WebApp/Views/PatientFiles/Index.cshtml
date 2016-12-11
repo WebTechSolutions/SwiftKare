@@ -21,13 +21,20 @@
                     <h2>Upload New Files</h2>
                     <form id="frmUpload" class="form-inline">
                         <div class="form-group m-b-10">
-                            <button type="button" class="btn btn-primary" onclick="document.getElementById('fileID').click(); return false;" />
-                            Browser
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('fileID').click(); return false;">
+                                Browse
                             </button>
                             <input type="file" id="fileID" style="visibility: hidden;display:none;" />
                             <button id="btnSelectedFile" type="button" class="btn btn-default" style="display:none;">
                                 <span id="spnSelFileName"></span> <i class="fa fa-times" aria-hidden="true"></i>
                             </button>
+                            @Html.DropDownList("fileType", (IEnumerable<SelectListItem>)ViewBag.drpFileTypes,
+                               new { @class = "form-control", @style = "height: 33px; margin-top: -3px; margin-bottom: 2px;" })
+
+                            @*<select id="heard" class="form-control" required="" style="height: 33px; margin-top: -3px; margin-bottom: 2px;">
+                                <option value="press">Test Result</option>
+                                <option value="">other</option>
+                            </select>*@
                             <button id="btnUpload" type="button" class="btn btn-primary" aria-expanded="false">Upload</button>
                             <p>Only , txt , pdf , docx , csv , jpg , png format are allowed</p>
                         </div>
@@ -60,7 +67,7 @@
 
             $("#btnUpload").click(function () {
                 if ($("#fileID").val() == '') {
-                    alert("Please select any file to upload");
+                    new PNotify({ title: 'Error', text: 'Please select any file to upload', type: 'error', styling: 'bootstrap3' });
                     return;
                 }
 
@@ -68,7 +75,7 @@
                 var fileExt = filepath.substring(filepath.lastIndexOf('.') + 1).toLowerCase();
 
                 if (fileExt != "txt" && fileExt != "pdf" && fileExt != "docx" && fileExt != "csv" && fileExt != "jpg" && fileExt != "png") {
-                    alert("File format is not supported. Please choose appropriate file format.");
+                    new PNotify({ title: 'Error', text: 'File format is not supported. Please choose appropriate file format.', type: 'error', styling: 'bootstrap3' });
                     return;
                 }
 
@@ -89,7 +96,7 @@
                     }
 
                     // Adding one more key to FormData object
-                    //fileData.append('testKey', 'testValue');
+                    fileData.append('fileType', $("#fileType").val());
 
                     //Start displaying loader
                     showLoader();
@@ -101,26 +108,22 @@
                         processData: false, // Not to process data
                         data: fileData,
                         success: function (result) {
-
                             //Reload container
                             reloadContainer(function () {
-                                alert(result);
+                                new PNotify({ title: 'Success', text: result, type: 'success', styling: 'bootstrap3' });
                                 deSelectFile();
-
                                 //Stop displaying loader
                                 stopLoader();
-                            })
-
+                            });
                         },
                         error: function (err) {
-                            alert(err.statusText);
-
+                            new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
                             //Stop displaying loader
                             stopLoader();
                         }
                     });
                 } else {
-                    alert("FormData is not supported.");
+                    new PNotify({ title: 'Error', text: 'FormData is not supported.', type: 'error', styling: 'bootstrap3' });
                 }
 
             });
@@ -142,11 +145,11 @@
                 $.post(cUrl, function (oResp) {
                     if (oResp.message == "") {
                         reloadContainer(function () {
-                            alert("File deleted sucessully.");
+                            new PNotify({ title: 'Success', text: 'File deleted successfully.', type: 'success', styling: 'bootstrap3' });
                             stopLoader();
                         });
                     } else {
-                        alert(oResp.message);
+                        new PNotify({ title: 'Error', text: oResp.message, type: 'error', styling: 'bootstrap3' });
                         stopLoader();
                     }
 

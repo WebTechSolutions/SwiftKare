@@ -21,6 +21,13 @@ namespace WebApp.Repositories.PatientRepositories
             return result;
         }
 
+        public IEnumerable<PatientFileType> GetPatientFileTypes()
+        {
+            var response = ApiConsumerHelper.GetResponseString("api/getFileTypes");
+            var result = JsonConvert.DeserializeObject<IEnumerable<PatientFileType>>(response);
+            return result;
+        }
+
         public GetPatientUserFiles GetPatientFile(long patientID, long fileId)
         {
             var response = ApiConsumerHelper.GetResponseString("api/getPatientFile?patientID=" + patientID + "&fileId=" + fileId);
