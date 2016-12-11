@@ -9,7 +9,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>@ViewBag.Title - @WebApp.Models.AppSettings.AppName</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+    <!-- Font Awesome -->
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet">
 
+    <!-- Custom Theme Style -->
+    <link href="~/Content/css/custom.min.css" rel="stylesheet">
+    <link href="~/Content/css/style.css" rel="stylesheet">
     @Styles.Render("~/Content/NewCss")
 
 
@@ -20,10 +27,7 @@
     <script src="@Url.Content("~/Scripts/blockUI.js")"></script>
 
     <style type="text/css">
-        body {
-            background-image: url("../../Content/images/bg.jpg");
-        }
-
+        
         /* Spinner */
         .spinner {
             width: 50px;
