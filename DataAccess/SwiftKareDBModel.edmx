@@ -1169,6 +1169,10 @@
           <Parameter Name="typeName" Type="varchar" Mode="In" />
           <Parameter Name="CB" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="sp_addextendedproc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="functname" Type="nvarchar" Mode="In" />
+          <Parameter Name="dllname" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="SP_AddLanguage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="languageName" Type="varchar" Mode="In" />
           <Parameter Name="CB" Type="varchar" Mode="In" />
@@ -1387,6 +1391,9 @@
         <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
           <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_dropextendedproc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="functname" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="SP_FetchDoctorTimings" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="docID" Type="bigint" Mode="In" />
@@ -2468,6 +2475,16 @@
             <End Role="Doctor" EntitySet="Doctors" />
             <End Role="UserFile" EntitySet="UserFiles" />
           </AssociationSet>
+          <FunctionImport Name="sp_addextendedproc2">
+            <Parameter Name="functname" Mode="In" Type="String" />
+            <Parameter Name="dllname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropextendedproc2">
+            <Parameter Name="functname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetPatientConsultations1" ReturnType="Collection(SwiftKareDBModel.SP_GetPatientConsultations1_Result)">
+            <Parameter Name="patientID" Mode="In" Type="Int64" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="SP_AppointmentReport_Result">
           <Property Type="Int64" Name="appID" Nullable="false" />
@@ -4109,6 +4126,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="SP_GetPatientConsultations1_Result">
+          <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="lastName" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="duration" Nullable="true" />
+          <Property Type="String" Name="review" Nullable="true" MaxLength="1000" />
+          <Property Type="Int32" Name="reviewStar" Nullable="true" />
+          <Property Type="Time" Name="appTime" Nullable="true" />
+          <Property Type="DateTime" Name="appDate" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5475,6 +5501,21 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_addextendedproc2" FunctionName="SwiftKareDBModel.Store.sp_addextendedproc" />
+          <FunctionImportMapping FunctionImportName="sp_dropextendedproc2" FunctionName="SwiftKareDBModel.Store.sp_dropextendedproc" />
+          <FunctionImportMapping FunctionImportName="SP_GetPatientConsultations1" FunctionName="SwiftKareDBModel.Store.SP_GetPatientConsultations">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetPatientConsultations1_Result">
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="review" ColumnName="review" />
+                <ScalarProperty Name="reviewStar" ColumnName="reviewStar" />
+                <ScalarProperty Name="appTime" ColumnName="appTime" />
+                <ScalarProperty Name="appDate" ColumnName="appDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -14,4 +14,10 @@ namespace DataAccess.CustomModels
         public Nullable<long> patientID { get; set; }
         public Nullable<long> doctorID { get; set; }
     }
+
+    public class PatientFileType
+    {
+        public int fileTypeID { get; set; }
+        public string typeName { get; set; }
+    }
 }

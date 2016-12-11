@@ -1,0 +1,1695 @@
+﻿@model IEnumerable<DataAccess.CustomModels.GetMessageModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Messages</h3>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_content">
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                        <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#inbox" id="inbox1" role="tab" data-toggle="tab" aria-expanded="true">Inbox</a>
+                            </li>
+                            <li role="presentation" class="">
+                                <a href="#draft" role="tab" id="draft1" data-toggle="tab" aria-expanded="false">Draft</a>
+                            </li>
+                            <li role="presentation" class="">
+                                <a href="#sent" role="tab" id="sent1" data-toggle="tab" aria-expanded="false">Sent</a>
+                            </li>
+                            <li role="presentation" class="">
+                                <a href="#delete" role="tab" id="delete1" data-toggle="tab" aria-expanded="false">Delete</a>
+                            </li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade active in" id="inbox" aria-labelledby="inbox">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="x_panel">
+                                        <div class="x_content">
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="x_panel">
+                                                        <div class="x_content">
+                                                            <div class="row">
+                                                                <div class="col-sm-3 mail_list_column">
+                                                                    <button id="compose" class="btn btn-sm btn-primary btn-block" type="button">COMPOSE</button>
+
+                                                                    @foreach (var item in Model)
+                                                                    {
+                                                                        <a href="javascript:" data-msgid="@item.msgID">
+                                                                            <div class="mail_list">
+                                                                                <div class="left">
+                                                                                    <i class="fa fa-circle"></i>
+                                                                                    @if (item.hasAttachment)
+                                                                                    {
+                                                                                        <i class="fa fa-paperclip"></i>
+                                                                                    }
+                                                                                </div>
+                                                                                <div class="right">
+                                                                                    <h3>@item.senderName <small>@item.sentTime.Value.ToShortDateString()</small></h3>
+                                                                                    <p>@item.subject</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </a>
+                                                                    }
+                                                                </div><!-- compose -->
+                                                                <!-- /MAIL LIST -->
+                                                                <!-- CONTENT MAIL -->
+                                                                <div class="col-sm-9 mail_view">
+                                                                    <div id="divInboxMsgBody" class="inbox-body">
+                                                                    </div>
+                                                                </div>
+                                                                <!-- /CONTENT MAIL -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="compose col-md-6 col-xs-12">
+                                                            <div class="compose-header">
+                                                                New Message
+                                                                <button type="button" class="close compose-close">
+                                                                    <span>×</span>
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="compose-body">
+                                                                <div id="alerts"></div>
+
+                                                                <div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="To" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Cc" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Subject" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu"></ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu">
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 5">
+                                                                                            <p style="font-size:17px">Huge</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 3">
+                                                                                            <p style="font-size:14px">Normal</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 1">
+                                                                                            <p style="font-size:11px">Small</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
+                                                                                <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
+                                                                                <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
+                                                                                <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list-ul"></i></a>
+                                                                                <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
+                                                                                <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a>
+                                                                                <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+                                                                                <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
+                                                                                <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
+                                                                                <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
+                                                                                <div class="dropdown-menu input-append">
+                                                                                    <input class="span2" placeholder="URL" type="text" data-edit="createLink" />
+                                                                                    <button class="btn" type="button">Add</button>
+                                                                                </div>
+                                                                                <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div id="editor" class="editor-wrapper"></div>
+                                                            </div>
+
+                                                            <div class="compose-footer">
+                                                                <button id="send" class="btn btn-sm btn-primary" type="button">Send</button>
+                                                                <button class="btn btn-blank" onclick="document.getElementById('fileID').click(); return false;" />
+                                                                <i class="fa fa-paperclip" aria-hidden="true" style="font-size: 18px; cursor: pointer;"></i>
+                                                                </button>
+                                                                <input type="file" id="fileID" style="visibility: hidden; display: none" />
+                                                                <button class="btn btn-default" id="toggle1">logo.png <i class="fa fa-times" aria-hidden="true"></i></button>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="reply col-md-6 col-xs-12">
+                                                            <div class="reply-header">
+                                                                Reply
+                                                                <button type="button" class="close reply-close">
+                                                                    <span>×</span>
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="reply-body">
+                                                                <div id="alerts1"></div>
+
+                                                                <div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="To" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Cc" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Subject" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu"></ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu">
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 5">
+                                                                                            <p style="font-size:17px">Huge</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 3">
+                                                                                            <p style="font-size:14px">Normal</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 1">
+                                                                                            <p style="font-size:11px">Small</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
+                                                                                <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
+                                                                                <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
+                                                                                <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list-ul"></i></a>
+                                                                                <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
+                                                                                <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a>
+                                                                                <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+                                                                                <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
+                                                                                <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
+                                                                                <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
+                                                                                <div class="dropdown-menu input-append">
+                                                                                    <input class="span2" placeholder="URL" type="text" data-edit="createLink" />
+                                                                                    <button class="btn" type="button">Add</button>
+                                                                                </div>
+                                                                                <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div id="editor1" class="editor-wrapper"></div>
+                                                            </div>
+
+                                                            <div class="reply-footer">
+                                                                <button id="send" class="btn btn-sm btn-primary" type="button">Send</button>
+                                                                <button class="btn btn-blank" onclick="document.getElementById('fileID').click(); return false;" />
+                                                                <i class="fa fa-paperclip" aria-hidden="true" style="font-size: 18px; cursor: pointer;"></i>
+                                                                </button>
+                                                                <input type="file" id="fileID" style="visibility: hidden; display: none" />
+                                                                <button class="btn btn-default" id="toggle2">logo.png <i class="fa fa-times" aria-hidden="true"></i></button>
+                                                            </div>
+                                                        </div><!-- reply-end -->
+
+                                                        <div class="reply1 col-md-6 col-xs-12">
+                                                            <div class="reply1-header">
+                                                                Reply
+                                                                <button type="button" class="close reply1-close">
+                                                                    <span>×</span>
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="reply1-body">
+                                                                <div id="alerts2"></div>
+
+                                                                <div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="To" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Cc" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Subject" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu"></ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu">
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 5">
+                                                                                            <p style="font-size:17px">Huge</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 3">
+                                                                                            <p style="font-size:14px">Normal</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 1">
+                                                                                            <p style="font-size:11px">Small</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
+                                                                                <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
+                                                                                <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
+                                                                                <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list-ul"></i></a>
+                                                                                <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
+                                                                                <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a>
+                                                                                <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+                                                                                <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
+                                                                                <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
+                                                                                <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
+                                                                                <div class="dropdown-menu input-append">
+                                                                                    <input class="span2" placeholder="URL" type="text" data-edit="createLink" />
+                                                                                    <button class="btn" type="button">Add</button>
+                                                                                </div>
+                                                                                <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div id="editor2" class="editor-wrapper"></div>
+                                                            </div>
+
+                                                            <div class="reply1-footer">
+                                                                <button id="send" class="btn btn-sm btn-primary" type="button">Send</button>
+                                                                <button class="btn btn-blank" onclick="document.getElementById('fileID').click(); return false;" />
+                                                                <i class="fa fa-paperclip" aria-hidden="true" style="font-size: 18px; cursor: pointer;"></i>
+                                                                </button>
+                                                                <input type="file" id="fileID" style="visibility: hidden; display: none" />
+                                                                <button class="btn btn-default" id="toggle3">logo.png <i class="fa fa-times" aria-hidden="true"></i></button>
+                                                            </div>
+                                                        </div><!-- reply1-end -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane fade" id="draft" aria-labelledby="draft">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="x_panel">
+
+
+                                        <div class="x_content">
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="x_panel">
+                                                        <div class="x_content">
+                                                            <div class="row">
+                                                                <div class="col-sm-3 mail_list_column">
+                                                                    <button id="compose" class="btn btn-sm btn-primary btn-block" type="button">COMPOSE</button>
+                                                                    <a href="#">
+                                                                        <div class="mail_list">
+                                                                            <div class="left">
+                                                                                <i class="fa fa-paperclip"></i>
+                                                                            </div>
+                                                                            <div class="right">
+                                                                                <h3>Jon Dibbs <small>4.09 PM</small></h3>
+                                                                                <p>Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                    <a href="#">
+                                                                        <div class="mail_list">
+                                                                            <div class="left">
+                                                                                <i class="fa fa-circle-o"></i><i class="fa fa-paperclip"></i>
+                                                                            </div>
+                                                                            <div class="right">
+                                                                                <h3>Musimbi Anne <small>4.09 PM</small></h3>
+                                                                                <p><span class="badge">CC</span> Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                    <a href="#">
+                                                                        <div class="mail_list">
+                                                                            <div class="left">
+                                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                            </div>
+                                                                            <div class="right">
+                                                                                <h3>Jane Nobert <small>4.09 PM</small></h3>
+                                                                                <p><span class="badge">To</span> Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+
+                                                                    <a href="#">
+                                                                        <div class="mail_list">
+                                                                            <div class="left">
+                                                                                <i class="fa fa-paperclip"></i>
+                                                                            </div>
+                                                                            <div class="right">
+                                                                                <h3>Jon Dibbs <small>4.09 PM</small></h3>
+                                                                                <p>Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                    <a href="#">
+                                                                        <div class="mail_list">
+                                                                            <div class="left">
+                                                                                <i class="fa fa-circle-o"></i><i class="fa fa-paperclip"></i>
+                                                                            </div>
+                                                                            <div class="right">
+                                                                                <h3>Musimbi Anne <small>4.09 PM</small></h3>
+                                                                                <p><span class="badge">CC</span> Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                    <a href="#">
+                                                                        <div class="mail_list">
+                                                                            <div class="left">
+                                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                            </div>
+                                                                            <div class="right">
+                                                                                <h3>Jane Nobert <small>4.09 PM</small></h3>
+                                                                                <p><span class="badge">To</span> Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                    <a href="#">
+                                                                        <div class="mail_list">
+                                                                            <div class="left">
+                                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                            </div>
+                                                                            <div class="right">
+                                                                                <h3>Jane Nobert <small>4.09 PM</small></h3>
+                                                                                <p><span class="badge">To</span> Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                                <!-- /MAIL LIST -->
+                                                                <!-- CONTENT MAIL -->
+                                                                <div class="col-sm-9 mail_view">
+                                                                    <div class="inbox-body">
+                                                                        <div class="mail_heading row">
+                                                                            <div class="col-md-8">
+                                                                                <div class="btn-group">
+                                                                                    <button id="reply" class="btn btn-sm btn-primary" type="button"><i class="fa fa-reply"></i> Reply</button>
+                                                                                    <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Forward"><i class="fa fa-share"></i></button>
+                                                                                    <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Print"><i class="fa fa-print"></i></button>
+                                                                                    <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Trash"><i class="fa fa-trash-o"></i></button>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-4 text-right">
+                                                                                <p class="date"> 8:02 PM 12 FEB 2014</p>
+                                                                            </div>
+                                                                            <div class="col-md-12">
+                                                                                <h4> Donec vitae leo at sem lobortis porttitor eu consequat risus. Mauris sed congue orci. Donec ultrices faucibus rutrum.</h4>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="sender-info">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <strong>Jon Doe</strong>
+                                                                                    <span>(jon.doe@gmail.com)</span> to
+                                                                                    <strong>me</strong>
+                                                                                    <a class="sender-dropdown"><i class="fa fa-chevron-down"></i></a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="view-mail">
+                                                                            <p>
+                                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                                                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                                                            </p>
+                                                                            <p>
+                                                                                Riusmod tempor incididunt ut labor erem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                                                                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+                                                                                mollit anim id est laborum.
+                                                                            </p>
+                                                                            <p>
+                                                                                Modesed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+                                                                                velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                                                            </p>
+                                                                        </div>
+
+                                                                        <div class="attachment">
+                                                                            <p>
+                                                                                <span><i class="fa fa-paperclip"></i> 3 attachments — </span>
+                                                                                <a href="#">Download all attachments</a> |
+                                                                                <a href="#">View all images</a>
+                                                                            </p>
+                                                                            <ul>
+                                                                                <li>
+                                                                                    <a data-toggle="modal" data-target="#myModal13" href="#" class="atch-thumb">
+                                                                                        <img src="images/inbox.png" alt="img" />
+                                                                                    </a>
+
+                                                                                    <div class="file-name">
+                                                                                        image-name.jpg
+                                                                                    </div>
+                                                                                    <span>12KB</span>
+
+
+                                                                                    <div class="links">
+                                                                                        <a href="#" data-toggle="modal" data-target="#myModal4">View</a> -
+                                                                                        <a href="#">Download</a>
+                                                                                    </div>
+                                                                                </li>
+
+                                                                                <li>
+                                                                                    <a data-toggle="modal" data-target="#myModal14" href="#" class="atch-thumb">
+                                                                                        <img src="images/inbox.png" alt="img" />
+                                                                                    </a>
+
+                                                                                    <div class="file-name">
+                                                                                        img_name.jpg
+                                                                                    </div>
+                                                                                    <span>40KB</span>
+
+                                                                                    <div class="links">
+                                                                                        <a href="#" data-toggle="modal" data-target="#myModal5">View</a> -
+                                                                                        <a href="#">Download</a>
+                                                                                    </div>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a data-toggle="modal" data-target="#myModal15" href="#" class="atch-thumb">
+                                                                                        <img src="images/inbox.png" alt="img" />
+                                                                                    </a>
+
+                                                                                    <div class="file-name">
+                                                                                        img_name.jpg
+                                                                                    </div>
+                                                                                    <span>30KB</span>
+
+                                                                                    <div class="links">
+                                                                                        <a href="#" data-toggle="modal" data-target="#myModal6">View</a> -
+                                                                                        <a href="#">Download</a>
+                                                                                    </div>
+                                                                                </li>
+
+                                                                            </ul>
+                                                                        </div>
+
+                                                                        <div class="modal fade" id="myModal13" tabindex="-1" role="dialog" aria-labelledby="myModalLabel13">
+                                                                            <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                    </div><!--/.modal header-->
+
+                                                                                    <div class="modal-body text-left">
+                                                                                        <img class="img-responsive" src="images/inbox.png" alt="img" style="margin: 0 auto;" />
+                                                                                    </div><!--/.modal body-->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="modal fade" id="myModal14" tabindex="-1" role="dialog" aria-labelledby="myModalLabel14">
+                                                                            <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                    </div><!--/.modal header-->
+
+                                                                                    <div class="modal-body text-left">
+                                                                                        <img class="img-responsive" src="images/inbox.png" alt="img" style="margin: 0 auto;" />
+                                                                                    </div><!--/.modal body-->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="modal fade" id="myModal15" tabindex="-1" role="dialog" aria-labelledby="myModalLabel15">
+                                                                            <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                    </div><!--/.modal header-->
+
+                                                                                    <div class="modal-body text-left">
+                                                                                        <img class="img-responsive" src="images/inbox.png" alt="img" style="margin: 0 auto;" />
+                                                                                    </div><!--/.modal body-->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4">
+                                                                            <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                    </div><!--/.modal header-->
+
+                                                                                    <div class="modal-body text-left">
+                                                                                        <img class="img-responsive" src="images/inbox.png" alt="img" style="margin: 0 auto;" />
+                                                                                    </div><!--/.modal body-->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel5">
+                                                                            <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                    </div><!--/.modal header-->
+
+                                                                                    <div class="modal-body text-left">
+                                                                                        <img class="img-responsive" src="images/inbox.png" alt="img" style="margin: 0 auto;" />
+                                                                                    </div><!--/.modal body-->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="modal fade" id="myModal6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel6">
+                                                                            <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                    </div><!--/.modal header-->
+
+                                                                                    <div class="modal-body text-left">
+                                                                                        <img class="img-responsive" src="images/inbox.png" alt="img" style="margin: 0 auto;" />
+                                                                                    </div><!--/.modal body-->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="btn-group">
+                                                                            <button id="reply1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-reply"></i> Reply</button>
+                                                                            <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Forward"><i class="fa fa-share"></i></button>
+                                                                            <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Print"><i class="fa fa-print"></i></button>
+                                                                            <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Trash"><i class="fa fa-trash-o"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- /CONTENT MAIL -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="compose col-md-6 col-xs-12">
+                                                            <div class="compose-header">
+                                                                New Message
+                                                                <button type="button" class="close compose-close">
+                                                                    <span>×</span>
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="compose-body">
+                                                                <div id="alerts"></div>
+
+                                                                <div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="To" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Cc" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Subject" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu"></ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu">
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 5">
+                                                                                            <p style="font-size:17px">Huge</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 3">
+                                                                                            <p style="font-size:14px">Normal</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 1">
+                                                                                            <p style="font-size:11px">Small</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
+                                                                                <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
+                                                                                <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
+                                                                                <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list-ul"></i></a>
+                                                                                <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
+                                                                                <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a>
+                                                                                <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+                                                                                <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
+                                                                                <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
+                                                                                <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
+                                                                                <div class="dropdown-menu input-append">
+                                                                                    <input class="span2" placeholder="URL" type="text" data-edit="createLink" />
+                                                                                    <button class="btn" type="button">Add</button>
+                                                                                </div>
+                                                                                <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div id="editor" class="editor-wrapper"></div>
+                                                            </div>
+
+                                                            <div class="compose-footer">
+                                                                <button id="send" class="btn btn-sm btn-primary" type="button">Send</button>
+                                                                <button class="btn btn-blank" onclick="document.getElementById('fileID').click(); return false;" />
+                                                                <i class="fa fa-paperclip" aria-hidden="true" style="font-size: 18px; cursor: pointer;"></i>
+                                                                </button>
+                                                                <input type="file" id="fileID" style="visibility: hidden; display: none" />
+                                                                <button class="btn btn-default" id="toggle4">logo.png <i class="fa fa-times" aria-hidden="true"></i></button>
+                                                            </div>
+                                                        </div><!-- compose -->
+
+                                                        <div class="reply col-md-6 col-xs-12">
+                                                            <div class="reply-header">
+                                                                Reply
+                                                                <button type="button" class="close reply-close">
+                                                                    <span>×</span>
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="reply-body">
+                                                                <div id="alerts"></div>
+
+                                                                <div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="To" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Cc" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Subject" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu"></ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu">
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 5">
+                                                                                            <p style="font-size:17px">Huge</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 3">
+                                                                                            <p style="font-size:14px">Normal</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 1">
+                                                                                            <p style="font-size:11px">Small</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
+                                                                                <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
+                                                                                <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
+                                                                                <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list-ul"></i></a>
+                                                                                <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
+                                                                                <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a>
+                                                                                <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+                                                                                <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
+                                                                                <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
+                                                                                <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
+                                                                                <div class="dropdown-menu input-append">
+                                                                                    <input class="span2" placeholder="URL" type="text" data-edit="createLink" />
+                                                                                    <button class="btn" type="button">Add</button>
+                                                                                </div>
+                                                                                <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div id="editor" class="editor-wrapper"></div>
+                                                            </div>
+
+                                                            <div class="reply-footer">
+                                                                <button id="send" class="btn btn-sm btn-primary" type="button">Send</button>
+                                                                <button class="btn btn-blank" onclick="document.getElementById('fileID').click(); return false;" />
+                                                                <i class="fa fa-paperclip" aria-hidden="true" style="font-size: 18px; cursor: pointer;"></i>
+                                                                </button>
+                                                                <input type="file" id="fileID" style="visibility: hidden; display: none" />
+                                                                <button class="btn btn-default" id="toggle5">logo.png <i class="fa fa-times" aria-hidden="true"></i></button>
+                                                            </div>
+                                                        </div><!-- reply-end -->
+
+                                                        <div class="reply1 col-md-6 col-xs-12">
+                                                            <div class="reply1-header">
+                                                                Reply
+                                                                <button type="button" class="close reply1-close">
+                                                                    <span>×</span>
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="reply1-body">
+                                                                <div id="alerts"></div>
+
+                                                                <div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="To" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Cc" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Subject" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu"></ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu">
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 5">
+                                                                                            <p style="font-size:17px">Huge</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 3">
+                                                                                            <p style="font-size:14px">Normal</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 1">
+                                                                                            <p style="font-size:11px">Small</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
+                                                                                <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
+                                                                                <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
+                                                                                <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list-ul"></i></a>
+                                                                                <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
+                                                                                <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a>
+                                                                                <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+                                                                                <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
+                                                                                <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
+                                                                                <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
+                                                                                <div class="dropdown-menu input-append">
+                                                                                    <input class="span2" placeholder="URL" type="text" data-edit="createLink" />
+                                                                                    <button class="btn" type="button">Add</button>
+                                                                                </div>
+                                                                                <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div id="editor" class="editor-wrapper"></div>
+                                                            </div>
+
+                                                            <div class="reply1-footer">
+                                                                <button id="send" class="btn btn-sm btn-primary" type="button">Send</button>
+                                                                <button class="btn btn-blank" onclick="document.getElementById('fileID').click(); return false;" />
+                                                                <i class="fa fa-paperclip" aria-hidden="true" style="font-size: 18px; cursor: pointer;"></i>
+                                                                </button>
+                                                                <input type="file" id="fileID" style="visibility: hidden; display: none" />
+                                                                <button class="btn btn-default" id="toggle6">logo.png <i class="fa fa-times" aria-hidden="true"></i></button>
+                                                            </div>
+                                                        </div><!-- reply1-end -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane fade" id="sent" aria-labelledby="sent">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="x_panel">
+
+
+                                        <div class="x_content">
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="x_panel">
+                                                        <div class="x_content">
+                                                            <div class="row">
+                                                                <div class="col-sm-3 mail_list_column">
+                                                                    <button id="compose" class="btn btn-sm btn-primary btn-block" type="button">COMPOSE</button>
+                                                                    <a href="#">
+                                                                        <div class="mail_list">
+                                                                            <div class="left">
+                                                                                <i class="fa fa-paperclip"></i>
+                                                                            </div>
+                                                                            <div class="right">
+                                                                                <h3>Jon Dibbs <small>4.09 PM</small></h3>
+                                                                                <p>Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                    <a href="#">
+                                                                        <div class="mail_list">
+                                                                            <div class="left">
+                                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                            </div>
+                                                                            <div class="right">
+                                                                                <h3>Jane Nobert <small>4.09 PM</small></h3>
+                                                                                <p><span class="badge">To</span> Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                    <a href="#">
+                                                                        <div class="mail_list">
+                                                                            <div class="left">
+                                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                            </div>
+                                                                            <div class="right">
+                                                                                <h3>Jane Nobert <small>4.09 PM</small></h3>
+                                                                                <p><span class="badge">To</span> Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                    <a href="#">
+                                                                        <div class="mail_list">
+                                                                            <div class="left">
+                                                                                <i class="fa fa-circle-o"></i><i class="fa fa-paperclip"></i>
+                                                                            </div>
+                                                                            <div class="right">
+                                                                                <h3>Musimbi Anne <small>4.09 PM</small></h3>
+                                                                                <p><span class="badge">CC</span> Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                    <a href="#">
+                                                                        <div class="mail_list">
+                                                                            <div class="left">
+                                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                            </div>
+                                                                            <div class="right">
+                                                                                <h3>Jane Nobert <small>4.09 PM</small></h3>
+                                                                                <p><span class="badge">To</span> Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                    <a href="#">
+                                                                        <div class="mail_list">
+                                                                            <div class="left">
+                                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                            </div>
+                                                                            <div class="right">
+                                                                                <h3>Jane Nobert <small>4.09 PM</small></h3>
+                                                                                <p><span class="badge">To</span> Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                    <a href="#">
+                                                                        <div class="mail_list">
+                                                                            <div class="left">
+                                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                            </div>
+                                                                            <div class="right">
+                                                                                <h3>Jane Nobert <small>4.09 PM</small></h3>
+                                                                                <p><span class="badge">To</span> Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                                <!-- /MAIL LIST -->
+                                                                <!-- CONTENT MAIL -->
+                                                                <div class="col-sm-9 mail_view">
+                                                                    <div class="inbox-body">
+                                                                        <div class="mail_heading row">
+                                                                            <div class="col-md-8">
+                                                                                <div class="btn-group">
+                                                                                    <button id="reply" class="btn btn-sm btn-primary" type="button"><i class="fa fa-reply"></i> Reply</button>
+                                                                                    <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Forward"><i class="fa fa-share"></i></button>
+                                                                                    <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Print"><i class="fa fa-print"></i></button>
+                                                                                    <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Trash"><i class="fa fa-trash-o"></i></button>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-4 text-right">
+                                                                                <p class="date"> 8:02 PM 12 FEB 2014</p>
+                                                                            </div>
+                                                                            <div class="col-md-12">
+                                                                                <h4> Donec vitae leo at sem lobortis porttitor eu consequat risus. Mauris sed congue orci. Donec ultrices faucibus rutrum.</h4>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="sender-info">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <strong>Jon Doe</strong>
+                                                                                    <span>(jon.doe@gmail.com)</span> to
+                                                                                    <strong>me</strong>
+                                                                                    <a class="sender-dropdown"><i class="fa fa-chevron-down"></i></a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="view-mail">
+                                                                            <p>
+                                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                                                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                                                            </p>
+                                                                            <p>
+                                                                                Riusmod tempor incididunt ut labor erem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                                                                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+                                                                                mollit anim id est laborum.
+                                                                            </p>
+                                                                            <p>
+                                                                                Modesed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+                                                                                velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                                                            </p>
+                                                                        </div>
+
+                                                                        <div class="attachment">
+                                                                            <p>
+                                                                                <span><i class="fa fa-paperclip"></i> 3 attachments — </span>
+                                                                                <a href="#">Download all attachments</a> |
+                                                                                <a href="#">View all images</a>
+                                                                            </p>
+                                                                            <ul>
+                                                                                <li>
+                                                                                    <a data-toggle="modal" data-target="#myModal16" href="#" class="atch-thumb">
+                                                                                        <img src="images/inbox.png" alt="img" />
+                                                                                    </a>
+
+                                                                                    <div class="file-name">
+                                                                                        image-name.jpg
+                                                                                    </div>
+                                                                                    <span>12KB</span>
+
+
+                                                                                    <div class="links">
+                                                                                        <a href="#" data-toggle="modal" data-target="#myModal7">View</a> -
+                                                                                        <a href="#">Download</a>
+                                                                                    </div>
+                                                                                </li>
+
+                                                                                <li>
+                                                                                    <a data-toggle="modal" data-target="#myModal17" href="#" class="atch-thumb">
+                                                                                        <img src="images/inbox.png" alt="img" />
+                                                                                    </a>
+
+                                                                                    <div class="file-name">
+                                                                                        img_name.jpg
+                                                                                    </div>
+                                                                                    <span>40KB</span>
+
+                                                                                    <div class="links">
+                                                                                        <a href="#" data-toggle="modal" data-target="#myModal8">View</a> -
+                                                                                        <a href="#">Download</a>
+                                                                                    </div>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a data-toggle="modal" data-target="#myModal18" href="#" class="atch-thumb">
+                                                                                        <img src="images/inbox.png" alt="img" />
+                                                                                    </a>
+
+                                                                                    <div class="file-name">
+                                                                                        img_name.jpg
+                                                                                    </div>
+                                                                                    <span>30KB</span>
+
+                                                                                    <div class="links">
+                                                                                        <a href="#" data-toggle="modal" data-target="#myModal9">View</a> -
+                                                                                        <a href="#">Download</a>
+                                                                                    </div>
+                                                                                </li>
+
+                                                                            </ul>
+                                                                        </div>
+
+                                                                        <div class="modal fade" id="myModal16" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16">
+                                                                            <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                    </div><!--/.modal header-->
+
+                                                                                    <div class="modal-body text-left">
+                                                                                        <img class="img-responsive" src="images/inbox.png" alt="img" style="margin: 0 auto;" />
+                                                                                    </div><!--/.modal body-->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="modal fade" id="myModal17" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17">
+                                                                            <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                    </div><!--/.modal header-->
+
+                                                                                    <div class="modal-body text-left">
+                                                                                        <img class="img-responsive" src="images/inbox.png" alt="img" style="margin: 0 auto;" />
+                                                                                    </div><!--/.modal body-->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="modal fade" id="myModal18" tabindex="-1" role="dialog" aria-labelledby="myModalLabel18">
+                                                                            <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                    </div><!--/.modal header-->
+
+                                                                                    <div class="modal-body text-left">
+                                                                                        <img class="img-responsive" src="images/inbox.png" alt="img" style="margin: 0 auto;" />
+                                                                                    </div><!--/.modal body-->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="modal fade" id="myModal7" tabindex="-1" role="dialog" aria-labelledby="myModalLabel7">
+                                                                            <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                    </div><!--/.modal header-->
+
+                                                                                    <div class="modal-body text-left">
+                                                                                        <img class="img-responsive" src="images/inbox.png" alt="img" style="margin: 0 auto;" />
+                                                                                    </div><!--/.modal body-->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8">
+                                                                            <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                    </div><!--/.modal header-->
+
+                                                                                    <div class="modal-body text-left">
+                                                                                        <img class="img-responsive" src="images/inbox.png" alt="img" style="margin: 0 auto;" />
+                                                                                    </div><!--/.modal body-->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="modal fade" id="myModal9" tabindex="-1" role="dialog" aria-labelledby="myModalLabel9">
+                                                                            <div class="modal-dialog" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                    </div><!--/.modal header-->
+
+                                                                                    <div class="modal-body text-left">
+                                                                                        <img class="img-responsive" src="images/inbox.png" alt="img" style="margin: 0 auto;" />
+                                                                                    </div><!--/.modal body-->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="btn-group">
+                                                                            <button id="reply1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-reply"></i> Reply</button>
+                                                                            <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Forward"><i class="fa fa-share"></i></button>
+                                                                            <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Print"><i class="fa fa-print"></i></button>
+                                                                            <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Trash"><i class="fa fa-trash-o"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- /CONTENT MAIL -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="compose col-md-6 col-xs-12">
+                                                            <div class="compose-header">
+                                                                New Message
+                                                                <button type="button" class="close compose-close">
+                                                                    <span>×</span>
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="compose-body">
+                                                                <div id="alerts"></div>
+
+                                                                <div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="To" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Cc" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Subject" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu"></ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu">
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 5">
+                                                                                            <p style="font-size:17px">Huge</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 3">
+                                                                                            <p style="font-size:14px">Normal</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 1">
+                                                                                            <p style="font-size:11px">Small</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
+                                                                                <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
+                                                                                <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
+                                                                                <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list-ul"></i></a>
+                                                                                <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
+                                                                                <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a>
+                                                                                <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+                                                                                <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
+                                                                                <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
+                                                                                <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
+                                                                                <div class="dropdown-menu input-append">
+                                                                                    <input class="span2" placeholder="URL" type="text" data-edit="createLink" />
+                                                                                    <button class="btn" type="button">Add</button>
+                                                                                </div>
+                                                                                <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div id="editor" class="editor-wrapper"></div>
+                                                            </div>
+
+                                                            <div class="compose-footer">
+                                                                <button id="send" class="btn btn-sm btn-primary" type="button">Send</button>
+                                                                <button class="btn btn-blank" onclick="document.getElementById('fileID').click(); return false;" />
+                                                                <i class="fa fa-paperclip" aria-hidden="true" style="font-size: 18px; cursor: pointer;"></i>
+                                                                </button>
+                                                                <input type="file" id="fileID" style="visibility: hidden; display: none" />
+                                                                <button class="btn btn-default" id="toggle7">logo.png <i class="fa fa-times" aria-hidden="true"></i></button>
+                                                            </div>
+                                                        </div><!-- compose -->
+
+                                                        <div class="reply col-md-6 col-xs-12">
+                                                            <div class="reply-header">
+                                                                Reply
+                                                                <button type="button" class="close reply-close">
+                                                                    <span>×</span>
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="reply-body">
+                                                                <div id="alerts"></div>
+
+                                                                <div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="To" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Cc" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Subject" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu"></ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu">
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 5">
+                                                                                            <p style="font-size:17px">Huge</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 3">
+                                                                                            <p style="font-size:14px">Normal</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 1">
+                                                                                            <p style="font-size:11px">Small</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
+                                                                                <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
+                                                                                <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
+                                                                                <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list-ul"></i></a>
+                                                                                <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
+                                                                                <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a>
+                                                                                <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+                                                                                <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
+                                                                                <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
+                                                                                <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
+                                                                                <div class="dropdown-menu input-append">
+                                                                                    <input class="span2" placeholder="URL" type="text" data-edit="createLink" />
+                                                                                    <button class="btn" type="button">Add</button>
+                                                                                </div>
+                                                                                <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div id="editor" class="editor-wrapper"></div>
+                                                            </div>
+
+                                                            <div class="reply-footer">
+                                                                <button id="send" class="btn btn-sm btn-primary" type="button">Send</button>
+                                                                <button class="btn btn-blank" onclick="document.getElementById('fileID').click(); return false;" />
+                                                                <i class="fa fa-paperclip" aria-hidden="true" style="font-size: 18px; cursor: pointer;"></i>
+                                                                </button>
+                                                                <input type="file" id="fileID" style="visibility: hidden; display: none" />
+                                                                <button class="btn btn-default" id="toggle8">logo.png <i class="fa fa-times" aria-hidden="true"></i></button>
+                                                            </div>
+                                                        </div><!-- reply-end -->
+
+                                                        <div class="reply1 col-md-6 col-xs-12">
+                                                            <div class="reply1-header">
+                                                                Reply
+                                                                <button type="button" class="close reply1-close">
+                                                                    <span>×</span>
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="reply1-body">
+                                                                <div id="alerts"></div>
+
+                                                                <div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="To" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Cc" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                            <form class="form-inline m-b-10">
+                                                                                <div class="form-group" style="width: 100%" ;>
+                                                                                    <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                                                                                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Subject" style="width: 99%; margin-left: 5px;">
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu"></ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
+                                                                                <ul class="dropdown-menu">
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 5">
+                                                                                            <p style="font-size:17px">Huge</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 3">
+                                                                                            <p style="font-size:14px">Normal</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <a data-edit="fontSize 1">
+                                                                                            <p style="font-size:11px">Small</p>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
+                                                                                <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
+                                                                                <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
+                                                                                <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list-ul"></i></a>
+                                                                                <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
+                                                                                <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a>
+                                                                                <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+                                                                                <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
+                                                                                <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
+                                                                                <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
+                                                                            </div>
+
+                                                                            <div class="btn-group">
+                                                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
+                                                                                <div class="dropdown-menu input-append">
+                                                                                    <input class="span2" placeholder="URL" type="text" data-edit="createLink" />
+                                                                                    <button class="btn" type="button">Add</button>
+                                                                                </div>
+                                                                                <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div id="editor" class="editor-wrapper"></div>
+                                                            </div>
+
+                                                            <div class="reply1-footer">
+                                                                <button id="send" class="btn btn-sm btn-primary" type="button">Send</button>
+                                                                <button class="btn btn-blank" onclick="document.getElementById('fileID').click(); return false;" />
+                                                                <i class="fa fa-paperclip" aria-hidden="true" style="font-size: 18px; cursor: pointer;"></i>
+                                                                </button>
+                                                                <input type="file" id="fileID" style="visibility: hidden; display: none" />
+                                                                <button class="btn btn-default" id="toggle9">logo.png <i class="fa fa-times" aria-hidden="true"></i></button>
+                                                            </div>
+                                                        </div><!-- reply1-end -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane fade" id="delete" aria-labelledby="delete">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="x_panel">
+
+                                        <div class="x_content">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <script>
+        //$(document).ready(function () {
+        $('#compose, .compose-close').click(function () {
+            $('.compose').slideToggle();
+        });
+
+        $('#reply, .reply-close').click(function () {
+            $('.reply').slideToggle();
+        });
+
+        $('#reply1, .reply1-close').click(function () {
+            $('.reply1').slideToggle();
+        });
+
+        $("[data-msgid]").click(function () {
+            var cUrl = "@Url.Action("GetMessageDetails","Messages")?msgId=" + $(this).data("msgid");
+            $.post(cUrl, function (oResp) {
+                $("#divInboxMsgBody").html(oResp);
+            });
+        });
+
+        //});
+
+
+
+    </script>
+}

@@ -7,6 +7,7 @@ using WebApp.Helper;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class UserChatController : Controller
     {
         [HttpPost]
@@ -20,6 +21,8 @@ namespace WebApp.Controllers
                 {
                     return false;
                 }
+                
+                openTokSession.UserType = userType;
 
                 openTokSession.UserType = userType;
 
