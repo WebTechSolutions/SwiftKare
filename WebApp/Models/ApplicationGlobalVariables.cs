@@ -22,10 +22,9 @@ namespace WebApp.Models
 
         private ApplicationGlobalVariables()
         {
-            ApiBaseUrl = "http://localhost:13040/";
-            // ApiBaseUrl = "http://13.91.42.71:8079/";
-            ClientId = "abc";
-            Secret = "ddddddddd";
+            ApiBaseUrl= !string.IsNullOrEmpty(WebConfigurationManager.AppSettings.Get(ConfigApiBaseUrl)) ? WebConfigurationManager.AppSettings[ConfigApiBaseUrl] : "http://localhost:13040/";
+            ClientId = !string.IsNullOrEmpty(WebConfigurationManager.AppSettings.Get(ConfigClientId)) ? WebConfigurationManager.AppSettings[ConfigClientId] :  "abc";
+            Secret = !string.IsNullOrEmpty(WebConfigurationManager.AppSettings.Get(ConfigSecret)) ? WebConfigurationManager.AppSettings[ConfigSecret] : "ddddddddd";
         }
 
 
@@ -37,5 +36,10 @@ namespace WebApp.Models
                 return instance;
             }
         }
+
+        private const string ConfigApiBaseUrl= "ApiBaseUrl";
+        private const string ConfigClientId = "ClientId";
+        private const string ConfigSecret = "Secret";
+
     }
 }
