@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -19,6 +20,19 @@ namespace RestAPIs.Controllers
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
         HttpResponseMessage response;
+        private bool IsValid(string emailaddress)
+        {
+            try
+            {
+                MailAddress m = new MailAddress(emailaddress);
+
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+        }
 
         [Route("api/PatientPreviousROV")]
         public HttpResponseMessage GetROV(long patientID)

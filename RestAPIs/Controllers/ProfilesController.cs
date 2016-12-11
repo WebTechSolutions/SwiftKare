@@ -17,6 +17,7 @@ using System.Web.Http.Description;
 
 namespace RestAPIs.Controllers
 {
+    [Authorize]
     public class ProfilesController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
@@ -43,7 +44,70 @@ namespace RestAPIs.Controllers
 
         }
 
-        
+        [HttpGet]
+        [Route("api/getTimeZones")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage GetTimeZones()
+        {
+
+
+            try
+            {
+                var timezones = (from tz in db.TimeZones where tz.active == true select new { tz.zoneID, tz.timeZonee }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, timezones);
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetTimeZones in ProfilesController.");
+            }
+
+        }
+
+
+        [HttpGet]
+        [Route("api/getCities")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage GetCities()
+        {
+
+
+            try
+            {
+                var cities = (from c in db.Cities where c.active == true select new { c.cityID, c.cityName }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, cities);
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetCities in ProfilesController.");
+            }
+
+        }
+
+        [HttpGet]
+        [Route("api/getStates")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage GetStates()
+        {
+
+
+            try
+            {
+                var states = (from c in db.States where c.active == true select new { c.stateID, c.stateName }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, states);
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetStates in ProfilesController.");
+            }
+
+        }
+
         //Doctor Profile Section
         [Route("api/updateDoctorPicture")]
         [ResponseType(typeof(HttpResponseMessage))]
@@ -262,7 +326,7 @@ namespace RestAPIs.Controllers
         [HttpPost]
         [Route("api/updateDoctorProfile")]
         [ResponseType(typeof(HttpResponseMessage))]
-        public async Task<HttpResponseMessage> UpdateDoctorProfile(long doctorID, DoctorProfileModel model)
+        public async Task<HttpResponseMessage> UpdateDoctorProfile(long doctorID, UpdateDoctorProfileModel model)
         {
 
             Doctor doctor = new Doctor();
@@ -293,7 +357,7 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Doctor not found." });
                     return response;
                 }
-                if (model.zip.Length >10)
+                if (model.zip.Length > 10)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Zip is too long. Keep it below ten characters." });
                     return response;
@@ -322,7 +386,6 @@ namespace RestAPIs.Controllers
                     doctor.publication = model.publication;
                     doctor.state = model.state;
                     doctor.zip = model.zip;
-                    doctor.cb = doctorID.ToString();
                     doctor.education = model.education;
                     doctor.timezone = model.timezone;
                     doctor.specialization = model.specialization;
@@ -336,18 +399,7 @@ namespace RestAPIs.Controllers
                     await db.SaveChangesAsync();
                     response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = doctorID, message = "" });
                     return response;
-                    //if(model.licensedState!=null)
-                    //{
-                    //   List<DoctorLicenseState> doclic = new List<DoctorLicenseState>();
-                    //   doclic = db.DoctorLicenseStates.Where(l => l.doctorID == doctorID).ToList();
-                    //   foreach (var item in model.licensedState)
-                    //   {
-                    //    DoctorLicenseState record = doclic.Where(dl => dl.doctorLicenseStateID == item.doctorLicenseStateID).FirstOrDefault();
-                    //    record.stateName = item.stateName;
-                    //    db.Entry(record).State = EntityState.Modified;
-                    //   }
 
-                    //}
 
                 }
 
