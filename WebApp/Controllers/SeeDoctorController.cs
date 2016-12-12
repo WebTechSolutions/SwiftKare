@@ -141,6 +141,7 @@ namespace WebApp.Controllers
             {
 
                 TimeSpan startTime = (TimeSpan)item.from;
+                TimeSpan itemstartTime = (TimeSpan)item.from;
                 TimeSpan endTime = (TimeSpan)item.to;
                 if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
                 {
@@ -149,7 +150,6 @@ namespace WebApp.Controllers
                     startTime = startTime.Add(tempp);
 
                 }
-
                 bool flag = true;
                 while (flag)
                 {
@@ -181,6 +181,26 @@ namespace WebApp.Controllers
                         }
                         flag = false;
                     }
+                    if(startTime.Hours == endTime.Hours)
+                    {
+                        if (startTime.Minutes > endTime.Minutes)
+                        {
+                            //TimeSpan diff = startTime.Subtract(endTime);
+                            if (!(timeSlots.Contains(endTime.ToString(@"hh\:mm"))))
+                            {
+                                timeSlots.Add(endTime.ToString(@"hh\:mm"));
+                                //TimeSpan tempp = TimeSpan.FromMinutes(15);
+                                //startTime = startTime.Add(tempp);
+
+                            }
+                            flag = false;
+                        }
+                    }
+                    
+                    //if ((timeSlots.Contains(itemstartTime.ToString(@"hh\:mm"))) && (timeSlots.Contains(endTime.ToString(@"hh\:mm"))))
+                    //{
+                    //    flag = false;
+                    //}
                 } //while end 
             }//for loop for database records.
 

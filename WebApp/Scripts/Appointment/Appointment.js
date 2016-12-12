@@ -86,12 +86,16 @@ function showDoctorInfo()
             var docemail = "NA";
             var cc = "NA";
             var docstate = "NA";
+            var gender = "";
+            if (specresult == "null") { specresult = "NA"; }
+            if (langresult == "null") { langresult = "NA"; }
             if (response.Object[0].cellPhone != null) { doccell = response.Object[0].cellPhone; }
             if (response.Object[0].email != null) { docemail = response.Object[0].email; }
             if (response.Object[0].consultCharges != null) { cc = response.Object[0].consultCharges; }
             if (response.Object[0].state != null) { docstate = response.Object[0].state; }
+            if (response.Object[0].gender != null) { gender = " (" + response.Object[0].gender + ")";}
             tableHtml = "<address>" +
-                     "<strong>Dr. " + response.Object[0].doctorName + " (" + response.Object[0].gender + ")</strong>" +
+                     "<strong>Dr. " + response.Object[0].doctorName + gender+"</strong>" +
                      "<br><strong>Specaility: </strong>&nbsp;" + specresult +
                      "<br><strong>Languages: </strong>&nbsp;" + langresult +
                      "<br><strong>State: </strong>&nbsp;" + docstate +
