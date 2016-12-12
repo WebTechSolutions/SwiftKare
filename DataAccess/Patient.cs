@@ -24,8 +24,8 @@ namespace DataAccess
             this.PatientAllergies = new HashSet<PatientAllergy>();
             this.PatientFamilyHXes = new HashSet<PatientFamilyHX>();
             this.PatientSurgeries = new HashSet<PatientSurgery>();
-            this.Consultations = new HashSet<Consultation>();
             this.UserFiles = new HashSet<UserFile>();
+            this.Consultations = new HashSet<Consultation>();
         }
     
         public long patientID { get; set; }
@@ -78,8 +78,8 @@ namespace DataAccess
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PatientSurgery> PatientSurgeries { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Consultation> Consultations { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserFile> UserFiles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Consultation> Consultations { get; set; }
     }
 }

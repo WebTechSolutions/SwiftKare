@@ -22,8 +22,6 @@ namespace DataAccess
         public Nullable<bool> reviewStatus { get; set; }
         public Nullable<long> doctorID { get; set; }
         public Nullable<long> patientID { get; set; }
-        public Nullable<int> startTime { get; set; }
-        public Nullable<int> endTime { get; set; }
         public Nullable<long> consultationRosID { get; set; }
         public string subjective { get; set; }
         public string objective { get; set; }
@@ -34,10 +32,12 @@ namespace DataAccess
         public string mb { get; set; }
         public Nullable<System.DateTime> md { get; set; }
         public Nullable<bool> active { get; set; }
+        public Nullable<System.TimeSpan> startTime { get; set; }
+        public Nullable<System.TimeSpan> endTime { get; set; }
     
         public virtual Appointment Appointment { get; set; }
         public virtual ConsultationRO ConsultationRO { get; set; }
-        public virtual Patient Patient { get; set; }
         public virtual Doctor Doctor { get; set; }
+        public virtual Patient Patient { get; set; }
     }
 }
