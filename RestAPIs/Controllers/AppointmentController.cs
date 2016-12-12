@@ -109,19 +109,22 @@ namespace RestAPIs.Controllers
                 app.active = true;
                 app.doctorID = model.doctorID;
                 app.patientID = model.patientID;
-                if (model.appTime.Contains("AM"))
-                {
-                    outputTime = model.appTime.Replace("AM", "");
-                }
-                if (model.appTime.Contains("PM"))
-                {
-                    outputTime = model.appTime.Replace("PM", "");
-                }
-                app.appTime = TimeSpan.Parse(outputTime);
+                //if (model.appTime.Contains("AM"))
+                //{
+                //    outputTime = model.appTime.Replace("AM", "");
+                //}
+                //if (model.appTime.Contains("PM"))
+                //{
+                //    outputTime = model.appTime.Replace("PM", "");
+                //}
+                app.appTime = To24HrTime(model.appTime);
                 app.appDate =Convert.ToDateTime(model.appDate);
                 app.rov = model.rov;
                 app.chiefComplaints = model.chiefComplaints;
                 app.cb = model.patientID.ToString();
+                app.paymentAmt = model.paymentAmt;
+                Random rnd = new Random();
+                app.paymentID= rnd.Next(100).ToString();
                 app.cd = System.DateTime.Now;
 
                 db.Appointments.Add(app);
@@ -136,7 +139,25 @@ namespace RestAPIs.Controllers
             response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
             return response;
         }
-      
+
+        private TimeSpan To24HrTime(string time)
+        {
+            char[] delimiters = new char[] { ':', ' ' };
+            string[] spltTime = time.Split(delimiters);
+
+            int hour = Convert.ToInt32(spltTime[0]);
+            int minute = Convert.ToInt32(spltTime[1]);
+            int seconds = 0;
+
+            string amORpm = spltTime[2];
+
+            if (amORpm.ToUpper() == "PM")
+            {
+                hour = (hour % 12) + 12;
+            }
+
+            return new TimeSpan(hour, minute,seconds);
+        }
         [Route("api/GetRescheduleAppforPatient")]
         public HttpResponseMessage GetRescheduleAppforPatient(long patientID)
         {

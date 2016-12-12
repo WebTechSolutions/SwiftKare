@@ -8,6 +8,7 @@ namespace DataAccess.CustomModels
 {
     public class UpdateSecretQuestions
     {
+        public long doctorID { get; set; }
         public string secretquestion1 { get; set; }
         public string secretquestion2 { get; set; }
         public string secretquestion3 { get; set; }

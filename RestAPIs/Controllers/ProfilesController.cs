@@ -126,7 +126,12 @@ namespace RestAPIs.Controllers
                     }
                     else
                     {
-                        response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Password is not changed. Try again." });
+                        string msg = "";
+                        foreach (var error in result.Errors)
+                        {
+                            msg = error;
+                        }
+                        response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = msg });
                         return response;
                     }
 
@@ -182,7 +187,7 @@ namespace RestAPIs.Controllers
 
         [Route("api/updateDoctorSecretAnswers")]
         [ResponseType(typeof(HttpResponseMessage))]
-        public async Task<HttpResponseMessage> AddDoctorSecretAnswers(long doctorID,UpdateSecretQuestions model)
+        public async Task<HttpResponseMessage> AddDoctorSecretAnswers(UpdateSecretQuestions model)
         {
             Doctor doctor = new Doctor();
             try
@@ -220,8 +225,8 @@ namespace RestAPIs.Controllers
                     return response;
                 }
 
-                doctor = db.Doctors.Where(m => m.doctorID == doctorID && m.active == true).FirstOrDefault();
-                if (doctor != null)
+                doctor = (from doc in db.Doctors where doc.doctorID == model.doctorID && doc.active == true select doc).FirstOrDefault();//db.Doctors.Where(m => m.doctorID == model.doctorID && m.active == true).FirstOrDefault();
+                if (doctor == null)
                 {
 
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Doctor not found." });
@@ -238,10 +243,10 @@ namespace RestAPIs.Controllers
                     doctor.secretAnswer2 = model.secretanswer2;
                     doctor.secretAnswer3 = model.secretanswer3;
                     doctor.md = System.DateTime.Now;
-                    doctor.mb = doctorID.ToString();
+                    doctor.mb = model.doctorID.ToString();
                     db.Entry(doctor).State = EntityState.Modified;
                     await db.SaveChangesAsync();
-                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = doctorID, message = "" });
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.doctorID, message = "" });
                     return response;
 
                 }
@@ -765,6 +770,7 @@ namespace RestAPIs.Controllers
                 else
                 {
                     patlang = new PatientLanguage();
+                    patlang.active = true;
                     patlang.languageName = model.languageName;
                     patlang.patientID = model.patientID;
                     patlang.cd = System.DateTime.Now;
@@ -857,7 +863,7 @@ namespace RestAPIs.Controllers
             }
             catch (Exception ex)
             {
-                return ThrowError(ex, "UpdatePatientLanguages in ProfilesController.");
+                return ThrowError(ex, "UpdateDoctorLanguages in ProfilesController.");
             }
 
         }
@@ -893,6 +899,7 @@ namespace RestAPIs.Controllers
                 {
                     doclang = new DoctorLanguage();
                     doclang.languageName = model.languageName;
+                    doclang.active = true;
                     doclang.doctorID = model.doctorID;
                     doclang.cd = System.DateTime.Now;
                     doclang.cb = model.doctorID.ToString();
@@ -970,6 +977,7 @@ namespace RestAPIs.Controllers
                 else
                 {
                     doclic = new DoctorLicenseState();
+                    doclic.active = true;
                     doclic.stateName = model.licstateName;
                     doclic.doctorID = model.doctorID;
                     doclic.cd = System.DateTime.Now;

@@ -17,6 +17,7 @@ namespace DataAccess.CustomModels
         public string specialization { get; set; }
         public string workExperience { get; set; }
         public string education { get; set; }
+        //
         public string publication { get; set; }
         public Nullable<long> consultCharges { get; set; }
         public string state { get; set; }
