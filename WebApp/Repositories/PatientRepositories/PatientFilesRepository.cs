@@ -55,7 +55,7 @@ namespace WebApp.Repositories.PatientRepositories
 
         public ApiResultModel DeletePatientFile(long fileID)
         {
-            var response = ApiConsumerHelper.DeleteData("api/deletePatientFile?fileID=" + fileID);
+            var response = ApiConsumerHelper.PostData("api/deletePatientFile?fileID=" + fileID, "");
             var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
             return result;
         }
