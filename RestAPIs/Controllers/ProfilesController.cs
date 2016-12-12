@@ -32,7 +32,7 @@ namespace RestAPIs.Controllers
             
             try
             {
-                var secretquests = (from sq in db.SecretQuestions where sq.active == true select new { sq.secretQuestionID, sq.secretQuestionn }).ToList();
+                var secretquests = (from sq in db.SecretQuestions where sq.active == true select new SecretQuestionVM { secretQuestionID = sq.secretQuestionID, secretQuestion = sq.secretQuestionn }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, secretquests);
                 return response;
                 
@@ -53,7 +53,7 @@ namespace RestAPIs.Controllers
 
             try
             {
-                var timezones = (from tz in db.TimeZones where tz.active == true select new { tz.zoneID, tz.timeZonee }).ToList();
+                var timezones = (from tz in db.TimeZones where tz.active == true select new TimeZoneVM { zoneID = tz.zoneID, timeZone = tz.timeZonee }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, timezones);
                 return response;
 
@@ -71,11 +71,9 @@ namespace RestAPIs.Controllers
         [ResponseType(typeof(HttpResponseMessage))]
         public HttpResponseMessage GetCities()
         {
-
-
             try
             {
-                var cities = (from c in db.Cities where c.active == true select new { c.cityID, c.cityName }).ToList();
+                var cities = (from c in db.Cities where c.active == true select new CityVM { cityID = c.cityID, cityName = c.cityName }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, cities);
                 return response;
 
@@ -96,7 +94,7 @@ namespace RestAPIs.Controllers
 
             try
             {
-                var states = (from c in db.States where c.active == true select new { c.stateID, c.stateName }).ToList();
+                var states = (from c in db.States where c.active == true select new StateVM { stateID = c.stateID, stateName = c.stateName }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, states);
                 return response;
 
@@ -854,6 +852,7 @@ namespace RestAPIs.Controllers
 
         }
 
+        [HttpPost]
         [Route("api/deletePatientLanguages")]
         public async Task<HttpResponseMessage> DeletePatientLanguages(long langID)
         {
@@ -982,6 +981,7 @@ namespace RestAPIs.Controllers
 
         }
 
+        [HttpPost]
         [Route("api/deleteDoctorLanguages")]
         public async Task<HttpResponseMessage> DeleteDoctorLanguages(long langID)
         {
@@ -1116,6 +1116,7 @@ namespace RestAPIs.Controllers
 
         }
 
+        [HttpPost]
         [Route("api/deleteDoctorLicensedStates")]
         public async Task<HttpResponseMessage> DeleteDoctorLicensedStates(long lsID)
         {
