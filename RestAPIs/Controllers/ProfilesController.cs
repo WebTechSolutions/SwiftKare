@@ -17,6 +17,7 @@ using System.Web.Http.Description;
 
 namespace RestAPIs.Controllers
 {
+    [Authorize]
     public class ProfilesController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
@@ -43,7 +44,70 @@ namespace RestAPIs.Controllers
 
         }
 
-        
+        [HttpGet]
+        [Route("api/getTimeZones")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage GetTimeZones()
+        {
+
+
+            try
+            {
+                var timezones = (from tz in db.TimeZones where tz.active == true select new { tz.zoneID, tz.timeZonee }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, timezones);
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetTimeZones in ProfilesController.");
+            }
+
+        }
+
+
+        [HttpGet]
+        [Route("api/getCities")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage GetCities()
+        {
+
+
+            try
+            {
+                var cities = (from c in db.Cities where c.active == true select new { c.cityID, c.cityName }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, cities);
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetCities in ProfilesController.");
+            }
+
+        }
+
+        [HttpGet]
+        [Route("api/getStates")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage GetStates()
+        {
+
+
+            try
+            {
+                var states = (from c in db.States where c.active == true select new { c.stateID, c.stateName }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, states);
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetStates in ProfilesController.");
+            }
+
+        }
+
         //Doctor Profile Section
         [Route("api/updateDoctorPicture")]
         [ResponseType(typeof(HttpResponseMessage))]

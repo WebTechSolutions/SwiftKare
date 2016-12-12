@@ -79,9 +79,9 @@ namespace DataAccess
         public virtual DbSet<LifeStyleQuestion> LifeStyleQuestions { get; set; }
         public virtual DbSet<UserFile> UserFiles { get; set; }
         public virtual DbSet<Doctor> Doctors { get; set; }
+        public virtual DbSet<TimeZone> TimeZones { get; set; }
         public virtual DbSet<ChatLog> ChatLogs { get; set; }
         public virtual DbSet<LiveReqLog> LiveReqLogs { get; set; }
-        public virtual DbSet<TimeZone> TimeZones { get; set; }
         public virtual DbSet<VCLog> VCLogs { get; set; }
         public virtual DbSet<Consultation> Consultations { get; set; }
     
@@ -1850,37 +1850,6 @@ namespace DataAccess
                 new ObjectParameter("patientID", typeof(long));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConsultations_Result>("SP_GetPatientConsultations", patientIDParameter);
-        }
-    
-        public virtual int sp_addextendedproc2(string functname, string dllname)
-        {
-            var functnameParameter = functname != null ?
-                new ObjectParameter("functname", functname) :
-                new ObjectParameter("functname", typeof(string));
-    
-            var dllnameParameter = dllname != null ?
-                new ObjectParameter("dllname", dllname) :
-                new ObjectParameter("dllname", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_addextendedproc2", functnameParameter, dllnameParameter);
-        }
-    
-        public virtual int sp_dropextendedproc2(string functname)
-        {
-            var functnameParameter = functname != null ?
-                new ObjectParameter("functname", functname) :
-                new ObjectParameter("functname", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_dropextendedproc2", functnameParameter);
-        }
-    
-        public virtual ObjectResult<SP_GetPatientConsultations1_Result> SP_GetPatientConsultations1(Nullable<long> patientID)
-        {
-            var patientIDParameter = patientID.HasValue ?
-                new ObjectParameter("patientID", patientID) :
-                new ObjectParameter("patientID", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConsultations1_Result>("SP_GetPatientConsultations1", patientIDParameter);
         }
     }
 }

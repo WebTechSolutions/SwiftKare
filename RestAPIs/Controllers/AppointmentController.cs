@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -19,6 +20,19 @@ namespace RestAPIs.Controllers
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
         HttpResponseMessage response;
+        private bool IsValid(string emailaddress)
+        {
+            try
+            {
+                MailAddress m = new MailAddress(emailaddress);
+
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+        }
 
         [Route("api/PatientPreviousROV")]
         public HttpResponseMessage GetROV(long patientID)
@@ -313,12 +327,12 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                if(model.doctorID==0||model.doctorID==null)
+                if(model.doctorID==0)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
                     return response;
                 }
-                if (model.appID == 0 || model.appID == null)
+                if (model.appID == 0 )
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment ID." });
                     return response;
@@ -332,13 +346,16 @@ namespace RestAPIs.Controllers
                 else
                 {
                     string currDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                    string appDateTime = result.appDate.ToString() + result.appTime.ToString();
+                    DateTime ad = Convert.ToDateTime(result.appDate);
+                    TimeSpan at = TimeSpan.Parse(result.appTime.ToString());
+                    //string appDateTime = ad.ToString("g") + " "+at.ToString();
+                    DateTime appDateTime = ad + at;
                     DateTime cdt = Convert.ToDateTime(currDateTime);
-                    DateTime adt = Convert.ToDateTime(appDateTime);
-                    TimeSpan timediff = cdt - adt;
-                    if (timediff.TotalHours > 24)
+                    //DateTime adt = Convert.ToDateTime(appDateTime);
+                    TimeSpan timediff = appDateTime-cdt ;
+                    if (timediff.TotalHours < 24)
                     {
-                        response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Appointment reschedule is not allowed after 24 hours." });
+                        response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Appointment reschedule is not allowed when less than 24 hrs are left for appointment." });
                         return response;
                     }
                     else
@@ -351,7 +368,7 @@ namespace RestAPIs.Controllers
                     }
                 }
                 
-                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = model.appID, message = "" });
+                response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.appID, message = "" });
                 return response;
             }
             catch (Exception ex)
@@ -363,7 +380,7 @@ namespace RestAPIs.Controllers
         }
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
-            response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = "Internal server error at"+Action });
+            response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = "Internal server error at "+Action });
             return response;
           
         }
