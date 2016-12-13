@@ -27,13 +27,13 @@ namespace DataAccess
         public string objective { get; set; }
         public string assessment { get; set; }
         public string plans { get; set; }
-        public Nullable<System.TimeSpan> startTime { get; set; }
-        public Nullable<System.TimeSpan> endTime { get; set; }
         public string cb { get; set; }
         public Nullable<System.DateTime> cd { get; set; }
         public string mb { get; set; }
         public Nullable<System.DateTime> md { get; set; }
         public Nullable<bool> active { get; set; }
+        public Nullable<System.TimeSpan> startTime { get; set; }
+        public Nullable<System.TimeSpan> endTime { get; set; }
         public string seesionID { get; set; }
         public string token { get; set; }
         public string endby { get; set; }
