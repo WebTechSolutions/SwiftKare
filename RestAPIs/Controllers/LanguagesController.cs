@@ -108,7 +108,7 @@ namespace RestAPIs.Controllers
 
         // DELETE: api/Languages/5
         [ResponseType(typeof(Language))]
-        public async Task<IHttpActionResult> DeleteLanguage(long id)
+        public async Task<IHttpActionResult> RemoveLanguage(long id)
         {
             Language language = await db.Languages.FindAsync(id);
             if (language == null)

@@ -856,7 +856,7 @@ namespace RestAPIs.Controllers
         }
 
         [Route("api/deletePatientLanguages")]
-        public async Task<HttpResponseMessage> DeletePatientLanguages(long langID)
+        public async Task<HttpResponseMessage> RemovePatientLanguages(long langID)
         {
             try
             {
@@ -984,7 +984,7 @@ namespace RestAPIs.Controllers
         }
 
         [Route("api/deleteDoctorLanguages")]
-        public async Task<HttpResponseMessage> DeleteDoctorLanguages(long langID)
+        public async Task<HttpResponseMessage> RemoveDoctorLanguages(long langID)
         {
             try
             {
@@ -997,7 +997,7 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Language not found." });
                     return response;
                 }
-                doclang.active = false;//Delete Operation changed
+                doclang.active = false;//Remove Operation changed
                 doclang.mb = doclang.doctorID.ToString();
                 doclang.md = System.DateTime.Now;
                 db.Entry(doclang).State = EntityState.Modified;
@@ -1118,7 +1118,7 @@ namespace RestAPIs.Controllers
         }
 
         [Route("api/deleteDoctorLicensedStates")]
-        public async Task<HttpResponseMessage> DeleteDoctorLicensedStates(long lsID)
+        public async Task<HttpResponseMessage> RemoveDoctorLicensedStates(long lsID)
         {
             try
             {

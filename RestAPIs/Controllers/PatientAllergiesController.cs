@@ -203,7 +203,7 @@ namespace RestAPIs.Controllers
       
         [Route("api/deletePatientAllergy")]
         [ResponseType(typeof(HttpResponseMessage))]
-        public async Task<HttpResponseMessage> DeletePatientCondition(long allergyID)
+        public async Task<HttpResponseMessage> RemovePatientAllergy(long allergyID)
         {
             try
             {

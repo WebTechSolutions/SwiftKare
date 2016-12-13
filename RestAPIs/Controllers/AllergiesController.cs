@@ -85,7 +85,7 @@ namespace RestAPIs.Controllers
 
         // DELETE: api/Allergies/5
         [ResponseType(typeof(Allergy))]
-        public async Task<IHttpActionResult> DeleteAllergy(long id)
+        public async Task<IHttpActionResult> RemoveAllergy(long id)
         {
             Allergy allergy = await db.Allergies.FindAsync(id);
             if (allergy == null)

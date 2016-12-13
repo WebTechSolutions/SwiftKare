@@ -236,7 +236,7 @@ namespace RestAPIs.Controllers
         }
 
         [Route("api/deleteMessage")]
-        public async Task<HttpResponseMessage> DeleteMessage(long msgID)
+        public async Task<HttpResponseMessage> RemoveMessage(long msgID)
         {
             try
             {

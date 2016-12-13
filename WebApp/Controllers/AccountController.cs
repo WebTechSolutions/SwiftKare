@@ -353,6 +353,112 @@ namespace WebApp.Controllers
             return View("Login", model);
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterPatient(LoginRegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = model.RegisterViewModel.Email,
+                    Email = model.RegisterViewModel.Email,
+                    FirstName = model.RegisterViewModel.FirstName,
+                    LastName = model.RegisterViewModel.LastName,
+                };
+
+                // Add the Address properties:
+
+
+
+                var result = await UserManager.CreateAsync(user, model.RegisterViewModel.Password);
+                dynamic addedResult;
+                if (result.Succeeded)
+                {
+                    SessionHandler.UserName = model.RegisterViewModel.Email;
+                    SessionHandler.Password = model.RegisterViewModel.Password;
+                    SessionHandler.UserId = user.Id;
+
+                    
+                        PatientRepository objRepo = new PatientRepository();
+                        Patient obj = new Patient
+                        {
+                            userId = user.Id,
+                            lastName = user.LastName,
+                            firstName = user.FirstName,
+                            email = user.Email
+                        };
+                        addedResult = objRepo.Add(obj);
+                   
+                    if (addedResult != null)
+                    {
+                        ViewBag.SuccessMessage = "Your Account has been created, please login";
+                        return View("PatientLogin");
+                    }
+                }
+                AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+
+            //return View("Login", model);
+            return View("PatientLogin", model);
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterDoctor(LoginRegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = model.RegisterViewModel.Email,
+                    Email = model.RegisterViewModel.Email,
+                    FirstName = model.RegisterViewModel.FirstName,
+                    LastName = model.RegisterViewModel.LastName,
+                };
+
+                // Add the Address properties:
+
+
+
+                var result = await UserManager.CreateAsync(user, model.RegisterViewModel.Password);
+                dynamic addedResult;
+                if (result.Succeeded)
+                {
+                    SessionHandler.UserName = model.RegisterViewModel.Email;
+                    SessionHandler.Password = model.RegisterViewModel.Password;
+                    SessionHandler.UserId = user.Id;
+
+                    
+                        DoctorRepository objRepo = new DoctorRepository();
+                        Doctor obj = new Doctor
+                        {
+                            userId = user.Id,
+                            lastName = user.LastName,
+                            firstName = user.FirstName,
+                            email = user.Email
+                        };
+                        addedResult = objRepo.Add(obj);
+                   
+                    if (addedResult != null)
+                    {
+                        ViewBag.SuccessMessage = "Your Account has been created, You can login after approval of your account.";
+                        return View("DoctorLogin");
+                    }
+                }
+                AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+
+            //return View("Login", model);
+            return View("DoctorLogin", model);
+        }
 
         //
         // GET: /Account/ConfirmEmail

@@ -31,7 +31,7 @@ namespace RestAPIs.Controllers
         }
 
         //[Route("api/deleteAlert")]
-        //public async Task<HttpResponseMessage> deleteAlert(long alertID)
+        //public async Task<HttpResponseMessage> RemoveAlert(long alertID)
         //{
         //    try
         //    {
