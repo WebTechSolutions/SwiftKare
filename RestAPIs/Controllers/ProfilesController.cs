@@ -410,7 +410,6 @@ namespace RestAPIs.Controllers
             }
 
         }
-
         [HttpGet]
         [Route("api/getDoctorProfile")]
         [ResponseType(typeof(HttpResponseMessage))]

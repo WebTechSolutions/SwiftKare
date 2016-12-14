@@ -105,28 +105,12 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult CreateEditTimings(DoctorTimingsModel model)
         {
-            var arrFrom = model.from.Split(':');
-            var arrTo = model.to.Split(':');
-
-            var strHoursFrom = arrFrom[0];
-            var strHoursTo = arrTo[0];
-
-            var hoursFrom = Convert.ToInt32(arrFrom[0]);
-            var hoursTo = Convert.ToInt32(arrTo[0]);
-
-            if (hoursFrom > 12)
-                hoursFrom = hoursFrom - 12;
-
-            if (hoursTo > 12)
-                hoursTo = hoursTo - 12;
-
-            model.from = model.from.Replace(strHoursFrom, hoursFrom.ToString());
-            model.to = model.to.Replace(strHoursTo, hoursTo.ToString());
             if (model.from.Length < 8)
                 model.from = "0" + model.from;
 
             if (model.to.Length < 8)
                 model.to = "0" + model.to;
+
             if (SessionHandler.IsExpired)
             {
                 return Json(new
@@ -195,6 +179,14 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult DeleteDoctorTiming(long id)
         {
+            if (SessionHandler.IsExpired)
+            {
+                return Json(new
+                {
+                    redirectUrl = Url.Action("DoctorLogin", "Account"),
+                    isRedirect = true
+                });
+            }
             objTimingRepo.Delete(id);
             return Json(id, JsonRequestBehavior.AllowGet);
         }

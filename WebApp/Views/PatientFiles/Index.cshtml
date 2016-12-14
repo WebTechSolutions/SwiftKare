@@ -1,0 +1,211 @@
+﻿@{
+    ViewBag.Title = "My Files";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+<div class="right_col" role="main">
+    <div class="clearfix"></div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel" style="margin-bottom: 190px;">
+                <div class="x_title">
+                    <h2>My Files</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <h2>Upload New Files</h2>
+                    <form id="frmUpload" class="form-inline">
+                        <div class="form-group m-b-10">
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('fileID').click(); return false;">
+                                Browse
+                            </button>
+                            <input type="file" id="fileID" style="visibility: hidden;display:none;" />
+                            <button id="btnSelectedFile" type="button" class="btn btn-default" style="display:none;">
+                                <span id="spnSelFileName"></span> <i class="fa fa-times" aria-hidden="true"></i>
+                            </button>
+                            @Html.DropDownList("fileType", (IEnumerable<SelectListItem>)ViewBag.drpFileTypes,
+                               new { @class = "form-control", @style = "height: 33px; margin-top: -3px; margin-bottom: 2px;" })
+
+                            @*<select id="heard" class="form-control" required="" style="height: 33px; margin-top: -3px; margin-bottom: 2px;">
+                                <option value="press">Test Result</option>
+                                <option value="">other</option>
+                            </select>*@
+                            <button id="btnUpload" type="button" class="btn btn-primary" aria-expanded="false">Upload</button>
+                            <p>Only , txt , pdf , docx , csv , jpg , png format are allowed</p>
+                        </div>
+                    </form>
+                    <div id="divResultContainer" class="table-responsive">
+                        @{
+                            Html.RenderAction("PartialIndex", "PatientFiles");
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<iframe id="iframeDownload" style="display:none;"></iframe>
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#fileID").change(function () {
+                var filepath = $("#fileID").val();
+                var filename = filepath.substring(filepath.lastIndexOf('\\') + 1);
+                $("#spnSelFileName").html(filename);
+                $("#btnSelectedFile").show();
+            });
+
+            $("#btnUpload").click(function () {
+                if ($("#fileID").val() == '') {
+                    new PNotify({ title: 'Error', text: 'Please select any file to upload', type: 'error', styling: 'bootstrap3' });
+                    return;
+                }
+
+                var filepath = $("#fileID").val();
+                var fileExt = filepath.substring(filepath.lastIndexOf('.') + 1).toLowerCase();
+
+                if (fileExt != "txt" && fileExt != "pdf" && fileExt != "docx" && fileExt != "csv" && fileExt != "jpg" && fileExt != "png") {
+                    new PNotify({ title: 'Error', text: 'File format is not supported. Please choose appropriate file format.', type: 'error', styling: 'bootstrap3' });
+                    return;
+                }
+
+                //Perform upload functionality
+
+                // Checking whether FormData is available in browser
+                if (window.FormData !== undefined) {
+
+                    var fileUpload = $("#fileID").get(0);
+                    var files = fileUpload.files;
+
+                    // Create FormData object
+                    var fileData = new FormData();
+
+                    // Looping over all files and add it to FormData object
+                    for (var i = 0; i < files.length; i++) {
+                        fileData.append(files[i].name, files[i]);
+                    }
+
+                    // Adding one more key to FormData object
+                    fileData.append('fileType', $("#fileType").val());
+
+                    //Start displaying loader
+                    showLoader();
+
+                    $.ajax({
+                        url: '@Url.Action("UploadFiles", "PatientFiles")',
+                        type: "POST",
+                        contentType: false, // Not to set any content header
+                        processData: false, // Not to process data
+                        data: fileData,
+                        success: function (result) {
+                            //Reload container
+                            reloadContainer(function () {
+                                new PNotify({ title: 'Success', text: result, type: 'success', styling: 'bootstrap3' });
+                                deSelectFile();
+                                //Stop displaying loader
+                                stopLoader();
+                            });
+                        },
+                        error: function (err) {
+                            new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                            //Stop displaying loader
+                            stopLoader();
+                        }
+                    });
+                } else {
+                    new PNotify({ title: 'Error', text: 'FormData is not supported.', type: 'error', styling: 'bootstrap3' });
+                }
+
+            });
+
+            $("#btnSelectedFile").click(deSelectFile);
+
+        });
+
+        function reloadContainer(callback) {
+            $("#divResultContainer").load('@Url.Action("PartialIndex", "PatientFiles")', function () {
+                callback();
+            });
+        }
+
+        function deleteFile(fileId) {
+            if (confirm("Are you sure you want to delete this file?")) {
+                showLoader();
+                var cUrl = "@Url.Action("deleteFile","PatientFiles")?fileId=" + fileId;
+                $.post(cUrl, function (oResp) {
+                    if (oResp.message == "") {
+                        reloadContainer(function () {
+                            new PNotify({ title: 'Success', text: 'File deleted successfully.', type: 'success', styling: 'bootstrap3' });
+                            stopLoader();
+                        });
+                    } else {
+                        new PNotify({ title: 'Error', text: oResp.message, type: 'error', styling: 'bootstrap3' });
+                        stopLoader();
+                    }
+
+                });
+            }
+        }
+
+        function downloadFile(fileId) {
+
+            if (confirm("Are you sure you want to downlod file?")) {
+                var cUrl = "@Url.Action("Download", "PatientFiles")?fileId=" + fileId;
+
+                $('#iframeDownload').attr('src', cUrl);
+                $('#iframeDownload').load();
+            }
+        }
+
+        function deSelectFile() {
+            $("#fileID").val('');
+            $("#btnSelectedFile").hide();
+            $("#spnSelFileName").html('');
+        }
+
+        function showLoader() {
+            blockUI();
+        }
+
+        function stopLoader() {
+            $.unblockUI();
+        }
+
+        //Center the element
+        $.fn.center = function () {
+            this.css("position", "absolute");
+            this.css("top", ($(window).height() - this.height()) / 2 + $(window).scrollTop() + "px");
+            this.css("left", ($(window).width() - this.width()) / 2 + $(window).scrollLeft() + "px");
+            return this;
+        }
+
+        //blockUI
+        function blockUI() {
+            $.blockUI({
+                css: {
+                    backgroundColor: 'transparent',
+                    border: 'none'
+                },
+                message: '<div class="spinner"></div>',
+                baseZ: 1500,
+                overlayCSS: {
+                    backgroundColor: '#FFFFFF',
+                    opacity: 0.7,
+                    cursor: 'wait'
+                }
+            });
+            $('.blockUI.blockMsg').center();
+        }//end Blockui
+
+    </script>
+}

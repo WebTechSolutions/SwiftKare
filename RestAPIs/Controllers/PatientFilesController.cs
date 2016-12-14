@@ -60,6 +60,33 @@ namespace RestAPIs.Controllers
             }
         }
 
+        [Route("api/getPatientFile")]
+        public HttpResponseMessage GetPatientFile(long patientID, long fileId)
+        {
+            try
+            {
+                var files = (from l in db.UserFiles
+                             where l.active == true && l.patientID == patientID&& l.fileID == fileId
+                             orderby l.fileID descending
+                             select new GetPatientUserFiles
+                             {
+                                 fileID = l.fileID,
+                                 patientID = l.patientID,
+                                 doctorID = l.doctorID,
+                                 FileName = l.FileName.Trim(),
+                                 fileContent = l.fileContent,
+                                 documentType = l.documentType
+                             }).FirstOrDefault();
+                response = Request.CreateResponse(HttpStatusCode.OK, files);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetPatientFiles in PatientFilesController");
+            }
+        }
+
+
         [Route("api/addPatientFile")]
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> AddPatientFiles(FilesCustomModel model)
@@ -68,11 +95,11 @@ namespace RestAPIs.Controllers
             try
             {
 
-                if (model.FileName == null || model.FileName == "" || !Regex.IsMatch(model.FileName.Trim(), "^[0-9a-zA-Z ]+$"))
-                {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid file name. Only letters and numbers are allowed." });
-                    return response;
-                }
+                //if (model.FileName == null || model.FileName == "" || !Regex.IsMatch(model.FileName.Trim(), "^[0-9a-zA-Z ]+$"))
+                //{
+                //    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid file name. Only letters and numbers are allowed." });
+                //    return response;
+                //}
                 if (model.patientID == null || model.patientID == 0)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
@@ -102,7 +129,7 @@ namespace RestAPIs.Controllers
                     patfile.FileName = model.FileName;
                     patfile.patientID = model.patientID;
                     patfile.cd = System.DateTime.Now;
-                    patfile.doctorID = model.doctorID;
+                    patfile.doctorID = model.doctorID == -1 ? null : model.doctorID;
                     patfile.fileContent = model.fileContent;
                     patfile.documentType = model.documentType;
                     patfile.cb = model.patientID.ToString();
@@ -203,6 +230,7 @@ namespace RestAPIs.Controllers
            
         }
 
+        [HttpPost]
         [Route("api/deletePatientFile")]
         public async Task<HttpResponseMessage> RemovePatientFile(long fileID)
         {

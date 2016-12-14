@@ -503,62 +503,75 @@ namespace WebApp.Controllers
                 var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 ForgotPasswordCodeModel.Token = code;
 
+                var callbackUrl = Url.Action("Questions", "Account", new { email = model.Email, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+                return View("ForgotPasswordConfirmationLink");
+            }
+            return View(model);
+        }
 
-                //var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                //await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
-                //ViewBag.Link = callbackUrl;
-                var objModel = new SecretQuestionModel();
-                objModel.Email = user.UserName;
-                var roles = UserManager.GetRoles(user.Id);
-                Random rnd = new Random();
-                int caseSwitch = rnd.Next(1, 4);
-                if (roles.Contains("Patient"))
+        [AllowAnonymous]
+        public async Task<ActionResult> Questions(string email, string code)
+        {
+            var user = await UserManager.FindByNameAsync(email);
+            ForgotPasswordCodeModel.Token = code;
+
+
+            var objModel = new SecretQuestionModel();
+            objModel.Email = user.UserName;
+            var roles = UserManager.GetRoles(user.Id);
+            Random rnd = new Random();
+            int caseSwitch = rnd.Next(1, 4);
+            if (roles.Contains("Patient"))
+            {
+                PatientRepository objRepo = new PatientRepository();
+                var resultAdd = objRepo.GetByUserId(user.Id);
+                switch (caseSwitch)
                 {
-                    PatientRepository objRepo = new PatientRepository();
-                    var resultAdd = objRepo.GetByUserId(user.Id);
-                    //switch (caseSwitch)
-                    //{
-                    //    case 1:
-                    //        objModel.SecretQuestion = resultAdd.secretQuestion1;
-                    //        objModel.SecretAnswerHidden = resultAdd.secretAnswer1;
-                    //        break;
-                    //    case 2:
-                    //        objModel.SecretQuestion = resultAdd.secretQuestion2;
-                    //        objModel.SecretAnswerHidden = resultAdd.secretAnswer2;
-                    //        break;
-                    //    default:
-                    //        objModel.SecretQuestion = resultAdd.secretQuestion3;
-                    //        objModel.SecretAnswerHidden = resultAdd.secretAnswer3;
-                    //        break;
-                    //}
+                    case 1:
+                        objModel.SecretQuestion = resultAdd.secretQuestion1;
+                        objModel.SecretAnswerHidden = resultAdd.secretAnswer1;
+                        break;
+                    case 2:
+                        objModel.SecretQuestion = resultAdd.secretQuestion2;
+                        objModel.SecretAnswerHidden = resultAdd.secretAnswer2;
+                        break;
+                    default:
+                        objModel.SecretQuestion = resultAdd.secretQuestion3;
+                        objModel.SecretAnswerHidden = resultAdd.secretAnswer3;
+                        break;
                 }
-                else if (roles.Contains("Doctor"))
+            }
+            else if (roles.Contains("Doctor"))
+            {
+                DoctorRepository objRepo = new DoctorRepository();
+                var resultAdd = objRepo.GetByUserId(user.Id);
+                switch (caseSwitch)
                 {
-                    DoctorRepository objRepo = new DoctorRepository();
-                    var resultAdd = objRepo.GetByUserId(user.Id);
-                    switch (caseSwitch)
-                    {
-                        case 1:
-                            objModel.SecretQuestion = resultAdd.secretQuestion1;
-                            objModel.SecretAnswerHidden = resultAdd.secretAnswer1;
-                            break;
-                        case 2:
-                            objModel.SecretQuestion = resultAdd.secretQuestion2;
-                            objModel.SecretAnswerHidden = resultAdd.secretAnswer2;
-                            break;
-                        default:
-                            objModel.SecretQuestion = resultAdd.secretQuestion3;
-                            objModel.SecretAnswerHidden = resultAdd.secretAnswer3;
-                            break;
-                    }
+                    case 1:
+                        objModel.SecretQuestion = resultAdd.secretQuestion1;
+                        objModel.SecretAnswerHidden = resultAdd.secretAnswer1;
+                        break;
+                    case 2:
+                        objModel.SecretQuestion = resultAdd.secretQuestion2;
+                        objModel.SecretAnswerHidden = resultAdd.secretAnswer2;
+                        break;
+                    default:
+                        objModel.SecretQuestion = resultAdd.secretQuestion3;
+                        objModel.SecretAnswerHidden = resultAdd.secretAnswer3;
+                        break;
                 }
-
-
-                return View("ForgotPasswordConfirmation", objModel);
             }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
+
+            return View("ForgotPasswordConfirmation", objModel);
+        }
+
+
+        [AllowAnonymous]
+        public ActionResult ForgotPasswordConfirmationLink()
+        {
+            return View();
         }
 
         //
@@ -657,8 +670,15 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            var roles = UserManager.GetRoles(SessionHandler.UserId);
+            var actionName = "Login";
+            if (roles.Contains("Doctor"))
+                actionName = "DoctorLogin";
+            else if (roles.Contains("Patient"))
+                actionName = "PatientLogin";
+
             AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(actionName, "Account");
         }
 
 

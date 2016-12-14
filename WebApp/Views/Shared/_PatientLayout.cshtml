@@ -9,7 +9,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>@ViewBag.Title - @WebApp.Models.AppSettings.AppName</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+    <!-- Font Awesome -->
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet">
 
+    <!-- Custom Theme Style -->
+    <link href="~/Content/css/custom.min.css" rel="stylesheet">
+    <link href="~/Content/css/style.css" rel="stylesheet">
     @Styles.Render("~/Content/NewCss")
 
 
@@ -17,16 +24,52 @@
 
     @*@Scripts.Render("~/bundles/jquery")*@
     @Scripts.Render("~/bundles/js")
+    <script src="@Url.Content("~/Scripts/blockUI.js")"></script>
 
-    <style>
-        body {
-            background-image: url("../../Content/images/bg.jpg");
+    <style type="text/css">
+        
+        /* Spinner */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+            padding: 0px;
+            border-radius: 100%;
+            border: 6px solid;
+            border-top-color: #005a9c;
+            border-bottom-color: #005a9c;
+            border-left-color: rgba(0, 90, 156, 0.15);
+            border-right-color: rgba(0, 90, 156, 0.15);
+            -webkit-animation: spinner 0.8s ease-in-out infinite alternate;
+            animation: spinner 0.8s ease-in-out infinite alternate;
+        }
+
+        @@keyframes spinner {
+            from {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @@-webkit-keyframes spinner {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(360deg);
+            }
         }
     </style>
 </head>
 
 <body class="nav-md">
-    <div>
+    <div style="display:none">
         <input type="text" id="receiverConnectionId" value="" style="display:none;" />
         Please select the doctor before calling...
         <select id="ddlAvailableDoctors"></select>
@@ -83,10 +126,7 @@
                                     <a href="my_health.html"><img src="~/Content/images/my-health.png" alt=""> &nbsp <span class="menu-txt">My Health</span> </a>
                                 </li>
                                 <li class="message">
-                                    <a href="#"><img src="~/Content/images/my-files.png" alt=""> &nbsp <span class="menu-txt">My Files</span> </a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="file.html">My Files</a></li>
-                                    </ul>
+                                    <a href="@Url.Action("Index","PatientFiles")"><img src="~/Content/images/my-files.png" alt=""> &nbsp <span class="menu-txt">My Files</span> </a>
                                 </li>
                                 <li class="call_history">
                                     <a href="#"><img src="~/Content/images/my-doctors1.png" alt="">  &nbsp <span class="menu-txt">My Doctors</span> </a>
@@ -495,6 +535,7 @@
             };
 
             // Start the connection
+            $.connection.hub.logging = true;
             $.connection.hub.start().done(function () {
                 var id = $.cookie('Id');
                 chat.server.adminJoin().done(function () {
@@ -517,13 +558,14 @@
                     // Clear text box and reset focus for next comment.
                 });
 
-                
+
 
             });
         });
     </script>
 
 
+    @RenderSection("scripts", required: false)
 
 </body>
 </html>

@@ -205,13 +205,13 @@
           <Property Name="objective" Type="varchar(max)" />
           <Property Name="assessment" Type="varchar(max)" />
           <Property Name="plans" Type="varchar(max)" />
-          <Property Name="startTime" Type="time" Precision="7" />
-          <Property Name="endTime" Type="time" Precision="7" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
+          <Property Name="startTime" Type="time" Precision="7" />
+          <Property Name="endTime" Type="time" Precision="7" />
           <Property Name="seesionID" Type="varchar" MaxLength="100" />
           <Property Name="token" Type="varchar" MaxLength="500" />
           <Property Name="endby" Type="varchar" MaxLength="50" />
@@ -228,8 +228,8 @@
           <Property Name="mb" Type="datetime" />
           <Property Name="md" Type="varchar" MaxLength="50" />
           <Property Name="active" Type="bit" />
-          <Property Name="consultationID" Type="bigint" />
           <Property Name="systemItemName" Type="varchar" MaxLength="50" />
+          <Property Name="consultationID" Type="bigint" />
         </EntityType>
         <EntityType Name="Doctor">
           <Key>
@@ -274,8 +274,8 @@
           <Property Name="suffix" Type="varchar" MaxLength="10" />
           <Property Name="education" Type="varchar(max)" />
           <Property Name="workexperience" Type="varchar(max)" />
-          <Property Name="specialization" Type="varchar" MaxLength="100" />
-          <Property Name="timezone" Type="varchar" MaxLength="100" />
+          <Property Name="specialization" Type="varchar" MaxLength="50" />
+          <Property Name="timezone" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="DoctorLanguages">
           <Key>
@@ -284,8 +284,8 @@
           <Property Name="doctorLanguageID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="languageName" Type="varchar" MaxLength="50" />
           <Property Name="doctorID" Type="bigint" />
-          <Property Name="cd" Type="datetime" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
+          <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
@@ -297,10 +297,10 @@
           <Property Name="doctorLicenseStateID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="doctorID" Type="bigint" />
           <Property Name="stateName" Type="varchar" MaxLength="50" />
-          <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
-          <Property Name="mb" Type="varchar" MaxLength="50" />
+          <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
+          <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="active" Type="bit" />
         </EntityType>
         <EntityType Name="DoctorSpeciality">
@@ -481,8 +481,8 @@
           <Property Name="subject" Type="varchar" MaxLength="100" />
           <Property Name="senderName" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
-          <Property Name="hasAttachment" Type="bit" />
           <Property Name="md" Type="datetime" />
+          <Property Name="hasAttachment" Type="bit" />
         </EntityType>
         <EntityType Name="Modules">
           <Key>
@@ -543,10 +543,10 @@
           <Property Name="pharmacy" Type="varchar" MaxLength="1000" />
           <Property Name="pharmacyid" Type="bigint" />
           <Property Name="title" Type="varchar" MaxLength="10" />
-          <Property Name="suffix" Type="varchar" MaxLength="10" />
           <Property Name="height" Type="int" />
           <Property Name="weight" Type="int" />
-          <Property Name="timezone" Type="varchar" MaxLength="100" />
+          <Property Name="suffix" Type="varchar" MaxLength="10" />
+          <Property Name="timezone" Type="varchar" MaxLength="50" />
           <Property Name="city" Type="varchar" MaxLength="50" />
           <Property Name="state" Type="varchar" MaxLength="50" />
         </EntityType>
@@ -701,7 +701,7 @@
             <PropertyRef Name="secretQuestionID" />
           </Key>
           <Property Name="secretQuestionID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="secretQuestionn" Type="varchar" MaxLength="100" />
+          <Property Name="secretQuestionn" Type="varchar" MaxLength="200" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
@@ -3403,7 +3403,7 @@
           <Property Name="suffix" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="height" Type="Int32" />
           <Property Name="weight" Type="Int32" />
-          <Property Name="timezone" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="timezone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="UserFiles" Relationship="SwiftKareDBModel.FK_UserFiles_Patient" FromRole="Patient" ToRole="UserFile" />
@@ -3880,7 +3880,7 @@
             <PropertyRef Name="secretQuestionID" />
           </Key>
           <Property Name="secretQuestionID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="secretQuestionn" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="secretQuestionn" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="cd" Type="DateTime" Precision="3" />
           <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -4008,8 +4008,8 @@
           <Property Name="suffix" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="education" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="workexperience" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="specialization" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="timezone" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="specialization" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="timezone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Appointments" Relationship="SwiftKareDBModel.FK_Appointments_Doctor" FromRole="Doctor" ToRole="Appointment" />
           <NavigationProperty Name="DoctorLanguages" Relationship="SwiftKareDBModel.FK_DoctorLanguages_Doctor" FromRole="Doctor" ToRole="DoctorLanguage" />
           <NavigationProperty Name="DoctorLicenseStates" Relationship="SwiftKareDBModel.FK_DoctorLicenseStates_Doctor" FromRole="Doctor" ToRole="DoctorLicenseState" />
@@ -4154,13 +4154,13 @@
           <Property Name="objective" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="assessment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="plans" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="startTime" Type="Time" Precision="7" />
-          <Property Name="endTime" Type="Time" Precision="7" />
           <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="cd" Type="DateTime" Precision="3" />
           <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
+          <Property Name="startTime" Type="Time" Precision="7" />
+          <Property Name="endTime" Type="Time" Precision="7" />
           <Property Name="seesionID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="token" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="endby" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -5614,13 +5614,13 @@
                 <ScalarProperty Name="endby" ColumnName="endby" />
                 <ScalarProperty Name="token" ColumnName="token" />
                 <ScalarProperty Name="seesionID" ColumnName="seesionID" />
+                <ScalarProperty Name="endTime" ColumnName="endTime" />
+                <ScalarProperty Name="startTime" ColumnName="startTime" />
                 <ScalarProperty Name="active" ColumnName="active" />
                 <ScalarProperty Name="md" ColumnName="md" />
                 <ScalarProperty Name="mb" ColumnName="mb" />
                 <ScalarProperty Name="cd" ColumnName="cd" />
                 <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="endTime" ColumnName="endTime" />
-                <ScalarProperty Name="startTime" ColumnName="startTime" />
                 <ScalarProperty Name="plans" ColumnName="plans" />
                 <ScalarProperty Name="assessment" ColumnName="assessment" />
                 <ScalarProperty Name="objective" ColumnName="objective" />
