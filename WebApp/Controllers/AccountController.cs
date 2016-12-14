@@ -447,7 +447,7 @@ namespace WebApp.Controllers
                     if (addedResult != null)
                     {
                         ViewBag.SuccessMessage = "Your Account has been created, please login";
-                        return View("PatientLogin");
+                        return View("PatientLogin", model);
                     }
                 }
                 AddErrors(result);
@@ -514,7 +514,7 @@ namespace WebApp.Controllers
 
                         var oSimpleEmail = new EmailHelper(obj.email, "SwiftKare Membership", sampleEmailBody);
                         oSimpleEmail.SendMessage();
-                        return View("DoctorLogin");
+                        return View("DoctorLogin", model);
                     }
                 }
                 AddErrors(result);
