@@ -16,6 +16,7 @@ using Identity.Membership.Models;
 using DataAccess;
 using WebApp.Repositories.DoctorRepositories;
 using WebApp.Repositories.PatientRepositories;
+using WebApp.Repositories.AdminRepository;
 //Jam
 namespace WebApp.Controllers
 {
@@ -224,6 +225,52 @@ namespace WebApp.Controllers
             }
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AdminLogin(LoginRegisterViewModel model, string returnUrl)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var result = await SignInManager.PasswordSignInAsync(model.LoginViewModel.Email, model.LoginViewModel.Password, model.LoginViewModel.RememberMe, shouldLockout: false);
+
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    {
+                        //var userId = HttpContext.User.Identity.GetUserId();
+                        string userId = UserManager.FindByName(model.LoginViewModel.Email)?.Id;
+                        SessionHandler.UserName = model.LoginViewModel.Email;
+                        SessionHandler.Password = model.LoginViewModel.Password;
+                        SessionHandler.UserId = userId;
+
+                        var objRepo = new AdminRepository();
+                        var admin = objRepo.GetByUserId(userId);
+                        var userModel = new UserInfoModel();
+                        userModel.Id = admin.adminID;
+                        userModel.Email = admin.email;
+                        userModel.FirstName = admin.firstName;
+                        userModel.LastName = admin.lastName;
+                        SessionHandler.UserInfo = userModel;
+                        if (admin.active == null || (bool)admin.active)
+                            Session["LogedUserID"] = model.LoginViewModel.Email;
+                            Session["LogedUserFullname"] = userModel.FirstName + " " + userModel.LastName;
+                        return RedirectToAction("Default", "Admin");
+                        
+                    }
+                    return RedirectToLocal(returnUrl);
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View(model);
+            }
+        }
+
 
         // POST: /Account/DoctorLogin
         [HttpPost]
@@ -253,6 +300,12 @@ namespace WebApp.Controllers
                             ModelState.AddModelError("", "Invalid login attempt.");
                             return View(model);
                         }
+                        if (doctor.status == null || !((bool)doctor.status))
+                        {
+                            ModelState.AddModelError("", "Account review is in progress. You can login after approval.");
+                            return View(model);
+                        }
+
                         var userModel = new UserInfoModel();
                         userModel.Id = doctor.doctorID;
                         userModel.Email = doctor.email;
@@ -436,18 +489,31 @@ namespace WebApp.Controllers
 
                     
                         DoctorRepository objRepo = new DoctorRepository();
-                        Doctor obj = new Doctor
-                        {
-                            userId = user.Id,
-                            lastName = user.LastName,
-                            firstName = user.FirstName,
-                            email = user.Email
+                    Doctor obj = new Doctor
+                    {
+                        userId = user.Id,
+                        lastName = user.LastName,
+                        firstName = user.FirstName,
+                        email = user.Email,
+                        status = false
                         };
                         addedResult = objRepo.Add(obj);
                    
                     if (addedResult != null)
                     {
                         ViewBag.SuccessMessage = "Your Account has been created, You can login after approval of your account.";
+                        //Send Simple Email
+
+                        var sampleEmailBody = @"
+                        <h3>Mail From SwiftKare</h3>
+                        <p>Your account has been created with SwiftKare successfully.</p>
+                        <p>You can login after approval of your account.</p>
+                        <p>&nbsp;</p>
+                        <p><strong>-Best Regards,<br/>SwiftKare</strong></p>
+                        ";
+
+                        var oSimpleEmail = new EmailHelper(obj.email, "SwiftKare Membership", sampleEmailBody);
+                        oSimpleEmail.SendMessage();
                         return View("DoctorLogin");
                     }
                 }

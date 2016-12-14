@@ -275,10 +275,30 @@ namespace SwiftKare.Controllers
 
         try
         {
-                     var id = Request.Form["id"].ToString();
-                     db.sp_ApproveDoctor(Convert.ToInt64(id),Session["LogedUserID"].ToString(), System.DateTime.Now);
-                     db.SaveChanges();
-                     return RedirectToAction("DoctorsForApproval");
+                     long id = Convert.ToInt64(Request.Form["id"].ToString());
+                    var email = Request.Form["email"].ToString();
+                    Doctor doc = db.Doctors.Where(d => d.doctorID == id && d.active == true && d.status == false).FirstOrDefault();
+                    doc.status = true;
+                    doc.mb = doc.doctorID.ToString();
+                    doc.md = System.DateTime.Now;
+                    db.Entry(doc).State = EntityState.Modified;
+                    
+                    db.SaveChangesAsync();
+                    //db.sp_ApproveDoctor(Convert.ToInt64(id),Session["LogedUserID"].ToString(), System.DateTime.Now);
+                    //db.SaveChanges();
+                    //Send Simple Email
+
+                    var sampleEmailBody = @"
+                        <h3>Mail From SwiftKare</h3>
+                        <p>Your account has been approved by Swift Kare.</p>
+                        <p>You can login now.</p>
+                        <p>&nbsp;</p>
+                        <p><strong>-Best Regards,<br/>Swift Kare</strong></p>
+                        ";
+
+                    var oSimpleEmail = new EmailHelper(email, "SwiftKare Membership", sampleEmailBody);
+                    oSimpleEmail.SendMessage();
+                    return RedirectToAction("DoctorsForApproval");
                  }
                  catch (Exception ex)
                  {

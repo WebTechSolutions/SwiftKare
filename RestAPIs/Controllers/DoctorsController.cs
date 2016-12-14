@@ -107,7 +107,7 @@ namespace RestAPIs.Controllers
                 objModel.userId = doctor.userId;
                 objModel.email = doctor.email;
                 objModel.active = doctor.active;
-
+                objModel.status = doctor.status;
                 objModel.secretQuestion1 = doctor.secretQuestion1;
                 objModel.secretQuestion2 = doctor.secretQuestion2;
                 objModel.secretQuestion3 = doctor.secretQuestion3;
@@ -216,6 +216,7 @@ namespace RestAPIs.Controllers
                 {
                     return BadRequest(ModelState);
                 }
+                doctor.status = false;
                 db.Doctors.Add(doctor);
                 await db.SaveChangesAsync();
                 return CreatedAtRoute("DefaultApi", new { id = doctor.doctorID }, doctor);

@@ -65,7 +65,7 @@
     <div id="register" class="animate form registration_form">
         <section class="login_content">
             <img src="~/Content/images/Logos.png" />
-            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            @using (Html.BeginForm("RegisterPatient", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 <h1>Create Account</h1>
@@ -90,10 +90,10 @@
                     <div>
                         <input type="submit" class="btn btn-primary submit" value="Submit" />
                     </div>
-                    <div>
+                    @*<div>
                         @Html.CheckBoxFor(m => m.IsPatient, new { @onChange = "chkChange()", @id = "chkIsPatient" })
                         <label for="chkIsPatient" id="lblIsPatient">Register as a Patient</label>
-                    </div>
+                    </div>*@
 
                     <div class="clearfix"></div>
                     <div class="separator">

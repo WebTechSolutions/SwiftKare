@@ -462,7 +462,7 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ApproveConsultation", iDParameter, mBParameter, mDParameter);
         }
     
-        public virtual int sp_ApproveDoctor(Nullable<long> iD, string mB, Nullable<System.DateTime> mD)
+        public virtual ObjectResult<Doctor> sp_ApproveDoctor(Nullable<long> iD, string mB, Nullable<System.DateTime> mD)
         {
             var iDParameter = iD.HasValue ?
                 new ObjectParameter("ID", iD) :
@@ -476,7 +476,24 @@ namespace DataAccess
                 new ObjectParameter("MD", mD) :
                 new ObjectParameter("MD", typeof(System.DateTime));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ApproveDoctor", iDParameter, mBParameter, mDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("sp_ApproveDoctor", iDParameter, mBParameter, mDParameter);
+        }
+    
+        public virtual ObjectResult<Doctor> sp_ApproveDoctor(Nullable<long> iD, string mB, Nullable<System.DateTime> mD, MergeOption mergeOption)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(long));
+    
+            var mBParameter = mB != null ?
+                new ObjectParameter("MB", mB) :
+                new ObjectParameter("MB", typeof(string));
+    
+            var mDParameter = mD.HasValue ?
+                new ObjectParameter("MD", mD) :
+                new ObjectParameter("MD", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("sp_ApproveDoctor", mergeOption, iDParameter, mBParameter, mDParameter);
         }
     
         public virtual ObjectResult<SP_CheckForDuplicatePatient_Result> SP_CheckForDuplicatePatient(string firstname, string lastname)
@@ -909,9 +926,14 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectDoctor");
         }
     
-        public virtual int SP_SelectDoctorsForApproval()
+        public virtual ObjectResult<Doctor> SP_SelectDoctorsForApproval()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectDoctorsForApproval");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("SP_SelectDoctorsForApproval");
+        }
+    
+        public virtual ObjectResult<Doctor> SP_SelectDoctorsForApproval(MergeOption mergeOption)
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("SP_SelectDoctorsForApproval", mergeOption);
         }
     
         public virtual ObjectResult<SP_SelectDocType_Result> SP_SelectDocType()
