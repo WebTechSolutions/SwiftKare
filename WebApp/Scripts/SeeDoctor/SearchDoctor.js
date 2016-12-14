@@ -359,16 +359,28 @@ function fetchTimings(fetchdate) {
         data: _objSearch,
         dataType: 'json',
         success: function (response) {
+            if (response.Message != undefined) {
+                //alert(response.Message.ReasonPhrase);
+                new PNotify({
+                    title: 'Error',
+                    text: response.Message.ReasonPhrase,
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+            }
+            else
+            {
+                var tablehtml = "";
+                $.each(response.Object, function (item) {
 
-            var tablehtml = "";
-            $.each(response.Object, function (item) {
+                    tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + fetchdate + "\")'>" + response.Object[item] + "</button></li>";
 
-                tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + fetchdate + "\")'>" + response.Object[item] + "</button></li>";
+                });
 
-            });
-
-            if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
-            else { document.getElementById("TimingsData").innerHTML = tablehtml; }
+                if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
+                else { document.getElementById("TimingsData").innerHTML = tablehtml; }
+            }
+            
         },
         error: errorRes
 

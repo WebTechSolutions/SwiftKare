@@ -151,7 +151,7 @@ namespace RestAPIs.Controllers
 
        
         [Route("api/deletePatientCondition")]
-        public async Task<HttpResponseMessage> DeletePatientCondition(long conditionID)
+        public async Task<HttpResponseMessage> RemovePatientCondition(long conditionID)
         {
             try
             {

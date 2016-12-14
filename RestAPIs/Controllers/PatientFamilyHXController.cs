@@ -151,7 +151,7 @@ namespace RestAPIs.Controllers
         }
         [Route("api/deletePatientFamilyHX")]
         [ResponseType(typeof(HttpResponseMessage))]
-        public async Task<HttpResponseMessage> DeletePatientFamilyHX(long fhxID)
+        public async Task<HttpResponseMessage> RemovePatientFamilyHX(long fhxID)
         {
             try
             {

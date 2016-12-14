@@ -67,43 +67,47 @@ function showDoctorInfo()
         data:{'doctorID': _selecteddoctorID},
         dataType: 'json',
         success: function (response) {
-            var spec = "";
-               
-            $.each(response.Object, function (item) {
-                spec = spec+response.Object[item].specialityName +",";
-          
-            });
-            var lang = "";
+            if (response.Object != null || response.Object != undefined)
+            {
+                var spec = "";
 
-            $.each(response.Object, function (item) {
-                lang = lang + response.Object[item].languageName + ",";
+                $.each(response.Object, function (item) {
+                    spec = spec + response.Object[item].specialityName + ",";
 
-            });
-           
-            var specresult = spec.substring(0, spec.length - 1);
-            var langresult = lang.substring(0, lang.length - 1);
-            var doccell = "NA";
-            var docemail = "NA";
-            var cc = "NA";
-            var docstate = "NA";
-            var gender = "";
-            if (specresult == "null") { specresult = "NA"; }
-            if (langresult == "null") { langresult = "NA"; }
-            if (response.Object[0].cellPhone != null) { doccell = response.Object[0].cellPhone; }
-            if (response.Object[0].email != null) { docemail = response.Object[0].email; }
-            if (response.Object[0].consultCharges != null) { cc = response.Object[0].consultCharges; }
-            if (response.Object[0].state != null) { docstate = response.Object[0].state; }
-            if (response.Object[0].gender != null) { gender = " (" + response.Object[0].gender + ")";}
-            tableHtml = "<address>" +
-                     "<strong>Dr. " + response.Object[0].doctorName + gender+"</strong>" +
-                     "<br><strong>Specaility: </strong>&nbsp;" + specresult +
-                     "<br><strong>Languages: </strong>&nbsp;" + langresult +
-                     "<br><strong>State: </strong>&nbsp;" + docstate +
-                     "<br><strong>Phone: </strong>&nbsp;" + doccell +
-                     "<br><strong>Email: </strong>&nbsp; " + docemail +
-                     "<br><strong>Consult Charges: </strong>&nbsp; " + cc +
-                      "</address>";
-            document.getElementById("docInfo").innerHTML = tableHtml;
+                });
+                var lang = "";
+
+                $.each(response.Object, function (item) {
+                    lang = lang + response.Object[item].languageName + ",";
+
+                });
+
+                var specresult = spec.substring(0, spec.length - 1);
+                var langresult = lang.substring(0, lang.length - 1);
+                var doccell = "NA";
+                var docemail = "NA";
+                var cc = "NA";
+                var docstate = "NA";
+                var gender = "";
+                if (specresult == "null") { specresult = "NA"; }
+                if (langresult == "null") { langresult = "NA"; }
+                if (response.Object[0].cellPhone != null) { doccell = response.Object[0].cellPhone; }
+                if (response.Object[0].email != null) { docemail = response.Object[0].email; }
+                if (response.Object[0].consultCharges != null) { cc = response.Object[0].consultCharges; }
+                if (response.Object[0].state != null) { docstate = response.Object[0].state; }
+                if (response.Object[0].gender != null) { gender = " (" + response.Object[0].gender + ")"; }
+                tableHtml = "<address>" +
+                         "<strong>Dr. " + response.Object[0].doctorName + gender + "</strong>" +
+                         "<br><strong>Specaility: </strong>&nbsp;" + specresult +
+                         "<br><strong>Languages: </strong>&nbsp;" + langresult +
+                         "<br><strong>State: </strong>&nbsp;" + docstate +
+                         "<br><strong>Phone: </strong>&nbsp;" + doccell +
+                         "<br><strong>Email: </strong>&nbsp; " + docemail +
+                         "<br><strong>Consult Charges: </strong>&nbsp; " + cc +
+                          "</address>";
+                document.getElementById("docInfo").innerHTML = tableHtml;
+            }
+            
         },
         error: errorRes
 
