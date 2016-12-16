@@ -17,6 +17,7 @@ using System.Text;
 using DataAccess.CommonModels;
 using DataAccess.CustomModels;
 using System.Data.Entity;
+using System.Globalization;
 
 namespace RestAPIs.Controllers
 {
@@ -87,7 +88,10 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                var result = db.SP_FetchDoctorTimings(searchModel.doctorID, Convert.ToDateTime(searchModel.appDate)).ToList();
+                //var dateTime = DateTime.Parse(searchModel.appDate);
+                string[] formats = { "dd/MM/yyyy" };
+                var dateTime = DateTime.ParseExact(searchModel.appDate.Trim(), formats, new CultureInfo("en-US"), DateTimeStyles.None);
+                var result = db.SP_FetchDoctorTimings(searchModel.doctorID, dateTime).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, result);
                return response;
                
@@ -214,6 +218,7 @@ namespace RestAPIs.Controllers
         {
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
             response.Content = new StringContent("Following Error occurred at method. "+ Action+"\n"+ex.Message, Encoding.Unicode);
+            response.ReasonPhrase = ex.Message;
            return response;
         }
     }

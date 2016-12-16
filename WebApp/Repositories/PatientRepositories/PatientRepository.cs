@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using WebApp.Helper;
 using Identity.Membership.Models;
 using DataAccess.CustomModels;
+using System.Web.Http;
 
 namespace WebApp.Repositories.PatientRepositories
 {
@@ -54,9 +55,17 @@ namespace WebApp.Repositories.PatientRepositories
 
         public PatientModel GetByUserId(string userId)
         {
-            var response = ApiConsumerHelper.GetResponseString("api/Patients?userId=" + userId,false);
-            var result = JsonConvert.DeserializeObject<PatientModel>(response);
-            return result;
+            try
+            {
+                var response = ApiConsumerHelper.GetResponseString("api/Patients?userId=" + userId, false);
+                var result = JsonConvert.DeserializeObject<PatientModel>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+           
         }
 
         public IQueryable<Patient> GetLanguagesList()

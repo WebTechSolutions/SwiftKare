@@ -109,9 +109,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, Object = timings });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response });
             }
 
         }
@@ -141,6 +141,20 @@ namespace WebApp.Controllers
             {
 
                 TimeSpan startTime = (TimeSpan)item.from;
+                if (startTime.Minutes % 15 != 0)
+                {
+                    TimeSpan tempp = TimeSpan.FromMinutes(15- (startTime.Minutes % 15));
+                    startTime = startTime.Add(tempp);
+                    if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
+                    {
+                        timeSlots.Add(startTime.ToString(@"hh\:mm"));
+                        TimeSpan temppp = TimeSpan.FromMinutes(15);
+                        startTime = startTime.Add(temppp);
+
+                    }
+                }
+               
+                TimeSpan itemstartTime = (TimeSpan)item.from;
                 TimeSpan endTime = (TimeSpan)item.to;
                 if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
                 {
@@ -149,7 +163,6 @@ namespace WebApp.Controllers
                     startTime = startTime.Add(tempp);
 
                 }
-
                 bool flag = true;
                 while (flag)
                 {
@@ -172,6 +185,7 @@ namespace WebApp.Controllers
 
                     if (TimeSpan.Equals(startTime, endTime))
                     {
+
                         if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
                         {
                             timeSlots.Add(startTime.ToString(@"hh\:mm"));
@@ -181,6 +195,35 @@ namespace WebApp.Controllers
                         }
                         flag = false;
                     }
+                    if(startTime.Hours == endTime.Hours)
+                    {
+                        //if (endTime.Minutes % 15 == 0)
+                        //{
+                        //    if (!(timeSlots.Contains(endTime.ToString(@"hh\:mm"))))
+                        //    {
+                        //        timeSlots.Add(endTime.ToString(@"hh\:mm"));
+                        //    }
+                        //        flag = false;
+                        //}
+                        //else
+                        //{
+                        //    flag = false;
+                        //}
+                        if (startTime.Minutes > endTime.Minutes)
+                        {
+
+                            //if (!(timeSlots.Contains(endTime.ToString(@"hh\:mm"))))
+                            //{
+                            //    timeSlots.Add(endTime.ToString(@"hh\:mm"));
+                            //}
+                            flag = false;
+                        }
+                    }
+                    
+                    //if ((timeSlots.Contains(itemstartTime.ToString(@"hh\:mm"))) && (timeSlots.Contains(endTime.ToString(@"hh\:mm"))))
+                    //{
+                    //    flag = false;
+                    //}
                 } //while end 
             }//for loop for database records.
 
@@ -203,7 +246,7 @@ namespace WebApp.Controllers
             {
                 TimeSpan doctimings = TimeSpan.Parse(timeSlots[i]);
                 var dateTime = new DateTime(doctimings.Ticks); // Date part is 01-01-0001
-                var formattedTime = dateTime.ToString("h:mm tt", CultureInfo.InvariantCulture);
+                var formattedTime = dateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
                 timeSlots.RemoveAt(i);
                 timeSlots.Insert(i, formattedTime);
                 // if (doctimings.Hours<12)

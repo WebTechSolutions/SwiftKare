@@ -232,7 +232,7 @@ namespace RestAPIs.Controllers
 
         [HttpPost]
         [Route("api/deletePatientFile")]
-        public async Task<HttpResponseMessage> DeletePatientFile(long fileID)
+        public async Task<HttpResponseMessage> RemovePatientFile(long fileID)
         {
             try
             {

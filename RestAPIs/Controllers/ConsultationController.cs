@@ -82,7 +82,7 @@ namespace RestAPIs.Controllers
 
         }
 
-        [Route("api/getROS")]
+        [Route("api/getConsultationROS")]
         public HttpResponseMessage GetROS(long consultID)
         {
             try

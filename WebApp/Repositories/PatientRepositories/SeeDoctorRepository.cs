@@ -46,11 +46,9 @@ namespace WebApp.Repositories.DoctorRepositories
                 var result = JsonConvert.DeserializeObject<List<FetchDoctorTimingModel>>(response);
                 return result;
             }
-            catch (Exception ex)
+            catch (HttpResponseException ex)
             {
-                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                httpResponseMessage.Content = new StringContent(ex.Message);
-                throw new HttpResponseException(httpResponseMessage);
+                throw ex;
             }
 
         }

@@ -280,7 +280,7 @@ function SearchDoctor(patientID) {
                                 "<i class='crl fa fa-circle clsAvailableSpot' aria-hidden='true' style='color: red; cursor: pointer;font-size: 12px; position:absolute; right:2%;'></i>" +
                                 "<img src='../Content/images/img.jpg' alt='' class='img-circle img-responsive m-b-10 m-t-0' style='margin: 0 auto;display: inline-block;'>" +
                                 "<h2 class='m-0'>" +
-                                 " <a href='#' class='thumbnail-col-inner m-b-15' data-toggle='modal' data-target='#myModal2' style='word-wrap: break-word;font-size: 15px'>Dr." +
+                                 " <a href='#' class='thumbnail-col-inner m-b-15' data-toggle='modal' data-target='#myModal2' style='word-wrap: break-word;font-size: 12px'>Dr." +
                                   response.DoctorModel[item].firstName + "&nbsp;" + response.DoctorModel[item].lastName + "</a>" +
                                  "</h2>" +
                                 "<h4 class='brief m-0 clsAvailbleForCall' style='color: green; display:none;' style='font-size: 14px'>Available</h4><h4 class='brief m-0 clsNotAvailbleForCall' style='color: red;font-size: 14px'>Not Available</h4>" +
@@ -359,16 +359,28 @@ function fetchTimings(fetchdate) {
         data: _objSearch,
         dataType: 'json',
         success: function (response) {
+            if (response.Message != undefined) {
+                //alert(response.Message.ReasonPhrase);
+                new PNotify({
+                    title: 'Error',
+                    text: response.Message.ReasonPhrase,
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+            }
+            else
+            {
+                var tablehtml = "";
+                $.each(response.Object, function (item) {
 
-            var tablehtml = "";
-            $.each(response.Object, function (item) {
+                    tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + fetchdate + "\")'>" + response.Object[item] + "</button></li>";
 
-                tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + fetchdate + "\")'>" + response.Object[item] + "</button></li>";
+                });
 
-            });
-
-            if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
-            else { document.getElementById("TimingsData").innerHTML = tablehtml; }
+                if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
+                else { document.getElementById("TimingsData").innerHTML = tablehtml; }
+            }
+            
         },
         error: errorRes
 

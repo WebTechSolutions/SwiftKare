@@ -19,5 +19,6 @@ namespace DataAccess.CustomModels
         public string secretAnswer3 { get; set; }
 
         public Nullable<bool> active { get; set; }
+        public Nullable<bool> status { get; set; }
     }
 }

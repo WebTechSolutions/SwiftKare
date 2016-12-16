@@ -199,7 +199,7 @@ namespace RestAPIs.Controllers
        
         [Route("api/deletePatientMedication")]
         [ResponseType(typeof(HttpResponseMessage))]
-        public async Task<HttpResponseMessage> DeletePatientMedication(long medicationID)
+        public async Task<HttpResponseMessage> RemovePatientMedication(long medicationID)
         {
 
             try

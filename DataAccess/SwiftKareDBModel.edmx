@@ -1962,7 +1962,7 @@
             <Parameter Name="MB" Mode="In" Type="String" />
             <Parameter Name="MD" Mode="In" Type="DateTime" />
           </FunctionImport>
-          <FunctionImport Name="sp_ApproveDoctor">
+          <FunctionImport Name="sp_ApproveDoctor" EntitySet="Doctors" ReturnType="Collection(SwiftKareDBModel.Doctor)">
             <Parameter Name="ID" Mode="In" Type="Int64" />
             <Parameter Name="MB" Mode="In" Type="String" />
             <Parameter Name="MD" Mode="In" Type="DateTime" />
@@ -2091,7 +2091,7 @@
           <FunctionImport Name="SP_SelectCity" />
           <FunctionImport Name="SP_SelectConsultation" ReturnType="Collection(SwiftKareDBModel.SP_SelectConsultation_Result)" />
           <FunctionImport Name="SP_SelectDoctor" />
-          <FunctionImport Name="SP_SelectDoctorsForApproval" />
+          <FunctionImport Name="SP_SelectDoctorsForApproval" EntitySet="Doctors" ReturnType="Collection(SwiftKareDBModel.Doctor)" />
           <FunctionImport Name="SP_SelectDocType" ReturnType="Collection(SwiftKareDBModel.SP_SelectDocType_Result)" />
           <FunctionImport Name="SP_SelectLanguages" />
           <FunctionImport Name="SP_SelectMedicine" />
@@ -4158,13 +4158,13 @@
           <Property Name="objective" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="assessment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="plans" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="startTime" Type="Time" Precision="7" />
-          <Property Name="endTime" Type="Time" Precision="7" />
           <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="cd" Type="DateTime" Precision="3" />
           <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
+          <Property Name="startTime" Type="Time" Precision="7" />
+          <Property Name="endTime" Type="Time" Precision="7" />
           <Property Name="seesionID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="token" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="endby" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -5620,13 +5620,13 @@
                 <ScalarProperty Name="endby" ColumnName="endby" />
                 <ScalarProperty Name="token" ColumnName="token" />
                 <ScalarProperty Name="seesionID" ColumnName="seesionID" />
+                <ScalarProperty Name="endTime" ColumnName="endTime" />
+                <ScalarProperty Name="startTime" ColumnName="startTime" />
                 <ScalarProperty Name="active" ColumnName="active" />
                 <ScalarProperty Name="md" ColumnName="md" />
                 <ScalarProperty Name="mb" ColumnName="mb" />
                 <ScalarProperty Name="cd" ColumnName="cd" />
                 <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="endTime" ColumnName="endTime" />
-                <ScalarProperty Name="startTime" ColumnName="startTime" />
                 <ScalarProperty Name="plans" ColumnName="plans" />
                 <ScalarProperty Name="assessment" ColumnName="assessment" />
                 <ScalarProperty Name="objective" ColumnName="objective" />
