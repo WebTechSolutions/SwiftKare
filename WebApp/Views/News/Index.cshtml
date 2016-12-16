@@ -1,0 +1,52 @@
+﻿@model List<DataAccess.CustomModels.NewsVM>
+@{
+    ViewBag.Title = "News List";
+}
+<!-- page content -->
+<div class="right_col">
+    <div style="padding-bottom: 190px;">
+        <div class="clearfix"></div>
+        <div class="page-title">
+            <div class="title_left">
+                <h3>What's News</h3>
+            </div>
+        </div>
+
+        <div class="row p-t-20 p-lr-30 gray-bdr-1 w-bg">
+
+            @foreach (var itmNews in Model)
+            {
+                <ul class="messages">
+                    <li>
+                        @if (itmNews.hasThumbnail)
+                        {
+                        <a href="@Url.Action("NewsDetails","News", new { @id = itmNews.newsID })">
+                            <img src="data:image/png;base64,@itmNews.newsThumbnailBase64"
+                                 class="avatar" alt="Avatar">
+                        </a>
+                        }
+
+                        <div class="message_date">
+                            <h4 class="date text-info">@itmNews.createdDate.Value.ToString("dd MMM yyyy")</h4>
+                            <p class="month">@itmNews.createdDate.Value.ToString("hh:mm tt")</p>
+                        </div>
+                        <div class="message_wrapper">
+                            <a href="@Url.Action("NewsDetails","News", new { @id = itmNews.newsID })" class="heading">@itmNews.newsTitle</a>
+                            <p class="message">@itmNews.newsDetail</p>
+                        </div>
+                    </li>
+                </ul>
+
+            }
+
+        </div>
+    </div>
+</div>
+
+<!-- /page content -->
+
+
+@section scripts{
+
+     
+}

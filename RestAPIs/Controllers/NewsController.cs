@@ -20,23 +20,23 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                List<News> objNewsList = new List<News>();
+                List<NewsVM> objNewsList = new List<NewsVM>();
                 var newslist = (from l in db.News
-                                  where l.active == true 
-                                  orderby l.newsID descending
-                                  select new 
-                                  {
-                                      l.newsID,
-                                      l.newsThumbnail,
-                                      l.newsTitle,
-                                      l.newsDetail,
-                                      l.cd
-                                  }).ToList();
+                                where l.active == true
+                                orderby l.newsID descending
+                                select new
+                                {
+                                    l.newsID,
+                                    l.newsThumbnail,
+                                    l.newsTitle,
+                                    l.newsDetail,
+                                    l.cd
+                                }).ToList();
                 int i = 1;
                 foreach (var item in newslist)
                 {
                     var count = item.newsDetail.Length;
-                    
+
                     string detail = "";
                     if (i <= newslist.Count)
                     {
@@ -49,17 +49,17 @@ namespace RestAPIs.Controllers
                         {
                             detail = item.newsDetail.Substring(0, count);
                         }
-                        News objNews = new News(); 
+                        NewsVM objNews = new NewsVM();
                         objNews.newsID = item.newsID;
                         objNews.newsThumbnail = item.newsThumbnail;
                         objNews.newsTitle = item.newsTitle;
                         objNews.newsDetail = detail;
-                        objNews.cd = item.cd;
+                        objNews.createdDate = item.cd;
                         objNewsList.Add(objNews);
                         i++;
                     }
-                }   
-                
+                }
+
                 response = Request.CreateResponse(HttpStatusCode.OK, objNewsList);
                 return response;
             }
@@ -74,19 +74,17 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                
                 var newsDetail = (from l in db.News
-                                where l.active == true
-                                orderby l.newsID descending
-                                select new
-                                {
-                                    l.newsID,
-                                    l.newsImage,
-                                    l.newsTitle,
-                                    l.newsDetail,
-                                    l.cd
-                                }).ToList();
-                
+                                  where l.active == true && l.newsID == newsID
+                                  orderby l.newsID descending
+                                  select new NewsVM
+                                  {
+                                      newsID = l.newsID,
+                                      newsImage = l.newsImage,
+                                      newsTitle = l.newsTitle,
+                                      newsDetail = l.newsDetail,
+                                      createdDate = l.cd
+                                  }).FirstOrDefault();
 
                 response = Request.CreateResponse(HttpStatusCode.OK, newsDetail);
                 return response;
