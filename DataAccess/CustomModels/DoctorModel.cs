@@ -11,6 +11,8 @@ namespace DataAccess.CustomModels
         public string secretQuestion1 { get; set; }
         public string secretQuestion2 { get; set; }
         public string secretQuestion3 { get; set; }
+        
+        public byte[] picture { get; set; }
 
         public string secretAnswer1 { get; set; }
         public string secretAnswer2 { get; set; }

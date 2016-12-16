@@ -16,7 +16,54 @@ namespace WebApp.Repositories.ProfileRepositories
 {
     public class ProfileRepository
     {
-         
+
+        public DoctorProfileInitialValues GetDoctorProfileInitialValues()
+        {
+            try
+            {
+                var request = ApiConsumerHelper.GetResponseString("api/getDoctorProfileInitialValues");
+                var result = JsonConvert.DeserializeObject<DoctorProfileInitialValues>(request);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                httpResponseMessage.Content = new StringContent(ex.Message);
+                throw new HttpResponseException(httpResponseMessage);
+            }
+        }
+
+        public DoctorProfileVM GetDoctorProfileWithAllValues(long doctorID)
+        {
+            try
+            {
+                var request = ApiConsumerHelper.GetResponseString("api/getDoctorProfileWithAllValues?doctorID=" + doctorID);
+                var result = JsonConvert.DeserializeObject<DoctorProfileVM>(request);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                httpResponseMessage.Content = new StringContent(ex.Message);
+                throw new HttpResponseException(httpResponseMessage);
+            }
+        }
+
+
+        public ApiResultModel UpdateDoctorProfileWithAllValues(DoctorProfileVM model)
+        {
+            var strContent = JsonConvert.SerializeObject(model);
+            var request = ApiConsumerHelper.PostData("api/updateDoctorProfileWithAllValues?doctorID=" + model.DoctorID, strContent);
+
+            var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
+            return result;
+        }
+
+
+
+
+
+
         public IEnumerable<SecretQuestionVM> GetSecretQuestionList()
         {
             try
@@ -114,7 +161,7 @@ namespace WebApp.Repositories.ProfileRepositories
         public ApiResultModel AddUpdateDoctorSecretAnswers(UpdateSecretQuestions model)
         {
             var strContent = JsonConvert.SerializeObject(model);
-            var request = ApiConsumerHelper.PostData("api/updateDoctorSecretAnswers", strContent);
+            var request = ApiConsumerHelper.PostData("api/updateDoctorSecretAnswers?doctorId=" + model.doctorID, strContent);
 
             var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
             return result;

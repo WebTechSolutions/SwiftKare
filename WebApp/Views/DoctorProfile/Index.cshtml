@@ -1,8 +1,11 @@
-﻿@{
+﻿@model DataAccess.CustomModels.DoctorProfileVM
+@{
     ViewBag.Title = "My Profile";
     Layout = "~/Views/Shared/_DoctorLayout.cshtml";
-}
 
+
+    bool isModelHasQuestions = !string.IsNullOrEmpty(Model.SectetAnswer1);
+}
 
 <!-- page content -->
 <div class="right_col">
@@ -15,317 +18,793 @@
     </div>
 
     <div class="clearfix"></div>
-    <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel" style="margin-bottom: 165px;">
-                <div class="x_title">
-                    <h2>Edit Profile</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                        <li>
-                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                        </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-                    <div class="row">
-                        <div class="col-lg-2 col-md-4 col-xs-12 text-center res-img">
-                            <img src="images/img.jpg" alt="..." class="profile_img m-b-10">
-                            <br>
-                            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#myModal1">Upload</button>
-                        </div>
-                        <div class="col-lg-10 col-md-8 col-xs-12">
-                            <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-4 col-sm-12">
-                                        <div class="form-group">
-                                            <label class="control-label" for="first-name">
-                                                Name<span class="required">*</span>
-                                            </label>
-                                            <div class="">
-                                                <input type="text" id="first-name" required="required" class="form-control">
+
+    <div class="" role="tabpanel" data-example-id="togglable-tabs" style="padding-bottom: 180px;">
+        <ul id="myTab" class="nav nav-tabs bar_tabs m-b-40" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#div_edit_profile" id="link_edit_profile" role="tab" data-toggle="tab" aria-expanded="true">Personal Info</a>
+            </li>
+            <li role="presentation" class="">
+                <a href="#div_account_settings" role="tab" id="link_account_settings" data-toggle="tab" aria-expanded="false">Account Info</a>
+            </li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="div_edit_profile" aria-labelledby="div_edit_profile">
+                <div class="x_panel" style="margin-bottom: 165px;">
+                    <div class="x_content">
+
+                        <form id="frmProfile">
+                            @Html.HiddenFor(x => x.DoctorID)
+
+                            <div class="row">
+                                <div class="col-lg-2 col-md-4 col-xs-12 text-center res-img">
+                                    <div id="divImageEditing" style="display:none;" class="image-editor">
+                                        <input id="fileID" style="visibility: hidden;display:none;" type="file" class="cropit-image-input">
+                                        <div class="cropit-preview"></div>
+                                        <div class="row" style="margin-top:5px;">
+                                            <div class="col-xs-1">
+                                                <i class="fa fa-rotate-left rotate-ccw"></i>
+                                            </div>
+                                            <div class="col-xs-1">
+                                                <i class="fa fa-rotate-right rotate-cw"></i>
+                                            </div>
+                                            <div class="col-xs-6 col-sm-offset-1">
+                                                <input type="range" class="cropit-image-zoom-input custom" min="0" max="1" step="0.01">
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label" for="first-name">
-                                                Age<span class="required">*</span>
-                                            </label>
-                                            <div class="">
-                                                <input type="text" id="first-name" required="required" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label ">Gender<span class="required">*</span></label>
-                                            <div class="">
-                                                <select class="form-control">
-                                                    <option>Male</option>
-                                                    <option>Female</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label" for="first-name">
-                                                Mobile<span class="required">*</span>
-                                            </label>
-                                            <div class="">
-                                                <input type="text" id="first-name" required="required" class="form-control">
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="col-sm-12">
+                                                <button type="button" class="btn btn-primary export">Crop</button>
+                                                <button type="button" id="btnCancelImageCrop" class="btn btn-default export">Cancel</button>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-12">
-                                        <div class="form-group">
-                                            <label for="middle-name" class="control-label">About me<span class="required">*</span></label>
-                                            <div class="">
-                                                <span></span>
-                                                <textarea class="form-control col-md-6 col-xs-12" type="text" name="" rows="1" style="height: 34px;"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="middle-name" class="control-label">Specialties<span class="required">*</span></label>
-                                            <div class="">
-                                                <span></span>
-                                                <!-- <input id="middle-name" class="form-control" type="text" name="middle-name"> -->
-                                                <div class="">
-                                                    <span></span>
-                                                    <textarea class="form-control col-md-6 col-xs-12" type="text" name="" rows="1" style="height: 34px;"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="middle-name" class="control-label">Qualifications<span class="required">*</span></label>
-                                            <div class="">
-                                                <span></span>
-                                                <!-- <input id="middle-name" class="form-control col-md-6 col-xs-12" type="text" name="middle-name"> -->
-                                                <div class="">
-                                                    <span></span>
-                                                    <textarea class="form-control col-md-6 col-xs-12" type="text" name="" rows="1" style="height: 34px;"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="middle-name" class="control-label">Licensed State(s)<span class="required">*</span></label>
-                                            <div class="">
-                                                <span></span>
-                                                <!-- <input id="middle-name" class="form-control" type="text" name="middle-name"> -->
-                                                <div class="">
-                                                    <span></span>
-                                                    <textarea class="form-control col-md-6 col-xs-12" type="text" name="" rows="1" style="height: 34px;"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-12">
-                                        <div class="form-group">
-                                            <label for="middle-name" class="control-label">Education<span class="required">*</span></label>
-                                            <div class="">
-                                                <span></span>
-                                                <!-- <input id="middle-name" class="form-control col-md-6 col-xs-12" type="text" name="middle-name"> -->
-                                                <div class="">
-                                                    <span></span>
-                                                    <textarea class="form-control col-md-6 col-xs-12" type="text" name="" rows="1" style="height: 34px;"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="middle-name" class="control-label">Publications<span class="required">*</span></label>
-                                            <div class="">
-                                                <span></span>
-                                                <!-- <input id="middle-name" class="form-control col-md-6 col-xs-12" type="text" name="middle-name"> -->
-                                                <div class="">
-                                                    <span></span>
-                                                    <textarea class="form-control col-md-6 col-xs-12" type="text" name="" rows="1" style="height: 34px;"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="middle-name" class="control-label">Location<span class="required">*</span></label>
-                                            <div class="">
-                                                <span></span>
-                                                <!-- <input id="middle-name" class="form-control col-md-6 col-xs-12" type="text" name="middle-name"> -->
-                                                <div class="">
-                                                    <span></span>
-                                                    <textarea class="form-control col-md-6 col-xs-12" type="text" name="" rows="1" style="height: 34px;"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="middle-name" class="control-label">Languages<span class="required">*</span></label>
-                                            <div class="">
-                                                <select class="select2_multiple form-control" multiple="multiple">
-                                                    <option>Eng</option>
-                                                    <option>Urbi</option>
-                                                    <option>urdu</option>
-                                                    <option>korian</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-
-
-
-
-
+                                    <div id="divImageDisplay">
+                                        <img id="imgProfilePic" src="@(string.IsNullOrEmpty(Model.ProfilePhotoBase64) ? WebApp.Helper.SessionHandler.ProfilePhoto : Model.ProfilePhotoBase64)" alt="..." class="profile_img m-b-10">
+                                        @Html.HiddenFor(x => x.ProfilePhotoBase64)
+                                        <br>
+                                        <button type="button" class="btn btn-primary" onclick="document.getElementById('fileID').click(); return false;">
+                                            Browse
+                                        </button>
+                                        <span id="spnErrorProfilePhoto" style="display:none; color:red; float:right;">Profile Photo is required</span>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="ln_solid"></div>
-                    <div class="form-group text-right">
-                        <button type="submit" class="btn btn-primary">Save</button>
+                                <div class="col-lg-10 col-md-8 col-xs-12">
+
+
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Title
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Prefix
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.Prefix, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    First Name<span class="required">*</span>
+                                                </label>
+                                                <span id="spnErrorFirstName" style="display:none; color:red; float:right;">First Name is required</span>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Last Name<span class="required">*</span>
+                                                </label>
+                                                <span id="spnErrorLastName" style="display:none; color:red; float:right;">Last Name is required</span>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Gender
+                                                </label>
+                                                <div class="">
+                                                    @Html.DropDownListFor(x => x.Gender,
+                                                       new List<SelectListItem> { new SelectListItem { Text = "Male", Value = "Male" }, new SelectListItem { Text = "Female", Value = "Female" } },
+                                                       new { @class = "form-control" }
+                                                       )
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Date Of Birth<span class="required">*</span>
+                                                </label>
+                                                <span id="spnErrorDOB" style="display:none; color:red; float:right;">Date Of Birth is required</span>
+                                                <div class="">
+                                                    <div class="xdisplay_inputx form-group has-feedback m-b-0">
+                                                        @Html.TextBox("DOB", (Model.DOB.HasValue ? Model.DOB.Value.ToString("MM/dd/yyyy") : ""), new { @class = "form-control has-feedback-left active datepicker" })
+                                                        <span class="fa fa-calendar-o form-control-feedback left date" aria-hidden="true"></span>
+                                                        <span id="inputSuccess1Status" class="sr-only">(success)</span>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Time Zone<span class="required">*</span>
+                                                </label>
+                                                <div class="">
+                                                    @Html.DropDownListFor(x => x.TimeZone, (List<SelectListItem>)ViewBag.drpdnTimeZone, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    About Me
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextAreaFor(x => x.AboutMe, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Specialization
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextAreaFor(x => x.Specialization, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Publications
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextAreaFor(x => x.Publication, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Education
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextAreaFor(x => x.Education, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Work Experience
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextAreaFor(x => x.WorkExperience, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Languages<span class="required">*</span>
+                                                </label>
+                                                <span id="spnErrorLanguages" style="display:none; color:red; float:right;">Languages is required</span>
+                                                <div class="">
+                                                    @Html.ListBoxFor(x => x.Languages, (List<SelectListItem>)ViewBag.drpdnLanguage, new { @class = "select2_multiple" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    License States<span class="required">*</span>
+                                                </label>
+                                                <span id="spnErrorLicenseState" style="display:none; color:red; float:right;">License State is required</span>
+                                                <div class="">
+                                                    @Html.ListBoxFor(x => x.LicenseStates, (List<SelectListItem>)ViewBag.drpdnState, new { @class = "select2_multiple" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Speciality<span class="required">*</span>
+                                                </label>
+                                                <span id="spnErrorSpeciality" style="display:none; color:red; float:right;">Speciality is required</span>
+                                                <div class="">
+                                                    @Html.ListBoxFor(x => x.Speciality, (List<SelectListItem>)ViewBag.drpdnSpeciality, new { @class = "select2_multiple" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Address 1
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.Address1, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Address 2
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.Address2, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    City<span class="required">*</span>
+                                                </label>
+                                                <div class="">
+                                                    @Html.DropDownListFor(x => x.City, (List<SelectListItem>)ViewBag.drpdnCity, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    State
+                                                </label>
+                                                <div class="">
+                                                    @Html.DropDownListFor(x => x.State, (List<SelectListItem>)ViewBag.drpdnState, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Zip Code
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.ZipCode, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Home Phone
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.HomePhone, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Cell Phone
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.CellPhone, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    latitude
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.Latitude, new { @class = "form-control", @type = "number" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Longitude
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.Longitude, new { @class = "form-control", @type = "number" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ln_solid"></div>
+                            <div class="form-group text-right">
+                                <button id="btnSaveProfile" type="button" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </div>
+            </div><!-- tab1 -->
+
+            <div role="tabpanel" class="tab-pane fade" id="div_account_settings" aria-labelledby="div_account_settings">
+                <div class="x_panel">
+                    <div class="x_content">
+
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">My Consult Charges</div>
+                                <div class="panel-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <label>Consult Charge</label>
+                                            <span id="spnErrorConsultCharges" style="display:none; color:red; float:right;">Consult Charges are required</span>
+                                            @Html.TextBoxFor(x => x.ConsultCharges, new { @class = "form-control", @type = "number" })
+                                        </div>
+                                        <button id="btnSaveConsultCharges" type="button" class="btn btn-primary">Save</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Account Security</div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <span id="spnErrorQuestion" style="display:none; color:red; float:right;">All Questions Must Be Unique</span>
+                                        </div>
+                                    </div>
+                                    <form id="frmSecretAnswer">
+                                        <div class="form-group">
+                                            <label>
+                                                @Html.DropDownListFor(x => x.SectetQuestion1, (List<SelectListItem>)ViewBag.SecretQuestion, new { @class = "form-control" })
+                                            </label>
+                                            <span id="spnErrorAnswer1" style="display:none; color:red; float:right;">Please provide answer.</span>
+                                            @Html.TextBoxFor(x => x.SectetAnswer1, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label>
+                                                @Html.DropDownListFor(x => x.SectetQuestion2, (List<SelectListItem>)ViewBag.SecretQuestion, new { @class = "form-control" })
+                                            </label>
+                                            <span id="spnErrorAnswer2" style="display:none; color:red; float:right;">Please provide answer.</span>
+                                            @Html.TextBoxFor(x => x.SectetAnswer2, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label>
+                                                @Html.DropDownListFor(x => x.SectetQuestion3, (List<SelectListItem>)ViewBag.SecretQuestion, new { @class = "form-control" })
+                                            </label>
+                                            <span id="spnErrorAnswer3" style="display:none; color:red; float:right;">Please provide answer.</span>
+                                            @Html.TextBoxFor(x => x.SectetAnswer3, new { @class = "form-control" })
+                                        </div>
+                                        <button id="btnSaveSecretAnswer" type="button" class="btn btn-primary">Save</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Change Password</div>
+                                <div class="panel-body">
+                                    <form id="frmPassword">
+                                        <div class="form-group">
+                                            <label>New Password:</label>
+                                            <span id="spnErrorPassword" style="display:none; color:red; float:right;"></span>
+                                            <input type="password" class="form-control" id="pwd">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Confirm Password:</label>
+                                            <span id="spnErrorConfirmPassword" style="display:none; color:red; float:right;"></span>
+                                            <input type="password" class="form-control" id="pwdConfirm">
+                                        </div>
+                                        <button id="btnSavePassword" type="button" class="btn btn-primary">Save</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div><!-- tab2 -->
         </div>
     </div>
 </div>
-<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div><!--/.modal header-->
-            <div class="modal-body text-left">
-                <div class="container cropper">
-                    <div class="row">
-                        <div class="col-md-9">
-                            <div class="img-container">
-                                <img id="image" src="images/cropper.jpg" alt="Picture">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="docs-preview img-responsive clearfix" style="max-width: 128px; min-height: 128px;">
-                                <div class="img-responsive img-preview preview-lg"></div>
-                                <!-- <div class="img-preview preview-md"></div>
-                                <div class="img-preview preview-sm"></div>
-                                <div class="img-preview preview-xs"></div> -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-9 docs-buttons">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary" data-method="setDragMode" data-option="move" title="Move">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;setDragMode&quot;, &quot;move&quot;)">
-                                        <span class="fa fa-arrows"></span>
-                                    </span>
-                                </button>
-                                <button type="button" class="btn btn-primary" data-method="setDragMode" data-option="crop" title="Crop">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;setDragMode&quot;, &quot;crop&quot;)">
-                                        <span class="fa fa-crop"></span>
-                                    </span>
-                                </button>
-                            </div>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary" data-method="zoom" data-option="0.1" title="Zoom In">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;zoom&quot;, 0.1)">
-                                        <span class="fa fa-search-plus"></span>
-                                    </span>
-                                </button>
-                                <button type="button" class="btn btn-primary" data-method="zoom" data-option="-0.1" title="Zoom Out">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;zoom&quot;, -0.1)">
-                                        <span class="fa fa-search-minus"></span>
-                                    </span>
-                                </button>
-                            </div>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary" data-method="move" data-option="-10" data-second-option="0" title="Move Left">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;move&quot;, -10, 0)">
-                                        <span class="fa fa-arrow-left"></span>
-                                    </span>
-                                </button>
-                                <button type="button" class="btn btn-primary" data-method="move" data-option="10" data-second-option="0" title="Move Right">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;move&quot;, 10, 0)">
-                                        <span class="fa fa-arrow-right"></span>
-                                    </span>
-                                </button>
-                                <button type="button" class="btn btn-primary" data-method="move" data-option="0" data-second-option="-10" title="Move Up">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;move&quot;, 0, -10)">
-                                        <span class="fa fa-arrow-up"></span>
-                                    </span>
-                                </button>
-                                <button type="button" class="btn btn-primary" data-method="move" data-option="0" data-second-option="10" title="Move Down">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;move&quot;, 0, 10)">
-                                        <span class="fa fa-arrow-down"></span>
-                                    </span>
-                                </button>
-                            </div>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary" data-method="rotate" data-option="-45" title="Rotate Left">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;rotate&quot;, -45)">
-                                        <span class="fa fa-rotate-left"></span>
-                                    </span>
-                                </button>
-                                <button type="button" class="btn btn-primary" data-method="rotate" data-option="45" title="Rotate Right">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;rotate&quot;, 45)">
-                                        <span class="fa fa-rotate-right"></span>
-                                    </span>
-                                </button>
-                            </div>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary" data-method="scaleX" data-option="-1" title="Flip Horizontal">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;scaleX&quot;, -1)">
-                                        <span class="fa fa-arrows-h"></span>
-                                    </span>
-                                </button>
-                                <button type="button" class="btn btn-primary" data-method="scaleY" data-option="-1" title="Flip Vertical">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;scaleY&quot;, -1)">
-                                        <span class="fa fa-arrows-v"></span>
-                                    </span>
-                                </button>
-                            </div>
 
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary" data-method="reset" title="Reset">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;reset&quot;)">
-                                        <span class="fa fa-refresh"></span>
-                                    </span>
-                                </button>
-                                <label class="btn btn-primary btn-upload" for="inputImage" title="Upload image file">
-                                    <input type="file" class="sr-only" id="inputImage" name="file" accept="image/*">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="Import image with Blob URLs">
-                                        <span class="fa fa-upload"></span>
-                                    </span>
-                                </label>
-                            </div>
-
-                            <!-- Show the cropped image in modal -->
-                            <div class="modal fade docs-cropped" id="getCroppedCanvasModal" aria-hidden="true" aria-labelledby="getCroppedCanvasTitle" role="dialog" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title" id="getCroppedCanvasTitle">Cropped</h4>
-                                        </div>
-                                        <div class="modal-body"></div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            <a class="btn btn-primary" id="download" href="javascript:void(0);" download="cropped.png">Download</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!-- /.modal -->
-                        </div>
-                        <div class="col-md-3">
-                            <div class="btn-group pull-right">
-                                <button type="button" class="btn btn-primary" data-method="crop" title="Ok">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;crop&quot;)">
-                                        <!-- <span class="fa fa-check"></span> -->
-                                        Ok
-                                    </span>
-                                </button>
-                                <button type="button" class="btn btn-primary" data-method="clear" title="Clear">
-                                    <span class="docs-tooltip" data-toggle="tooltip" title="$().cropper(&quot;clear&quot;)">
-                                        <!-- <span class="fa fa-remove"></span> -->
-                                        Cancel
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div><!--/.modal body-->
-        </div>
-    </div>
-</div>
 <!-- /page content -->
+
+
+@section scripts{
+
+    <script>
+
+        function validateProfileForm() {
+
+            var isValid = true;
+
+            if ($("#ProfilePhotoBase64").val() == "") {
+                isValid = false;
+                $("#spnErrorProfilePhoto").show();
+            }
+            else {
+                $("#spnErrorProfilePhoto").hide();
+            }
+
+            if ($("#FirstName").val() == "") {
+                isValid = false;
+                $("#FirstName").addClass("redBorder").focus();
+                $("#spnErrorFirstName").show();
+            }
+            else {
+                $("#FirstName").removeClass("redBorder");
+                $("#spnErrorFirstName").hide();
+            }
+
+            if ($("#LastName").val() == "") {
+                isValid = false;
+                $("#LastName").addClass("redBorder").focus();
+                $("#spnErrorLastName").show();
+            }
+            else {
+                $("#LastName").removeClass("redBorder");
+                $("#spnErrorLastName").hide();
+            }
+
+
+            if ($("#DOB").val() == "") {
+                isValid = false;
+                $("#DOB").addClass("redBorder").focus();
+                $("#spnErrorDOB").show();
+            }
+            else {
+                $("#DOB").removeClass("redBorder");
+                $("#spnErrorDOB").hide();
+            }
+
+            if ($("#Languages").val() == null) {
+                isValid = false;
+                $("#Languages").addClass("redBorder").focus();
+                $("#spnErrorLanguages").show();
+            }
+            else {
+                $("#Languages").removeClass("redBorder");
+                $("#spnErrorLanguages").hide();
+            }
+
+            if ($("#LicenseStates").val() == null) {
+                isValid = false;
+                $("#LicenseStates").addClass("redBorder").focus();
+                $("#spnErrorLicenseState").show();
+            }
+            else {
+                $("#LicenseStates").removeClass("redBorder");
+                $("#spnErrorLicenseState").hide();
+            }
+
+            if ($("#Speciality").val() == null) {
+                isValid = false;
+                $("#Speciality").addClass("redBorder").focus();
+                $("#spnErrorSpeciality").show();
+            }
+            else {
+                $("#Speciality").removeClass("redBorder");
+                $("#spnErrorSpeciality").hide();
+            }
+
+            return isValid;
+        }
+
+        $("#btnSaveProfile").click(function () {
+
+            try {
+                if (validateProfileForm()) {
+                    showLoader();
+                    var cUrl = "@Url.Action("SaveDoctorProfile", "DoctorProfile")";
+
+                    $.post(cUrl, $("#frmProfile").serialize(), function (oResp) {
+                        if (oResp == "") {
+                            new PNotify({ title: 'Success', text: "Profile data saved successfully!", type: 'success', styling: 'bootstrap3' });
+                        }
+                        else {
+                            new PNotify({ title: 'Error', text: oResp, type: 'error', styling: 'bootstrap3' });
+                        }
+                        hideLoader();
+                    });
+                }
+            } catch (e) {
+                hideLoader();
+            }
+
+        });
+
+        function validateConsultCharges() {
+            var isValid = true;
+
+            if ($("#ConsultCharges").val() == "") {
+                isValid = false;
+                $("#ConsultCharges").addClass("redBorder").focus();
+                $("#spnErrorConsultCharges").show();
+            }
+            else {
+                $("#ConsultCharges").removeClass("redBorder");
+                $("#spnErrorConsultCharges").hide();
+            }
+
+            return isValid;
+        }
+        $("#btnSaveConsultCharges").click(function () {
+            try {
+                if (validateConsultCharges()) {
+                    showLoader();
+                    var cUrl = "@Url.Action("SaveConsultCharges", "DoctorProfile")?charges=" + $("#ConsultCharges").val();
+
+                    $.post(cUrl, function (oResp) {
+                        if (oResp == "") {
+                            new PNotify({ title: 'Success', text: "Consulting charges saved successfully!", type: 'success', styling: 'bootstrap3' });
+                        }
+                        else {
+                            new PNotify({ title: 'Error', text: oResp, type: 'error', styling: 'bootstrap3' });
+                        }
+                        hideLoader();
+                    });
+                }
+            } catch (e) {
+                hideLoader();
+            }
+        });
+
+        function validateSecretAnswers() {
+            var isValid = true;
+
+            if ($("#SectetQuestion1").val() == $("#SectetQuestion2").val() || $("#SectetQuestion1").val() == $("#SectetQuestion3").val() || $("#SectetQuestion3").val() == $("#SectetQuestion2").val()) {
+                isValid = false;
+                $("#spnErrorQuestion").show();
+            } else {
+                $("#spnErrorQuestion").hide();
+            }
+
+            if ($("#SectetAnswer1").val() == "") {
+                isValid = false;
+                $("#SectetAnswer1").addClass("redBorder").focus();
+                $("#spnErrorAnswer1").show();
+            }
+            else {
+                $("#SectetAnswer1").removeClass("redBorder");
+                $("#spnErrorAnswer1").hide();
+            }
+
+            if ($("#SectetAnswer2").val() == "") {
+                isValid = false;
+                $("#SectetAnswer2").addClass("redBorder").focus();
+                $("#spnErrorAnswer2").show();
+            }
+            else {
+                $("#SectetAnswer2").removeClass("redBorder");
+                $("#spnErrorAnswer2").hide();
+            }
+
+            if ($("#SectetAnswer3").val() == "") {
+                isValid = false;
+                $("#SectetAnswer3").addClass("redBorder").focus();
+                $("#spnErrorAnswer3").show();
+            }
+            else {
+                $("#SectetAnswer3").removeClass("redBorder");
+                $("#spnErrorAnswer3").hide();
+            }
+
+            return isValid;
+        }
+
+        $("#btnSaveSecretAnswer").click(function () {
+            try {
+                if (validateSecretAnswers()) {
+                    showLoader();
+                    var cUrl = "@Url.Action("SaveSecretAnswers", "DoctorProfile")";
+                    $.post(cUrl, $("#frmSecretAnswer").serialize(), function (oResp) {
+                        if (oResp == "") {
+                            new PNotify({ title: 'Success', text: "Answers saved successfully!", type: 'success', styling: 'bootstrap3' });
+                        }
+                        else {
+                            new PNotify({ title: 'Error', text: oResp, type: 'error', styling: 'bootstrap3' });
+                        }
+                        hideLoader();
+                    });
+                }
+            } catch (e) {
+                hideLoader();
+            }
+        });
+
+
+        function validatePasswordForm() {
+
+            var isValid = true;
+            var pwdRegex = /^(?=.*[0-9])(?=.*[!@@#$%^&*])[a-zA-Z0-9!@@#$%^&*]{6,16}$/;;
+
+            if ($("#pwd").val() == "") {
+                isValid = false;
+                $("#pwd").addClass("redBorder").focus();
+                $("#spnErrorPassword").html("Please enter passoword").show();
+            }
+            else if ($("#pwd").val().length < 6) {
+                isValid = false;
+                $("#pwd").addClass("redBorder").focus();
+                $("#spnErrorPassword").html("Password length must be atleast 6 characters").show();
+            }
+            else if (pwdRegex.test($("#pwd").val()) == false) {
+                isValid = false;
+                $("#pwd").addClass("redBorder").focus();
+                $("#spnErrorPassword").html("Password should contain atleast One Number, One UpperCase, lowercase and Special character.").show();
+            }
+            else {
+                $("#pwd").removeClass("redBorder");
+                $("#spnErrorPassword").hide();
+            }
+
+            if ($("#pwdConfirm").val() == "") {
+                isValid = false;
+                $("#pwdConfirm").addClass("redBorder").focus();
+                $("#spnErrorConfirmPassword").html("Please enter passoword").show();
+            }
+            else if ($("#pwdConfirm").val() != $("#pwd").val()) {
+                isValid = false;
+                $("#pwdConfirm").addClass("redBorder").focus();
+                $("#spnErrorConfirmPassword").html("Both Passwords must be same.").show();
+            }
+            else {
+                $("#pwdConfirm").removeClass("redBorder");
+                $("#spnErrorConfirmPassword").hide();
+            }
+
+            return isValid;
+
+        }
+
+        $("#btnSavePassword").click(function () {
+
+            try {
+                if (validatePasswordForm()) {
+                    showLoader();
+                    var cUrl = "@Url.Action("ChangePassword", "DoctorProfile")?newPassword=" + $("#pwd").val();
+                    $.post(cUrl, function (oResp) {
+                        if (oResp == "") {
+                            new PNotify({ title: 'Success', text: "Password changed successfully!", type: 'success', styling: 'bootstrap3' });
+                        }
+                        else {
+                            new PNotify({ title: 'Error', text: oResp, type: 'error', styling: 'bootstrap3' });
+                        }
+                        hideLoader();
+                    });
+                }
+            } catch (e) {
+                hideLoader();
+            }
+        });
+
+
+        $(".select2_multiple").select2({
+            maximumSelectionLength: 4,
+            placeholder: "With Max Selection limit 4",
+            allowClear: true
+        });
+
+        $('.datepicker').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_1"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+        });
+
+
+        //$(function () {
+        $('.image-editor').cropit({
+            onImageLoaded: function () {
+                $("#divImageEditing").show();
+                $("#divImageDisplay").hide();
+            }
+        });
+
+        $("#btnCancelImageCrop").click(resetImageCropping);
+
+        $('.rotate-cw').click(function () {
+            $('.image-editor').cropit('rotateCW');
+        });
+        $('.rotate-ccw').click(function () {
+            $('.image-editor').cropit('rotateCCW');
+        });
+
+        $('.export').click(function (e) {
+            var imageData = $('.image-editor').cropit('export');
+            $("#imgProfilePic").attr("src", imageData);
+            $("#ProfilePhotoBase64").val(imageData);
+            resetImageCropping();
+
+            //window.open(imageData);
+        });
+
+        function resetImageCropping() {
+            $("#fileID").val("");
+            $("#divImageEditing").hide();
+            $("#divImageDisplay").show();
+        }
+
+        //});
+        function showLoader() {
+            blockUI();
+        }
+
+        function hideLoader() {
+            $.unblockUI();
+        }
+
+        //Center the element
+        $.fn.center = function () {
+            this.css("position", "absolute");
+            this.css("top", ($(window).height() - this.height()) / 2 + $(window).scrollTop() + "px");
+            this.css("left", ($(window).width() - this.width()) / 2 + $(window).scrollLeft() + "px");
+            return this;
+        }
+
+        //blockUI
+        function blockUI() {
+            $.blockUI({
+                css: {
+                    backgroundColor: 'transparent',
+                    border: 'none'
+                },
+                message: '<div class="spinner"></div>',
+                baseZ: 1500,
+                overlayCSS: {
+                    backgroundColor: '#FFFFFF',
+                    opacity: 0.7,
+                    cursor: 'wait'
+                }
+            });
+            $('.blockUI.blockMsg').center();
+        }//end Blockui
+    </script>
+}

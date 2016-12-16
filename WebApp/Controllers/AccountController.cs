@@ -16,6 +16,7 @@ using Identity.Membership.Models;
 using DataAccess;
 using WebApp.Repositories.DoctorRepositories;
 using WebApp.Repositories.PatientRepositories;
+using System.Text;
 //Jam
 namespace WebApp.Controllers
 {
@@ -145,6 +146,11 @@ namespace WebApp.Controllers
                             userModel.FirstName = doctor.firstName;
                             userModel.LastName = doctor.lastName;
                             SessionHandler.UserInfo = userModel;
+
+                            if (doctor.picture != null && doctor.picture.Count() > 0) {
+                                SessionHandler.ProfilePhoto = Encoding.ASCII.GetString(doctor.picture);
+                            }
+
                             if (doctor.active == null || (bool)doctor.active)
                                 return RedirectToAction("DoctorTimings", "Doctor");
                         }
@@ -259,6 +265,11 @@ namespace WebApp.Controllers
                         userModel.FirstName = doctor.firstName;
                         userModel.LastName = doctor.lastName;
                         SessionHandler.UserInfo = userModel;
+
+                        if (doctor.picture != null && doctor.picture.Count() > 0)
+                        {
+                            SessionHandler.ProfilePhoto = Encoding.ASCII.GetString(doctor.picture);
+                        }
 
 
                         if (doctor.active == null || (bool)doctor.active)
