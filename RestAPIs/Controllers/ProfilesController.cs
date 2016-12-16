@@ -23,6 +23,9 @@ namespace RestAPIs.Controllers
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
         HttpResponseMessage response;
 
+
+        #region Doctor APIs 
+
         [HttpGet]
         [Route("api/getDoctorProfileInitialValues")]
         [ResponseType(typeof(HttpResponseMessage))]
@@ -161,7 +164,6 @@ namespace RestAPIs.Controllers
             }
 
         }
-
 
         [HttpPost]
         [Route("api/updateDoctorProfileWithAllValues")]
@@ -492,7 +494,371 @@ namespace RestAPIs.Controllers
         }
 
 
+        #endregion
 
+        #region Patient APIS
+
+        [HttpGet]
+        [Route("api/getPatientProfileInitialValues")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage GetPatientProfileInitialValues()
+        {
+            try
+            {
+                var lstLanguageVM = (from p in db.Languages
+                                     where p.active == true
+                                     select new LanguageVM { languageID = p.languageID, languageName = p.languageName }).ToList();
+
+                var lstSecretQuestionVM = (from p in db.SecretQuestions
+                                           where p.active == true
+                                           select new SecretQuestionVM { secretQuestionID = p.secretQuestionID, secretQuestion = p.secretQuestionn }).ToList();
+
+                var lstTimeZoneVM = (from p in db.TimeZones
+                                     where p.active == true
+                                     select new TimeZoneVM { zoneID = p.zoneID, timeZone = p.timeZonee }).ToList();
+
+                var lstCityVM = (from c in db.Cities
+                                 where c.active == true
+                                 select new CityVM { cityID = c.cityID, cityName = c.cityName }).ToList();
+
+                var lstStateVM = (from c in db.States
+                                  where c.active == true
+                                  select new StateVM { stateID = c.stateID, stateName = c.stateName }).ToList();
+
+                var oRetModel = new PatientProfileInitialValues
+                {
+                    lstCityVM = lstCityVM,
+                    lstLanguageVM = lstLanguageVM,
+                    lstSecretQuestionVM = lstSecretQuestionVM,
+                    lstStateVM = lstStateVM,
+                    lstTimeZoneVM = lstTimeZoneVM
+                };
+
+                response = Request.CreateResponse(HttpStatusCode.OK, oRetModel);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "getPatientProfileInitialValues in ProfilesController.");
+            }
+
+        }
+
+
+        [HttpGet]
+        [Route("api/getPatientProfileWithAllValues")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage GetPatientProfileWithAllValues(long patientID)
+        {
+            Patient patient = new Patient();
+            try
+            {
+                if (patientID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient ID is not valid." });
+                    return response;
+                }
+                patient = db.Patients.Where(m => m.patientID == patientID && m.active == true).FirstOrDefault();
+                if (patient == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient does not exist." });
+                    return response;
+                }
+                else
+                {
+                    var oPatientProfileVM = new PatientProfileVM();
+
+                    oPatientProfileVM = (from l in db.Patients
+                                        where l.active == true && l.patientID == patientID
+                                        select new PatientProfileVM
+                                        {
+                                            PatientID = l.patientID,
+                                            ProfilePhoto = l.picture,
+                                            Title = l.title,
+                                            Prefix = l.suffix,
+                                            FirstName = l.firstName,
+                                            LastName = l.lastName,
+                                            Gender = l.gender,
+
+                                            DOB = l.dob,
+                                            TimeZone = l.timezone,
+
+                                            Height = l.height,
+                                            Weight = l.weight,
+
+                                            Address1 = l.address1,
+                                            Address2 = l.address2,
+                                            City = l.city,
+                                            State = l.state,
+                                            ZipCode = l.zip,
+                                            HomePhone = l.homePhone,
+                                            CellPhone = l.cellPhone,
+
+                                            Latitude = l.lat,
+                                            Longitude = l.lon,
+
+                                            SectetQuestion1 = l.secretQuestion1,
+                                            SectetQuestion2 = l.secretQuestion2,
+                                            SectetQuestion3 = l.secretQuestion3,
+
+                                            SectetAnswer1 = l.secretAnswer1,
+                                            SectetAnswer2 = l.secretAnswer2,
+                                            SectetAnswer3 = l.secretAnswer3
+                                        }).FirstOrDefault();
+
+                    if (oPatientProfileVM != null)
+                    {
+                        oPatientProfileVM.Languages = db.PatientLanguages.Where(x => x.patientID == patientID).Select(x => x.languageName).ToArray();
+                    }
+
+                    response = Request.CreateResponse(HttpStatusCode.OK, oPatientProfileVM);
+                    return response;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetPatientProfileWithAllValues in ProfilesController.");
+            }
+        }
+
+
+        [HttpPost]
+        [Route("api/updatePatientProfileWithAllValues")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public async Task<HttpResponseMessage> UpdatePatientProfileWithAllValues(long patientID, PatientProfileVM model)
+        {
+            Patient patient = new Patient();
+            try
+            {
+                if (model.FirstName == null || model.FirstName == "" || !Regex.IsMatch(model.FirstName, "^[0-9a-zA-Z ]+$"))
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "First name is not valid. Only letter and numbers are allowed." });
+                    return response;
+                }
+                if (model.LastName != null || model.LastName != "")
+                {
+                    if (!Regex.IsMatch(model.LastName, "^[0-9a-zA-Z ]+$"))            //@"^[a-zA-Z\s]+$"
+                    {
+                        response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Last name is not valid. Only letter and numbers are allowed." });
+                        return response;
+                    }
+                }
+                if (patientID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient ID is not valid." });
+                    return response;
+                }
+                patient = db.Patients.Where(m => m.patientID == patientID && m.active == true).FirstOrDefault();
+                if (patient == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient not found." });
+                    return response;
+                }
+                if (model.ZipCode.Length > 10)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Zip is too long. Keep it below ten characters." });
+                    return response;
+                }
+                if (model.Gender.Length > 10)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Gender is too long. Keep it below ten characters." });
+                    return response;
+                }
+                else
+                {
+                    //Save Patient Profile
+                    patient.active = true;
+
+                    patient.picture = model.ProfilePhoto;
+
+                    patient.title = model.Title;
+                    patient.firstName = model.FirstName;
+                    patient.lastName = model.LastName;
+                    patient.suffix = model.Prefix;
+                    patient.gender = model.Gender;
+
+                    patient.dob = model.DOB;
+                    patient.timezone = model.TimeZone;
+
+                    patient.height = model.Height;
+                    patient.weight = model.Weight;
+
+                    patient.address1 = model.Address1;
+                    patient.address2 = model.Address2;
+                    patient.city = model.City;
+                    patient.state = model.State;
+                    patient.zip = model.ZipCode;
+
+                    patient.homePhone = model.HomePhone;
+                    patient.cellPhone = model.CellPhone;
+
+                    patient.lat = model.Latitude;
+                    patient.lon = model.Longitude;
+
+                    patient.cd = System.DateTime.Now;
+                    patient.mb = patientID.ToString();
+                    patient.md = System.DateTime.Now;
+
+                    db.Entry(patient).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+
+
+                    //Save Doctor Language
+                    var allPrevLanguages = db.PatientLanguages.Where(x => x.patientID == patientID).ToList();
+                    foreach (var itemNewLang in model.Languages)
+                    {
+                        if (allPrevLanguages.Count(x => x.languageName == itemNewLang) == 0)
+                        {
+                            db.PatientLanguages.Add(new PatientLanguage
+                            {
+                                patientID = patientID,
+                                languageName = itemNewLang,
+                                active = true,
+                                cd = System.DateTime.Now,
+                                cb = patientID.ToString()
+                            });
+                        }
+                    }
+                    foreach (var itemPrvLang in allPrevLanguages)
+                    {
+                        if (!model.Languages.Contains(itemPrvLang.languageName))
+                        {
+                            db.PatientLanguages.Remove(itemPrvLang);
+                        }
+                    }
+                    await db.SaveChangesAsync();
+
+                    //Return
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = patientID, message = "" });
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "UpdatePatientProfileWithAllValues in ProfileController.");
+            }
+
+        }
+
+
+        [HttpPost]
+        [Route("api/updatePatientSecretAnswers")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public async Task<HttpResponseMessage> updatePatientSecretAnswers(long patientId, UpdateSecretQuestions model)
+        {
+            Patient patient = new Patient();
+            try
+            {
+                if (model.secretquestion1 == null || model.secretquestion1 == "")
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Secret question 1 is not provided." });
+                    return response;
+                }
+                if (model.secretquestion2 == null || model.secretquestion2 == "")
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Secret question 2 is not provided." });
+                    return response;
+                }
+                if (model.secretquestion3 == null || model.secretquestion3 == "")
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Secret question 3 is not provided." });
+                    return response;
+                }
+
+                if (model.secretanswer1 == null || model.secretanswer1 == "")
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Secret answer 1 is not provided." });
+                    return response;
+                }
+                if (model.secretanswer2 == null || model.secretanswer2 == "")
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Secret answer 2 is not provided." });
+                    return response;
+                }
+                if (model.secretanswer3 == null || model.secretanswer3 == "")
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Secret answer 3 is not provided." });
+                    return response;
+                }
+
+                patient = (from pat in db.Patients where pat.patientID == patientId && pat.active == true select pat).FirstOrDefault();
+                if (patient == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient not found." });
+                    return response;
+                }
+
+                else
+                {
+                    patient.secretQuestion1 = model.secretquestion1;
+                    patient.secretQuestion2 = model.secretquestion2;
+                    patient.secretQuestion3 = model.secretquestion3;
+                    patient.secretQuestion1 = model.secretquestion1;
+                    patient.secretAnswer1 = model.secretanswer1;
+                    patient.secretAnswer2 = model.secretanswer2;
+                    patient.secretAnswer3 = model.secretanswer3;
+                    patient.md = System.DateTime.Now;
+                    patient.mb = patientId.ToString();
+                    db.Entry(patient).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = patientId, message = "" });
+                    return response;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "AddDoctorSecretAnswers in ProfilesController.");
+            }
+
+        }
+
+
+        [Route("api/changePatientPassword")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public async Task<HttpResponseMessage> ChangePatientPassword(DoctorPasswordModel model)
+        {
+            try
+            {
+                string userID = (from d in db.Patients where d.active == true && d.patientID == model.doctorID select d.userId).FirstOrDefault();
+                var user = await UserManager.FindByIdAsync(userID);
+                var code = UserManager.GeneratePasswordResetToken(user.Id);
+
+                if (user != null)
+                {
+                    var result = await UserManager.ResetPasswordAsync(user.Id, code, model.password);
+                    if (result.Succeeded)
+                    {
+                        response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.doctorID, message = "" });
+                        return response;
+                    }
+                    else
+                    {
+                        string msg = "";
+                        foreach (var error in result.Errors)
+                        {
+                            msg = error;
+                        }
+                        response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = msg });
+                        return response;
+                    }
+                }
+                else
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Patient not found" });
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "ChangePatientPassword in DoctorController.");
+            }
+        }
+
+        #endregion
+
+        #region Other APIs
 
         [HttpGet]
         [Route("api/getSecretQuestionList")]
@@ -1466,6 +1832,9 @@ namespace RestAPIs.Controllers
             response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = lsID, message = "" });
             return response;
         }
+
+        #endregion
+
 
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {

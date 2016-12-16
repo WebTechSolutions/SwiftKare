@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="4d36abb2f49a47c18a8ca7fb1a61b785" Name="Diagram1">
+      <Diagram DiagramId="4d36abb2f49a47c18a8ca7fb1a61b785" Name="Diagram1" ZoomLevel="74">
         <EntityTypeShape EntityType="SwiftKareDBModel.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.AdminUser" Width="1.5" PointX="8" PointY="10" />
         <EntityTypeShape EntityType="SwiftKareDBModel.Alert" Width="1.5" PointX="0.75" PointY="3.75" />
@@ -31,7 +31,7 @@
         <EntityTypeShape EntityType="SwiftKareDBModel.Medicine" Width="1.5" PointX="15.75" PointY="8.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.Module" Width="1.5" PointX="8.75" PointY="14.375" />
         <EntityTypeShape EntityType="SwiftKareDBModel.News" Width="1.5" PointX="15.75" PointY="12.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Patient" Width="1.5" PointX="0.75" PointY="17.25" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Patient" Width="1.5" PointX="2.25" PointY="17.25" />
         <EntityTypeShape EntityType="SwiftKareDBModel.PatientAllergy" Width="1.5" PointX="3" PointY="19.875" />
         <EntityTypeShape EntityType="SwiftKareDBModel.PatientFamilyHX" Width="1.5" PointX="3" PointY="38.875" />
         <EntityTypeShape EntityType="SwiftKareDBModel.PatientLifeStyle" Width="1.5" PointX="16.75" PointY="0.75" />
@@ -73,7 +73,7 @@
         <EntityTypeShape EntityType="SwiftKareDBModel.LifeStyleQuestion" Width="1.5" PointX="18.375" PointY="20.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.UserFile" Width="1.5" PointX="6" PointY="18.375" />
         <AssociationConnector Association="SwiftKareDBModel.FK_UserFiles_Patient" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Doctor" Width="1.5" PointX="0.75" PointY="15.375" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Doctor" Width="1.5" PointX="0.5" PointY="16.625" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Appointments_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_DoctorLanguages_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_DoctorLicenseStates_Doctor" />

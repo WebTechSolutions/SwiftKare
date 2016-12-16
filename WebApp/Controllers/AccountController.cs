@@ -217,6 +217,12 @@ namespace WebApp.Controllers
                         userModel.FirstName = patient.firstName;
                         userModel.LastName = patient.lastName;
                         SessionHandler.UserInfo = userModel;
+
+                        if (patient.picture != null && patient.picture.Count() > 0)
+                        {
+                            SessionHandler.ProfilePhoto = Encoding.ASCII.GetString(patient.picture);
+                        }
+
                         if (patient.active == null || (bool)patient.active)
                             return RedirectToAction("Index", "Patient");
                     }

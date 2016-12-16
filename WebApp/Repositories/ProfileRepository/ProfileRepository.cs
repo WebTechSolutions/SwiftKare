@@ -16,6 +16,7 @@ namespace WebApp.Repositories.ProfileRepositories
 {
     public class ProfileRepository
     {
+        #region Doctor Profile Methods
 
         public DoctorProfileInitialValues GetDoctorProfileInitialValues()
         {
@@ -49,7 +50,6 @@ namespace WebApp.Repositories.ProfileRepositories
             }
         }
 
-
         public ApiResultModel UpdateDoctorProfileWithAllValues(DoctorProfileVM model)
         {
             var strContent = JsonConvert.SerializeObject(model);
@@ -58,87 +58,6 @@ namespace WebApp.Repositories.ProfileRepositories
             var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
             return result;
         }
-
-
-
-
-
-
-        public IEnumerable<SecretQuestionVM> GetSecretQuestionList()
-        {
-            try
-            {
-                var request = ApiConsumerHelper.GetResponseString("api/getSecretQuestionList");
-                var result = JsonConvert.DeserializeObject<IEnumerable<SecretQuestionVM>>(request);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                httpResponseMessage.Content = new StringContent(ex.Message);
-                throw new HttpResponseException(httpResponseMessage);
-            }
-        }
-
-        public IEnumerable<TimeZoneVM> GetTimeZones()
-        {
-            try
-            {
-                var request = ApiConsumerHelper.GetResponseString("api/getTimeZones");
-                var result = JsonConvert.DeserializeObject<IEnumerable<TimeZoneVM>>(request);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                httpResponseMessage.Content = new StringContent(ex.Message);
-                throw new HttpResponseException(httpResponseMessage);
-            }
-        }
-
-        public IEnumerable<CityVM> GetCities()
-        {
-            try
-            {
-                var request = ApiConsumerHelper.GetResponseString("api/getCities");
-                var result = JsonConvert.DeserializeObject<IEnumerable<CityVM>>(request);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                httpResponseMessage.Content = new StringContent(ex.Message);
-                throw new HttpResponseException(httpResponseMessage);
-            }
-        }
-
-        public IEnumerable<StateVM> GetStates()
-        {
-            try
-            {
-                string emailId = SessionHandler.UserInfo.Email;
-
-                var request = ApiConsumerHelper.GetResponseString("api/getStates");
-                var result = JsonConvert.DeserializeObject<IEnumerable<StateVM>>(request);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                httpResponseMessage.Content = new StringContent(ex.Message);
-                throw new HttpResponseException(httpResponseMessage);
-            }
-        }
-
-        public ApiResultModel UpdateDoctorPicture(UpdateDoctorPicture model)
-        {
-            var strContent = JsonConvert.SerializeObject(model);
-            var request = ApiConsumerHelper.PostData("api/updateDoctorPicture", strContent);
-
-            var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
-            return result;
-        }
-
 
         public ApiResultModel ChangePassword(DoctorPasswordModel model)
         {
@@ -167,23 +86,16 @@ namespace WebApp.Repositories.ProfileRepositories
             return result;
         }
 
+        #endregion
 
-        public ApiResultModel UpdateDoctorProfile(long doctorID, UpdateDoctorProfileModel model)
-        {
-            var strContent = JsonConvert.SerializeObject(model);
-            var request = ApiConsumerHelper.PostData("api/updateDoctorProfile?doctorID=" + doctorID, strContent);
+        #region Patient Profile Methods
 
-            var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
-            return result;
-        }
-
-
-        public DoctorProfileModel GetDoctorProfile(long doctorID)
+        public PatientProfileInitialValues GetPatientProfileInitialValues()
         {
             try
             {
-                var request = ApiConsumerHelper.GetResponseString("api/getDoctorProfile?doctorID=" + doctorID);
-                var result = JsonConvert.DeserializeObject<DoctorProfileModel>(request);
+                var request = ApiConsumerHelper.GetResponseString("api/getPatientProfileInitialValues");
+                var result = JsonConvert.DeserializeObject<PatientProfileInitialValues>(request);
                 return result;
             }
             catch (Exception ex)
@@ -194,12 +106,12 @@ namespace WebApp.Repositories.ProfileRepositories
             }
         }
 
-        public DoctorProfileModel ViewDoctorProfile(long doctorID)
+        public PatientProfileVM GetPatientProfileWithAllValues(long patientID)
         {
             try
             {
-                var request = ApiConsumerHelper.GetResponseString("api/viewDoctorProfile?doctorID=" + doctorID);
-                var result = JsonConvert.DeserializeObject<DoctorProfileModel>(request);
+                var request = ApiConsumerHelper.GetResponseString("api/getPatientProfileWithAllValues?patientID=" + patientID);
+                var result = JsonConvert.DeserializeObject<PatientProfileVM>(request);
                 return result;
             }
             catch (Exception ex)
@@ -210,137 +122,34 @@ namespace WebApp.Repositories.ProfileRepositories
             }
         }
 
-        public SP_ViewPatientProfile_Result ViewPatientProfile(long patientID)
-        {
-            try
-            {
-                var request = ApiConsumerHelper.GetResponseString("api/viewPatientProfile?patientID=" + patientID);
-                var result = JsonConvert.DeserializeObject<List<SP_ViewPatientProfile_Result>>(request).FirstOrDefault();
-                return result;
-            }
-            catch (Exception ex)
-            {
-                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                httpResponseMessage.Content = new StringContent(ex.Message);
-                throw new HttpResponseException(httpResponseMessage);
-            }
-        }
-
-
-        public ApiResultModel UpdatePatientProfile(long patientID, PatientProfileModel model)
+        public ApiResultModel UpdatePatientProfileWithAllValues(PatientProfileVM model)
         {
             var strContent = JsonConvert.SerializeObject(model);
-            var request = ApiConsumerHelper.PostData("api/updatePatientProfile?patientID=" + patientID, strContent);
+            var request = ApiConsumerHelper.PostData("api/updatePatientProfileWithAllValues?patientID=" + model.PatientID, strContent);
 
             var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
             return result;
         }
 
-        public PatientProfileModel GetPatientProfile(long patientID)
-        {
-            try
-            {
-                var request = ApiConsumerHelper.GetResponseString("api/getPatientProfile?patientID=" + patientID);
-                var result = JsonConvert.DeserializeObject<PatientProfileModel>(request);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                httpResponseMessage.Content = new StringContent(ex.Message);
-                throw new HttpResponseException(httpResponseMessage);
-            }
-        }
-
-
-        public ApiResultModel UpdatePatientPicture(UpdatePatientPicture model)
+        public ApiResultModel ChangePatientPassword(DoctorPasswordModel model)
         {
             var strContent = JsonConvert.SerializeObject(model);
-            var request = ApiConsumerHelper.PostData("api/updatePatientPicture", strContent);
+            var request = ApiConsumerHelper.PostData("api/changePatientPassword", strContent);
 
             var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
             return result;
         }
 
-        public ApiResultModel UpdatePatientLanguages(long patlangID, PatientLanguages model)
+        public ApiResultModel updatePatientSecretAnswers(long patientId, UpdateSecretQuestions model)
         {
             var strContent = JsonConvert.SerializeObject(model);
-            var request = ApiConsumerHelper.PostData("api/updatePatientLanguages", strContent);
+            var request = ApiConsumerHelper.PostData("api/updatePatientSecretAnswers?patientId=" + patientId, strContent);
 
             var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
             return result;
         }
 
-        public ApiResultModel InsertPatientLanguages(PatientLanguages model)
-        {
-            var strContent = JsonConvert.SerializeObject(model);
-            var request = ApiConsumerHelper.PostData("api/insertPatientLanguages", strContent);
-
-            var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
-            return result;
-        }
-
-        public void DeletePatientLanguages(long langID)
-        {
-            var request = ApiConsumerHelper.PostData("api/deletePatientLanguages?langID=" + langID, "");
-
-            //var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
-            //return result;
-        }
-
-        public ApiResultModel UpdateDoctorLanguages(long doclangID, DoctorLanguages model)
-        {
-            var strContent = JsonConvert.SerializeObject(model);
-            var request = ApiConsumerHelper.PostData("api/updateDoctorLanguages?doclangID=" + doclangID, strContent);
-
-            var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
-            return result;
-        }
-
-        public ApiResultModel InsertDoctorLanguages(DoctorLanguages model)
-        {
-            var strContent = JsonConvert.SerializeObject(model);
-            var request = ApiConsumerHelper.PostData("api/insertDoctorLanguages", strContent);
-
-            var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
-            return result;
-        }
-
-
-        public void DeleteDoctorLanguages(long langID)
-        {
-            var request = ApiConsumerHelper.PostData("api/deleteDoctorLanguages?langID=" + langID, "");
-
-            //var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
-            //return result;
-        }
-
-        public ApiResultModel InsertDoctorLicensedStates(DoctorLicStatesModel model)
-        {
-            var strContent = JsonConvert.SerializeObject(model);
-            var request = ApiConsumerHelper.PostData("api/insertDoctorLicensedStates", strContent);
-
-            var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
-            return result;
-        }
-
-        public ApiResultModel UpdateDoctorLicensedStates(long licstateID, DoctorLicStatesModel model)
-        {
-            var strContent = JsonConvert.SerializeObject(model);
-            var request = ApiConsumerHelper.PostData("api/updateDoctorLicensedStates?licstateID=" + licstateID, strContent);
-
-            var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
-            return result;
-        }
-
-        public void DeleteDoctorLicensedStates(long lsID)
-        {
-            var request = ApiConsumerHelper.PostData("api/deleteDoctorLicensedStates?lsID=" + lsID, "");
-
-            //var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
-            //return result;
-        }
+        #endregion
 
     }
-
 }

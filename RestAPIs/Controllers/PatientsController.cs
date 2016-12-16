@@ -67,6 +67,7 @@ namespace RestAPIs.Controllers
                 objModel.userId = patient.userId;
                 objModel.email = patient.email;
                 objModel.active = patient.active;
+                objModel.picture = patient.picture;
 
                 objModel.secretQuestion1 = patient.secretQuestion1;
                 objModel.secretQuestion2 = patient.secretQuestion2;
