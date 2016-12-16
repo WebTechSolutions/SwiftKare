@@ -25,7 +25,7 @@ namespace RestAPIs.Controllers
             {
                 var questions = (from l in db.LifeStyleQuestions
                                where l.active == true
-                               select new { familyHXItemsID = l.questionID, name = l.question.Trim() }).ToList();
+                               select new { questionID = l.questionID, question = l.question.Trim() }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, questions);
                 return response;
             }
@@ -145,6 +145,7 @@ namespace RestAPIs.Controllers
         {
 
             response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Following Error occurred at method:" + Action + " " + ex.Message });
+            response.ReasonPhrase = ex.Message;
             return response;
         }
 

@@ -27,7 +27,7 @@ function GetAllergies() {
 
 
         },
-        error: errorRes
+        //error: errorRes
 
     });
 
@@ -60,7 +60,7 @@ function GetSensitivities() {
             });
             $select.append(listitems);
         },
-        error: errorRes
+        //error: errorRes
 
     });
 
@@ -82,7 +82,7 @@ function GetReactions() {
             });
             $select.append(listitems);
         },
-        error: errorRes
+        //error: errorRes
 
     });
 
@@ -109,7 +109,7 @@ function GetPatientAllergies(patientid) {
 
             return false;
         },
-        error: errorRes
+        //error: errorRes
 
     });
 
@@ -275,7 +275,7 @@ function addupdateAllergies(patientid) {
                 resetAllergies();
 
             },
-            error: errorRes
+           // error: errorRes
 
         });
 
@@ -329,7 +329,7 @@ function deleteAllergies(allergyID) {
 
 
         },
-        error: errorRes
+        //error: errorRes
 
     });
 }

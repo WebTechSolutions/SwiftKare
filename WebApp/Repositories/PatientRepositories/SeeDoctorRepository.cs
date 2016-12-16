@@ -17,7 +17,7 @@ namespace WebApp.Repositories.DoctorRepositories
 {
     public class SeeDoctorRepository
     {
-            public List<DoctorModel> SeeDoctor(SearchDoctorModel searchModel)
+            public List<DoctorDataset> SeeDoctor(SearchDoctorModel searchModel)
             {
 
                
@@ -25,15 +25,13 @@ namespace WebApp.Repositories.DoctorRepositories
                 {
                     var strContent = JsonConvert.SerializeObject(searchModel);
                     var response = ApiConsumerHelper.PostData("api/searchDoctor/?searchModel", strContent);
-                    var result = JsonConvert.DeserializeObject<List<DoctorModel>>(response);
+                    var result = JsonConvert.DeserializeObject<List<DoctorDataset>>(response);
                     return result;
                 }
-                catch (Exception ex)
+                catch (HttpResponseException ex)
                 {
-                    HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    httpResponseMessage.Content = new StringContent(ex.Message);
-                    throw new HttpResponseException(httpResponseMessage);
-                }
+                    throw ex;
+                 }
 
             }
         public List<FetchDoctorTimingModel> FetchDoctorTimes(FetchTimingsModel searchModel)
@@ -62,11 +60,10 @@ namespace WebApp.Repositories.DoctorRepositories
                 var result = JsonConvert.DeserializeObject<List<SP_GetDoctorInfoforAppointment_Result>>(response);
                 return result;
             }
-            catch (Exception ex)
+            catch (HttpResponseException ex)
             {
-                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                httpResponseMessage.Content = new StringContent(ex.Message);
-                throw new HttpResponseException(httpResponseMessage);
+
+                throw ex;
             }
 
         }
@@ -80,11 +77,10 @@ namespace WebApp.Repositories.DoctorRepositories
                 var result = JsonConvert.DeserializeObject<PatientROV>(response);
                 return result;
             }
-            catch (Exception ex)
+            catch (HttpResponseException ex)
             {
-                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                httpResponseMessage.Content = new StringContent(ex.Message);
-                throw new HttpResponseException(httpResponseMessage);
+
+                throw ex;
             }
 
         }
@@ -97,11 +93,10 @@ namespace WebApp.Repositories.DoctorRepositories
                 var result = JsonConvert.DeserializeObject<PatientROV>(response);
                 return result;
             }
-            catch (Exception ex)
+            catch (HttpResponseException ex)
             {
-                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                httpResponseMessage.Content = new StringContent(ex.Message);
-                throw new HttpResponseException(httpResponseMessage);
+
+                throw ex;
             }
 
         }
@@ -114,11 +109,10 @@ namespace WebApp.Repositories.DoctorRepositories
                 var result = JsonConvert.DeserializeObject<List<ROV_Custom>>(response);
                 return result;
             }
-            catch (Exception ex)
+            catch (HttpResponseException ex)
             {
-                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                httpResponseMessage.Content = new StringContent(ex.Message);
-                throw new HttpResponseException(httpResponseMessage);
+
+                throw ex;
             }
 
         }

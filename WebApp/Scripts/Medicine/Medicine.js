@@ -30,7 +30,7 @@ function GetMedicines()
 
             
         },
-        error: errorRes
+        //error: errorRes
 
     });
       
@@ -60,7 +60,7 @@ function GetFrequency() {
 
             return false;
         },
-        error: errorRes
+        //error: errorRes
 
     });
 
@@ -98,7 +98,7 @@ function GetMedications(patientid) {
 
             return false;
         },
-        error: errorRes
+        //error: errorRes
 
     });
 
@@ -245,7 +245,7 @@ function addupdateMedicine(patientid) {
                 }
 
             },
-            error: errorRes
+            //error: errorRes
 
         });
 
@@ -295,7 +295,7 @@ function deleteMedicine(medicationID) {
 
 
         },
-        error: errorRes
+        //error: errorRes
 
     });
 }

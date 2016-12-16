@@ -26,7 +26,8 @@ namespace RestAPIs.Controllers
             {
                 var hxitems = (from l in db.FamilyHXItems
                                  where l.active == true
-                                 select new { familyHXItemsID = l.familyHXItemsID, name = l.name.Trim() }).ToList();
+                               orderby l.familyHXItemsID ascending
+                               select new { familyHXItemsID = l.familyHXItemsID, name = l.name.Trim() }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, hxitems);
                 return response;
             }
@@ -37,14 +38,33 @@ namespace RestAPIs.Controllers
 
         }
 
+
+        [Route("api/getRelationships")]
+        public HttpResponseMessage GetRelationships()
+        {
+            try
+            {
+                var hxitems = (from l in db.Relationships
+                               where l.activre == true
+                               select new { relationshipID = l.relationshipID, name = l.name.Trim() }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, hxitems);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetRelationships in PatientFamilyHXController");
+            }
+
+        }
+
         [Route("api/getPatientFamilyHXItems")]
         public HttpResponseMessage GetPatientFamilyHXItems(long patientID)
         {
             try
             {
                 var ptFamilyHX = (from l in db.PatientFamilyHXes
-                                 where l.active == true && l.patientID == patientID
-                                 select new { fhxid = l.fhxid, patientID = l.patientID, name = l.name.Trim() }).ToList();
+                                 where l.active == true && l.patientID == patientID orderby l.fhxid descending
+                                 select new { fhxid = l.fhxid, patientID = l.patientID, name = l.name.Trim(),relationship=l.relationship.Trim() }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, ptFamilyHX);
                 return response;
             }
@@ -61,7 +81,7 @@ namespace RestAPIs.Controllers
             PatientFamilyHX phx = new PatientFamilyHX();
             try
             {
-                if (model.name == null || model.name == "" || !Regex.IsMatch(model.name.Trim(), "^[0-9a-zA-Z ]+$"))
+                if (model.name == null || model.name == "")
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid familyHX. Only letters and numbers are allowed." });
                     return response;
@@ -72,7 +92,7 @@ namespace RestAPIs.Controllers
                     return response;
                 }
 
-                phx = db.PatientFamilyHXes.Where(p => p.name.Trim() == model.name.Trim()).FirstOrDefault();
+                phx = db.PatientFamilyHXes.Where(p => p.name.Trim() == model.name.Trim() && p.patientID==model.patientID).FirstOrDefault();
                 if (phx != null)
                 {
                     phx.relationship = model.relationship;
@@ -109,28 +129,24 @@ namespace RestAPIs.Controllers
 
         [Route("api/updatePatientFamilyHX")]
         [ResponseType(typeof(HttpResponseMessage))]
-        public async Task<HttpResponseMessage> UpdatePatientFamilyHX(long patientfamilyHXID, long patientID,string relationship)
+        public async Task<HttpResponseMessage> UpdatePatientFamilyHX(UpdateFamilyHX model)
         {
             PatientFamilyHX pls = new PatientFamilyHX();
             try
             {
                 
-                if (patientfamilyHXID == null || patientfamilyHXID == 0)
-                {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient familyHX ID." });
-                    return response;
-                }
-                if (patientID == null || patientID == 0)
+                
+                if (model.patientID == 0)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
                     return response;
                 }
-                pls = db.PatientFamilyHXes.Where(all => all.fhxid == patientfamilyHXID && all.patientID == patientID).FirstOrDefault();
+                pls = db.PatientFamilyHXes.Where(all => all.fhxid == model.patientfamilyHXID).FirstOrDefault();
                 if (pls != null)
                 {
-                    pls.relationship = relationship;
+                    pls.relationship = model.relationship;
                     pls.md = System.DateTime.Now;
-                    pls.mb = patientID.ToString();
+                    pls.mb = model.patientID.ToString();
                     db.Entry(pls).State = EntityState.Modified;
                     await db.SaveChangesAsync();
 
@@ -146,9 +162,10 @@ namespace RestAPIs.Controllers
                 return ThrowError(ex, "EditPatientLifeStyle in PatientLifeStyleController.");
             }
 
-            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = patientfamilyHXID, message = "" });
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.patientfamilyHXID, message = "" });
             return response;
         }
+
         [Route("api/deletePatientFamilyHX")]
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> RemovePatientFamilyHX(long fhxID)
@@ -190,6 +207,7 @@ namespace RestAPIs.Controllers
         {
            
             response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Following Error occurred at method:" + Action + " " + ex.Message });
+            response.ReasonPhrase = ex.Message;
             return response;
         }
         protected override void Dispose(bool disposing)

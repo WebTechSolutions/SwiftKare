@@ -19,4 +19,11 @@ namespace DataAccess.CustomModels
         public Nullable<bool> active { get; set; }
         public Nullable<bool> status { get; set; }
     }
+    public class DoctorDataset
+    {
+        public long doctorID { get; set; }
+        public string lastName { get; set; }
+        public string firstName { get; set; }
+        public byte[] picture { get; set; }
+    }
 }

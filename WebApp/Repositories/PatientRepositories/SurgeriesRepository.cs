@@ -45,7 +45,7 @@ namespace WebApp.Repositories.PatientRepositories
         public ApiResultModel DeletePatientSurgery(long id)
         {
 
-            var response = ApiConsumerHelper.DeleteData("api/deletePatientSurgery/?surgeryID=" + id);
+            var response = ApiConsumerHelper.PostData("api/deletePatientSurgery/?surgeryID=" + id,"");
             var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
             return result;
         }

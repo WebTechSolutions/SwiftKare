@@ -29,7 +29,7 @@ namespace WebApp.Repositories.PatientRepositories
         public ApiResultModel DeleteCondition(long id)
         {
            
-            var response = ApiConsumerHelper.DeleteData("api/deletePatientCondition/?conditionId=" + id);
+            var response = ApiConsumerHelper.PostData("api/deletePatientCondition/?conditionId=" + id,"");
             var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
             return result;
         }

@@ -1,0 +1,93 @@
+﻿
+@{
+    Layout = null;
+}
+<link href="~/Content/css/style.css" rel="stylesheet">
+   
+        <div class="row">
+            <ul class="to_do">
+                <li style="display: inline-block; width: 100%; margin-bottom: 5px;">
+                    <div class="col-sm-12">
+                        <div class="title_right">
+                            <div class="form-group top_search m-b-0" style="height: 60px;">
+                                
+                                <div class="input-group m-b-0">
+                                    <div style="color:red; display:none;float:left" id="divfhx">Family History is required.</div>
+                                    <div style="color:red; display:none;float:right;width: 45%;" id="divrel">Relationship is required.</div><br/>
+                                    <div><input id="nametxt" class="form-control" placeholder="" style="border-radius: 0; height: 35px; width: 53%;" type="text"></div>
+
+                                    <div style="float:right;width: 45%;">
+                                        <select id="Relationship" class="form-control" style="width: 94%; height: 35px;">
+                                            <option>Relationship</option>
+                                            @if (ViewBag.relationships != null)
+                                            {
+                                                foreach (var itemm in ViewBag.relationships)
+                                                {
+                                                    <option value="@itemm.relationshipID">
+                                                        @itemm.name
+                                                    </option>
+                                                }
+                                            }
+                                           
+                                        </select>
+                                    </div>
+                                    <span class="input-group-btn" style="height:75px">
+                                        <button id="btnAdd" class="btn btn-primary" style="border-radius: 0; padding-top: 3px; padding-bottom: 3px; color: #fff;" type="button">Add</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                @if (ViewBag.familyHX != null)
+                {
+                    var j = 1;
+                    foreach (var item in ViewBag.familyHX)
+                    {
+                <li>
+                    <div class="row" >
+                        <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6">
+                            <div class="checkbox" >
+                                <label id="mycheckbox" onclick="adddeleteFamilyHX(@j,@item.fhxID,'@item.name')">
+                                    <input id="@("div"+j)" type="checkbox" class="flat">&nbsp &nbsp @item.name
+                                    <script>
+                                        if(@item.patientID!=0)
+                                        {
+                                           $('#div' + "@j").prop('checked', true);
+                                        }
+                                        
+                                    </script>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6">
+                            <select id="@("UR"+j)" class="form-control" onchange="updateFamilyHX(@j,@item.fhxID)">
+                                <option>Relationship</option>
+                            @if (ViewBag.relationships != null)
+                            {
+                                  foreach (var itemm in ViewBag.relationships)
+                                  {
+                                        <option value="@itemm.name"  @(itemm.name == item.relationship ? "selected" : "")>
+                                            @itemm.name
+                                           
+                                        </option>
+                                      
+
+                                }
+                            }
+
+                            </select>
+                           
+                        </div>
+                    </div>
+                </li>
+                        j = j + 1;
+                    }
+                }
+
+
+            </ul>
+        </div>
+
+    
+

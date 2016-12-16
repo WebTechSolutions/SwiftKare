@@ -1,0 +1,1179 @@
+﻿@using WebApp.Helper;
+@{
+    ViewBag.Title = "My Health History";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+@if (ViewBag.Error == "")
+{
+    <script>
+        $(function () {
+            new PNotify({
+                title: 'Success',
+                text: "@ViewBag.Success",
+                type: 'success',
+                styling: 'bootstrap3'
+            });
+        });
+
+    </script>
+}
+@if (ViewBag.Success == "")
+{
+
+    <script>
+        $(function () {
+            new PNotify({
+                title: 'Error',
+                text: "@ViewBag.Error",
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        });
+    </script>
+}
+<script src="~/Scripts/HealthConditions/HealthConditions.js"></script>
+<script src="~/Scripts/Medicine/Medicine.js"></script>
+<script src="~/Scripts/PatientAllergies/PateintAllergies.js"></script>
+<script src="~/Scripts/Surgeries/Surgeries.js"></script>
+  <!-- page content -->
+<div class="right_col" role="main">
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel" style="margin-bottom: 190px;">
+                <div class="x_title">
+                    <h2>Health History</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="col-sm-12">
+                        <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                            <ul id="myTab" class="nav nav-tabs bar_tabs m-b-40" role="tablist">
+                                <li role="presentation" class="active">
+                                    <a href="#find_doctor" id="doctor" role="tab" data-toggle="tab" aria-expanded="true">My Family History</a>
+                                </li>
+                                <li role="presentation" class="">
+                                    <a href="#call_history" role="tab" id="history" data-toggle="tab" aria-expanded="false">My LifeStyle</a>
+                                </li>
+                                <li role="presentation" class="">
+                                    <a href="#appointments" role="tab" id="appointments1" data-toggle="tab" aria-expanded="false">My Health History</a>
+                                </li>
+                                <li role="presentation" class="">
+                                    <a href="#whats_new" role="tab" id="whats_new1" data-toggle="tab" aria-expanded="false">Pharmacy</a>
+                                </li>
+                            </ul>
+                            <div id="myTabContent" class="tab-content">
+                                <div role="tabpanel" class="tab-pane fade active in" id="find_doctor" aria-labelledby="find_doctor">
+                                    <div class="profile_details">
+                                        <div class="row profile_view gust">
+                                            <h2 class="m-b-20">Does anyone in your family have the following? (Check all that apply)</h2>
+                                            <div id="divResultContainer" class="row profile_view gust">
+                                                @{
+                                                    Html.RenderAction("PartialFamilyHX", "MyHealth");
+                                                }
+                                            </div>
+
+                                        </div>
+                                </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade" id="call_history" aria-labelledby="call_history">
+                                    <div id="divLifeStyle" class="row">
+                                        @{
+                                            Html.RenderAction("PartialLifeStyle", "MyHealth");
+                                        }
+                                    </div>
+                                </div>
+
+                                <div role="tabpanel" class="tab-pane fade" id="appointments" aria-labelledby="appointments">
+                                    <div class="x_panel">
+                                        <div class="x_title">
+                                            <h2>My Health Conditions</h2>
+                                            @*<ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </ul>*@
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <input id="conditionID" type="number" style="display:none" value="0" />
+                                        <div class="x_content">
+                                            <div class="table-responsive">
+                                                <table class="table" style="margin-bottom: 5px;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="border-top: none; width:78%"><h2>Do you have any health conditions?</h2></td>
+                                                            <td style="border-top: none;float: right;">
+
+                                                                <div class="text-right" style="vertical-align:bottom">
+
+                                                                    <label style="display:none;">
+                                                                        No <input type="checkbox" class="js-switch" id="conditionCheckbox" /> Yes
+                                                                    </label>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <!-- colspan="3" -->
+                                                            <td style="width:78%;">
+                                                                <div style="color:red; display:none;float:right" id="divcondition">Condition is required.</div>
+
+                                                                <div class="input-group" style="width: 100%;">
+                                                                    @*<input type="text" name="country" placeholder="Add Conditions" id="autocomplete-custom-append" class="form-control" />*@
+
+                                                                    <input style="display:block" maxlength="50" type="text" name="country" placeholder="Add Conditions" id="myCondition" class="form-control" />
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div style="color:red;display:none" id="btncondition"><label></label></div>
+                                                                <button class="btn btn-primary" style="max-width: 200px; float: right;display:block" type="button" id="reset">Reset</button>
+                                                                <button class="btn btn-primary" style="max-width: 200px; float: right;display:block" type="button" id="addcondition">Add Conditions</button>
+
+                                                            </td>
+
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <table id="conditionstable" class="table table-striped table-bordered dt-responsive" cellspacing="0" style="width:100%;word-wrap:break-word">
+                                                    <thead>
+                                                        <tr class="headings">
+                                                            <th class="colum+n-title">sr.no </th>
+                                                            <th class="column-title">My conditions </th>
+                                                            <th class="column-title">Reported Date</th>
+                                                            <th class="column-title"></th>
+
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody id="conditionsTable"></tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="x_panel">
+                                        <div class="x_title">
+                                            <h2>My Medications</h2>
+                                            @*<ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </ul>*@
+                                            <div class="clearfix"></div>
+                                        </div>
+
+                                        <div class="x_content">
+                                            <div class="table-responsive">
+                                                <table class="table" style="margin-bottom: 5px;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="border-top: none" width="50%"><h2>Are you currently taking any medication?</h2></td>
+                                                            <td style="border-top: none" width="25%"></td>
+                                                            <td style="border-top: none">
+                                                                <div class="text-right">
+                                                                    <label style="display:none;">
+                                                                        No <input type="checkbox" class="js-switch" id="medicineCheckbox" /> Yes
+                                                                    </label>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td width="50%">
+                                                                <div class="form-group">
+                                                                    <div style="color:red; display:none;float:right" id="divmedicine">Medicine is required.</div>
+                                                                    <input maxlength="50" style="display:block" type="text" name="country" placeholder="Search Medicine" id="myMedicine" class="form-control" />
+                                                                </div>
+                                                            </td>
+                                                            <td width="25%">
+                                                                <div class="form-group">
+                                                                    <div style="color:red;display:none" id="divfrequency"><label></label></div>
+                                                                    <select class="form-control" id="myFrequency" style="display:block">
+                                                                        <option value="">Choose Frequency</option>
+
+                                                                    </select>
+                                                                    @*<input type="text" name="country" placeholder="Select Frequency" id="autocomplete-custom-append2" class="form-control" />*@
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div style="color:red;display:none" id="btnmedicine"><label></label></div>
+                                                                <button class="btn btn-primary" style="max-width: 200px; float: right;display:block" type="button" id="resetmedicine">Reset</button>
+                                                                <button class="btn btn-primary" style="max-width: 200px; float: right;display:block" type="button" id="addmedicine">Add Medication</button>
+
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <table id="medicinestable" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
+                                                    <thead>
+                                                        <tr class="headings">
+                                                            <th class="column-title">Sr.No </th>
+                                                            <th class="column-title">My Medication</th>
+                                                            <th class="column-title">Frequency</th>
+                                                            <th class="column-title">Reported Date</th>
+                                                            <th class="column-title"></th>
+
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="x_panel">
+                                        <div class="x_title">
+                                            <h2>My Allergies</h2>
+                                            @*<ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </ul>*@
+                                            <div class="clearfix"></div>
+                                        </div>
+
+                                        <div class="x_content">
+                                            <div class="table-responsive">
+                                                <table class="table" style="margin-bottom: 5px;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="border-top: none"><h2>Do you have any allergies or Drug Sensitivities?</h2></td>
+                                                            <td style="border-top: none"></td>
+                                                            <td style="border-top: none"></td>
+                                                            <td style="border-top: none">
+                                                                <div class="text-right">
+                                                                    <label style="display:none;">
+                                                                        No <input type="checkbox" class="js-switch" id="allergyCheckbox" /> Yes
+                                                                    </label>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <div style="color:red; display:none;float:right" id="divallergy">Allergy is required.</div>
+                                                                    <input maxlength="50" display:block" type="text" name="country" placeholder="Add Allergy" id="myAllergy" class="form-control" />
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <div style="color:red;display:none" id="divsensitivity"><label></label></div>
+                                                                    <select class="form-control" id="Sensitivity" style="display:block">
+                                                                        <option value="">Choose Sensitivity</option>
+
+                                                                    </select>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <div style="color:red;display:none" id="divreaction"><label></label></div>
+                                                                    <select class="form-control" id="Reaction" style="display:block">
+
+                                                                        <option value="">Choose Reaction</option>
+
+                                                                    </select>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div style="color:red;display:none" id="btnallergy"><label></label></div>
+                                                                <button id="resetallergy" class="btn btn-primary" style="max-width: 200px; float: right; margin-right: 0;display:block" type="button">Reset</button>
+                                                                <button id="addallergy" class="btn btn-primary" style="max-width: 200px; float: right; margin-right: 0;display:block" type="button">Add Allergy</button>
+
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <table id="allergiestable" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
+                                                    <thead>
+                                                        <tr class="headings">
+                                                            <th class="column-title">Sr.No </th>
+                                                            <th class="column-title">Allergy</th>
+                                                            <th class="column-title">Severity</th>
+                                                            <th class="column-title">Reaction</th>
+                                                            <th class="column-title">Reported Date</th>
+                                                            <th class="column-title"></th>
+
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="x_panel">
+                                        <div class="x_title">
+                                            <h2>My Surgeries and Procedures</h2>
+                                            @*<ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>*@
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="x_content">
+                                            <div class="table-responsive">
+                                                <table id="surgeriestable" class="table" style="margin-bottom: 5px;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="border-top: none">Have you ever had any surgeries or medical procedures?</td>
+                                                            <td style="border-top: none"></td>
+                                                            <td style="border-top: none"></td>
+                                                            <td style="border-top: none">
+                                                                <div class="text-right" style="width: 87px;">
+                                                                    <label style="display:none;">
+                                                                        No <input type="checkbox" class="js-switch" id="surgeryCheckbox" /> Yes
+                                                                    </label>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>
+
+                                                                <div class="input-group" style="width: 100%;">
+                                                                    <div style="color:red; display:none;float:right" id="divsurgery">Surgery is required.</div>
+                                                                    <input style="display:block" maxlength="50" type="text" name="country" placeholder="Add Surgeries" id="myBodyPart" class="form-control" />
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div style="color:red;display:none" id="btnsurgery"><label></label></div>
+                                                                <button style="display:block" id="addsurgery" class="btn btn-primary" type="button">Add Surgeries</button>
+
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><b>Have you ever had any of the following? (Check All that Apply)</b></td>
+                                                            <td><b></b></td>
+                                                        </tr>
+                                                        @*<tr>
+                                <td>
+                                    <div class="checkbox" style="display: inline-block; width: 150px;">
+                                        <label>
+                                            <input type="checkbox" class="flat" checked="checked">&nbsp Ankle
+                                        </label>
+
+
+                                    </div>
+
+                                </td>
+                               <td></td>
+                            </tr>*@
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  
+                                </div>
+
+                                <div role="tabpanel" class="tab-pane fade" id="whats_new" aria-labelledby="whats_new">
+
+                                    <div class="row" style="margin-bottom: 70px;">
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="x_panel">
+                                                <div class="x_title">
+                                                    <div class="input-group res-w-input" style="width: 94%; float: left;">
+                                                        <input type="text" name="country" placeholder="Search Pharmacy" id="pharmacy" class="form-control" />
+                                                        <input type="number" id="pharmacyid" style="display:none" />
+                                                    </div>
+                                                    <ul class="nav navbar-right panel_toolbox">
+                                                        <li>
+                                                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                                <div class="x_content">
+                                                    <h2 class="m-t-0">Current Pharmacy</h2>
+                                                    <h2>Wal-Mart Pharmacy 5866</h2>
+                                                    <p>8555 PRESTON RD</p>
+                                                    <p>FRISCO TX,75034</p>
+                                                    <p><strong>Ph:</strong> (469)237-3768</p>
+                                                    <p><strong>Fax:</strong>  2144364723</p>
+                                                    <p><strong>Pharmacy Hours:</strong> Open 24 hours</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <!-- <div id="map" style="height: 330px; width: 100%;"></div>
+            <script>
+              function initMap() {
+                var uluru = {lat: 40.723523, lng: -73.9960463};
+                var map = new google.maps.Map(document.getElementById('map'), {
+                  zoom: 16,
+                  center: uluru
+                });
+                var marker = new google.maps.Marker({
+                  position: uluru,
+                  map: map
+                });
+              }
+            </script>
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&callback=initMap" async defer></script>     -->
+                                            <img class="gray-bdr-1 img-responsive" src="../Content/images/us_map.jpg" style="height: 330px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<iframe id="iframeDownload" style="display:none;"></iframe>
+<!-- /page content -->
+
+<!--Family History-->
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //$('input').iCheck('check', function(){
+        //    alert('Well done, Sir');
+        //});
+
+          $("#btnAdd").click(function () {
+
+            if ($("#nametxt").val() == "" && $("#Relationship option:selected").text()!="Relationship") {
+
+                document.getElementById("divfhx").style.display = "block";
+                document.getElementById("divrel").style.display = "none";
+                return;
+            }
+            if ($("#nametxt").val() != "" && $("#Relationship option:selected").text()=="Relationship") {
+
+                document.getElementById("divfhx").style.display = "none";
+                document.getElementById("divrel").style.display = "block";
+                return;
+            }
+            if ($("#nametxt").val() == "" && $("#Relationship option:selected").text()=="Relationship") {
+
+                document.getElementById("divfhx").style.display = "block";
+                document.getElementById("divrel").style.display = "block";
+                return;
+            }
+            if ($("#nametxt").val() == "") {
+
+                document.getElementById("divfhx").style.display = "block";
+                return;
+            }
+            if($("#Relationship option:selected").text()=="Relationship") {
+
+                document.getElementById("divrel").style.display = "block";
+                return;
+            }
+
+
+            document.getElementById("divfhx").style.display = "none";
+            document.getElementById("divrel").style.display = "none";
+                var objFamilyHX = {};
+                objFamilyHX["patientID"]=@SessionHandler.UserInfo.Id;
+                objFamilyHX["name"]=$("#nametxt").val();
+                if($("#Relationship option:selected").text()=="Relationship")
+                {
+                    objFamilyHX["relationship"]="";
+                }
+                else
+                {
+                    objFamilyHX["relationship"]=$("#Relationship option:selected").text();
+                }
+
+                var _objFHX=objFamilyHX;
+                addFamilyHX(_objFHX);
+
+        });
+    });
+    
+    function addFamilyHX(_objFHX)
+    {
+        //Start displaying loader
+        showLoader();
+
+        $.ajax({
+            url: '@Url.Action("AddFamilyHX", "MyHealth")',
+            type: "POST",
+            data: _objFHX,
+            dataType: 'json',
+            success: function (result) {
+                //Reload container
+                if (result.Message != undefined)
+                {
+                    new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                    $("#Relationship").val($("#Relationship option:first").val());
+                    stopLoader();
+                }
+                else
+                {
+                    reloadContainer(function () {
+                        new PNotify({ title: 'Success', text: "Family Hisytory is added successfully.", type: 'success', styling: 'bootstrap3' });
+                        //Stop displaying loader
+                        stopLoader();
+                    });
+                }
+
+            },
+            error: function (err) {
+                new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                //Stop displaying loader
+                stopLoader();
+            }
+        });
+    }
+    function updateFamilyHX(id,patfhxid)
+    {
+        if($("#div"+id).prop('checked') == true){
+
+            var objFamilyHX = {};
+            objFamilyHX["patientID"]=@SessionHandler.UserInfo.Id;
+            objFamilyHX["patientfamilyHXID"]=patfhxid;
+
+            if($("#UR"+id+" option:selected").text()=="Relationship")
+            {
+                objFamilyHX["relationship"]="";
+            }
+            else
+            {
+                objFamilyHX["relationship"]=$("#UR"+id+" option:selected").text();
+            }
+
+            var _objFHX=objFamilyHX;
+            //Start displaying loader
+            showLoader();
+
+            $.ajax({
+                url: '@Url.Action("UpdateFamilyHX", "MyHealth")',
+                type: "POST",
+                data: _objFHX,
+                dataType: 'json',
+                success: function (result) {
+                    //Reload container
+                    if (result.Message != undefined)
+                    {
+                        new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                        stopLoader();
+                    }
+                    else
+                    {
+                        new PNotify({ title: 'Success', text: "Family History is updated successfully.", type: 'success', styling: 'bootstrap3' });
+                        stopLoader();
+                        //reloadContainer(function () {
+                        //    new PNotify({ title: 'Success', text: "Family Hisytory is added successfully.", type: 'success', styling: 'bootstrap3' });
+                        //    //Stop displaying loader
+                        //    stopLoader();
+                        //});
+                    }
+
+                },
+                error: function (err) {
+                    new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                    //Stop displaying loader
+                    stopLoader();
+                }
+            });
+
+        }
+        else
+        {
+            return;
+            //alert('FamilyHX is not checked.');
+        }
+    }
+    function restore(_objFHX)
+    {
+
+        showLoader();
+         $.ajax({
+            url: '@Url.Action("AddFamilyHX", "MyHealth")',
+            type: "POST",
+            data: _objFHX,
+            dataType: 'json',
+            success: function (result) {
+                //Reload container
+                if (result.Message != undefined)
+                {
+                    new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                    stopLoader();
+                }
+                else
+                {
+                    //reloadContainer(function () {
+                        new PNotify({ title: 'Success', text: "Family Hisytory is added successfully.", type: 'success', styling: 'bootstrap3' });
+                        //Stop displaying loader
+                        stopLoader();
+                    //});
+                }
+
+            },
+            error: function (err) {
+                new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                //Stop displaying loader
+                stopLoader();
+            }
+        });
+    }
+    function adddeleteFamilyHX(chkid,fhxID,name) {
+
+        if($("#div"+chkid).prop('checked') == false)
+        {
+          
+        if(fhxID!=0)
+        {
+            var objFHX = {};
+            objFHX["patientID"]=@SessionHandler.UserInfo.Id;
+            objFHX["name"]=name;
+            if($('#UR'+chkid+" option:selected").text()=="Relationship")
+            {
+                objFHX["relationship"]="";
+            }
+            else
+            {
+                objFHX["relationship"]=$("#UR"+chkid+" option:selected").text();
+            }
+            restore(objFHX);
+        }
+        if(fhxID==0)
+        {
+            var objFHX = {};
+            objFHX["patientID"]=@SessionHandler.UserInfo.Id;
+            objFHX["name"]=name;
+
+            if($('#UR'+chkid+" option:selected").text()=="Relationship")
+            {
+                objFHX["relationship"]="";
+            }
+            else
+            {
+                objFHX["relationship"]=$("#UR"+chkid+" option:selected").text();
+            }
+            var _objFHXX=objFHX;
+            addFamilyHX(_objFHXX);
+
+        }
+        }
+        if($("#div"+chkid).prop('checked') == true)
+        {
+            if (confirm("Are you sure you want to delete?")) {
+                showLoader();
+                var cUrl = "@Url.Action("deleteFamilyHX", "MyHealth")?fhxID=" + fhxID;
+                $.post(cUrl, function (oResp) {
+                    if (oResp.message == "") {
+                        //reloadContainer(function () {
+                        new PNotify({ title: 'Success', text: 'Family History is deleted successfully.', type: 'success', styling: 'bootstrap3' });
+                        $("#UR"+chkid).val($("#UR"+chkid+ " option:first").val());
+                            stopLoader();
+                        //});
+                    } else {
+                        new PNotify({ title: 'Error', text: oResp.message, type: 'error', styling: 'bootstrap3' });
+                        stopLoader();
+                    }
+
+                });
+            }
+            else
+            {
+
+                $('#div' + chkid).iCheck('toggle');
+            }
+        }
+
+    }
+    function reloadContainer(callback) {
+        $("#divResultContainer").load('@Url.Action("PartialFamilyHX", "MyHealth")', function () {
+             callback();
+        });
+
+
+    }
+    function showLoader() {
+        blockUI();
+    }
+
+    function stopLoader() {
+        $.unblockUI();
+    }
+
+    //Center the element
+    $.fn.center = function () {
+        this.css("position", "absolute");
+        this.css("top", ($(window).height() - this.height()) / 2 + $(window).scrollTop() + "px");
+        this.css("left", ($(window).width() - this.width()) / 2 + $(window).scrollLeft() + "px");
+        return this;
+    }
+
+    //blockUI
+    function blockUI() {
+        $.blockUI({
+            css: {
+                backgroundColor: 'transparent',
+                border: 'none'
+            },
+            message: '<div class="spinner"></div>',
+            baseZ: 1500,
+            overlayCSS: {
+                backgroundColor: '#FFFFFF',
+                opacity: 0.7,
+                cursor: 'wait'
+            }
+        });
+        $('.blockUI.blockMsg').center();
+    }//end Blockui
+    </script>
+
+<!--Life Style-->
+<script type="text/javascript">
+    //if ($('#allergyCheckbox')[0].checked) {
+
+    function addLifeStyle(id,question,plsid)
+    {
+        //if ($('#lfs'+id)[0].checked) {
+        //    alert('yes');
+        //}
+        //else
+        //{
+        //    alert('no');
+        //}
+        
+        
+        if(plsid==0)
+        {
+            var objLifeStyle = {};
+            objLifeStyle["patientID"]=@SessionHandler.UserInfo.Id;
+            objLifeStyle["question"]=question;
+            if ($('#lfs'+id)[0].checked) {
+                objLifeStyle["answer"]="Y";
+            }
+            else
+            {
+                objLifeStyle["answer"]="N";
+            }
+            var _objPLS=objLifeStyle;
+            //Start displaying loader
+            showLoader();
+
+            $.ajax({
+                url: '@Url.Action("AddLifeStyle", "MyHealth")',
+                type: "POST",
+                data: _objPLS,
+                dataType: 'json',
+                success: function (result) {
+                    //Reload container
+                    if (result.Message != undefined)
+                    {
+                        new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                        stopLoader();
+                    }
+                    else
+                    {
+                        
+                        reloadLifeStyle(function () {
+                            new PNotify({ title: 'Success', text: "Life style is added successfully.", type: 'success', styling: 'bootstrap3' });
+                            stopLoader();
+                        });
+
+                    }
+
+                },
+                error: function (err) {
+                    new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                    //Stop displaying loader
+                    stopLoader();
+                }
+            });
+        } //end if(plsid==0)
+        else if(plsid!=0)
+        {
+            if (!($('#lfs'+id)[0].checked))
+            {
+                if (confirm("Are you sure you want to delete?")) {
+                    showLoader();
+                    var objLifeStyle = {};
+                    objLifeStyle["patientID"]=@SessionHandler.UserInfo.Id;
+                    objLifeStyle["patientLifeStyleID"]=plsid;
+                    if ($('#lfs'+id)[0].checked) {
+                        objLifeStyle["answer"]="Y";
+                    }
+                    else
+                    {
+                        objLifeStyle["answer"]="N";
+                    }
+              
+                    var _objPLS=objLifeStyle;
+                    //Start displaying loader
+                    showLoader();
+
+                    $.ajax({
+                        url: '@Url.Action("UpdateLifeStyle", "MyHealth")',
+                        type: "POST",
+                        data: _objPLS,
+                        dataType: 'json',
+                        success: function (result) {
+                            //Reload container
+                            if (result.Message != undefined)
+                            {
+                                new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                                stopLoader();
+                            }
+                            else
+                            {
+                                new PNotify({ title: 'Success', text: "Life style is updated successfully.", type: 'success', styling: 'bootstrap3' });
+                                stopLoader();
+
+                            }
+
+                        } 
+
+                    });
+                }
+            }
+            else
+            {
+                showLoader();
+                var objLifeStyle = {};
+                objLifeStyle["patientID"]=@SessionHandler.UserInfo.Id;
+                objLifeStyle["patientLifeStyleID"]=plsid;
+                if ($('#lfs'+id)[0].checked) {
+                    objLifeStyle["answer"]="Y";
+                }
+                else
+                {
+                    objLifeStyle["answer"]="N";
+                }
+              
+                var _objPLS=objLifeStyle;
+                //Start displaying loader
+                showLoader();
+
+                $.ajax({
+                    url: '@Url.Action("UpdateLifeStyle", "MyHealth")',
+                    type: "POST",
+                    data: _objPLS,
+                    dataType: 'json',
+                    success: function (result) {
+                        //Reload container
+                        if (result.Message != undefined)
+                        {
+                            new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                            stopLoader();
+                        }
+                        else
+                        {
+                            new PNotify({ title: 'Success', text: "Life style is updated successfully.", type: 'success', styling: 'bootstrap3' });
+                            stopLoader();
+
+                        }
+
+                    } 
+
+                });
+            }
+            
+        } //end if(plsid!=0)
+        }//end function
+     
+    function reloadLifeStyle(callback) {
+        $("#divLifeStyle").load('@Url.Action("PartialLifeStyle", "MyHealth")', function () {
+            callback();
+        });
+       
+
+    }
+    function showLoader() {
+        blockUI();
+    }
+
+    function stopLoader() {
+        $.unblockUI();
+    }
+
+    //Center the element
+    $.fn.center = function () {
+        this.css("position", "absolute");
+        this.css("top", ($(window).height() - this.height()) / 2 + $(window).scrollTop() + "px");
+        this.css("left", ($(window).width() - this.width()) / 2 + $(window).scrollLeft() + "px");
+        return this;
+    }
+
+    //blockUI
+    function blockUI() {
+        $.blockUI({
+            css: {
+                backgroundColor: 'transparent',
+                border: 'none'
+            },
+            message: '<div class="spinner"></div>',
+            baseZ: 1500,
+            overlayCSS: {
+                backgroundColor: '#FFFFFF',
+                opacity: 0.7,
+                cursor: 'wait'
+            }
+        });
+        $('.blockUI.blockMsg').center();
+    }//end Blockui
+</script>
+
+<!--Health History-->
+<script>
+    $(document).ready(function () {
+         $('#conditionstable').DataTable({
+            'order': [[0, 'asc']],
+            'columnDefs': [
+               { visible: false, targets: [0] },
+               { "width": "10%", "targets": [0] },
+               { "width": "25%", "targets": [1] },
+                 { "width": "20%", "targets": [2] },
+               { "width": "35%", "targets": [3] }
+            ]
+        });
+        GetHealthConditions(@SessionHandler.UserInfo.Id);
+       
+    });
+    //For health conditions//
+    $('#addcondition').on('click', function () {
+        if ($("#myCondition").val() == "") {
+            //$("#myCondition").val("Condition name is required.");
+            document.getElementById("divcondition").style.display = "block";
+            document.getElementById("btncondition").style.display = "block";
+        }
+        else {
+            document.getElementById("divcondition").style.display = "none";
+            document.getElementById("btncondition").style.display = "none";
+            addupdateCondition(@SessionHandler.UserInfo.Id);
+        }
+
+
+    });
+    $('#reset').on('click', function () {
+        resetCondition();
+
+    });
+    $('#conditionCheckbox').on('click', function () {
+        if ($('#conditionCheckbox')[0].checked) {
+
+            document.getElementById("myCondition").style.display = "block";
+            document.getElementById("addcondition").style.display = "block";
+            document.getElementById("reset").style.display = "block";
+        }
+        else {
+
+            //document.getElementById("healthconditions").style.display = "none";
+            document.getElementById("myCondition").style.display = "none";
+            document.getElementById("addcondition").style.display = "none";
+            document.getElementById("reset").style.display = "none";
+            document.getElementById("divcondition").style.display = "none";
+            document.getElementById("btncondition").style.display = "none";
+
+        }
+
+    });
+
+    //For health conditions//
+</script>
+
+<!--Medince History-->
+<script>
+    $(document).ready(function () {
+        GetMedicines();
+        GetMedications(@SessionHandler.UserInfo.Id);
+        GetFrequency();
+        $('#medicinestable').DataTable({
+            'order': [[0, 'asc']],
+            'columnDefs': [
+               { visible: false, targets: [0] },
+               { "width": "20%", "targets": [2] },
+                { "width": "20%", "targets": [3] },
+               { "width": "15%", "targets": [4] }
+            ]
+        });
+    });
+    $('#addmedicine').on('click', function () {
+        if ($("#myMedicine").val() == "") {
+            document.getElementById("divmedicine").style.display = "block";
+            document.getElementById("btnmedicine").style.display = "block";
+            document.getElementById("divfrequency").style.display = "block";
+
+        }
+        else
+        {
+            document.getElementById("divmedicine").style.display = "none";
+            document.getElementById("btnmedicine").style.display = "none";
+            document.getElementById("divfrequency").style.display = "none";
+            addupdateMedicine(@ViewBag.PatienID);
+        }
+
+
+    });
+    $('#resetmedicine').on('click', function () {
+        resetMedicine();
+
+    });
+    $('#medicineCheckbox').on('click', function () {
+        if ($('#medicineCheckbox')[0].checked) {
+            document.getElementById("myMedicine").style.display = "block";
+            document.getElementById("myFrequency").style.display = "block";
+            document.getElementById("resetmedicine").style.display = "block";
+            document.getElementById("addmedicine").style.display = "block";
+        }
+        else {
+
+            document.getElementById("myMedicine").style.display = "none";
+            document.getElementById("myFrequency").style.display = "none";
+            document.getElementById("resetmedicine").style.display = "none";
+            document.getElementById("addmedicine").style.display = "none";
+            document.getElementById("divmedicine").style.display = "none";
+            document.getElementById("divfrequency").style.display = "none";
+            document.getElementById("btnmedicine").style.display = "none";
+
+        }
+
+    });
+</script>
+
+<!--Allergies-->
+<script>
+    $(document).ready(function () {
+        GetAllergies();
+        GetSensitivities();
+        GetReactions();
+        GetPatientAllergies(@SessionHandler.UserInfo.Id);
+        $('#allergiestable').DataTable({
+            'order': [[0, 'asc']],
+            'columnDefs': [
+               { visible: false, targets: [0] },
+                { "width": "20%", "targets": [1] },
+                { "width": "20%", "targets": [2] },
+                { "width": "20%", "targets": [3] },
+               { "width": "15%", "targets": [5] }
+            ]
+
+
+        });
+    });
+    $('#addallergy').on('click', function () {
+        if ($("#myAllergy").val() == "") {
+            document.getElementById("divallergy").style.display = "block";
+            document.getElementById("btnallergy").style.display = "block";
+            document.getElementById("divsensitivity").style.display = "block";
+            document.getElementById("divreaction").style.display = "block";
+        }
+        else {
+            document.getElementById("divallergy").style.display = "none";
+            document.getElementById("btnallergy").style.display = "none";
+            document.getElementById("divsensitivity").style.display = "none";
+            document.getElementById("divreaction").style.display = "none";
+            addupdateAllergies(@ViewBag.PatienID);
+        }
+
+    });
+    $('#resetallergy').on('click', function () {
+        resetAllergies();
+
+    });
+    $('#allergyCheckbox').on('click', function () {
+        if ($('#allergyCheckbox')[0].checked) {
+
+            document.getElementById("myAllergy").style.display = "block";
+            document.getElementById("Sensitivity").style.display = "block";
+            document.getElementById("Reaction").style.display = "block";
+            document.getElementById("resetallergy").style.display = "block";
+            document.getElementById("addallergy").style.display = "block";
+        }
+        else {
+
+            document.getElementById("myAllergy").style.display = "none";
+            document.getElementById("Sensitivity").style.display = "none";
+            document.getElementById("Reaction").style.display = "none";
+            document.getElementById("resetallergy").style.display = "none";
+            document.getElementById("addallergy").style.display = "none";
+            document.getElementById("divallergy").style.display = "none";
+            document.getElementById("divsensitivity").style.display = "none";
+            document.getElementById("divreaction").style.display = "none";
+            document.getElementById("btnallergy").style.display = "none";
+        }
+
+    });
+</script>
+
+<!--Surgeries-->
+<script>
+    $(document).ready(function () {
+        GetSurgeries();
+        GetPatientSurgeries(@SessionHandler.UserInfo.Id);
+
+
+        $('#addsurgery').on('click', function () {
+            if ($("#myBodyPart").val() == "") {
+                document.getElementById("divsurgery").style.display = "block";
+                document.getElementById("btnsurgery").style.display = "block";
+            }
+            else {
+                document.getElementById("divsurgery").style.display = "none";
+                document.getElementById("btnsurgery").style.display = "none";
+                addupdateSurgery(@ViewBag.PatienID);
+            }
+
+        });
+        $('#surgeryCheckbox').on('click', function () {
+            if ($('#surgeryCheckbox')[0].checked) {
+
+                document.getElementById("myBodyPart").style.display = "block";
+                document.getElementById("addsurgery").style.display = "block";
+            }
+            else {
+                document.getElementById("myBodyPart").style.display = "none";
+                document.getElementById("addsurgery").style.display = "none";
+                document.getElementById("divsurgery").style.display = "none";
+                document.getElementById("btnsurgery").style.display = "none";
+            }
+
+        });
+    });
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            var pharmacy = { 1: "pharmacy 1", 2: "pharmacy 2", 3: "pharmacy 3" };
+
+            var pharmacyArray = $.map(pharmacy, function (value, key) {
+                return {
+                    value: value,
+                    data: key
+                };
+            });
+            $("#pharmacy").autocomplete({
+                lookup: pharmacyArray,
+                select: function (s, e) {
+                    alert(e.item.value);
+                    //savePharmacy(e.item.value);
+                    //$(this).val(b.item.value);
+                    //$("#pharmacyid").val(a.item.value);
+
+
+                }
+            });
+        });
+    });
+</script>
+
+
+<script>
+        $(document).ajaxSuccess(function (evt, request, settings) {
+            console.log(request.responseText);
+            if (response.isRedirect) {
+                window.location.href = response.redirectUrl;
+            }
+        });
+</script>
