@@ -1,4 +1,4 @@
-﻿
+﻿ 
 function GetROV() {
     var param = "{}";
     var listitems;
@@ -17,6 +17,7 @@ function GetROV() {
 
                     });
                     $select.append(listitems);
+                   
                     //here I could call the properties of my object, as below:
                     //$("#ROV").val(response.Object.rov);
 
@@ -48,8 +49,10 @@ function GetPatientROV(patientID) {
                     $("#ROV option").filter(function () {
                         //may want to use $.trim in here
                         //alert(response.Object.rov);
+                        //console.log("Patient Last ROV:"+" "+response.Object.rov);
                         return $(this).text() == response.Object.rov;
                     }).prop('selected', true);
+                    console.log($("#ROV").find(":selected").text());
                     //$("#ROV option:contains(" + response.Object.rov + ")").attr('selected', 'selected');
                     //alert();
                     //$("#ROV").val(response.Object.rov);
@@ -81,8 +84,15 @@ function GetPatientChiefComplaints(patientID) {
                     //here I could call the properties of my object, as below:
                     $("#chiefcomplaints").val(response.Object.chiefComplaints);
 
-
+                    $("#ROV option").filter(function () {
+                        //may want to use $.trim in here
+                        //alert(response.Object.rov);
+                       
+                        return $(this).text() == response.Object.rov;
+                    }).prop('selected', true);
+                    
                     //$('#ROV option').filter(function () { return $(this).html() == response.Object.rov; }).val();
+                    console.log($("#ROV").find(":selected").text());
                 }
             }
             //else {response.Message;}
@@ -269,7 +279,18 @@ function SearchDoctor(patientID) {
 
             var tableHtml = "";// "<div class='row'>";
             if (response.Success == true) {
-                if (response.DoctorModel.length > 0) {
+                 if (response.Message != null) {
+                
+                new PNotify({
+                    title: 'Error',
+                    text: response.Message,
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+                 }
+             else
+                 {
+                    if (response.DoctorModel.length > 0) {
 
                     $.each(response.DoctorModel, function (item) {
 
@@ -330,12 +351,14 @@ function SearchDoctor(patientID) {
                     });
                     //tableHtml = tableHtml+"</div>";
                     favDoctors(patientID);
-                }
+                }   
+                 }
+                
                 if (response.DoctorModel.length > 0) { document.getElementById("docList").innerHTML = tableHtml; checkAnyDoctorAvailableNow(); }
                 else { document.getElementById("docList").innerHTML = "No record found";; }
 
                 document.getElementById("mainpanel").style.display = "block";
-                $.unblockUI();
+               
             }
 
         },
@@ -343,7 +366,7 @@ function SearchDoctor(patientID) {
 
     });
 
-    $.unblockUI();
+    
 }
 function fetchTimings(fetchdate) {
 

@@ -29,8 +29,10 @@ namespace WebApp.Helper
             }
             catch (WebException ex)
             {
+
                 response = ex.Response as HttpWebResponse;
             }
+
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 actual = response != null ? UnPackResponse(response) : "";

@@ -29,7 +29,7 @@ function GetSurgeries() {
 
 
         },
-        error: errorRes
+        //error: errorRes
 
     });
 
@@ -66,7 +66,7 @@ function GetPatientSurgeries(patientid) {
             }
            return false;
         },
-        error: errorRes
+        //error: errorRes
 
     });
 
@@ -178,7 +178,7 @@ function addupdatepredefinedSurgery(chkbox,surgeryName)
                     }
 
                 },
-                error: errorRes
+                //error: errorRes
 
             });
            
@@ -254,7 +254,7 @@ function addupdateSurgery(patientid) {
                 }
 
             },
-            error: errorRes
+            //error: errorRes
 
         });
 
@@ -300,7 +300,7 @@ function deleteObjSurgery(surgeryID) {
             }
 
        },
-        error: errorRes
+        //error: errorRes
 
     });
 }

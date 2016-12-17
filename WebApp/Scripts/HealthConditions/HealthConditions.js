@@ -29,7 +29,7 @@ function GetHealthConditions(patientid) {
 
             return false;
         },
-        error: errorRes
+        //error: errorRes
 
     });
 
@@ -60,6 +60,7 @@ function bindConditionsTable(Conditions) {
         ]);
 
     }
+    
     $('#conditionstable').DataTable().draw();
 
 }
@@ -157,7 +158,7 @@ function addupdateCondition(_patientId) {
                 }
                
             },
-            error: errorRes
+            //error: errorRes
 
         });
 
@@ -206,7 +207,7 @@ function deleteHealthConditions(conditionID) {
                 }
              
         },
-        error: errorRes
+        //error: errorRes
 
     });
 }

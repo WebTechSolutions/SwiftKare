@@ -130,7 +130,7 @@
                                     </ul>
                                 </li>
                                 <li class="patient">
-                                    <a href="my_health.html"><img src="~/Content/images/my-health.png" alt=""> &nbsp <span class="menu-txt">My Health</span> </a>
+                                    <a href="@Url.Action("Index","MyHealth")"><img src="~/Content/images/my-health.png" alt=""> &nbsp <span class="menu-txt">My Health</span> </a>
                                 </li>
                                 <li class="message">
                                     <a href="@Url.Action("Index","PatientFiles")"><img src="~/Content/images/my-files.png" alt=""> &nbsp <span class="menu-txt">My Files</span> </a>
@@ -567,6 +567,14 @@
             });
         });
     </script>
+    <script>
+        $(document).ajaxSuccess(function (evt, request, settings) {
+            console.log(request.responseText);
+            if (response.isRedirect) {
+                window.location.href = response.redirectUrl;
+            }
+        });
+        </script>
 
 
     @RenderSection("scripts", required: false)

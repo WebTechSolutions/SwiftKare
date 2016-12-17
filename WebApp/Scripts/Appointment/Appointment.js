@@ -235,6 +235,7 @@ function CreateAppointment(patientID,amount) {
                         type: 'success',
                         styling: 'bootstrap3'
                     });
+                   
 
                 }
 

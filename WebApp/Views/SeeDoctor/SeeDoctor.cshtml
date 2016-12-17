@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using WebApp.Helper;
 @{
     ViewBag.Title = "SeeDoctor";
     Layout = "~/Views/Shared/_PatientLayout.cshtml";
@@ -177,7 +178,7 @@
                                         <div class="col-md-4 col-sm-6 col-xs-12">
 
 
-                                            <label class="control-label">Specially:</label>
+                                            <label class="control-label">Speciality:</label>
                                             <div class="form-group">
                                                 <select class="form-control" id="Speciality">
                                                     <option value="">ALL</option>
@@ -803,8 +804,8 @@
         GetAllLanguages();
         GetAllSpecialities();
         GetROV(@ViewBag.PatienID);
-        GetPatientROV(@ViewBag.PatienID);
-        GetPatientChiefComplaints(@ViewBag.PatienID);
+        //GetPatientROV(@ViewBag.PatienID);
+        //GetPatientChiefComplaints(@ViewBag.PatienID);
 
         //initialize autocomplete with custom appendTo
         //$('#pharmacy').autocomplete({
@@ -833,7 +834,7 @@
 
                 //Redirect User for video chat
                 alert("Payment successful! Now user can be redirected to video chat page with doctor.");
-
+                location.reload();
             },
             handleFailure: function () {
                 alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
@@ -841,24 +842,12 @@
         });
 
         oStripePayCheckout.initialize();
-
+        
 
     });
       
     function searchDoctor() {
-        // $.blockUI({ message: "<div class='loader'></div>" });
-
-        //if ($("#time").val() == "Time" || $("#time").val() == "") {
-        //    document.getElementById("pt").style.display = "block";
-        //}
-        //else {
-        //    document.getElementById("pt").style.display = "none";
-        //}
-        //if ($("#time").val() != "Time" && $("#time").val() != "")
-        //{
-        //    SearchDoctor();
-        //}
-        
+              
         SearchDoctor(@ViewBag.PatienID)
         
 
@@ -895,22 +884,7 @@
                 format: 'DD/MM/YYYY ',
 
             });
-    //$('#searchdate').bootstrapMaterialDatePicker('setDate', moment());
-    //$('#appdate').bootstrapMaterialDatePicker
-    //   ({
-    //       time: false,
-    //       clearButton: true,
-    //       format: 'DD/MM/YYYY ',
-
-    //   });
-    //$('#appdate').bootstrapMaterialDatePicker('setDate', moment());
-    //$('#fetchdate').daterangepicker({
-    //    singleDatePicker: true,
-    //    calender_style: "picker_2",
-
-    //}, function (start, end, label) {
-    //    console.log(start.toISOString(), end.toISOString(), label);
-    //});
+    
 
     $("#fetchdate").daterangepicker({
         singleDatePicker: true,
@@ -1285,14 +1259,14 @@
 <!-- /jQuery Smart Wizard -->
 <script>
     $(document).ready(function () {
-       
+
       //  $('#wizard').smartWizard('onShowStep', 2);
         $('#wizard_verticle').smartWizard({
             transitionEffect: 'slide'
-           
+
         });
 
-       
+
         //showApppointmentSummary();
         $('.buttonNext').addClass('btn btn-primary');
         $('.buttonPrevious').addClass('btn btn-primary');
@@ -1301,38 +1275,41 @@
 
     $('#wizard').smartWizard({
         onLeaveStep:leaveAStepCallback
-       
+
     });
 
     function leaveAStepCallback(obj, context){
         //alert("Leaving step " + context.fromStep + " to go to step " + context.toStep);
-        return validateSteps(context.toStep); // return false to stay on step and true to continue navigation 
+        return validateSteps(context.toStep); // return false to stay on step and true to continue navigation
     }
 
-    
+
 
     // Your Step validation logic
     function validateSteps(stepnumber){
         var isStepValid = true;
         //alert(stepnumber);
         // validate step 1
+        if( stepnumber== 2){
+            GetPatientChiefComplaints(@SessionHandler.UserInfo.Id);
+        }
         if( stepnumber== 5){
             //alert('load appointment detaul');
             // Your step validation logic
             // set isStepValid = false if has errors
             showDoctorInfo();
             showApppointmentSummary();
-           
+
         }
         return true;
-        // ...      
+        // ...
     }
-        
- 
+
+
     $('#fetchdate').on('apply.daterangepicker', function (ev, picker) {
         //do something, like clearing an input
         fetchTimings( $('#fetchdate').val());
-       
+
     });
 </script>
 

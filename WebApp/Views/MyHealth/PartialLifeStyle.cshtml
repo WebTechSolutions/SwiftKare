@@ -1,0 +1,45 @@
+﻿@{
+    Layout = null;
+}
+@if (ViewBag.lifeStyle != null)
+{
+    var j = 1;
+    foreach (var item in ViewBag.lifeStyle)
+    {
+<div class="col-lg-6 col-md-12 col-sm-12">
+  
+    <div class="table-responsive">
+       
+        <table class="table">
+            <tbody>
+                <tr >
+                    <td>@item.question</td>
+                    <td class="text-right">
+                        <div class="text-right">
+
+                            <label>
+                                No <input id="@("lfs"+j)" type="checkbox" class="js-switch" onclick="addLifeStyle(@j,'@item.question','@item.patientLifeStyleID')"/> Yes
+                                <script>
+                                    if(@item.patientID!=0 && "@item.answer"=="Y")
+                                    {
+                                        $('#lfs' + "@j").prop('checked', true);
+                                        //($(this).prop("checked")?)
+                                    }
+
+                                </script>
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                                
+            </tbody>
+        </table>
+        
+    </div>
+    
+
+
+</div>
+        j = j + 1;
+    }
+}
