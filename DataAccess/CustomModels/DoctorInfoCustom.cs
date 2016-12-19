@@ -19,9 +19,10 @@ namespace DataAccess.CustomModels
         public string cellPhone { get; set; }
         public string specialityName { get; set; }
         public string languageName { get; set; }
-        
+        public byte[] picture { get; set; }
 
 
 
     }
+    
 }

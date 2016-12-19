@@ -1,0 +1,129 @@
+﻿@using WebApp.Helper
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+<link href="~/Content/css/pnotify.css" rel="stylesheet">
+@*<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
+<script type="text/javascript" src="~/Scripts/~/Scripts/bootstrap.min.js"></script>*@
+<script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="~/Scripts/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" src="~/Scripts/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="~/Scripts/dataTables.responsive.min.js"></script>
+<script type="text/javascript" src= "~/Scripts/pnotify.js"></script>
+
+<!-- page content -->
+<div class="right_col">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Appointments</h3>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <div class="" role="tabpanel" data-example-id="togglable-tabs" style="padding-bottom: 180px;">
+        <ul id="myTab" class="nav nav-tabs bar_tabs m-b-40" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#call_history" id="doctor" role="tab" data-toggle="tab" aria-expanded="true">Upcoming</a>
+            </li>
+            <li role="presentation" class="">
+                <a href="#find_doctor" role="tab" id="history" data-toggle="tab" aria-expanded="false">Reschedule</a>
+            </li>
+
+        </ul>
+        <div id="myTabContent" class="tab-content">
+
+            <div role="tabpanel" class="tab-pane fade active in" id="call_history" aria-labelledby="call_history">
+                <div class="x_panel">
+
+
+                    <div class="x_content">
+                        <div id="divUpcoming" class="table-responsive">
+
+                            @{
+                                Html.RenderAction("PartialDoctorUpcoming", "DoctorAppointment");
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="find_doctor" aria-labelledby="find_doctor">
+                <div class="x_panel">
+
+
+                    <div class="x_content">
+                        <div id="divReschedule" class="table-responsive">
+
+                            @{
+                                Html.RenderAction("PartialDoctorReschedule", "DoctorAppointment");
+                            }
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4">
+        <div class="modal-dialog" style="width: 350px;">
+            <div id='myModalContent' class="modal-content" style="border-radius: 0;">
+
+            </div>
+        </div>
+    </div><!-- View App Detail -->
+    <div class="modal fade" id="myModal6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4">
+        <div class="modal-dialog" style="width: 350px;">
+            <div id='myModalContent' class="modal-content" style="border-radius: 0;">
+
+            </div>
+        </div>
+    </div><!-- View App Detail -->
+
+    
+</div>
+
+<!-- /page content -->
+<!-- Load View App Detail Popup -->
+<script>
+
+    
+    //$("#myModal4").on('show.bs.modal', function (e) {
+
+    //    var $modal = $(this);
+    //     mydocid = e.relatedTarget.id;
+    //    alert(mydocid);
+    //    var appID = $('#' + mydocid).data('todo').appID;
+    //    var appDateTime = $('#' + mydocid).data('todo').appDateTime;
+    //    var rov = $('#' + mydocid).data('todo').rov;
+    //    var chiefcomplaints = $('#' + mydocid).data('todo').chiefComplaints;
+    //    var paymentamount = $('#' + mydocid).data('todo').amount;
+    //    var pharmacy = $('#' + mydocid).data('todo').pharmacy;
+    //    var cellPhone = $('#' + mydocid).data('todo').cellPhone;
+
+    //    $("#editappid").val(appID);
+    //    $('#p_appdatetime').append("<b>"+appDateTime+"</b>");
+    //    $('#p_rov').append(rov);
+    //    $('#p_chiefComplaints').append(chiefcomplaints);
+    //    $('#p_pharmacy').append(pharmacy);
+    //    $('#p_amount').append(paymentamount);
+    //    $('#cellPhone').append(cellPhone);
+    //});
+
+   function reloadContainer(callback) {
+        
+        $("#divReschedule").load('@Url.Action("PartialDoctorReschedule", "DoctorAppointment")', function () {
+            callback();
+        });
+        $("#divUpcoming").load('@Url.Action("PartialDoctorUpcoming", "DoctorAppointment")', function () {
+            callback();
+        });
+
+
+    }
+</script>
+
+

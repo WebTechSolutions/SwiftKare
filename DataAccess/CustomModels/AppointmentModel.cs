@@ -22,4 +22,12 @@ namespace DataAccess.CommonModels
         public string consultationType { get; set; }
         public string consultationStatus { get; set; }
     }
+
+    public class RescheduleAppointmentModel
+    {
+        public long appID { get; set; }
+        public Nullable<long> patientID { get; set; }
+        public string appDate { get; set; }
+        public string appTime { get; set; }
+    }
 }

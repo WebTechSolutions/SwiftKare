@@ -8,13 +8,22 @@ namespace DataAccess.CustomModels
 {
     public class RescheduleAppModel
     {
+        public long appID { get; set; }
         public long doctorID { get; set;}
         public long patientID { get; set; }
-        public string docName { get; set;}
-        public string patName { get; set; }
-        public Nullable<DateTime> appDate { get; set; }
-        public Nullable<TimeSpan> appTime { get; set; }
+        public string DoctorName { get; set;}
+        public string PatientName { get; set; }
+        public string appDate { get; set; }
+        public string appTime { get; set; }
         public string rov { get; set; }
         public string chiefComplaints { get; set; }
+
+        
+       
+
     }
+
+   
+
+
 }

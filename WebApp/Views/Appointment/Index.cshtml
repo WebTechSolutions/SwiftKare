@@ -1,0 +1,391 @@
+﻿@using WebApp.Helper
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+<!-- page content -->
+<div class="right_col">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Appointments</h3>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <div class="" role="tabpanel" data-example-id="togglable-tabs" style="padding-bottom: 180px;">
+        <ul id="myTab" class="nav nav-tabs bar_tabs m-b-40" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#call_history" id="doctor" role="tab" data-toggle="tab" aria-expanded="true">Upcoming</a>
+            </li>
+            <li role="presentation" class="">
+                <a href="#find_doctor" role="tab" id="history" data-toggle="tab" aria-expanded="false">Reschedule</a>
+            </li>
+           
+        </ul>
+        <div id="myTabContent" class="tab-content">
+
+            <div role="tabpanel" class="tab-pane fade active in" id="call_history" aria-labelledby="call_history">
+                <div class="x_panel">
+
+
+                    <div class="x_content">
+                        <div id="divUpcoming" class="table-responsive">
+
+                            @{
+                                Html.RenderAction("PartialUpcoming", "Appointment");
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="find_doctor" aria-labelledby="find_doctor">
+                <div class="x_panel">
+
+
+                    <div class="x_content">
+                        <div id="divReschedule" class="table-responsive">
+
+                            @{
+                                Html.RenderAction("PartialReschedule", "Appointment");
+                            }
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+            </div>
+    <div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4">
+        <div class="modal-dialog" role="document" style="width: 350px;">
+            <div id='myModalContent' class="modal-content" style="border-radius: 0;">
+               
+            </div>
+        </div>
+    </div><!-- View App Detail -->
+
+    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="timingsmodaltitle"></h4>
+                </div><!--/.modal header-->
+
+                <div class="modal-body text-left">
+                    <div class="row" id="docrow">
+                        <input type="text" style="display:none" id="doctorid">
+
+                        <form class="form-horizontal form-label-left">
+                            <div class="col-sm-offset-4 col-sm-4">
+                                <div class="xdisplay_inputx form-group has-feedback">
+                                    <input type="text" class="form-control has-feedback-left active" id="fetchdate" placeholder="Choose a Date" aria-describedby="inputSuccess2Status">
+                                    <span class="fa fa-calendar-o form-control-feedback left date" aria-hidden="true"></span>
+                                    <span id="inputSuccess2Status" class="sr-only">(success)</span>
+                                </div>
+                            </div>
+                        </form>
+                      
+                        <form class="form-horizontal form-label-left">
+                            <div class="col-sm-12 text-center">
+                                <ul class="doctor_time" id="TimingsData"></ul>
+                            </div>
+                            <input type="text" style="display:none" id="RAppID">
+                            <button type="button" class="btn btn-primary btn-sm pull-right" id="RAPP" onclick="rescheduleApp($('#RAppID').val())">Save</button>
+                        </form>
+
+                    </div><!-- Timing Slots -->
+                </div>
+            </div>
+        </div>
+    </div><!-- col1 -->
+</div>
+
+<!-- /page content -->
+
+ <!-- Load View App Detail Popup -->
+<script>
+   
+
+    var _objAppointment = {};
+    var _doctorName="";
+    var _doctorID="";
+    var appdate="";
+    function sendVariables(doctorid, editappid,elem) {
+        
+        _doctorID=doctorid;
+        _doctorName= $(elem).data('assigned-id');
+       
+        showDoctorTimings(doctorid,editappid);
+    }
+
+    $(function () {
+        $(".thumbnail-col-inner").click(function () {
+
+            //debugger;
+            var $buttonClicked = $(this);
+            var AppDetailPostBackURL = '/Appointment/ViewAppDetails';
+            var docid = $buttonClicked.attr('data-id');
+            var appID = $buttonClicked.attr('id');
+           
+           
+            $.ajax({
+                type: "GET",
+                url: AppDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "appID": appID },
+                datatype: "json",
+                success: function (data) {
+                    if(data!=undefined|| data!=null)
+                    {
+                        $('#myModalContent').html(data);
+                        $('#myModal4').modal('show');
+                        var $modal = $('#myModal4');
+                        $editappid = $modal.find('#editappid');
+                        $doctorid = $modal.find('#doctorid');
+                        $editappid.val(appID);
+                        $doctorid.val(docid);
+                    }
+                    else
+                    {
+                        new PNotify({ title: 'Error', text: "Dynamic content load failed.", type: 'error', styling: 'bootstrap3' });
+                        
+                    }
+                    
+                },
+                error: function (err) {
+                    new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                }
+            });
+        });
+
+
+    });
+
+   
+    //Reschedule App
+    
+    function rescheduleApp(appID)
+    {
+
+        _objAppointment["appID"] =  $("#RAppID").val();
+        _objAppointment["patientID"] = @SessionHandler.UserInfo.Id;
+        $.ajax({
+            url: '@Url.Action("RescheduleApp", "Appointment")',
+            type: "POST",
+            data: _objAppointment,
+            dataType: 'json',
+            success: function (result) {
+                //Reload container
+                if (result.Message != undefined) {
+                    new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                    $('#myModal1').modal('hide');
+                    $('#myModal4').modal('hide');
+                    //stopLoader();
+                }
+                else {
+
+                        if(result.ApiResultModel.message=="")
+                        {
+                            new PNotify({ title: 'Success', text: "Appointment is rescheduled successfully.", type: 'success', styling: 'bootstrap3' });
+                            $('#myModal1').modal('hide');
+                            $('#myModal4').modal('hide');
+                            reloadContainer(function ()
+                            {
+                                //Stop displaying loader
+                                //stopLoader();
+                               
+                            });
+                        }
+                        else
+                        {
+                            new PNotify({ title: 'Error', text: result.ApiResultModel.message, type: 'error', styling: 'bootstrap3' });
+                            $('#myModal1').modal('hide');
+                            $('#myModal4').modal('hide');
+                            
+                        }
+
+
+                }
+
+            },
+            error: function (err) {
+                //alert(err.statusText);
+                new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                //Stop displaying loader
+                //stopLoader();
+            }
+        });
+    }
+    //////////////////
+    //Show Timing Slots
+    $(".reschedule").click(function () {
+
+        //debugger;
+        var $buttonClicked = $(this);
+        appdate = $buttonClicked.attr('data-id');
+
+    });
+    $("#myModal1").on('show.bs.modal', function (e) {
+        var $modal = $(this);
+        var todoId="";
+        var docName="";
+        var mydocid = e.relatedTarget.id;
+        if(mydocid=="editappointment")
+        {
+            todoId =_doctorID ;
+            docName =_doctorName ;
+        }
+        else
+        {
+            todoId = $('#' + mydocid).data('todo').docid;
+
+            docName = $('#' + mydocid).data('todo').doctorName;
+        }
+        
+        $("#doctorid").val(todoId);
+        $("#timingsmodaltitle").text(docName + " Timings");
+
+
+
+    });
+    $("#fetchdate").daterangepicker({
+        singleDatePicker: true,
+        calender_style: "picker_2",
+        format: 'DD/MM/YYYY ',
+        minDate: new Date()
+    });
+    $('#fetchdate').on('apply.daterangepicker', function (ev, picker) {
+        //do something, like clearing an input
+        //alert($('#fetchdate').val());
+        fetchTimings( $('#fetchdate').val());
+
+    });
+    $('#fetchdate').data('daterangepicker').setStartDate();
+    function fetchTimings(fetchdate) {
+
+        var _objSearch = {};
+        _objSearch["appDate"] = fetchdate;//$("#fetchdate").val();
+        //alert( _objSearch["appDate"]);
+        _objSearch["doctorID"] = $("#doctorid").val();
+
+        var div = "";
+        $.ajax({
+            type: 'POST',
+            url: '/SeeDoctor/FetchDoctorTimings',
+            data: _objSearch,
+            dataType: 'json',
+            success: function (response) {
+                if (response.Message != undefined) {
+                    //alert(response.Message.ReasonPhrase);
+                    new PNotify({
+                        title: 'Error',
+                        text: response.Message.ReasonPhrase,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                }
+                else {
+                    var tablehtml = "";
+                    $.each(response.Object, function (item) {
+
+                        tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + fetchdate + "\")'>" + response.Object[item] + "</button></li>";
+
+                    });
+
+                    if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
+                    else { document.getElementById("TimingsData").innerHTML = tablehtml; }
+                }
+
+            },
+
+        });
+    }
+
+    function showDoctorTimings(doctorID,appID) {
+
+        $("#RAppID").val(appID);
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+
+        today = dd + '/' + mm + '/' + yyyy;
+        $('#fetchdate').val(today);
+        var _objSearch = {};
+
+        _objSearch["appDate"] = $('#fetchdate').val();
+        _objSearch["doctorID"] = doctorID;
+
+        var div = "";
+        $.ajax({
+            type: 'POST',
+            url: '/SeeDoctor/FetchDoctorTimings',
+            data: _objSearch,
+            dataType: 'json',
+            success: function (response) {
+                if (response.Message != undefined) {
+
+                }
+                else {
+                    var tablehtml = "";
+                    $.each(response.Object, function (item) {
+
+                        tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + $("#fetchdate").val() + "\")'>" + response.Object[item] + "</button></li>";
+
+                    });
+
+                    if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
+                    else { document.getElementById("TimingsData").innerHTML = tablehtml; }
+
+                }
+
+            },
+
+        });
+    }
+
+    function setDateTime(myappTime, myappDate) {
+
+        _objAppointment["appDate"] = myappDate;
+        _objAppointment["appTime"] = myappTime;
+        _selecteddoctorID = $("#doctorid").val();
+        //$('#myModal1').modal('hide');
+        //$('#wizard').smartWizard('goToStep', 2);
+        //if ($("#wizard").smartWizard('currentStep', '2')) {
+        //    //alert('2');
+        //    $('.buttonNext').show();
+        //    $('.buttonPrevious').show();
+
+        //}
+        //showDoctorInfo();
+        //showApppointmentSummary(myappTime, myappDate);
+        return false;
+        // $('#step-2').show();
+    }
+
+    function reloadContainer(callback) {
+        
+        $("#divReschedule").load('@Url.Action("PartialReschedule", "Appointment")', function () {
+            callback();
+        });
+        $("#divUpcoming").load('@Url.Action("PartialUpcoming", "Appointment")', function () {
+            callback();
+        });
+
+
+    }
+
+</script> 

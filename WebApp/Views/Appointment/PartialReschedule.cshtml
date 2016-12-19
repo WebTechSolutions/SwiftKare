@@ -1,0 +1,143 @@
+﻿@model IEnumerable<DataAccess.CustomModels.RescheduleAppModel>
+@{
+    Layout = null;
+}
+
+
+@if (Model == null || Model.Count() == 0)
+{
+    <div class="well">
+        There is no rescheduled appointment.
+    </div>
+}
+else
+{
+
+    <table id="rescheduledatatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <tr class="headings">
+                <th class="column-title">Doctor Name </th>
+                <th class="column-title">Appointment Time</th>
+                <th class="column-title">Reason of Visit </th>
+                <th class="column-title">ChiefComplaint</th>
+                <th class="column-title">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="even pointer">
+                    <td>@item.DoctorName</td>
+                    <td>@item.appDate @item.appTime</td>
+                    <td>@item.rov</td>
+                    <td>@item.chiefComplaints</td>
+                    <!-- <td><button class="btn btn-primary btn-sm m-b-0 " type="submit">View</button></td> -->
+                    <td>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Action
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    @*<a href='#' data-toggle="modal" class="thumbnail-col-inner" data-id="@item.doctorID" id="@item.appID" data-target="#myModal4"
+            data-todo='{"appID":"@item.appID","appDateTime":"@item.appDate@item.appTime","rov":"@item.rov","chiefComplaints":"@item.chiefComplaints","amount":"@item.paymentAmount","pharmacy":"@item.pharmacy"
+            ,"cellPhone":"@item.cellphone"}'>View Detail</a>*@
+                                <li><a href="#" data-toggle="modal" class="thumbnail-col-inner" data-id="@item.doctorID" id="@item.appID" data-target="#myModal4">View Detail</a></li>
+                                
+                                <li><a href="#" class="reschedule" data-id="@item.appDate" data-toggle="modal" data-target="#myModal1" data-todo='{"docid":"@item.doctorID","doctorName":"@item.DoctorName","appID":"@item.appID","appDate":"@item.appDate"}' onclick=showDoctorTimings(@item.doctorID,@item.appID) id="@item.doctorID">Reschedule App</a></li>
+
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+}
+
+<!-- Datatables -->
+<script>
+      $(document).ready(function() {
+        var handleDataTableButtons = function() {
+          if ($("#datatable-buttons").length) {
+            $("#datatable-buttons").DataTable({
+              dom: "Bfrtip",
+              buttons: [
+                {
+                  extend: "copy",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "csv",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "excel",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "pdfHtml5",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "print",
+                  className: "btn-sm"
+                },
+              ],
+              responsive: true
+            });
+          }
+        };
+
+        TableManageButtons = function() {
+          "use strict";
+          return {
+            init: function() {
+              handleDataTableButtons();
+            }
+          };
+        }();
+
+        $('#rescheduledatatable').dataTable();
+
+        $('#datatable-keytable').DataTable({
+          keys: true
+        });
+
+        $('#datatable-responsive').DataTable();
+
+        $('#datatable-scroller').DataTable({
+          ajax: "js/datatables/json/scroller-demo.json",
+          deferRender: true,
+          scrollY: 380,
+          scrollCollapse: true,
+          scroller: true
+        });
+
+        $('#datatable-fixed-header').DataTable({
+          fixedHeader: true
+        });
+
+        var $datatable = $('#datatable-checkbox');
+
+        $datatable.dataTable({
+          'order': [[ 1, 'asc' ]],
+          'columnDefs': [
+            { orderable: false, targets: [0] }
+          ]
+        });
+        $datatable.on('draw.dt', function() {
+          $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+          });
+        });
+
+        TableManageButtons.init();
+      });
+</script>
+<!-- /Datatables -->
+

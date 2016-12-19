@@ -834,7 +834,7 @@
 
                 //Redirect User for video chat
                 alert("Payment successful! Now user can be redirected to video chat page with doctor.");
-                location.reload();
+                //location.reload();
             },
             handleFailure: function () {
                 alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
@@ -889,7 +889,8 @@
     $("#fetchdate").daterangepicker({
         singleDatePicker: true,
         calender_style: "picker_2",
-        format: 'DD/MM/YYYY '
+        format: 'DD/MM/YYYY ',
+        minDate: new Date()
     });
     $('#fetchdate').data('daterangepicker').setStartDate();
 
@@ -911,10 +912,11 @@
     //$('#time').bootstrapMaterialDatePicker('setTime', moment());// update check in sp for null time
     $("#myModal1").on('show.bs.modal', function (e) {
         var $modal = $(this);
+       
         mydocid = e.relatedTarget.id;
+       
         $("#doctorid").val(mydocid);
         var todoId = $('#' + mydocid).data('todo').id;
-
         var docName = $('#' + mydocid).data('todo').doctorName;
         $("#timingsmodaltitle").text(docName+" Timings");
     });

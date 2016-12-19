@@ -3,6 +3,7 @@ using DataAccess.CommonModels;
 using DataAccess.CustomModels;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -12,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+
 
 namespace RestAPIs.Controllers
 {
@@ -34,6 +36,23 @@ namespace RestAPIs.Controllers
             }
         }
 
+        [Route("api/GetAppDetail")]
+        public HttpResponseMessage GetAppDetail(long appID)
+        {
+            try
+            {
+                    var result = db.SP_GetAppDetail(appID).ToList();
+                    response = Request.CreateResponse(HttpStatusCode.OK, result);
+                    return response;
+              
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetAppDetail in AppointmentController");
+            }
+
+
+        }
         [Route("api/PatientPreviousROV")]
         public HttpResponseMessage GetROV(long patientID)
         {
@@ -91,6 +110,8 @@ namespace RestAPIs.Controllers
 
 
         }
+
+
         [HttpPost]
         [Route("api/addAppointment")]
         [ResponseType(typeof(void))]
@@ -119,18 +140,10 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
                     return response;
                 }
-                string outputTime = "";
+               
                 app.active = true;
                 app.doctorID = model.doctorID;
                 app.patientID = model.patientID;
-                //if (model.appTime.Contains("AM"))
-                //{
-                //    outputTime = model.appTime.Replace("AM", "");
-                //}
-                //if (model.appTime.Contains("PM"))
-                //{
-                //    outputTime = model.appTime.Replace("PM", "");
-                //}
                 app.appTime = To24HrTime(model.appTime);
                 app.appDate =Convert.ToDateTime(model.appDate);
                 app.rov = model.rov;
@@ -144,6 +157,88 @@ namespace RestAPIs.Controllers
                 db.Appointments.Add(app);
 
                 await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "AddAppointments in AppointmentController.");
+            }
+
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
+            return response;
+        }
+
+        [HttpPost]
+        [Route("api/rescheduleAppointment")]
+        [ResponseType(typeof(void))]
+        public async Task<HttpResponseMessage> RescheduleAppointments(RescheduleAppointmentModel model)
+        {
+            Appointment app = new Appointment();
+            try
+            {
+                if (model.appDate == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment date." });
+                    return response;
+                }
+                if (model.appTime == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment time." });
+                    return response;
+                }
+               
+                if ( model.appID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment ID." });
+                    return response;
+                }
+                if (model.patientID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
+                    return response;
+                }
+                Appointment result = db.Appointments.Where(rapp => rapp.appID == model.appID && rapp.active == true).FirstOrDefault();
+                string currDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                DateTime cdt = Convert.ToDateTime(currDateTime);
+                DateTime ad = Convert.ToDateTime(result.appDate);
+                TimeSpan at = TimeSpan.Parse(result.appTime.ToString());
+                DateTime appDateTime = ad + at;
+
+                DateTime cad = Convert.ToDateTime(model.appDate);
+                TimeSpan cat = TimeSpan.Parse(To24HrTime(model.appTime.ToString()).ToString());
+                DateTime cappDateTime = cad + cat;
+
+                TimeSpan ctimediff = cappDateTime- appDateTime ;
+                TimeSpan timediff = appDateTime - cdt;
+                 string RescheduleLimit = ConfigurationManager.AppSettings["RescheduleLimit"].ToString();
+                //if (ctimediff.TotalHours < 0 )
+                //{
+                //    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Reschedule is not allowed on back date." });
+                //    return response;
+                //}
+                if (timediff.TotalHours < Convert.ToInt32(RescheduleLimit))
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Reschedule is not allowed when appointment is about to start within 24 hours." });
+                    return response;
+                }
+                else
+                {
+
+                    result.appTime = To24HrTime(model.appTime);
+                    result.appDate = Convert.ToDateTime(model.appDate);
+                    result.mb = model.patientID.ToString();
+                    result.md = System.DateTime.Now;
+                    result.consultationStatus = "C";
+                    db.Entry(result).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    Alert alert = new Alert();
+                    alert.alertFor = result.doctorID.ToString();
+                    alert.alertText="Your appointment on "+ model.appDate+" at "+model.appTime + " is rescheduled by patient.";
+                    alert.cd = System.DateTime.UtcNow;
+                    alert.cb = model.patientID.ToString();
+                    alert.active = true;
+                    db.Alerts.Add(alert);
+                    await db.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -184,7 +279,7 @@ namespace RestAPIs.Controllers
                 }
                 else
                 {
-                    var result = db.SP_GetRescheduleAppforPatient(patientID);
+                    var result = db.SP_GetRescheduleAppforPatient(patientID).ToList();
                     response = Request.CreateResponse(HttpStatusCode.OK, result);
                     return response;
                 }
@@ -245,6 +340,7 @@ namespace RestAPIs.Controllers
 
 
         }
+
         [Route("api/GetUpcomingAppforDoctor")]
         public HttpResponseMessage GetUpcomingAppforDoctor(long doctorID)
         {
@@ -319,8 +415,6 @@ namespace RestAPIs.Controllers
 
         }
 
-       
-
         [HttpPost]
         [Route("api/RescheduleRequest")]
         public async Task<HttpResponseMessage> RescheduleApp(RescheduleRequestModel model)
@@ -353,14 +447,17 @@ namespace RestAPIs.Controllers
                     DateTime cdt = Convert.ToDateTime(currDateTime);
                     //DateTime adt = Convert.ToDateTime(appDateTime);
                     TimeSpan timediff = appDateTime-cdt ;
-                    if (timediff.TotalHours < 24)
+                    string RescheduleLimit = ConfigurationManager.AppSettings["RescheduleLimit"].ToString();
+                    if (timediff.TotalHours < Convert.ToInt32(RescheduleLimit))
                     {
+                        
                         response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Appointment reschedule is not allowed when less than 24 hrs are left for appointment." });
                         return response;
                     }
                     else
                     {
                         result.rescheduleRequiredBy = "D";
+                        result.consultationStatus = "R";
                         result.mb = model.doctorID.ToString();
                         result.md = System.DateTime.Now;
                         db.Entry(result).State = EntityState.Modified;
@@ -378,9 +475,45 @@ namespace RestAPIs.Controllers
 
 
         }
+
+        [HttpPost]
+        [Route("api/CancelRescheduleRequest")]
+        public async Task<HttpResponseMessage> CancelRescheduleRequest(RescheduleRequestModel model)
+        {
+            try
+            {
+                Appointment result = db.Appointments.Where(app => app.appID == model.appID && app.active == true).FirstOrDefault();
+                if (result == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Appointment not found" });
+                    return response;
+                }
+                else
+                {
+                        result.rescheduleRequiredBy = "";
+                    result.consultationStatus = "";
+                    result.mb = model.doctorID.ToString();
+                        result.md = System.DateTime.Now;
+                        db.Entry(result).State = EntityState.Modified;
+                        await db.SaveChangesAsync();
+                   
+                }
+
+                response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.appID, message = "" });
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "CancelRescheduleRequest in AppointmentController");
+            }
+
+
+        }
+
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
-            response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = "Internal server error at "+Action });
+            response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = ex.Message+" at "+Action });
+            response.ReasonPhrase = ex.Message;
             return response;
           
         }

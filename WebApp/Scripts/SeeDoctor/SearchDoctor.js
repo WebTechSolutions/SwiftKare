@@ -411,7 +411,7 @@ function fetchTimings(fetchdate) {
 }
 
 function showDoctorTimings(doctorID) {
-    //document.getElementById("TimingsData").innerHTML = "No record found";
+   
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1; //January is 0!
@@ -457,16 +457,16 @@ function showDoctorTimings(doctorID) {
 }
 
 
-//function errorRes(data) {
-//   // var err = eval("(" + data.responseText + ")");
-//    //alert(err.Message);
-//    new PNotify({
-//        title: 'Error',
-//        text: data.Message,
-//        type: 'error',
-//        styling: 'bootstrap3'
-//    });
-//}
+function errorRes(data) {
+   // var err = eval("(" + data.responseText + ")");
+    //alert(err.Message);
+    new PNotify({
+        title: 'Error',
+        text: data.Message,
+        type: 'error',
+        styling: 'bootstrap3'
+    });
+}
 
 
 

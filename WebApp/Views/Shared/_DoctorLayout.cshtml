@@ -17,6 +17,7 @@
     <!-- Custom Theme Style -->
     <link href="~/Content/css/custom.min.css" rel="stylesheet">
     <link href="~/Content/css/style.css" rel="stylesheet">
+   
     <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://rawgit.com/FezVrasta/bootstrap-material-design/master/dist/js/material.min.js"></script>
@@ -66,7 +67,7 @@
                         <div class="menu_section">
                             <ul class="nav side-menu" style="margin-top: 10px;">
                                 <li class="scheduler">
-                                    <a href="#"><img src="~/Content/images/icon_scheduler.png" alt=""> &nbsp <span class="menu-txt"> Appointment</span></a>
+                                    <a href="@Url.Action("Index","DoctorAppointment")"><img src="~/Content/images/icon_scheduler.png" alt=""> &nbsp <span class="menu-txt"> Appointment</span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="appointments.html">Rescheduled Appointments</a></li>
                                         <li><a href="appointments.html">Pending Appointments</a></li>

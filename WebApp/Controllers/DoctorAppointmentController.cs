@@ -1,0 +1,133 @@
+﻿using DataAccess.CustomModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using WebApp.Helper;
+using WebApp.Repositories.DoctorRepositories;
+
+namespace WebApp.Controllers
+{
+    public class DoctorAppointmentController : Controller
+    {
+        // GET: DoctorAppointment
+        DoctorAppointmentRepositroy oAppointmentRepository;
+        SeeDoctorRepository oSeeDoctorRepository;
+        public DoctorAppointmentController()
+        {
+            oAppointmentRepository = new DoctorAppointmentRepositroy();
+            oSeeDoctorRepository = new SeeDoctorRepository();
+        }
+        // GET: Appointment
+        public ActionResult Index()
+        {
+            if (SessionHandler.IsExpired)
+            {
+                return Json(new
+                {
+                    redirectUrl = Url.Action("DoctorLogin", "Account"),
+                    isRedirect = true
+                });
+            }
+            else
+            {
+                ViewBag.errorMessage = "";
+                ViewBag.successMessage = "";
+                return View();
+            }
+        }
+
+        public PartialViewResult PartialDoctorReschedule()
+        {
+            try
+            {
+                var oData = oAppointmentRepository.GetRescheduleApp(SessionHandler.UserInfo.Id);
+
+                return PartialView("PartialDoctorReschedule", oData);
+
+            }
+
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                ViewBag.errorMessage = ex.Response.ReasonPhrase.ToString();
+                ViewBag.successMessage = "";
+                return PartialView("PartialDoctorReschedule");
+            }
+           
+        }
+
+        public PartialViewResult PartialDoctorUpcoming()
+        {
+            try
+            {
+                var oData = oAppointmentRepository.GetUpcomingApp(SessionHandler.UserInfo.Id);
+                ViewBag.errorMessage = "";
+                ViewBag.successMessage = "";
+                return PartialView("PartialDoctorUpcoming", oData);
+
+            }
+
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                ViewBag.errorMessage = ex.Response.ReasonPhrase.ToString();
+                ViewBag.successMessage = "";
+                
+                return PartialView("PartialDoctorUpcoming");
+            }
+           
+        }
+
+        public ActionResult ViewAppDetails(int appID)
+        {
+            try
+            {
+                var oData = oAppointmentRepository.GetAppDetail(appID);
+                return PartialView("PartialDoctorViewAppDetail", oData);
+            }
+
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                ViewBag.errorMessage = ex.Response.ReasonPhrase.ToString();
+                ViewBag.errorMessage = "";
+                return PartialView("PartialDoctorViewAppDetail");
+            }
+           
+        }
+        [HttpPost]
+        public JsonResult CancelReschedule(RescheduleRequestModel model)
+        {
+            try
+            {
+                ApiResultModel apiresult = new ApiResultModel();
+                apiresult = oAppointmentRepository.CancelReschedule(model);
+                return Json(new { Success = true, ApiResultModel = apiresult });
+
+            }
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                return Json(new { Message = ex.Response });
+            }
+
+        }
+
+        [HttpPost]
+        public JsonResult Reschedule(RescheduleRequestModel model)
+        {
+            try
+            {
+                ApiResultModel apiresult = new ApiResultModel();
+                apiresult = oAppointmentRepository.Reschedule(model);
+                return Json(new { Success = true, ApiResultModel = apiresult });
+
+            }
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                return Json(new { Message = ex.Response });
+            }
+
+        }
+
+        
+    }
+}

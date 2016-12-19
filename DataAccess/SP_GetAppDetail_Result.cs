@@ -20,12 +20,19 @@ namespace DataAccess
         public string DoctorGender { get; set; }
         public string city { get; set; }
         public string state { get; set; }
+        public int DoctorAge { get; set; }
+        public string dcellPhone { get; set; }
+        public string pcellPhone { get; set; }
+        public int PatientAge { get; set; }
+        public string languages { get; set; }
         public string PatientGender { get; set; }
-        public Nullable<System.DateTime> appDate { get; set; }
-        public Nullable<System.TimeSpan> appTime { get; set; }
+        public string appDate { get; set; }
+        public string appTime { get; set; }
         public string rov { get; set; }
         public string chiefComplaints { get; set; }
         public string pharmacy { get; set; }
+        public int paymentAmt { get; set; }
         public string specialityName { get; set; }
+        public string languageName { get; set; }
     }
 }
