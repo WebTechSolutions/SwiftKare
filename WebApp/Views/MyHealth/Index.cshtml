@@ -494,7 +494,85 @@
 
         });
     });
-    
+    $(function() {
+
+
+       
+        $('input').on('ifToggled', function(event){
+           
+            if($("#"+this.id).prop('checked') == false)
+            {
+                if (confirm("Are you sure you want to delete?")) {
+                    showLoader();
+                    var delfhxID = this.name.replace(/[^0-9]/g, '');
+                    var delrelID=this.id.replace(/[^0-9]/g, '');
+                    var cUrl = "@Url.Action("deleteFamilyHX", "MyHealth")?fhxID=" + delfhxID;
+                    $.post(cUrl, function (oResp) {
+                        if (oResp.message == "") {
+                            //reloadContainer(function () {
+                            new PNotify({ title: 'Success', text: 'Family History is deleted successfully.', type: 'success', styling: 'bootstrap3' });
+                            $("#UR"+delrelID).val($("#UR"+delrelID+ " option:first").val());
+                            stopLoader();
+                            //});
+                        } else {
+                            new PNotify({ title: 'Error', text: oResp.message, type: 'error', styling: 'bootstrap3' });
+                            stopLoader();
+                        }
+
+                    });
+                    return;
+                }
+                else
+                {
+
+                    $('#' + this.id).iCheck('toggle');
+                }
+            }
+            else
+            {
+               
+                var fhxID = this.name.replace(/[^0-9]/g, '');
+                var name = this.name.replace(/[0-9]/g, '');
+                var relID=this.id.replace(/[^0-9]/g, '');
+                if(fhxID!=0)
+                {
+                    var objFHX = {};
+                    objFHX["patientID"]=@SessionHandler.UserInfo.Id;
+                    objFHX["name"]=name;
+                    //objFHX["relationship"]="";
+                    if($("#UR"+relID+" option:selected").text()=="Relationship")
+                    {
+                        objFHX["relationship"]="";
+                    }
+                    else
+                    {
+                        objFHX["relationship"]=$("#UR"+chkid+" option:selected").text();
+                    }
+                    $("#UR"+relID+" option").prop('disabled', false);
+                    restore(objFHX);
+                }
+                if(fhxID==0)
+                {
+                    var objFHX = {};
+                    objFHX["patientID"]=@SessionHandler.UserInfo.Id;
+                    objFHX["name"]=name;
+
+                    if($("#UR"+relID+" option:selected").text()=="Relationship")
+                    {
+                        objFHX["relationship"]="";
+                    }
+                    else
+                    {
+                        objFHX["relationship"]=$("#UR"+relID+" option:selected").text();
+                    }
+                    var _objFHXX=objFHX;
+                    $("#UR"+relID+" option").prop('disabled', false);
+                    addFamilyHX(_objFHXX);
+                }
+            }
+
+        });
+    });
     function addFamilyHX(_objFHX)
     {
         //Start displaying loader
@@ -622,72 +700,7 @@
             }
         });
     }
-    function adddeleteFamilyHX(chkid,fhxID,name) {
-
-        if($("#div"+chkid).prop('checked') == false)
-        {
-          
-        if(fhxID!=0)
-        {
-            var objFHX = {};
-            objFHX["patientID"]=@SessionHandler.UserInfo.Id;
-            objFHX["name"]=name;
-            if($('#UR'+chkid+" option:selected").text()=="Relationship")
-            {
-                objFHX["relationship"]="";
-            }
-            else
-            {
-                objFHX["relationship"]=$("#UR"+chkid+" option:selected").text();
-            }
-            restore(objFHX);
-        }
-        if(fhxID==0)
-        {
-            var objFHX = {};
-            objFHX["patientID"]=@SessionHandler.UserInfo.Id;
-            objFHX["name"]=name;
-
-            if($('#UR'+chkid+" option:selected").text()=="Relationship")
-            {
-                objFHX["relationship"]="";
-            }
-            else
-            {
-                objFHX["relationship"]=$("#UR"+chkid+" option:selected").text();
-            }
-            var _objFHXX=objFHX;
-            addFamilyHX(_objFHXX);
-
-        }
-        }
-        if($("#div"+chkid).prop('checked') == true)
-        {
-            if (confirm("Are you sure you want to delete?")) {
-                showLoader();
-                var cUrl = "@Url.Action("deleteFamilyHX", "MyHealth")?fhxID=" + fhxID;
-                $.post(cUrl, function (oResp) {
-                    if (oResp.message == "") {
-                        //reloadContainer(function () {
-                        new PNotify({ title: 'Success', text: 'Family History is deleted successfully.', type: 'success', styling: 'bootstrap3' });
-                        $("#UR"+chkid).val($("#UR"+chkid+ " option:first").val());
-                            stopLoader();
-                        //});
-                    } else {
-                        new PNotify({ title: 'Error', text: oResp.message, type: 'error', styling: 'bootstrap3' });
-                        stopLoader();
-                    }
-
-                });
-            }
-            else
-            {
-
-                $('#div' + chkid).iCheck('toggle');
-            }
-        }
-
-    }
+   
     function reloadContainer(callback) {
         $("#divResultContainer").load('@Url.Action("PartialFamilyHX", "MyHealth")', function () {
              callback();

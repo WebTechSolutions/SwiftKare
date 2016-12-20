@@ -1,0 +1,103 @@
+﻿@model IEnumerable<DataAccess.SP_GetAppDetail_Result>
+@{
+    Layout = null;
+}
+@if (Model != null)
+{
+    var doctorName = "";
+    var age = "";
+    var gender = "";
+    var languages = "";
+    var specialities = "";
+   
+    var appDate = "";
+    var appTime = "";
+    var rov = "";
+    var chiefComplaints = "";
+    var amount = "";
+    var pharmacy = "";
+    var cellPhone = "";
+
+    foreach (var item in Model)
+    {
+        doctorName = item.DoctorName;
+        age = item.DoctorAge.ToString();
+        gender = item.DoctorGender;
+        cellPhone = item.pcellPhone;
+        appDate = item.appDate;
+        appTime = item.appTime;
+        rov = item.rov;
+        chiefComplaints = item.chiefComplaints;
+        amount = item.paymentAmt.ToString();
+        pharmacy = item.pharmacy;
+       
+        if (item.languageName != "N.A")
+        {
+            languages = languages + item.languageName+ ",";
+        }
+        else
+        {
+            languages = "N.A";
+        }
+        if (item.specialityName != "N.A")
+        {
+            specialities = specialities + item.specialityName+",";
+        }
+        else
+        {
+            specialities = "N.A";
+        }
+        if (languages != "N.A") { languages = languages.Remove(languages.Length - 1, 1); }
+
+        if (languages != "N.A") { specialities = specialities.Remove(specialities.Length - 1, 1); }
+
+    }
+
+
+
+        <div class="modal-header text-center" style="background: #E4F1FE; border-bottom-color: #c3bebe;">
+            <h2 style="margin: 0; color: #337ab7"><b>Appoinment Details</b></h2>
+        </div><!--/.modal header-->
+
+
+    <div class="modal-body text-left">
+        <div class="user-detail">
+            <div class="img-1">
+                <img src="../Content/images/img.jpg" alt="" class="m-b-10 img-responsive">
+            </div>
+            <div class="name-sec">
+                <h2>Doctor: @doctorName</h2>
+                <p>Age: @age Years @*<br><span>Gender: @gender</span>*@</p>
+                <p>Gender: @gender</p>
+                <p id="cellPhone">Cell Phone: @cellPhone</p>
+                <p>Languages: @languages</p>
+                <p>Specialities: @specialities</p>
+            </div>
+        </div>
+
+        <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 0 -15px 20px; padding: 10px 21px 0; float: left;">
+            <p style="color: #375781;"><span style="width: 150px; float: left;">Appointment Date/Time</span><b>@appDate - @appTime</b></p>
+        </div>
+        <p id="p_rov" style="color: #375781;"><b>Reason of Visit:</b> @rov</p>
+        <p id="p_chiefComplaints" style="color: #375781;"><b>Chief Complaint:</b> @chiefComplaints</p>
+        <p id="p_pharmacy" style="color: #375781;"><b>Pharmacy:</b> @pharmacy</p>
+        <p id="p_amount" style="color: #375781;"><b>Payment Amount</b> @amount</p>
+
+        @*<label style="font-weight: 300;" for="">Please enter the number we should call</label>
+            <input type="text" placeholder="(469)237-3768" style="max-width: 100%;" class="form-control" />*@
+        <div class="m-t-10">
+            <button onclick=sendVariables($("#doctorid").val(),$("#editappid").val(),this) data-assigned-id="@doctorName" data-todo='{"docid":"$("#doctorid").val()","doctorName":"@doctorName"}' data-toggle="modal" data-target="#myModal1" id="editappointment" style="width: 100%; border-radius: 0; padding: 15px 5px; font-size: 20px;" type="button" class="btn btn-primary">Edit Appointment</button>
+            @*<li><a href="#" class="reschedule" data-id="@item.appDate" data-toggle="modal" data-target="#myModal1" data-todo='{"docid":"@item.doctorID","doctorName":"@item.DoctorName","appID":"@item.appID","appDate":"@item.appDate"}' onclick=showDoctorTimings(@item.doctorID,@item.appID) id="@item.doctorID">Reschedule App</a></li>*@
+            <input type="text" style="display:none" id="editappid">
+            <input type="text" style="display:none" id="doctorid">
+            @*<button style="width: 100%; border-radius: 0; background: #2AAC39; color: #fff; padding: 15px 5px; font-size: 20px;" class="btn" type="button">ACCEPT</button>
+                <button style="width: 100%; border-radius: 0; background: #DB0029; color: #fff; padding: 15px 5px; font-size: 20px;" class="btn" type="button">DECLINE</button>*@
+        </div>
+    </div><!--/.modal body-->
+}
+<script>
+    //function sendVariables(doctorid, editappid) {
+    //    alert(editappid+' '+ editappid);
+    //}
+    </script>
+
