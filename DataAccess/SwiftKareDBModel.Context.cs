@@ -1796,15 +1796,6 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
         }
     
-        public virtual ObjectResult<SP_GetDoctorInfoforAppointment_Result> SP_GetDoctorInfoforAppointment(Nullable<long> doctorID)
-        {
-            var doctorIDParameter = doctorID.HasValue ?
-                new ObjectParameter("doctorID", doctorID) :
-                new ObjectParameter("doctorID", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetDoctorInfoforAppointment_Result>("SP_GetDoctorInfoforAppointment", doctorIDParameter);
-        }
-    
         public virtual ObjectResult<SP_SearchDoctor_Result> SP_SearchDoctor(string language, string spec, string name, string appDay, Nullable<System.TimeSpan> appTime, string gender)
         {
             var languageParameter = language != null ?
@@ -1872,6 +1863,15 @@ namespace DataAccess
                 new ObjectParameter("patientID", typeof(long));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConsultations_Result>("SP_GetPatientConsultations", patientIDParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetDoctorInfoforAppointment_Result> SP_GetDoctorInfoforAppointment(Nullable<long> doctorID)
+        {
+            var doctorIDParameter = doctorID.HasValue ?
+                new ObjectParameter("doctorID", doctorID) :
+                new ObjectParameter("doctorID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetDoctorInfoforAppointment_Result>("SP_GetDoctorInfoforAppointment", doctorIDParameter);
         }
     }
 }

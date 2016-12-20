@@ -18,9 +18,11 @@ namespace DataAccess
         public string gender { get; set; }
         public string email { get; set; }
         public string state { get; set; }
-        public Nullable<long> consultCharges { get; set; }
+        public long consultCharges { get; set; }
         public string cellPhone { get; set; }
         public string specialityName { get; set; }
         public string languageName { get; set; }
+        public byte[] picture { get; set; }
+        public int DoctorAge { get; set; }
     }
 }
