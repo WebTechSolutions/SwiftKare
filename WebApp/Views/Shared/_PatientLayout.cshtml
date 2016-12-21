@@ -25,9 +25,14 @@
     @*@Scripts.Render("~/bundles/jquery")*@
     @Scripts.Render("~/bundles/js")
     <script src="@Url.Content("~/Scripts/blockUI.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.cropit.js")"></script>
+    <script src="@Url.Content("~/Scripts/daterangepiker/daterangepicker.js")"></script>
 
     <style type="text/css">
-        
+        .redBorder, .redBorder:focus, .redBorder:active {
+            border-color: red;
+        }
+
         /* Spinner */
         .spinner {
             width: 50px;
@@ -91,11 +96,13 @@
                     <!-- menu profile quick info -->
                     <div class="profile m-b-60">
                         <div class="profile_pic">
-                            <a href="p_profile_page.html"><img src="~/Content/images/img.jpg" alt="..." class="img-circle profile_img"></a>
+                            <a href="@Url.Action("Profile","PatientProfile")">
+                                <img src="@SessionHandler.ProfilePhoto" alt="..." class="img-circle profile_img">
+                            </a>
                         </div>
                         <div class="profile_info">
                             <span>Welcome,</span>
-                            <h2>John Doe</h2>
+                            <h2>@SessionHandler.UserName</h2>
                         </div>
                     </div>
                     <!-- /menu profile quick info -->
@@ -105,13 +112,13 @@
                         <div class="menu_section">
                             <ul class="nav side-menu" style="margin-top: 10px;">
                                 <li class="scheduler">
-                                    <a href="@Url.Action("Index","Appointment")"><img src="~/Content/images/appointments.png" alt=""> &nbsp <span class="menu-txt"> Appointment</span></a>
-                                    @*<ul class="nav child_menu">
+                                    <a href="#"><img src="~/Content/images/appointments.png" alt=""> &nbsp <span class="menu-txt"> Appointment</span></a>
+                                    <ul class="nav child_menu">
                                         <li><a href="appointments.html">Rescheduled Appointments</a></li>
                                         <li><a href="appointments.html">Pending Appointments</a></li>
                                         <li><a href="appointments.html">Cancelled Appointments</a></li>
                                         <li><a href="appointments.html">Completed Appointments</a></li>
-                                    </ul>*@
+                                    </ul>
                                 </li>
                                 <li class="doctor">
                                     <a href="@Url.Action("SeeDoctor", "SeeDoctor")"><img src="~/Content/images/icon_doc_search.png" alt="">  &nbsp <span class="menu-txt">See a doctor</span> </a>
@@ -135,10 +142,7 @@
                                     </ul>
                                 </li>
                                 <li class="call_history">
-                                    <a href="#"><img src="~/Content/images/whats-new.png" alt="">  &nbsp <span class="menu-txt">Whats New</span> </a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="whats_news.html">what's News</a></li>
-                                    </ul>
+                                    <a href="@Url.Action("Index","News")"><img src="~/Content/images/whats-new.png" alt="">  &nbsp <span class="menu-txt">Whats New</span> </a>
                                 </li>
                             </ul>
                         </div>
@@ -175,11 +179,11 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li class="">
                                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    <img src="~/Content/images/img.jpg" alt="">John Doe
-                                    <span class=" fa fa-angle-down"></span>
+                                    <img src="@SessionHandler.ProfilePhoto" alt="">@SessionHandler.UserName
+                                    <span class="fa fa-angle-down"></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                    <li><a href="p_profile_page.html"> Profile</a></li>
+                                    <li><a href="@Url.Action("Index","PatientProfile")"> Profile</a></li>
                                     <li>
                                         <a href="javascript:;">
                                             <span class="badge bg-red pull-right">50%</span>
@@ -574,14 +578,13 @@
         });
     </script>
     <script>
-              $(document).ajaxSuccess(function (evt, request, settings) {
-            console.log(request.response);
-            if (request.response != null) {
-                if (request.response.redirectUrl != null)
-                    window.location.href = request.response.redirectUrl;
-            }
+        $(document).ajaxSuccess(function (evt, request, settings) {
+            console.log(request.responseText);
+            //if (response.isRedirect) {
+            //    window.location.href = response.redirectUrl;
+            //}
         });
-    </script>
+        </script>
 
 
     @RenderSection("scripts", required: false)

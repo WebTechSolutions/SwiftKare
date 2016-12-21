@@ -62,6 +62,8 @@ namespace DataAccess
         public string timezone { get; set; }
         public string city { get; set; }
         public string state { get; set; }
+        public Nullable<double> lat { get; set; }
+        public Nullable<double> lon { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Condition> Conditions { get; set; }

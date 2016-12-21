@@ -1,0 +1,674 @@
+﻿@model DataAccess.CustomModels.PatientProfileVM
+@{
+    ViewBag.Title = "My Profile";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+
+    bool isModelHasQuestions = !string.IsNullOrEmpty(Model.SectetAnswer1);
+}
+<!-- page content -->
+<div class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Patient Profile</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="" role="tabpanel" data-example-id="togglable-tabs" style="padding-bottom: 180px;">
+        <ul id="myTab" class="nav nav-tabs bar_tabs m-b-40" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#div_edit_profile" id="link_edit_profile" role="tab" data-toggle="tab" aria-expanded="true">Personal Info</a>
+            </li>
+            <li role="presentation" class="">
+                <a href="#div_account_settings" role="tab" id="link_account_settings" data-toggle="tab" aria-expanded="false">Account Info</a>
+            </li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="div_edit_profile" aria-labelledby="div_edit_profile">
+                <div class="x_panel" style="margin-bottom: 165px;">
+                    <div class="x_content">
+
+                        <form id="frmProfile">
+                            @Html.HiddenFor(x => x.PatientID)
+
+                            <div class="row">
+                                <div class="col-lg-2 col-md-4 col-xs-12 text-center res-img">
+                                    <div id="divImageEditing" style="display:none;" class="image-editor">
+                                        <input id="fileID" style="visibility: hidden;display:none;" type="file" class="cropit-image-input">
+                                        <div class="cropit-preview"></div>
+                                        <div class="row" style="margin-top:5px;">
+                                            <div class="col-xs-1">
+                                                <i class="fa fa-rotate-left rotate-ccw"></i>
+                                            </div>
+                                            <div class="col-xs-1">
+                                                <i class="fa fa-rotate-right rotate-cw"></i>
+                                            </div>
+                                            <div class="col-xs-6 col-sm-offset-1">
+                                                <input type="range" class="cropit-image-zoom-input custom" min="0" max="1" step="0.01">
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="col-sm-12">
+                                                <button type="button" class="btn btn-primary export">Crop</button>
+                                                <button type="button" id="btnCancelImageCrop" class="btn btn-default export">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="divImageDisplay">
+                                        <img id="imgProfilePic" src="@(string.IsNullOrEmpty(Model.ProfilePhotoBase64) ? WebApp.Helper.SessionHandler.ProfilePhoto : Model.ProfilePhotoBase64)" alt="..." class="profile_img m-b-10">
+                                        @Html.HiddenFor(x => x.ProfilePhotoBase64)
+                                        <br>
+                                        <button type="button" class="btn btn-primary" onclick="document.getElementById('fileID').click(); return false;">
+                                            Browse
+                                        </button>
+                                        <span id="spnErrorProfilePhoto" style="display:none; color:red; float:right;">Profile Photo is required</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-10 col-md-8 col-xs-12">
+
+
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Title
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Suffix
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.Prefix, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    First Name<span class="required">*</span>
+                                                </label>
+                                                <span id="spnErrorFirstName" style="display:none; color:red; float:right;">First Name is required</span>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Last Name<span class="required">*</span>
+                                                </label>
+                                                <span id="spnErrorLastName" style="display:none; color:red; float:right;">Last Name is required</span>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Gender
+                                                </label>
+                                                <div class="">
+                                                    @Html.DropDownListFor(x => x.Gender,
+                                                       new List<SelectListItem> { new SelectListItem { Text = "Male", Value = "Male" }, new SelectListItem { Text = "Female", Value = "Female" } },
+                                                       new { @class = "form-control" }
+                                                       )
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Date Of Birth<span class="required">*</span>
+                                                </label>
+                                                <span id="spnErrorDOB" style="display:none; color:red; float:right;">Date Of Birth is required</span>
+                                                <div class="">
+                                                    <div class="xdisplay_inputx form-group has-feedback m-b-0">
+                                                        @Html.TextBox("DOB", (Model.DOB.HasValue ? Model.DOB.Value.ToString("MM/dd/yyyy") : ""), new { @class = "form-control has-feedback-left active datepicker" })
+                                                        <span class="fa fa-calendar-o form-control-feedback left date" aria-hidden="true"></span>
+                                                        <span id="inputSuccess1Status" class="sr-only">(success)</span>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Time Zone<span class="required">*</span>
+                                                </label>
+                                                <div class="">
+                                                    @Html.DropDownListFor(x => x.TimeZone, (List<SelectListItem>)ViewBag.drpdnTimeZone, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Languages<span class="required">*</span>
+                                                </label>
+                                                <span id="spnErrorLanguages" style="display:none; color:red; float:right;">Languages is required</span>
+                                                <div class="">
+                                                    @Html.ListBoxFor(x => x.Languages, (List<SelectListItem>)ViewBag.drpdnLanguage, new { @class = "select2_multiple" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Height
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.Height, new { @class = "form-control", @type="number" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Weight
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.Weight, new { @class = "form-control", @type = "number" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Address 1
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.Address1, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Address 2
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.Address2, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    City<span class="required">*</span>
+                                                </label>
+                                                <div class="">
+                                                    @Html.DropDownListFor(x => x.City, (List<SelectListItem>)ViewBag.drpdnCity, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    State
+                                                </label>
+                                                <div class="">
+                                                    @Html.DropDownListFor(x => x.State, (List<SelectListItem>)ViewBag.drpdnState, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Zip Code
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.ZipCode, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Home Phone
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.HomePhone, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Cell Phone
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.CellPhone, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    latitude
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.Latitude, new { @class = "form-control", @type = "number" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Longitude
+                                                </label>
+                                                <div class="">
+                                                    @Html.TextBoxFor(x => x.Longitude, new { @class = "form-control", @type = "number" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ln_solid"></div>
+                            <div class="form-group text-right">
+                                <button id="btnSaveProfile" type="button" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div><!-- tab1 -->
+
+            <div role="tabpanel" class="tab-pane fade" id="div_account_settings" aria-labelledby="div_account_settings">
+                <div class="x_panel">
+                    <div class="x_content">
+
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Account Security</div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <span id="spnErrorQuestion" style="display:none; color:red; float:right;">All Questions Must Be Unique</span>
+                                        </div>
+                                    </div>
+                                    <form id="frmSecretAnswer">
+                                        <div class="form-group">
+                                            <label>
+                                                @Html.DropDownListFor(x => x.SectetQuestion1, (List<SelectListItem>)ViewBag.SecretQuestion, new { @class = "form-control" })
+                                            </label>
+                                            <span id="spnErrorAnswer1" style="display:none; color:red; float:right;">Please provide answer.</span>
+                                            @Html.TextBoxFor(x => x.SectetAnswer1, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label>
+                                                @Html.DropDownListFor(x => x.SectetQuestion2, (List<SelectListItem>)ViewBag.SecretQuestion, new { @class = "form-control" })
+                                            </label>
+                                            <span id="spnErrorAnswer2" style="display:none; color:red; float:right;">Please provide answer.</span>
+                                            @Html.TextBoxFor(x => x.SectetAnswer2, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label>
+                                                @Html.DropDownListFor(x => x.SectetQuestion3, (List<SelectListItem>)ViewBag.SecretQuestion, new { @class = "form-control" })
+                                            </label>
+                                            <span id="spnErrorAnswer3" style="display:none; color:red; float:right;">Please provide answer.</span>
+                                            @Html.TextBoxFor(x => x.SectetAnswer3, new { @class = "form-control" })
+                                        </div>
+                                        <button id="btnSaveSecretAnswer" type="button" class="btn btn-primary">Save</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Change Password</div>
+                                <div class="panel-body">
+                                    <form id="frmPassword">
+                                        <div class="form-group">
+                                            <label>New Password:</label>
+                                            <span id="spnErrorPassword" style="display:none; color:red; float:right;"></span>
+                                            <input type="password" class="form-control" id="pwd">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Confirm Password:</label>
+                                            <span id="spnErrorConfirmPassword" style="display:none; color:red; float:right;"></span>
+                                            <input type="password" class="form-control" id="pwdConfirm">
+                                        </div>
+                                        <button id="btnSavePassword" type="button" class="btn btn-primary">Save</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div><!-- tab2 -->
+        </div>
+    </div>
+</div>
+
+<!-- /page content -->
+
+
+@section scripts{
+
+    <script>
+
+        function validateProfileForm() {
+
+            var isValid = true;
+
+            if ($("#ProfilePhotoBase64").val() == "") {
+                isValid = false;
+                $("#spnErrorProfilePhoto").show();
+            }
+            else {
+                $("#spnErrorProfilePhoto").hide();
+            }
+
+            if ($("#FirstName").val() == "") {
+                isValid = false;
+                $("#FirstName").addClass("redBorder").focus();
+                $("#spnErrorFirstName").show();
+            }
+            else {
+                $("#FirstName").removeClass("redBorder");
+                $("#spnErrorFirstName").hide();
+            }
+
+            if ($("#LastName").val() == "") {
+                isValid = false;
+                $("#LastName").addClass("redBorder").focus();
+                $("#spnErrorLastName").show();
+            }
+            else {
+                $("#LastName").removeClass("redBorder");
+                $("#spnErrorLastName").hide();
+            }
+
+
+            if ($("#DOB").val() == "") {
+                isValid = false;
+                $("#DOB").addClass("redBorder").focus();
+                $("#spnErrorDOB").show();
+            }
+            else {
+                $("#DOB").removeClass("redBorder");
+                $("#spnErrorDOB").hide();
+            }
+
+            if ($("#Languages").val() == null) {
+                isValid = false;
+                $("#Languages").addClass("redBorder").focus();
+                $("#spnErrorLanguages").show();
+            }
+            else {
+                $("#Languages").removeClass("redBorder");
+                $("#spnErrorLanguages").hide();
+            }
+
+            return isValid;
+        }
+
+        $("#btnSaveProfile").click(function () {
+
+            try {
+                if (validateProfileForm()) {
+                    showLoader();
+                    var cUrl = "@Url.Action("SavePatientProfile", "PatientProfile")";
+
+                    $.post(cUrl, $("#frmProfile").serialize(), function (oResp) {
+                        if (oResp == "") {
+                            new PNotify({ title: 'Success', text: "Profile data saved successfully!", type: 'success', styling: 'bootstrap3' });
+                        }
+                        else {
+                            new PNotify({ title: 'Error', text: oResp, type: 'error', styling: 'bootstrap3' });
+                        }
+                        hideLoader();
+                    });
+                }
+            } catch (e) {
+                hideLoader();
+            }
+
+        });
+
+        function validateSecretAnswers() {
+            var isValid = true;
+
+            if ($("#SectetQuestion1").val() == $("#SectetQuestion2").val() || $("#SectetQuestion1").val() == $("#SectetQuestion3").val() || $("#SectetQuestion3").val() == $("#SectetQuestion2").val()) {
+                isValid = false;
+                $("#spnErrorQuestion").show();
+            } else {
+                $("#spnErrorQuestion").hide();
+            }
+
+            if ($("#SectetAnswer1").val() == "") {
+                isValid = false;
+                $("#SectetAnswer1").addClass("redBorder").focus();
+                $("#spnErrorAnswer1").show();
+            }
+            else {
+                $("#SectetAnswer1").removeClass("redBorder");
+                $("#spnErrorAnswer1").hide();
+            }
+
+            if ($("#SectetAnswer2").val() == "") {
+                isValid = false;
+                $("#SectetAnswer2").addClass("redBorder").focus();
+                $("#spnErrorAnswer2").show();
+            }
+            else {
+                $("#SectetAnswer2").removeClass("redBorder");
+                $("#spnErrorAnswer2").hide();
+            }
+
+            if ($("#SectetAnswer3").val() == "") {
+                isValid = false;
+                $("#SectetAnswer3").addClass("redBorder").focus();
+                $("#spnErrorAnswer3").show();
+            }
+            else {
+                $("#SectetAnswer3").removeClass("redBorder");
+                $("#spnErrorAnswer3").hide();
+            }
+
+            return isValid;
+        }
+
+        $("#btnSaveSecretAnswer").click(function () {
+            try {
+                if (validateSecretAnswers()) {
+                    showLoader();
+                    var cUrl = "@Url.Action("SaveSecretAnswers", "PatientProfile")";
+                    $.post(cUrl, $("#frmSecretAnswer").serialize(), function (oResp) {
+                        if (oResp == "") {
+                            new PNotify({ title: 'Success', text: "Answers saved successfully!", type: 'success', styling: 'bootstrap3' });
+                        }
+                        else {
+                            new PNotify({ title: 'Error', text: oResp, type: 'error', styling: 'bootstrap3' });
+                        }
+                        hideLoader();
+                    });
+                }
+            } catch (e) {
+                hideLoader();
+            }
+        });
+
+
+        function validatePasswordForm() {
+
+            var isValid = true;
+            var pwdRegex = /^(?=.*[0-9])(?=.*[!@@#$%^&*])[a-zA-Z0-9!@@#$%^&*]{6,16}$/;;
+
+            if ($("#pwd").val() == "") {
+                isValid = false;
+                $("#pwd").addClass("redBorder").focus();
+                $("#spnErrorPassword").html("Please enter passoword").show();
+            }
+            else if ($("#pwd").val().length < 6) {
+                isValid = false;
+                $("#pwd").addClass("redBorder").focus();
+                $("#spnErrorPassword").html("Password length must be atleast 6 characters").show();
+            }
+            else if (pwdRegex.test($("#pwd").val()) == false) {
+                isValid = false;
+                $("#pwd").addClass("redBorder").focus();
+                $("#spnErrorPassword").html("Password should contain atleast One Number, One UpperCase, lowercase and Special character.").show();
+            }
+            else {
+                $("#pwd").removeClass("redBorder");
+                $("#spnErrorPassword").hide();
+            }
+
+            if ($("#pwdConfirm").val() == "") {
+                isValid = false;
+                $("#pwdConfirm").addClass("redBorder").focus();
+                $("#spnErrorConfirmPassword").html("Please enter passoword").show();
+            }
+            else if ($("#pwdConfirm").val() != $("#pwd").val()) {
+                isValid = false;
+                $("#pwdConfirm").addClass("redBorder").focus();
+                $("#spnErrorConfirmPassword").html("Both Passwords must be same.").show();
+            }
+            else {
+                $("#pwdConfirm").removeClass("redBorder");
+                $("#spnErrorConfirmPassword").hide();
+            }
+
+            return isValid;
+
+        }
+
+        $("#btnSavePassword").click(function () {
+
+            try {
+                if (validatePasswordForm()) {
+                    showLoader();
+                    var cUrl = "@Url.Action("ChangePassword", "PatientProfile")?newPassword=" + $("#pwd").val();
+                    $.post(cUrl, function (oResp) {
+                        if (oResp == "") {
+                            new PNotify({ title: 'Success', text: "Password changed successfully!", type: 'success', styling: 'bootstrap3' });
+                        }
+                        else {
+                            new PNotify({ title: 'Error', text: oResp, type: 'error', styling: 'bootstrap3' });
+                        }
+                        hideLoader();
+                    });
+                }
+            } catch (e) {
+                hideLoader();
+            }
+        });
+
+
+        $(".select2_multiple").select2({
+            maximumSelectionLength: 4,
+            placeholder: "With Max Selection limit 4",
+            allowClear: true
+        });
+
+        $('.datepicker').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_1"
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+        });
+
+
+        //$(function () {
+        $('.image-editor').cropit({
+            onImageLoaded: function () {
+                $("#divImageEditing").show();
+                $("#divImageDisplay").hide();
+            }
+        });
+
+        $("#btnCancelImageCrop").click(resetImageCropping);
+
+        $('.rotate-cw').click(function () {
+            $('.image-editor').cropit('rotateCW');
+        });
+        $('.rotate-ccw').click(function () {
+            $('.image-editor').cropit('rotateCCW');
+        });
+
+        $('.export').click(function (e) {
+            var imageData = $('.image-editor').cropit('export');
+            $("#imgProfilePic").attr("src", imageData);
+            $("#ProfilePhotoBase64").val(imageData);
+            resetImageCropping();
+
+            //window.open(imageData);
+        });
+
+        function resetImageCropping() {
+            $("#fileID").val("");
+            $("#divImageEditing").hide();
+            $("#divImageDisplay").show();
+        }
+
+        //});
+        function showLoader() {
+            blockUI();
+        }
+
+        function hideLoader() {
+            $.unblockUI();
+        }
+
+        //Center the element
+        $.fn.center = function () {
+            this.css("position", "absolute");
+            this.css("top", ($(window).height() - this.height()) / 2 + $(window).scrollTop() + "px");
+            this.css("left", ($(window).width() - this.width()) / 2 + $(window).scrollLeft() + "px");
+            return this;
+        }
+
+        //blockUI
+        function blockUI() {
+            $.blockUI({
+                css: {
+                    backgroundColor: 'transparent',
+                    border: 'none'
+                },
+                message: '<div class="spinner"></div>',
+                baseZ: 1500,
+                overlayCSS: {
+                    backgroundColor: '#FFFFFF',
+                    opacity: 0.7,
+                    cursor: 'wait'
+                }
+            });
+            $('.blockUI.blockMsg').center();
+        }//end Blockui
+    </script>
+}

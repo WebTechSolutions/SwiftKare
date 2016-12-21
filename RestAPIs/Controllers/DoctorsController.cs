@@ -107,6 +107,8 @@ namespace RestAPIs.Controllers
                 objModel.userId = doctor.userId;
                 objModel.email = doctor.email;
                 objModel.active = doctor.active;
+
+                objModel.picture = doctor.picture;
                 objModel.status = doctor.status;
                 objModel.secretQuestion1 = doctor.secretQuestion1;
                 objModel.secretQuestion2 = doctor.secretQuestion2;

@@ -1380,7 +1380,29 @@ body#video {
 
 }
 
+ .border-left {
+    height: 77%;
+    position: absolute;
+    top: 20px;
+    width: 1px;
+    left: 16px;
+    border-left: 1px solid #0061b2;
+}
 
+.cropit-preview {
+        background-color: #f8f8f8;
+        background-size: cover;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin-top: 7px;
+        width: 128px;
+        height: 128px;
+      }
 
+      .cropit-preview-image-container {
+        cursor: move;
+      }
 
-
+      .image-size-label {
+        margin-top: 10px;
+      }

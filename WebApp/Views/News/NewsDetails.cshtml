@@ -1,0 +1,39 @@
+﻿@model DataAccess.CustomModels.NewsVM
+@{
+    ViewBag.Title = Model.newsTitle;
+}
+
+<!-- page content -->
+<div class="right_col">
+    <div style="padding-bottom: 290px;">
+
+        <div class="clearfix"></div>
+        <div class="page-title">
+            <div class="title_left">
+                <h3>@Model.newsTitle</h3>
+            </div>
+        </div>
+        <div class="row p-t-20 p-lr-30 gray-bdr-1 w-bg">
+            <ul class="messages">
+                <li style="border-bottom: none;">
+
+                    @if (Model.hasImage)
+                    {
+                        <img src="data:image/png;base64,@Model.newsImageBase64" class="avatar" alt="Avatar">
+                    }
+
+                    <div class="">
+                        @Html.Raw(Model.newsDetail)
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- /page content -->
+
+
+@section scripts{
+
+
+}
