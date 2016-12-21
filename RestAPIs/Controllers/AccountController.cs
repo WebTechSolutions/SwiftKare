@@ -111,6 +111,25 @@ namespace RestAPIs.Controllers
                             }
 
                         }
+                        else if (model.Role.ToLower() == "patient")
+                        {
+                            var patient = db.Patients.SingleOrDefault(o => o.userId == userId);
+                          
+                            if (patient != null)
+                            {
+
+                                userModel.Id = patient.patientID;
+                                userModel.FirstName = patient.firstName;
+                                userModel.LastName = patient.lastName;
+                            }
+                            else
+                            {
+                                userModel.Errors = new List<string>();
+                                userModel.Errors.Add("User is not exist with this role.");
+                            }
+
+                        }
+                       
                     }
                     else if (result == SignInStatus.Failure)
                     {
