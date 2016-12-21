@@ -37,10 +37,11 @@ namespace DataAccess
         public string seesionID { get; set; }
         public string token { get; set; }
         public string endby { get; set; }
+        public string status { get; set; }
     
-        public virtual Appointment Appointment { get; set; }
         public virtual ConsultationRO ConsultationRO { get; set; }
         public virtual Doctor Doctor { get; set; }
         public virtual Patient Patient { get; set; }
+        public virtual Appointment Appointment { get; set; }
     }
 }

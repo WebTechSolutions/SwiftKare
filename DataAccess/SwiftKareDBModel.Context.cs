@@ -32,7 +32,6 @@ namespace DataAccess
         public virtual DbSet<Alert> Alerts { get; set; }
         public virtual DbSet<Allergy> Allergies { get; set; }
         public virtual DbSet<AppAttachment> AppAttachments { get; set; }
-        public virtual DbSet<Appointment> Appointments { get; set; }
         public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
@@ -84,6 +83,7 @@ namespace DataAccess
         public virtual DbSet<LiveReqLog> LiveReqLogs { get; set; }
         public virtual DbSet<VCLog> VCLogs { get; set; }
         public virtual DbSet<Consultation> Consultations { get; set; }
+        public virtual DbSet<Appointment> Appointments { get; set; }
     
         public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
         {
@@ -1778,15 +1778,6 @@ namespace DataAccess
                 new ObjectParameter("gender", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SearchDoctor_Result>("SP_SearchDoctor", languageParameter, specParameter, nameParameter, appDayParameter, appTimeParameter, genderParameter);
-        }
-    
-        public virtual int sp_dropextendedproc1(string functname)
-        {
-            var functnameParameter = functname != null ?
-                new ObjectParameter("functname", functname) :
-                new ObjectParameter("functname", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_dropextendedproc1", functnameParameter);
         }
     
         public virtual ObjectResult<SP_ViewPatientProfile_Result> SP_ViewPatientProfile(Nullable<long> patID)

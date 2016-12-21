@@ -17,13 +17,13 @@ namespace DataAccess
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Doctor()
         {
-            this.Appointments = new HashSet<Appointment>();
             this.DoctorLanguages = new HashSet<DoctorLanguage>();
             this.DoctorLicenseStates = new HashSet<DoctorLicenseState>();
             this.DoctorSpecialities = new HashSet<DoctorSpeciality>();
             this.DoctorTimings = new HashSet<DoctorTiming>();
             this.UserFiles = new HashSet<UserFile>();
             this.Consultations = new HashSet<Consultation>();
+            this.Appointments = new HashSet<Appointment>();
         }
     
         public long doctorID { get; set; }
@@ -69,8 +69,6 @@ namespace DataAccess
         public string timezone { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Appointment> Appointments { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DoctorLanguage> DoctorLanguages { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DoctorLicenseState> DoctorLicenseStates { get; set; }
@@ -82,5 +80,7 @@ namespace DataAccess
         public virtual ICollection<UserFile> UserFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Consultation> Consultations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Appointment> Appointments { get; set; }
     }
 }

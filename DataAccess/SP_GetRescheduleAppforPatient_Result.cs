@@ -13,6 +13,7 @@ namespace DataAccess
     
     public partial class SP_GetRescheduleAppforPatient_Result
     {
+        public string status { get; set; }
         public long appID { get; set; }
         public long doctorID { get; set; }
         public string DoctorName { get; set; }

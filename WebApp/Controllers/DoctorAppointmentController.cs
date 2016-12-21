@@ -24,11 +24,7 @@ namespace WebApp.Controllers
         {
             if (SessionHandler.IsExpired)
             {
-                return Json(new
-                {
-                    redirectUrl = Url.Action("DoctorLogin", "Account"),
-                    isRedirect = true
-                });
+                return RedirectToAction("DoctorLogin", "Account");
             }
             else
             {

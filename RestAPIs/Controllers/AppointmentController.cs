@@ -140,7 +140,8 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
                     return response;
                 }
-               
+
+                app.appointmentStatus = "C";
                 app.active = true;
                 app.doctorID = model.doctorID;
                 app.patientID = model.patientID;
@@ -148,7 +149,7 @@ namespace RestAPIs.Controllers
                 app.appDate =Convert.ToDateTime(model.appDate);
                 app.rov = model.rov;
                 app.chiefComplaints = model.chiefComplaints;
-                app.cb = model.patientID.ToString();
+                app.cb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault(); model.patientID.ToString();
                 app.paymentAmt = model.paymentAmt;
                 Random rnd = new Random();
                 app.paymentID= rnd.Next(100).ToString();
@@ -225,16 +226,21 @@ namespace RestAPIs.Controllers
 
                     result.appTime = To24HrTime(model.appTime);
                     result.appDate = Convert.ToDateTime(model.appDate);
-                    result.mb = model.patientID.ToString();
+                    result.mb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault();
                     result.md = System.DateTime.Now;
-                    result.consultationStatus = "C";
+                    result.appointmentStatus = "C";
+                    if(result.rescheduleRequiredBy!="D" || result.rescheduleRequiredBy==null)
+                    {
+                        result.rescheduleRequiredBy = "P";
+                    }
                     db.Entry(result).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                     Alert alert = new Alert();
                     alert.alertFor = result.doctorID.ToString();
                     alert.alertText="Your appointment on "+ model.appDate+" at "+model.appTime + " is rescheduled by patient.";
                     alert.cd = System.DateTime.UtcNow;
-                    alert.cb = model.patientID.ToString();
+                    alert.cb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault();
+                    alert.active = true;
                     alert.active = true;
                     db.Alerts.Add(alert);
                     await db.SaveChangesAsync();
@@ -457,8 +463,8 @@ namespace RestAPIs.Controllers
                     else
                     {
                         result.rescheduleRequiredBy = "D";
-                        result.consultationStatus = "R";
-                        result.mb = model.doctorID.ToString();
+                        result.appointmentStatus = "R";
+                        result.mb = db.Doctors.Where(p => p.doctorID == model.doctorID && p.active == true).Select(pt => pt.userId).FirstOrDefault();
                         result.md = System.DateTime.Now;
                         db.Entry(result).State = EntityState.Modified;
                         await db.SaveChangesAsync();
@@ -490,12 +496,12 @@ namespace RestAPIs.Controllers
                 }
                 else
                 {
-                        result.rescheduleRequiredBy = "";
-                    result.consultationStatus = "";
-                    result.mb = model.doctorID.ToString();
-                        result.md = System.DateTime.Now;
-                        db.Entry(result).State = EntityState.Modified;
-                        await db.SaveChangesAsync();
+                    result.rescheduleRequiredBy = "";
+                    result.appointmentStatus = "C";
+                    result.mb = db.Doctors.Where(p => p.doctorID == model.doctorID && p.active == true).Select(pt => pt.userId).FirstOrDefault();
+                    result.md = System.DateTime.Now;
+                    db.Entry(result).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
                    
                 }
 
@@ -512,9 +518,13 @@ namespace RestAPIs.Controllers
 
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
-            response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = ex.Message+" at "+Action });
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
+            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.Message, Encoding.Unicode);
             response.ReasonPhrase = ex.Message;
             return response;
+            //response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = ex.Message+" at "+Action });
+            //response.ReasonPhrase = ex.Message;
+            //return response;
           
         }
         protected override void Dispose(bool disposing)

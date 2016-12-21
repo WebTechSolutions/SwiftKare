@@ -44,6 +44,7 @@ else
                                     Action
                                     <span class="caret"></span>
                                 </button>
+                                <span>&nbsp;&nbsp;&nbsp;</span><i class='fa fa-phone' aria-hidden='true'></i>
                                 <ul class="dropdown-menu dropdown-menu-right">
                                     <li><a href="#" data-toggle="modal" class="thumbnail-col-inner" data-id="@item.appID" id="@item.doctorID" data-target="#myModal5">View Detail</a></li>
                                   
@@ -273,4 +274,29 @@ else
         //});
     });
 </script>
+
+<script>
+    $(document).ready(function () {
+        //alert('checking app time');
+        //checkAppointTime();
+    });
+    function checkAppointTime() {
+        
+        var table = $('#datatable').DataTable();
+        var data = table.column(4).data()[0];
+        alert(data);
+        // Get the column API object
+        //var column = table.column(table.column(1).attr('data-column'));
+
+        // Toggle the visibility
+        //table.column(4).visible(!table.column(1).visible());
+        //table.columns([4, '.fa fa-phone']).visible(!table.columns([4, '.fa fa-phone']));
+        //table.column(4).find(".fa fa-phone")[4].prop('display') = none;
+         //$("#datatable").find(".fa fa-phone")[4].prop('display') = none;
+    }
+
+    //var i = setInterval(function () { checkAppointTime(); }, 2000);
+
+    
+    </script>
 
