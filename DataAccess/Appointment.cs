@@ -38,13 +38,13 @@ namespace DataAccess
         public string chiefComplaints { get; set; }
         public string rov { get; set; }
         public string consultationType { get; set; }
-        public string consultationStatus { get; set; }
+        public string appointmentStatus { get; set; }
         public string rescheduleRequiredBy { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AppAttachment> AppAttachments { get; set; }
-        public virtual Patient Patient { get; set; }
         public virtual Doctor Doctor { get; set; }
+        public virtual Patient Patient { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Consultation> Consultations { get; set; }
     }

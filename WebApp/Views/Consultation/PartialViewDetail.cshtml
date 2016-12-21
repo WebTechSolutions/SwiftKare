@@ -1,0 +1,93 @@
+﻿@model IEnumerable<DataAccess.SP_GetConsultationDetails_Result>
+@{
+    Layout = null;
+}
+@if (Model != null)
+{
+    var doctorName = "";
+    var age = "";
+    var gender = "";
+    var languages = "";
+    var specialities = "";
+    var appDate = "";
+    var rov = "";
+    var chiefComplaints = "";
+   var pharmacy = "";
+    var subjective = "";
+    var objective = "";
+    var plans = "";
+    var assessment = "";
+
+
+    foreach (var item in Model)
+    {
+        doctorName = item.DoctorName;
+        age = item.DoctorAge.ToString();
+        gender = item.DoctorGender;
+        appDate = item.appDate;
+        rov = item.rov;
+        chiefComplaints = item.chiefComplaints;
+        pharmacy = item.pharmacy;
+        subjective = item.pharmacy;
+        objective = item.pharmacy;
+        plans = item.pharmacy;
+        assessment = item.pharmacy;
+
+        if (item.DoctorLanguages != "N.A")
+        {
+            languages = languages + item.DoctorLanguages + ",";
+        }
+
+        if (item.DoctorSpeciality != "N.A")
+        {
+            specialities = specialities + item.DoctorSpeciality + ",";
+        }
+
+        //if (languages != "N.A") { languages = languages.Remove(languages.Length - 1, 1); }
+
+        //if (specialities != "N.A") { specialities = specialities.Remove(specialities.Length - 1, 1); }
+
+    }
+
+
+
+    <div class="modal-header text-center" style="background: #E4F1FE; border-bottom-color: #c3bebe;">
+        <h2 style="margin: 0; color: #337ab7"><b>Consultation Details</b></h2>
+    </div><!--/.modal header-->
+
+
+    <div class="modal-body text-left">
+        <div class="user-detail">
+            <div class="img-1">
+                <img src="../Content/images/img.jpg" alt="" class="m-b-10 img-responsive">
+            </div>
+            <div class="name-sec">
+                <h2>Dr. @doctorName</h2>
+                <p><b>Age:</b> @age Years
+                <p><b>Gender:</b> @gender</p>
+                <p><b>Languages:</b> @languages</p>
+                <p><b>Specialities:</b> @specialities</p>
+            </div>
+        </div>
+
+        <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 0 -15px 20px; padding: 10px 21px 0; float: left;">
+            <p style="color: #375781;"><span style="width: 150px; float: left;">Appointment Date/Time</span><b>@appDate</b></p>
+        </div>
+        <p id="p_rov" style="color: #375781;"><b>Reason of Visit:</b> @rov</p>
+        <p id="p_chiefComplaints" style="color: #375781;"><b>Chief Complaints:</b> @chiefComplaints</p>
+        <p id="p_pharmacy" style="color: #375781;"><b>Pharmacy:</b> @pharmacy</p>
+       
+
+        <div class="m-t-10">
+            <button style="width: 25%; border-radius: 0; padding: 15px 5px; font-size: 15px;" type="button" class="btn btn-primary">OK</button>
+           
+        </div>
+    </div><!--/.modal body-->
+}
+<script>
+    //function sendVariables(doctorid, editappid) {
+    //    alert(editappid+' '+ editappid);
+    //}
+</script>
+
+

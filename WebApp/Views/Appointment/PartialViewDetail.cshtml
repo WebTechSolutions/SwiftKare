@@ -9,7 +9,7 @@
     var gender = "";
     var languages = "";
     var specialities = "";
-   
+
     var appDate = "";
     var appTime = "";
     var rov = "";
@@ -30,26 +30,28 @@
         chiefComplaints = item.chiefComplaints;
         amount = item.paymentAmt.ToString();
         pharmacy = item.pharmacy;
-       
+
         if (item.languageName != "N.A")
         {
             languages = languages + item.languageName+ ",";
         }
         else
         {
-            languages = "N.A";
+            languages = item.languageName;
         }
+
         if (item.specialityName != "N.A")
         {
             specialities = specialities + item.specialityName+",";
         }
         else
         {
-            specialities = "N.A";
+            specialities = item.specialityName;
         }
-        if (languages != "N.A") { languages = languages.Remove(languages.Length - 1, 1); }
 
-        if (languages != "N.A") { specialities = specialities.Remove(specialities.Length - 1, 1); }
+        //if (languages != "N.A") { languages = languages.Remove(languages.Length - 1, 1); }
+
+        //if (specialities != "N.A") { specialities = specialities.Remove(specialities.Length - 1, 1); }
 
     }
 
@@ -66,12 +68,12 @@
                 <img src="../Content/images/img.jpg" alt="" class="m-b-10 img-responsive">
             </div>
             <div class="name-sec">
-                <h2>Doctor: @doctorName</h2>
-                <p>Age: @age Years @*<br><span>Gender: @gender</span>*@</p>
-                <p>Gender: @gender</p>
-                <p id="cellPhone">Cell Phone: @cellPhone</p>
-                <p>Languages: @languages</p>
-                <p>Specialities: @specialities</p>
+                <h2>Dr. @doctorName</h2>
+                <p><b>Age:</b> @age Years @*<br><span>Gender: @gender</span>*@</p>
+                <p><b>Gender:</b> @gender</p>
+                <p id="cellPhone"><b>Cell Phone:</b> @cellPhone</p>
+                <p><b>Languages:</b> @languages</p>
+                <p><b>Specialities:</b> @specialities</p>
             </div>
         </div>
 
