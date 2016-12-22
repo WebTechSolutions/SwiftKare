@@ -17,15 +17,15 @@ namespace DataAccess
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Patient()
         {
+            this.Appointments = new HashSet<Appointment>();
             this.Conditions = new HashSet<Condition>();
+            this.Consultations = new HashSet<Consultation>();
             this.ConsultationROS = new HashSet<ConsultationRO>();
             this.Medications = new HashSet<Medication>();
             this.PatientAllergies = new HashSet<PatientAllergy>();
             this.PatientFamilyHXes = new HashSet<PatientFamilyHX>();
             this.PatientSurgeries = new HashSet<PatientSurgery>();
             this.UserFiles = new HashSet<UserFile>();
-            this.Consultations = new HashSet<Consultation>();
-            this.Appointments = new HashSet<Appointment>();
         }
     
         public long patientID { get; set; }
@@ -66,7 +66,11 @@ namespace DataAccess
         public Nullable<double> lon { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Appointment> Appointments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Condition> Conditions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Consultation> Consultations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ConsultationRO> ConsultationROS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -79,9 +83,5 @@ namespace DataAccess
         public virtual ICollection<PatientSurgery> PatientSurgeries { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserFile> UserFiles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Consultation> Consultations { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Appointment> Appointments { get; set; }
     }
 }

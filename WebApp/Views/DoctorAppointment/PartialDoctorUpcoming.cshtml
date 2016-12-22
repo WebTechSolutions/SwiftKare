@@ -44,9 +44,8 @@ else
                                     Action
                                     <span class="caret"></span>
                                 </button>
-                                <span>&nbsp;&nbsp;&nbsp;</span><i class='fa fa-phone' aria-hidden='true'></i>
                                 <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#" data-toggle="modal" class="thumbnail-col-inner" data-id="@item.appID" id="@item.doctorID" data-target="#myModal5">View Detail</a></li>
+                                    <li><a href="#" data-toggle="modal" class="thumbnail-col-inner" data-id="@item.appID" id="@item.doctorID" data-target="#myModal5" onclick=$("#pvappid").val(@item.appID);>View Detail</a></li>
                                   
                                     <li><a href="#" class="reschedule" data-id="@item.doctorID" id="@item.appID">Reschedule Req</a></li>
 
@@ -240,32 +239,51 @@ else
             var AppDetailPostBackURL = '/DoctorAppointment/ViewAppDetails';
             var id = $buttonClicked.attr('data-id');
             var docid = $buttonClicked.attr('id');
-            //alert(detailfor);
-            $.ajax({
-                type: "GET",
-                url: AppDetailPostBackURL,
-                contentType: "application/json; charset=utf-8",
-                data: { "appID": id },
-                datatype: "json",
-                success: function (data) {
-                    $('#myModalContent').html(data);
-                    $('#myModal5').modal('show');
-                    var $modal = $('#myModal5');
-                    $editappid = $modal.find('#editappid');
-                    $doctorid = $modal.find('#doctorid');
-                    $editappid.val(id);
-                    $doctorid.val(docid);
-                    $reditappointment = $modal.find('#reditappointment');
-                    $ueditappointment = $modal.find('#ueditappointment');
-                    $ueditappointment.show();
-                    $reditappointment.hide();
-                    //$editappointment = $modal.find('#editappointment');
-                    //$editappointment.text('Reschedule Request');
-                },
-                error: function () {
-                    alert("Dynamic content load failed.");
-                }
+            reloadModelContainer(function () {
+                var $modal = $('#myModal5');
+                $editappid = $modal.find('#editappid');
+                $doctorid = $modal.find('#doctorid');
+                $reditappointment = $modal.find('#reditappointment');
+                $ueditappointment = $modal.find('#ueditappointment');
+                $reditappointment.show();
+                $ueditappointment.hide();
+                $editappid.val(id);
+                $doctorid.val(docid);
+                $reditappointment = $modal.find('#reditappointment');
+                $ueditappointment = $modal.find('#ueditappointment');
+                $ueditappointment.show();
+                $reditappointment.hide();
+                $editappointment = $modal.find('#editappointment');
+                $editappointment.text('Reschedule Request');
+                //Stop displaying loader
+                //stopLoader();
+
             });
+            //$.ajax({
+            //    type: "GET",
+            //    url: AppDetailPostBackURL,
+            //    contentType: "application/json; charset=utf-8",
+            //    data: { "appID": id },
+            //    datatype: "json",
+            //    success: function (data) {
+            //        $('#myModalContent').html(data);
+            //        $('#myModal5').modal('show');
+            //        var $modal = $('#myModal5');
+            //        $editappid = $modal.find('#editappid');
+            //        $doctorid = $modal.find('#doctorid');
+            //        $editappid.val(id);
+            //        $doctorid.val(docid);
+            //        $reditappointment = $modal.find('#reditappointment');
+            //        $ueditappointment = $modal.find('#ueditappointment');
+            //        $ueditappointment.show();
+            //        $reditappointment.hide();
+            //        //$editappointment = $modal.find('#editappointment');
+            //        //$editappointment.text('Reschedule Request');
+            //    },
+            //    error: function () {
+            //        alert("Dynamic content load failed.");
+            //    }
+            //});
 
         });
 
@@ -273,30 +291,13 @@ else
         //    $('#myModal4').modal('hide');
         //});
     });
-</script>
+    function reloadModelContainer(callback) {
+        var appid = $("#pvappid").val();
 
-<script>
-    $(document).ready(function () {
-        //alert('checking app time');
-        //checkAppointTime();
-    });
-    function checkAppointTime() {
-        
-        var table = $('#datatable').DataTable();
-        var data = table.column(4).data()[0];
-        alert(data);
-        // Get the column API object
-        //var column = table.column(table.column(1).attr('data-column'));
+        $("#myModalContent").load('@Url.Action("ViewAppDetails", "DoctorAppointment")?appID=' + appid, function () {
+            callback();
+        });
 
-        // Toggle the visibility
-        //table.column(4).visible(!table.column(1).visible());
-        //table.columns([4, '.fa fa-phone']).visible(!table.columns([4, '.fa fa-phone']));
-        //table.column(4).find(".fa fa-phone")[4].prop('display') = none;
-         //$("#datatable").find(".fa fa-phone")[4].prop('display') = none;
     }
-
-    //var i = setInterval(function () { checkAppointTime(); }, 2000);
-
-    
-    </script>
+</script>
 

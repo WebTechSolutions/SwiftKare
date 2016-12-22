@@ -52,7 +52,6 @@ namespace DataAccess
         public virtual DbSet<Medicine> Medicines { get; set; }
         public virtual DbSet<Module> Modules { get; set; }
         public virtual DbSet<News> News { get; set; }
-        public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<PatientAllergy> PatientAllergies { get; set; }
         public virtual DbSet<PatientFamilyHX> PatientFamilyHXes { get; set; }
         public virtual DbSet<PatientLifeStyle> PatientLifeStyles { get; set; }
@@ -84,6 +83,7 @@ namespace DataAccess
         public virtual DbSet<VCLog> VCLogs { get; set; }
         public virtual DbSet<Consultation> Consultations { get; set; }
         public virtual DbSet<Appointment> Appointments { get; set; }
+        public virtual DbSet<Patient> Patients { get; set; }
     
         public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
         {

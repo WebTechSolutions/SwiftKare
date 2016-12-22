@@ -17,7 +17,7 @@
     var amount = "";
     var pharmacy = "";
     var cellPhone = "";
-
+    var formattedDate = "";
     foreach (var item in Model)
     {
         doctorName = item.DoctorName;
@@ -33,27 +33,37 @@
 
         if (item.languageName != "N.A")
         {
-            languages = languages + item.languageName+ ",";
-        }
-        else
-        {
-            languages = item.languageName;
+            if(languages=="")
+            {
+                languages= item.languageName + ",";
+            }
+            else
+            {
+                languages = languages + item.languageName + ",";
+            }
+
         }
 
         if (item.specialityName != "N.A")
         {
-            specialities = specialities + item.specialityName+",";
-        }
-        else
-        {
-            specialities = item.specialityName;
-        }
+            if (specialities == "")
+            {
+                specialities = item.specialityName + ",";
+            }
+            else
+            {
+                specialities = specialities + item.specialityName + ",";
+            }
 
-        //if (languages != "N.A") { languages = languages.Remove(languages.Length - 1, 1); }
-
-        //if (specialities != "N.A") { specialities = specialities.Remove(specialities.Length - 1, 1); }
+        }
 
     }
+    if(appDate!="")
+    {
+        DateTime date = DateTime.ParseExact(appDate.ToString(), "dd/MM/yyyy", null);
+        formattedDate = string.Format("{0:dd MMM, yyyy}", date);
+    }
+
 
 
 
@@ -68,38 +78,45 @@
                 <img src="../Content/images/img.jpg" alt="" class="m-b-10 img-responsive">
             </div>
             <div class="name-sec">
-                <h2>Dr. @doctorName</h2>
-                <p><b>Age:</b> @age Years @*<br><span>Gender: @gender</span>*@</p>
-                <p><b>Gender:</b> @gender</p>
-                <p id="cellPhone"><b>Cell Phone:</b> @cellPhone</p>
-                <p><b>Languages:</b> @languages</p>
-                <p><b>Specialities:</b> @specialities</p>
-            </div>
+                <h2>@doctorName</h2>
+                <p style="font-size:10px">
+                    @age Years <br>@*<span>Gender: @gender</span>*@
+                    Gender: @gender<br>
+                    Languages: @languages<br>
+                    Specialities: @specialities<br>
+                    Cell Phone:@cellPhone
+                </p>
+</div>
         </div>
 
-        <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 0 -15px 20px; padding: 10px 21px 0; float: left;">
-            <p style="color: #375781;"><span style="width: 150px; float: left;">Appointment Date/Time</span><b>@appDate - @appTime</b></p>
+         <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 36px -15px 20px; padding: 10px 21px 0; ">
+            <p style="color: #375781;"><span style="width: 150px; float: left;">Appointment Date/Time</span><b>@formattedDate - @appTime</b></p>
         </div>
-        <p id="p_rov" style="color: #375781;"><b>Reason of Visit:</b> @rov</p>
-        <p id="p_chiefComplaints" style="color: #375781;"><b>Chief Complaint:</b> @chiefComplaints</p>
-        <p id="p_pharmacy" style="color: #375781;"><b>Pharmacy:</b> @pharmacy</p>
-        <p id="p_amount" style="color: #375781;"><b>Payment Amount</b> @amount</p>
-
-        @*<label style="font-weight: 300;" for="">Please enter the number we should call</label>
-            <input type="text" placeholder="(469)237-3768" style="max-width: 100%;" class="form-control" />*@
-        <div class="m-t-10">
-            <button onclick=sendVariables($("#doctorid").val(),$("#editappid").val(),this) data-assigned-id="@doctorName" data-todo='{"docid":"$("#doctorid").val()","doctorName":"@doctorName"}' data-toggle="modal" data-target="#myModal1" id="editappointment" style="width: 100%; border-radius: 0; padding: 15px 5px; font-size: 20px;" type="button" class="btn btn-primary">Edit Appointment</button>
+        @*<div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 0 -15px 20px; padding: 10px 21px 0; float: left;">
+        <p style="color: #375781;"><span style="width: 150px; float: left;">Reason of Visit</span><b>@rov</b></p>
+    </div>*@
+       
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Reason of Visit:</b><br> @rov</p>
+        <p id="p_chiefComplaints" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Chief Complaint:</b><br> @chiefComplaints</p>
+        <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Payment Amount</b><br> @amount</p>
+        
+       
+        <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 0 -15px -11px; padding: 10px 21px 0; ">
+            <p style="color: #375781;"><span style="width: 150px; float: left;">Pharmacy</span><b>@pharmacy</b></p>
+        </div><br />    
+         @*<label style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">Cell Phone</label>
+            <input type="text" value="@cellPhone" style="max-width: 100%;" class="form-control" />*@
+        <div class="m-t-10" style="margin-top:-26px">
+            <button onclick=sendVariables($("#doctorid").val(),$("#editappid").val(),this) data-assigned-id="@doctorName" data-todo='{"docid":"$("#doctorid").val()","doctorName":"@doctorName"}' data-toggle="modal" data-target="#myModal1" id="editappointment" style="width: 100%; border-radius: 0; color: #fff; padding: 15px 5px; font-size: 20px;" type="button" class="btn btn-primary">Reschedule App</button>
             @*<li><a href="#" class="reschedule" data-id="@item.appDate" data-toggle="modal" data-target="#myModal1" data-todo='{"docid":"@item.doctorID","doctorName":"@item.DoctorName","appID":"@item.appID","appDate":"@item.appDate"}' onclick=showDoctorTimings(@item.doctorID,@item.appID) id="@item.doctorID">Reschedule App</a></li>*@
             <input type="text" style="display:none" id="editappid">
             <input type="text" style="display:none" id="doctorid">
-            @*<button style="width: 100%; border-radius: 0; background: #2AAC39; color: #fff; padding: 15px 5px; font-size: 20px;" class="btn" type="button">ACCEPT</button>
-                <button style="width: 100%; border-radius: 0; background: #DB0029; color: #fff; padding: 15px 5px; font-size: 20px;" class="btn" type="button">DECLINE</button>*@
+           
         </div>
+
     </div><!--/.modal body-->
 }
 <script>
-    //function sendVariables(doctorid, editappid) {
-    //    alert(editappid+' '+ editappid);
-    //}
+    
     </script>
 

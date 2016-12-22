@@ -337,12 +337,12 @@
                                         <h4 class="modal-title" id="timingsmodaltitle"></h4>
                                     </div><!--/.modal header-->
 
-                                    <div class="modal-body text-left">
+                                    <div class="modal-body text-left" >
                                         <div class="row" id="docrow">
                                             <input type="text" style="display:none" id="doctorid">
 
-                                            <form class="form-horizontal form-label-left">
-                                                <div class="col-sm-offset-4 col-sm-4">
+                                            <form class="form-horizontal form-label-left"> @*style="height:230px"*@
+                                                <div class="col-sm-offset-4 col-sm-4" style="width: 182px;">
                                                     <div class="xdisplay_inputx form-group has-feedback">
                                                         <input type="text" class="form-control has-feedback-left active" id="fetchdate" placeholder="Choose a Date" aria-describedby="inputSuccess2Status">
                                                         <span class="fa fa-calendar-o form-control-feedback left date" aria-hidden="true"></span>
@@ -918,7 +918,8 @@
         $("#doctorid").val(mydocid);
         var todoId = $('#' + mydocid).data('todo').id;
         var docName = $('#' + mydocid).data('todo').doctorName;
-        $("#timingsmodaltitle").text(docName+" Timings");
+        var cap=docName.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        $("#timingsmodaltitle").text("Dr. "+cap + " Timings");
     });
     $("#myModal8").on('show.bs.modal', function (e) {
         var $modal = $(this);

@@ -3,7 +3,9 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_DoctorLayout.cshtml";
 }
-<link href="~/Content/css/pnotify.css" rel="stylesheet">
+<link href="~/Content/css/style.css" rel="stylesheet">
+<link href="~/Content/css/custom.css" rel="stylesheet">
+
 @*<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
 <script type="text/javascript" src="~/Scripts/~/Scripts/bootstrap.min.js"></script>*@
 <script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
@@ -68,10 +70,13 @@
 
 
     </div>
+    <input type="text" style="display:none" id="pvappid" value="0">
     <div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4">
         <div class="modal-dialog" style="width: 350px;">
             <div id='myModalContent' class="modal-content" style="border-radius: 0;">
-
+                @{
+                    Html.RenderAction("ViewAppDetails", "DoctorAppointment", new { appID = 0 });
+                }
             </div>
         </div>
     </div><!-- View App Detail -->

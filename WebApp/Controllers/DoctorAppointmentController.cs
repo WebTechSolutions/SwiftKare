@@ -24,7 +24,11 @@ namespace WebApp.Controllers
         {
             if (SessionHandler.IsExpired)
             {
-                return RedirectToAction("DoctorLogin", "Account");
+                return Json(new
+                {
+                    redirectUrl = Url.Action("DoctorLogin", "Account"),
+                    isRedirect = true
+                });
             }
             else
             {
@@ -74,11 +78,12 @@ namespace WebApp.Controllers
            
         }
 
-        public ActionResult ViewAppDetails(int appID)
+        public PartialViewResult ViewAppDetails(long? appID)
         {
             try
             {
-                var oData = oAppointmentRepository.GetAppDetail(appID);
+                long apID = Convert.ToInt64(appID);
+                var oData = oAppointmentRepository.GetAppDetail(apID);
                 return PartialView("PartialDoctorViewAppDetail", oData);
             }
 
