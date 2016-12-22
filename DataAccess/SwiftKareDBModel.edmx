@@ -550,6 +550,8 @@
           <Property Name="timezone" Type="varchar" MaxLength="100" />
           <Property Name="city" Type="varchar" MaxLength="50" />
           <Property Name="state" Type="varchar" MaxLength="50" />
+          <Property Name="lat" Type="float" />
+          <Property Name="lon" Type="float" />
         </EntityType>
         <EntityType Name="PatientAllergies">
           <Key>
@@ -2356,7 +2358,6 @@
           <EntitySet Name="Medicines" EntityType="SwiftKareDBModel.Medicine" />
           <EntitySet Name="Modules" EntityType="SwiftKareDBModel.Module" />
           <EntitySet Name="News" EntityType="SwiftKareDBModel.News" />
-          <EntitySet Name="Patients" EntityType="SwiftKareDBModel.Patient" />
           <EntitySet Name="PatientAllergies" EntityType="SwiftKareDBModel.PatientAllergy" />
           <EntitySet Name="PatientFamilyHXes" EntityType="SwiftKareDBModel.PatientFamilyHX" />
           <EntitySet Name="PatientLifeStyles" EntityType="SwiftKareDBModel.PatientLifeStyle" />
@@ -2386,37 +2387,13 @@
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="AspNetUserLogin" EntitySet="AspNetUserLogins" />
           </AssociationSet>
-          <AssociationSet Name="FK_Conditions_Patient" Association="SwiftKareDBModel.FK_Conditions_Patient">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="Condition" EntitySet="Conditions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ConsultationROS_Patient" Association="SwiftKareDBModel.FK_ConsultationROS_Patient">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="ConsultationRO" EntitySet="ConsultationROS" />
-          </AssociationSet>
           <AssociationSet Name="FK_ConsultationROS_SystemItems" Association="SwiftKareDBModel.FK_ConsultationROS_SystemItems">
             <End Role="SystemItemss" EntitySet="SystemItemsses" />
             <End Role="ConsultationRO" EntitySet="ConsultationROS" />
           </AssociationSet>
-          <AssociationSet Name="FK_Medications_Patient" Association="SwiftKareDBModel.FK_Medications_Patient">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="Medication" EntitySet="Medications" />
-          </AssociationSet>
           <AssociationSet Name="FK_RoleModules_Modules" Association="SwiftKareDBModel.FK_RoleModules_Modules">
             <End Role="Module" EntitySet="Modules" />
             <End Role="RoleModule" EntitySet="RoleModules" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Allergies_Patient" Association="SwiftKareDBModel.FK_Allergies_Patient">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="PatientAllergy" EntitySet="PatientAllergies" />
-          </AssociationSet>
-          <AssociationSet Name="FK_FamilyHX_Patient" Association="SwiftKareDBModel.FK_FamilyHX_Patient">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="PatientFamilyHX" EntitySet="PatientFamilyHXes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Surgeries_Patient" Association="SwiftKareDBModel.FK_Surgeries_Patient">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="PatientSurgery" EntitySet="PatientSurgeries" />
           </AssociationSet>
           <AssociationSet Name="FK_SystemItems_Systems" Association="SwiftKareDBModel.FK_SystemItems_Systems">
             <End Role="PatientSystem" EntitySet="PatientSystems" />
@@ -2437,10 +2414,6 @@
           <EntitySet Name="SecretQuestions" EntityType="SwiftKareDBModel.SecretQuestion" />
           <EntitySet Name="LifeStyleQuestions" EntityType="SwiftKareDBModel.LifeStyleQuestion" />
           <EntitySet Name="UserFiles" EntityType="SwiftKareDBModel.UserFile" />
-          <AssociationSet Name="FK_UserFiles_Patient" Association="SwiftKareDBModel.FK_UserFiles_Patient">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="UserFile" EntitySet="UserFiles" />
-          </AssociationSet>
           <FunctionImport Name="SP_ViewPatientProfile" ReturnType="Collection(SwiftKareDBModel.SP_ViewPatientProfile_Result)">
           <Parameter Name="patID" Mode="In" Type="Int64" />
           </FunctionImport>
@@ -2481,27 +2454,11 @@
             <End Role="Doctor" EntitySet="Doctors" />
             <End Role="Consultation" EntitySet="Consultations" />
           </AssociationSet>
-          <AssociationSet Name="FK_Consultation_Patient" Association="SwiftKareDBModel.FK_Consultation_Patient">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="Consultation" EntitySet="Consultations" />
-          </AssociationSet>
           <FunctionImport Name="SP_GetDoctorInfoforAppointment" ReturnType="Collection(SwiftKareDBModel.SP_GetDoctorInfoforAppointment_Result)">
           <Parameter Name="doctorID" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="SP_GetAppDetail" ReturnType="Collection(SwiftKareDBModel.SP_GetAppDetail_Result)">
           <Parameter Name="appID" Mode="In" Type="Int64" />
-          </FunctionImport>
-          <FunctionImport Name="SP_GetRescheduleAppforDoctor" ReturnType="Collection(SwiftKareDBModel.SP_GetRescheduleAppforDoctor_Result)">
-          <Parameter Name="doctorID" Mode="In" Type="Int64" />
-          </FunctionImport>
-          <FunctionImport Name="SP_GetRescheduleAppforPatient" ReturnType="Collection(SwiftKareDBModel.SP_GetRescheduleAppforPatient_Result)">
-          <Parameter Name="patientID" Mode="In" Type="Int64" />
-          </FunctionImport>
-          <FunctionImport Name="SP_GetUpcomingAppforDoctor" ReturnType="Collection(SwiftKareDBModel.SP_GetUpcomingAppforDoctor_Result)">
-          <Parameter Name="doctorID" Mode="In" Type="Int64" />
-          </FunctionImport>
-          <FunctionImport Name="SP_GetUpcomingAppforPatient" ReturnType="Collection(SwiftKareDBModel.SP_GetUpcomingAppforPatient_Result)">
-          <Parameter Name="patientID" Mode="In" Type="Int64" />
           </FunctionImport>
           <EntitySet Name="Appointments" EntityType="SwiftKareDBModel.Appointment" />
           <AssociationSet Name="FK_AppAttachment_Appointments" Association="SwiftKareDBModel.FK_AppAttachment_Appointments">
@@ -2512,14 +2469,59 @@
             <End Role="Doctor" EntitySet="Doctors" />
             <End Role="Appointment" EntitySet="Appointments" />
           </AssociationSet>
-          <AssociationSet Name="FK_Appointments_Patient" Association="SwiftKareDBModel.FK_Appointments_Patient">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="Appointment" EntitySet="Appointments" />
-          </AssociationSet>
           <AssociationSet Name="FK_Consultation_Appointments" Association="SwiftKareDBModel.FK_Consultation_Appointments">
             <End Role="Appointment" EntitySet="Appointments" />
             <End Role="Consultation" EntitySet="Consultations" />
           </AssociationSet>
+          <EntitySet Name="Patients" EntityType="SwiftKareDBModel.Patient" />
+          <AssociationSet Name="FK_Appointments_Patient" Association="SwiftKareDBModel.FK_Appointments_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="Appointment" EntitySet="Appointments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Conditions_Patient" Association="SwiftKareDBModel.FK_Conditions_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="Condition" EntitySet="Conditions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Consultation_Patient" Association="SwiftKareDBModel.FK_Consultation_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="Consultation" EntitySet="Consultations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConsultationROS_Patient" Association="SwiftKareDBModel.FK_ConsultationROS_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="ConsultationRO" EntitySet="ConsultationROS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Medications_Patient" Association="SwiftKareDBModel.FK_Medications_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="Medication" EntitySet="Medications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Allergies_Patient" Association="SwiftKareDBModel.FK_Allergies_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="PatientAllergy" EntitySet="PatientAllergies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FamilyHX_Patient" Association="SwiftKareDBModel.FK_FamilyHX_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="PatientFamilyHX" EntitySet="PatientFamilyHXes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Surgeries_Patient" Association="SwiftKareDBModel.FK_Surgeries_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="PatientSurgery" EntitySet="PatientSurgeries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserFiles_Patient" Association="SwiftKareDBModel.FK_UserFiles_Patient">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="UserFile" EntitySet="UserFiles" />
+          </AssociationSet>
+          <FunctionImport Name="SP_GetRescheduleAppforDoctor" ReturnType="Collection(SwiftKareDBModel.SP_GetRescheduleAppforDoctor_Result)">
+            <Parameter Name="doctorID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetRescheduleAppforPatient" ReturnType="Collection(SwiftKareDBModel.SP_GetRescheduleAppforPatient_Result)">
+            <Parameter Name="patientID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetUpcomingAppforDoctor" ReturnType="Collection(SwiftKareDBModel.SP_GetUpcomingAppforDoctor_Result)">
+            <Parameter Name="doctorID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetUpcomingAppforPatient" ReturnType="Collection(SwiftKareDBModel.SP_GetUpcomingAppforPatient_Result)">
+            <Parameter Name="patientID" Mode="In" Type="Int64" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="SP_AppointmentReport_Result">
           <Property Type="Int64" Name="appID" Nullable="false" />
@@ -3079,9 +3081,9 @@
           <Property Name="active" Type="Boolean" />
           <Property Name="systemItemName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="consultationID" Type="Int64" />
-          <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_ConsultationROS_Patient" FromRole="ConsultationRO" ToRole="Patient" />
           <NavigationProperty Name="SystemItemss" Relationship="SwiftKareDBModel.FK_ConsultationROS_SystemItems" FromRole="ConsultationRO" ToRole="SystemItemss" />
           <NavigationProperty Name="Consultations" Relationship="SwiftKareDBModel.FK_Consultation_ConsultationROS" FromRole="ConsultationRO" ToRole="Consultation" />
+          <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_ConsultationROS_Patient" FromRole="ConsultationRO" ToRole="Patient" />
         </EntityType>
         <EntityType Name="DoctorLanguage">
           <Key>
@@ -3259,54 +3261,6 @@
           <Property Name="mb" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
-        </EntityType>
-        <EntityType Name="Patient">
-          <Key>
-            <PropertyRef Name="patientID" />
-          </Key>
-          <Property Name="patientID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="firstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="lastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="secretQuestion1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="secretQuestion2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="secretQuestion3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="secretAnswer1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="secretAnswer2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="secretAnswer3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="gender" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="address1" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="address2" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="homePhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cellPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="zip" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="dob" Type="DateTime" Precision="3" />
-          <Property Name="languages" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="picture" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cd" Type="DateTime" Precision="3" />
-          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="md" Type="DateTime" Precision="3" />
-          <Property Name="active" Type="Boolean" />
-          <Property Name="userId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="pharmacy" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="pharmacyid" Type="Int64" />
-          <NavigationProperty Name="Conditions" Relationship="SwiftKareDBModel.FK_Conditions_Patient" FromRole="Patient" ToRole="Condition" />
-          <NavigationProperty Name="ConsultationROS" Relationship="SwiftKareDBModel.FK_ConsultationROS_Patient" FromRole="Patient" ToRole="ConsultationRO" />
-          <NavigationProperty Name="Medications" Relationship="SwiftKareDBModel.FK_Medications_Patient" FromRole="Patient" ToRole="Medication" />
-          <NavigationProperty Name="PatientAllergies" Relationship="SwiftKareDBModel.FK_Allergies_Patient" FromRole="Patient" ToRole="PatientAllergy" />
-          <NavigationProperty Name="PatientFamilyHXes" Relationship="SwiftKareDBModel.FK_FamilyHX_Patient" FromRole="Patient" ToRole="PatientFamilyHX" />
-          <NavigationProperty Name="PatientSurgeries" Relationship="SwiftKareDBModel.FK_Surgeries_Patient" FromRole="Patient" ToRole="PatientSurgery" />
-          <Property Name="title" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="suffix" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="height" Type="Int32" />
-          <Property Name="weight" Type="Int32" />
-          <Property Name="timezone" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="UserFiles" Relationship="SwiftKareDBModel.FK_UserFiles_Patient" FromRole="Patient" ToRole="UserFile" />
-          <NavigationProperty Name="Consultations" Relationship="SwiftKareDBModel.FK_Consultation_Patient" FromRole="Patient" ToRole="Consultation" />
-          <NavigationProperty Name="Appointments" Relationship="SwiftKareDBModel.FK_Appointments_Patient" FromRole="Patient" ToRole="Appointment" />
         </EntityType>
         <EntityType Name="PatientAllergy">
           <Key>
@@ -3574,30 +3528,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Conditions_Patient">
-          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.Condition" Role="Condition" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="patientID" />
-            </Principal>
-            <Dependent Role="Condition">
-              <PropertyRef Name="patientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ConsultationROS_Patient">
-          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.ConsultationRO" Role="ConsultationRO" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="patientID" />
-            </Principal>
-            <Dependent Role="ConsultationRO">
-              <PropertyRef Name="patientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ConsultationROS_SystemItems">
           <End Type="SwiftKareDBModel.SystemItemss" Role="SystemItemss" Multiplicity="0..1" />
           <End Type="SwiftKareDBModel.ConsultationRO" Role="ConsultationRO" Multiplicity="*" />
@@ -3610,18 +3540,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Medications_Patient">
-          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.Medication" Role="Medication" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="patientID" />
-            </Principal>
-            <Dependent Role="Medication">
-              <PropertyRef Name="patientId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_RoleModules_Modules">
           <End Type="SwiftKareDBModel.Module" Role="Module" Multiplicity="0..1" />
           <End Type="SwiftKareDBModel.RoleModule" Role="RoleModule" Multiplicity="*" />
@@ -3631,42 +3549,6 @@
             </Principal>
             <Dependent Role="RoleModule">
               <PropertyRef Name="moduleID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Allergies_Patient">
-          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.PatientAllergy" Role="PatientAllergy" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="patientID" />
-            </Principal>
-            <Dependent Role="PatientAllergy">
-              <PropertyRef Name="patientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_FamilyHX_Patient">
-          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.PatientFamilyHX" Role="PatientFamilyHX" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="patientID" />
-            </Principal>
-            <Dependent Role="PatientFamilyHX">
-              <PropertyRef Name="patientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Surgeries_Patient">
-          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.PatientSurgery" Role="PatientSurgery" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="patientID" />
-            </Principal>
-            <Dependent Role="PatientSurgery">
-              <PropertyRef Name="patientID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3789,21 +3671,9 @@
           <Property Name="fileContent" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="patientID" Type="Int64" />
           <Property Name="doctorID" Type="Int64" />
-          <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_UserFiles_Patient" FromRole="UserFile" ToRole="Patient" />
           <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_UserFiles_Doctor" FromRole="UserFile" ToRole="Doctor" />
+          <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_UserFiles_Patient" FromRole="UserFile" ToRole="Patient" />
         </EntityType>
-        <Association Name="FK_UserFiles_Patient">
-          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.UserFile" Role="UserFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="patientID" />
-            </Principal>
-            <Dependent Role="UserFile">
-              <PropertyRef Name="patientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <ComplexType Name="SP_ViewPatientProfile_Result">
           <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="lastName" Nullable="true" MaxLength="100" />
@@ -4029,9 +3899,9 @@
           <Property Name="endby" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="ConsultationRO" Relationship="SwiftKareDBModel.FK_Consultation_ConsultationROS" FromRole="Consultation" ToRole="ConsultationRO" />
           <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_Consultation_Doctor" FromRole="Consultation" ToRole="Doctor" />
-          <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_Consultation_Patient" FromRole="Consultation" ToRole="Patient" />
           <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Appointment" Relationship="SwiftKareDBModel.FK_Consultation_Appointments" FromRole="Consultation" ToRole="Appointment" />
+          <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_Consultation_Patient" FromRole="Consultation" ToRole="Patient" />
         </EntityType>
         <Association Name="FK_Consultation_ConsultationROS">
           <End Type="SwiftKareDBModel.ConsultationRO" Role="ConsultationRO" Multiplicity="0..1" />
@@ -4054,18 +3924,6 @@
             </Principal>
             <Dependent Role="Consultation">
               <PropertyRef Name="doctorID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Consultation_Patient">
-          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.Consultation" Role="Consultation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="patientID" />
-            </Principal>
-            <Dependent Role="Consultation">
-              <PropertyRef Name="patientID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4105,6 +3963,228 @@
           <Property Type="String" Name="specialityName" Nullable="false" MaxLength="50" />
           <Property Type="String" Name="languageName" Nullable="false" MaxLength="50" />
         </ComplexType>
+        <EntityType Name="Appointment">
+          <Key>
+            <PropertyRef Name="appID" />
+          </Key>
+          <Property Name="appID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="doctorID" Type="Int64" />
+          <Property Name="patientID" Type="Int64" />
+          <Property Name="appDate" Type="DateTime" Precision="0" />
+          <Property Name="appTime" Type="Time" Precision="7" />
+          <Property Name="notes" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="paymentID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="paymentAmt" Type="Int32" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+          <Property Name="appTypeAV" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="chiefComplaints" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="rov" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="consultationType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="appointmentStatus" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="rescheduleRequiredBy" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AppAttachments" Relationship="SwiftKareDBModel.FK_AppAttachment_Appointments" FromRole="Appointment" ToRole="AppAttachment" />
+          <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_Appointments_Doctor" FromRole="Appointment" ToRole="Doctor" />
+          <NavigationProperty Name="Consultations" Relationship="SwiftKareDBModel.FK_Consultation_Appointments" FromRole="Appointment" ToRole="Consultation" />
+          <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_Appointments_Patient" FromRole="Appointment" ToRole="Patient" />
+        </EntityType>
+        <Association Name="FK_AppAttachment_Appointments">
+          <End Type="SwiftKareDBModel.Appointment" Role="Appointment" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.AppAttachment" Role="AppAttachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Appointment">
+              <PropertyRef Name="appID" />
+            </Principal>
+            <Dependent Role="AppAttachment">
+              <PropertyRef Name="appID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Appointments_Doctor">
+          <End Type="SwiftKareDBModel.Doctor" Role="Doctor" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.Appointment" Role="Appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctor">
+              <PropertyRef Name="doctorID" />
+            </Principal>
+            <Dependent Role="Appointment">
+              <PropertyRef Name="doctorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Consultation_Appointments">
+          <End Type="SwiftKareDBModel.Appointment" Role="Appointment" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.Consultation" Role="Consultation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Appointment">
+              <PropertyRef Name="appID" />
+            </Principal>
+            <Dependent Role="Consultation">
+              <PropertyRef Name="appID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Patient">
+          <Key>
+            <PropertyRef Name="patientID" />
+          </Key>
+          <Property Name="patientID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="firstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="lastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="secretQuestion1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="secretQuestion2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="secretQuestion3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="secretAnswer1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="secretAnswer2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="secretAnswer3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="gender" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="address1" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="address2" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="homePhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cellPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="zip" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="dob" Type="DateTime" Precision="3" />
+          <Property Name="languages" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="picture" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+          <Property Name="userId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="pharmacy" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="pharmacyid" Type="Int64" />
+          <Property Name="title" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="suffix" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="height" Type="Int32" />
+          <Property Name="weight" Type="Int32" />
+          <Property Name="timezone" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="lat" Type="Double" />
+          <Property Name="lon" Type="Double" />
+          <NavigationProperty Name="Appointments" Relationship="SwiftKareDBModel.FK_Appointments_Patient" FromRole="Patient" ToRole="Appointment" />
+          <NavigationProperty Name="Conditions" Relationship="SwiftKareDBModel.FK_Conditions_Patient" FromRole="Patient" ToRole="Condition" />
+          <NavigationProperty Name="Consultations" Relationship="SwiftKareDBModel.FK_Consultation_Patient" FromRole="Patient" ToRole="Consultation" />
+          <NavigationProperty Name="ConsultationROS" Relationship="SwiftKareDBModel.FK_ConsultationROS_Patient" FromRole="Patient" ToRole="ConsultationRO" />
+          <NavigationProperty Name="Medications" Relationship="SwiftKareDBModel.FK_Medications_Patient" FromRole="Patient" ToRole="Medication" />
+          <NavigationProperty Name="PatientAllergies" Relationship="SwiftKareDBModel.FK_Allergies_Patient" FromRole="Patient" ToRole="PatientAllergy" />
+          <NavigationProperty Name="PatientFamilyHXes" Relationship="SwiftKareDBModel.FK_FamilyHX_Patient" FromRole="Patient" ToRole="PatientFamilyHX" />
+          <NavigationProperty Name="PatientSurgeries" Relationship="SwiftKareDBModel.FK_Surgeries_Patient" FromRole="Patient" ToRole="PatientSurgery" />
+          <NavigationProperty Name="UserFiles" Relationship="SwiftKareDBModel.FK_UserFiles_Patient" FromRole="Patient" ToRole="UserFile" />
+        </EntityType>
+        <Association Name="FK_Appointments_Patient">
+          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.Appointment" Role="Appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="patientID" />
+            </Principal>
+            <Dependent Role="Appointment">
+              <PropertyRef Name="patientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Conditions_Patient">
+          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.Condition" Role="Condition" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="patientID" />
+            </Principal>
+            <Dependent Role="Condition">
+              <PropertyRef Name="patientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Consultation_Patient">
+          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.Consultation" Role="Consultation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="patientID" />
+            </Principal>
+            <Dependent Role="Consultation">
+              <PropertyRef Name="patientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConsultationROS_Patient">
+          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.ConsultationRO" Role="ConsultationRO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="patientID" />
+            </Principal>
+            <Dependent Role="ConsultationRO">
+              <PropertyRef Name="patientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Medications_Patient">
+          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.Medication" Role="Medication" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="patientID" />
+            </Principal>
+            <Dependent Role="Medication">
+              <PropertyRef Name="patientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Allergies_Patient">
+          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.PatientAllergy" Role="PatientAllergy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="patientID" />
+            </Principal>
+            <Dependent Role="PatientAllergy">
+              <PropertyRef Name="patientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FamilyHX_Patient">
+          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.PatientFamilyHX" Role="PatientFamilyHX" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="patientID" />
+            </Principal>
+            <Dependent Role="PatientFamilyHX">
+              <PropertyRef Name="patientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Surgeries_Patient">
+          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.PatientSurgery" Role="PatientSurgery" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="patientID" />
+            </Principal>
+            <Dependent Role="PatientSurgery">
+              <PropertyRef Name="patientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserFiles_Patient">
+          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.UserFile" Role="UserFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="patientID" />
+            </Principal>
+            <Dependent Role="UserFile">
+              <PropertyRef Name="patientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <ComplexType Name="SP_GetRescheduleAppforDoctor_Result">
           <Property Type="String" Name="status" Nullable="true" MaxLength="50" />
           <Property Type="Int64" Name="appID" Nullable="false" />
@@ -4153,82 +4233,6 @@
           <Property Type="String" Name="rov" Nullable="false" MaxLength="500" />
           <Property Type="String" Name="chiefComplaints" Nullable="false" MaxLength="500" />
         </ComplexType>
-        <EntityType Name="Appointment">
-          <Key>
-            <PropertyRef Name="appID" />
-          </Key>
-          <Property Name="appID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="doctorID" Type="Int64" />
-          <Property Name="patientID" Type="Int64" />
-          <Property Name="appDate" Type="DateTime" Precision="0" />
-          <Property Name="appTime" Type="Time" Precision="7" />
-          <Property Name="notes" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="paymentID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="paymentAmt" Type="Int32" />
-          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cd" Type="DateTime" Precision="3" />
-          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="md" Type="DateTime" Precision="3" />
-          <Property Name="active" Type="Boolean" />
-          <Property Name="appTypeAV" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="chiefComplaints" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="rov" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="consultationType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="appointmentStatus" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="rescheduleRequiredBy" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="AppAttachments" Relationship="SwiftKareDBModel.FK_AppAttachment_Appointments" FromRole="Appointment" ToRole="AppAttachment" />
-          <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_Appointments_Doctor" FromRole="Appointment" ToRole="Doctor" />
-          <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_Appointments_Patient" FromRole="Appointment" ToRole="Patient" />
-          <NavigationProperty Name="Consultations" Relationship="SwiftKareDBModel.FK_Consultation_Appointments" FromRole="Appointment" ToRole="Consultation" />
-        </EntityType>
-        <Association Name="FK_AppAttachment_Appointments">
-          <End Type="SwiftKareDBModel.Appointment" Role="Appointment" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.AppAttachment" Role="AppAttachment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Appointment">
-              <PropertyRef Name="appID" />
-            </Principal>
-            <Dependent Role="AppAttachment">
-              <PropertyRef Name="appID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Appointments_Doctor">
-          <End Type="SwiftKareDBModel.Doctor" Role="Doctor" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.Appointment" Role="Appointment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Doctor">
-              <PropertyRef Name="doctorID" />
-            </Principal>
-            <Dependent Role="Appointment">
-              <PropertyRef Name="doctorID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Appointments_Patient">
-          <End Type="SwiftKareDBModel.Patient" Role="Patient" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.Appointment" Role="Appointment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="patientID" />
-            </Principal>
-            <Dependent Role="Appointment">
-              <PropertyRef Name="patientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Consultation_Appointments">
-          <End Type="SwiftKareDBModel.Appointment" Role="Appointment" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.Consultation" Role="Consultation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Appointment">
-              <PropertyRef Name="appID" />
-            </Principal>
-            <Dependent Role="Consultation">
-              <PropertyRef Name="appID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4982,46 +4986,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Patients">
-            <EntityTypeMapping TypeName="SwiftKareDBModel.Patient">
-              <MappingFragment StoreEntitySet="Patient">
-                <ScalarProperty Name="state" ColumnName="state" />
-                <ScalarProperty Name="city" ColumnName="city" />
-                <ScalarProperty Name="timezone" ColumnName="timezone" />
-                <ScalarProperty Name="weight" ColumnName="weight" />
-                <ScalarProperty Name="height" ColumnName="height" />
-                <ScalarProperty Name="suffix" ColumnName="suffix" />
-                <ScalarProperty Name="title" ColumnName="title" />
-                <ScalarProperty Name="pharmacyid" ColumnName="pharmacyid" />
-                <ScalarProperty Name="pharmacy" ColumnName="pharmacy" />
-                <ScalarProperty Name="userId" ColumnName="userId" />
-                <ScalarProperty Name="active" ColumnName="active" />
-                <ScalarProperty Name="md" ColumnName="md" />
-                <ScalarProperty Name="mb" ColumnName="mb" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-                <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="picture" ColumnName="picture" />
-                <ScalarProperty Name="languages" ColumnName="languages" />
-                <ScalarProperty Name="dob" ColumnName="dob" />
-                <ScalarProperty Name="zip" ColumnName="zip" />
-                <ScalarProperty Name="cellPhone" ColumnName="cellPhone" />
-                <ScalarProperty Name="homePhone" ColumnName="homePhone" />
-                <ScalarProperty Name="address2" ColumnName="address2" />
-                <ScalarProperty Name="address1" ColumnName="address1" />
-                <ScalarProperty Name="gender" ColumnName="gender" />
-                <ScalarProperty Name="secretAnswer3" ColumnName="secretAnswer3" />
-                <ScalarProperty Name="secretAnswer2" ColumnName="secretAnswer2" />
-                <ScalarProperty Name="secretAnswer1" ColumnName="secretAnswer1" />
-                <ScalarProperty Name="secretQuestion3" ColumnName="secretQuestion3" />
-                <ScalarProperty Name="secretQuestion2" ColumnName="secretQuestion2" />
-                <ScalarProperty Name="secretQuestion1" ColumnName="secretQuestion1" />
-                <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="lastName" ColumnName="lastName" />
-                <ScalarProperty Name="firstName" ColumnName="firstName" />
-                <ScalarProperty Name="patientID" ColumnName="patientID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="PatientAllergies">
             <EntityTypeMapping TypeName="SwiftKareDBModel.PatientAllergy">
               <MappingFragment StoreEntitySet="PatientAllergies">
@@ -5578,6 +5542,73 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Appointments">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.Appointment">
+              <MappingFragment StoreEntitySet="Appointments">
+                <ScalarProperty Name="rescheduleRequiredBy" ColumnName="rescheduleRequiredBy" />
+                <ScalarProperty Name="appointmentStatus" ColumnName="appointmentStatus" />
+                <ScalarProperty Name="consultationType" ColumnName="consultationType" />
+                <ScalarProperty Name="rov" ColumnName="rov" />
+                <ScalarProperty Name="chiefComplaints" ColumnName="chiefComplaints" />
+                <ScalarProperty Name="appTypeAV" ColumnName="appTypeAV" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="paymentAmt" ColumnName="paymentAmt" />
+                <ScalarProperty Name="paymentID" ColumnName="paymentID" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+                <ScalarProperty Name="appTime" ColumnName="appTime" />
+                <ScalarProperty Name="appDate" ColumnName="appDate" />
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
+                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+                <ScalarProperty Name="appID" ColumnName="appID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Patients">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.Patient">
+              <MappingFragment StoreEntitySet="Patient">
+                <ScalarProperty Name="lon" ColumnName="lon" />
+                <ScalarProperty Name="lat" ColumnName="lat" />
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="timezone" ColumnName="timezone" />
+                <ScalarProperty Name="weight" ColumnName="weight" />
+                <ScalarProperty Name="height" ColumnName="height" />
+                <ScalarProperty Name="suffix" ColumnName="suffix" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="pharmacyid" ColumnName="pharmacyid" />
+                <ScalarProperty Name="pharmacy" ColumnName="pharmacy" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="picture" ColumnName="picture" />
+                <ScalarProperty Name="languages" ColumnName="languages" />
+                <ScalarProperty Name="dob" ColumnName="dob" />
+                <ScalarProperty Name="zip" ColumnName="zip" />
+                <ScalarProperty Name="cellPhone" ColumnName="cellPhone" />
+                <ScalarProperty Name="homePhone" ColumnName="homePhone" />
+                <ScalarProperty Name="address2" ColumnName="address2" />
+                <ScalarProperty Name="address1" ColumnName="address1" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="secretAnswer3" ColumnName="secretAnswer3" />
+                <ScalarProperty Name="secretAnswer2" ColumnName="secretAnswer2" />
+                <ScalarProperty Name="secretAnswer1" ColumnName="secretAnswer1" />
+                <ScalarProperty Name="secretQuestion3" ColumnName="secretQuestion3" />
+                <ScalarProperty Name="secretQuestion2" ColumnName="secretQuestion2" />
+                <ScalarProperty Name="secretQuestion1" ColumnName="secretQuestion1" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="SP_GetRescheduleAppforDoctor" FunctionName="SwiftKareDBModel.Store.SP_GetRescheduleAppforDoctor">
             <ResultMapping>
               <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetRescheduleAppforDoctor_Result">
@@ -5642,31 +5673,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="Appointments">
-            <EntityTypeMapping TypeName="SwiftKareDBModel.Appointment">
-              <MappingFragment StoreEntitySet="Appointments">
-                <ScalarProperty Name="rescheduleRequiredBy" ColumnName="rescheduleRequiredBy" />
-                <ScalarProperty Name="appointmentStatus" ColumnName="appointmentStatus" />
-                <ScalarProperty Name="consultationType" ColumnName="consultationType" />
-                <ScalarProperty Name="rov" ColumnName="rov" />
-                <ScalarProperty Name="chiefComplaints" ColumnName="chiefComplaints" />
-                <ScalarProperty Name="appTypeAV" ColumnName="appTypeAV" />
-                <ScalarProperty Name="active" ColumnName="active" />
-                <ScalarProperty Name="md" ColumnName="md" />
-                <ScalarProperty Name="mb" ColumnName="mb" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-                <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="paymentAmt" ColumnName="paymentAmt" />
-                <ScalarProperty Name="paymentID" ColumnName="paymentID" />
-                <ScalarProperty Name="notes" ColumnName="notes" />
-                <ScalarProperty Name="appTime" ColumnName="appTime" />
-                <ScalarProperty Name="appDate" ColumnName="appDate" />
-                <ScalarProperty Name="patientID" ColumnName="patientID" />
-                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
-                <ScalarProperty Name="appID" ColumnName="appID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -5681,7 +5687,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />

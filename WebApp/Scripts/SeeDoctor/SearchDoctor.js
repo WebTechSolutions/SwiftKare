@@ -396,7 +396,7 @@ function fetchTimings(fetchdate) {
                 var tablehtml = "";
                 $.each(response.Object, function (item) {
 
-                    tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + fetchdate + "\")'>" + response.Object[item] + "</button></li>";
+                    tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + fetchdate + "\")' style='width:85px'>" + response.Object[item] + "</button></li>";
 
                 });
 
@@ -444,7 +444,7 @@ function showDoctorTimings(doctorID) {
             var tablehtml = "";
             $.each(response.Object, function (item) {
 
-                tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + $("#fetchdate").val() + "\")'>" + response.Object[item] + "</button></li>";
+                tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + response.Object[item] + "</button></li>";
 
             });
 

@@ -15,7 +15,7 @@ namespace WebApp.Controllers
     public class AppointmentController : Controller
     {
         AppointmentRepository oAppointmentRepository;
- 
+        long appID = 0;
         public AppointmentController()
         {
             oAppointmentRepository = new AppointmentRepository();
@@ -76,11 +76,13 @@ namespace WebApp.Controllers
             return PartialView("PartialUpcoming");
         }
 
-        public ActionResult ViewAppDetails(int appID)
+      
+        public PartialViewResult ViewAppDetails(long? appID)
         {
             try
             {
-                var oData = oAppointmentRepository.GetAppDetail(appID);
+                long apID = Convert.ToInt64(appID);
+                var oData = oAppointmentRepository.GetAppDetail(apID);
                 return PartialView("PartialViewDetail", oData);
             }
             catch (System.Web.Http.HttpResponseException ex)
