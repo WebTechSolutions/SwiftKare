@@ -36,7 +36,7 @@
             <PropertyRef Name="alertID" />
           </Key>
           <Property Name="alertID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="alertText" Type="varchar" MaxLength="500" />
+          <Property Name="alertText" Type="varchar" MaxLength="200" />
           <Property Name="alertFor" Type="varchar" MaxLength="50" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
@@ -205,17 +205,17 @@
           <Property Name="objective" Type="varchar(max)" />
           <Property Name="assessment" Type="varchar(max)" />
           <Property Name="plans" Type="varchar(max)" />
-          <Property Name="startTime" Type="time" Precision="7" />
-          <Property Name="endTime" Type="time" Precision="7" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
+          <Property Name="startTime" Type="time" Precision="7" />
+          <Property Name="endTime" Type="time" Precision="7" />
           <Property Name="seesionID" Type="varchar" MaxLength="100" />
           <Property Name="token" Type="varchar" MaxLength="500" />
           <Property Name="endby" Type="varchar" MaxLength="50" />
-          <Property Name="status" Type="varchar" MaxLength="50" />
+          <Property Name="status" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="ConsultationROS">
           <Key>
@@ -229,8 +229,8 @@
           <Property Name="mb" Type="datetime" />
           <Property Name="md" Type="varchar" MaxLength="50" />
           <Property Name="active" Type="bit" />
-          <Property Name="consultationID" Type="bigint" />
           <Property Name="systemItemName" Type="varchar" MaxLength="50" />
+          <Property Name="consultationID" Type="bigint" />
         </EntityType>
         <EntityType Name="Doctor">
           <Key>
@@ -275,7 +275,7 @@
           <Property Name="suffix" Type="varchar" MaxLength="10" />
           <Property Name="education" Type="varchar(max)" />
           <Property Name="workexperience" Type="varchar(max)" />
-          <Property Name="specialization" Type="varchar" MaxLength="100" />
+          <Property Name="specialization" Type="varchar" MaxLength="50" />
           <Property Name="timezone" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="DoctorLanguages">
@@ -285,8 +285,8 @@
           <Property Name="doctorLanguageID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="languageName" Type="varchar" MaxLength="50" />
           <Property Name="doctorID" Type="bigint" />
-          <Property Name="cd" Type="datetime" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
+          <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
@@ -298,10 +298,10 @@
           <Property Name="doctorLicenseStateID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="doctorID" Type="bigint" />
           <Property Name="stateName" Type="varchar" MaxLength="50" />
-          <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
-          <Property Name="mb" Type="varchar" MaxLength="50" />
+          <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
+          <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="active" Type="bit" />
         </EntityType>
         <EntityType Name="DoctorSpeciality">
@@ -482,8 +482,8 @@
           <Property Name="subject" Type="varchar" MaxLength="100" />
           <Property Name="senderName" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
-          <Property Name="hasAttachment" Type="bit" />
           <Property Name="md" Type="datetime" />
+          <Property Name="hasAttachment" Type="bit" />
         </EntityType>
         <EntityType Name="Modules">
           <Key>
@@ -544,12 +544,14 @@
           <Property Name="pharmacy" Type="varchar" MaxLength="1000" />
           <Property Name="pharmacyid" Type="bigint" />
           <Property Name="title" Type="varchar" MaxLength="10" />
-          <Property Name="suffix" Type="varchar" MaxLength="10" />
           <Property Name="height" Type="int" />
           <Property Name="weight" Type="int" />
+          <Property Name="suffix" Type="varchar" MaxLength="10" />
           <Property Name="timezone" Type="varchar" MaxLength="100" />
           <Property Name="city" Type="varchar" MaxLength="50" />
           <Property Name="state" Type="varchar" MaxLength="50" />
+          <Property Name="lat" Type="float" />
+          <Property Name="lon" Type="float" />
         </EntityType>
         <EntityType Name="PatientAllergies">
           <Key>
@@ -702,7 +704,7 @@
             <PropertyRef Name="secretQuestionID" />
           </Key>
           <Property Name="secretQuestionID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="secretQuestionn" Type="varchar" MaxLength="100" />
+          <Property Name="secretQuestionn" Type="varchar" MaxLength="200" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
@@ -743,6 +745,14 @@
           <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
+          <Property Name="active" Type="bit" />
+        </EntityType>
+        <EntityType Name="SuffixMaster">
+          <Key>
+            <PropertyRef Name="SuffixID" />
+          </Key>
+          <Property Name="SuffixID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SuffixName" Type="varchar" MaxLength="50" />
           <Property Name="active" Type="bit" />
         </EntityType>
         <EntityType Name="Surgery">
@@ -790,6 +800,14 @@
           <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
+          <Property Name="active" Type="bit" />
+        </EntityType>
+        <EntityType Name="TitleMaster">
+          <Key>
+            <PropertyRef Name="titleID" />
+          </Key>
+          <Property Name="titleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="titleName" Type="varchar" MaxLength="50" />
           <Property Name="active" Type="bit" />
         </EntityType>
         <EntityType Name="UserFiles">
@@ -1726,10 +1744,12 @@
           <EntitySet Name="Severity" EntityType="Self.Severity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Speciallity" EntityType="Self.Speciallity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="States" EntityType="Self.States" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SuffixMaster" EntityType="Self.SuffixMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Surgery" EntityType="Self.Surgery" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SystemItemss" EntityType="Self.SystemItemss" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TimeZones" EntityType="Self.TimeZones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TitleMaster" EntityType="Self.TitleMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserFiles" EntityType="Self.UserFiles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="VCLog" EntityType="Self.VCLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Zips" EntityType="Self.Zips" Schema="dbo" store:Type="Tables" />
@@ -2520,6 +2540,8 @@
             <End Role="Appointment" EntitySet="Appointments" />
             <End Role="Consultation" EntitySet="Consultations" />
           </AssociationSet>
+          <EntitySet Name="SuffixMasters" EntityType="SwiftKareDBModel.SuffixMaster" />
+          <EntitySet Name="TitleMasters" EntityType="SwiftKareDBModel.TitleMaster" />
           </EntityContainer>
         <ComplexType Name="SP_AppointmentReport_Result">
           <Property Type="Int64" Name="appID" Nullable="false" />
@@ -2948,7 +2970,7 @@
             <PropertyRef Name="alertID" />
           </Key>
           <Property Name="alertID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="alertText" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="alertText" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="alertFor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="cd" Type="DateTime" Precision="3" />
@@ -3307,6 +3329,8 @@
           <NavigationProperty Name="UserFiles" Relationship="SwiftKareDBModel.FK_UserFiles_Patient" FromRole="Patient" ToRole="UserFile" />
           <NavigationProperty Name="Consultations" Relationship="SwiftKareDBModel.FK_Consultation_Patient" FromRole="Patient" ToRole="Consultation" />
           <NavigationProperty Name="Appointments" Relationship="SwiftKareDBModel.FK_Appointments_Patient" FromRole="Patient" ToRole="Appointment" />
+          <Property Name="lat" Type="Double" />
+          <Property Name="lon" Type="Double" />
         </EntityType>
         <EntityType Name="PatientAllergy">
           <Key>
@@ -3755,7 +3779,7 @@
             <PropertyRef Name="secretQuestionID" />
           </Key>
           <Property Name="secretQuestionID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="secretQuestionn" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="secretQuestionn" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="cd" Type="DateTime" Precision="3" />
           <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -3883,7 +3907,7 @@
           <Property Name="suffix" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="education" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="workexperience" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="specialization" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="specialization" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="timezone" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="DoctorLanguages" Relationship="SwiftKareDBModel.FK_DoctorLanguages_Doctor" FromRole="Doctor" ToRole="DoctorLanguage" />
           <NavigationProperty Name="DoctorLicenseStates" Relationship="SwiftKareDBModel.FK_DoctorLicenseStates_Doctor" FromRole="Doctor" ToRole="DoctorLicenseState" />
@@ -4030,7 +4054,7 @@
           <NavigationProperty Name="ConsultationRO" Relationship="SwiftKareDBModel.FK_Consultation_ConsultationROS" FromRole="Consultation" ToRole="ConsultationRO" />
           <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_Consultation_Doctor" FromRole="Consultation" ToRole="Doctor" />
           <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_Consultation_Patient" FromRole="Consultation" ToRole="Patient" />
-          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Appointment" Relationship="SwiftKareDBModel.FK_Consultation_Appointments" FromRole="Consultation" ToRole="Appointment" />
         </EntityType>
         <Association Name="FK_Consultation_ConsultationROS">
@@ -4229,6 +4253,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="SuffixMaster">
+          <Key>
+            <PropertyRef Name="SuffixID" />
+          </Key>
+          <Property Name="SuffixID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SuffixName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="active" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="TitleMaster">
+          <Key>
+            <PropertyRef Name="titleID" />
+          </Key>
+          <Property Name="titleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="titleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="active" Type="Boolean" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4985,6 +5025,8 @@
           <EntitySetMapping Name="Patients">
             <EntityTypeMapping TypeName="SwiftKareDBModel.Patient">
               <MappingFragment StoreEntitySet="Patient">
+                <ScalarProperty Name="lon" ColumnName="lon" />
+                <ScalarProperty Name="lat" ColumnName="lat" />
                 <ScalarProperty Name="state" ColumnName="state" />
                 <ScalarProperty Name="city" ColumnName="city" />
                 <ScalarProperty Name="timezone" ColumnName="timezone" />
@@ -5664,6 +5706,24 @@
                 <ScalarProperty Name="patientID" ColumnName="patientID" />
                 <ScalarProperty Name="doctorID" ColumnName="doctorID" />
                 <ScalarProperty Name="appID" ColumnName="appID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SuffixMasters">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.SuffixMaster">
+              <MappingFragment StoreEntitySet="SuffixMaster">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="SuffixName" ColumnName="SuffixName" />
+                <ScalarProperty Name="SuffixID" ColumnName="SuffixID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TitleMasters">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.TitleMaster">
+              <MappingFragment StoreEntitySet="TitleMaster">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="titleName" ColumnName="titleName" />
+                <ScalarProperty Name="titleID" ColumnName="titleID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

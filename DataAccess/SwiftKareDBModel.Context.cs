@@ -84,6 +84,8 @@ namespace DataAccess
         public virtual DbSet<VCLog> VCLogs { get; set; }
         public virtual DbSet<Consultation> Consultations { get; set; }
         public virtual DbSet<Appointment> Appointments { get; set; }
+        public virtual DbSet<SuffixMaster> SuffixMasters { get; set; }
+        public virtual DbSet<TitleMaster> TitleMasters { get; set; }
     
         public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
         {

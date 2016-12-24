@@ -89,6 +89,8 @@
         <AssociationConnector Association="SwiftKareDBModel.FK_Appointments_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Appointments_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Appointments" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.SuffixMaster" Width="1.5" PointX="22.375" PointY="7.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.TitleMaster" Width="1.5" PointX="22.375" PointY="10.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
