@@ -136,19 +136,19 @@
                                 @if (Model.Height > 0)
                                 {
                                     <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Height</b></h4>
-                                        <p style="padding-left: 25px;"> @Model.Height</p>
+                                    <p style="padding-left: 25px;"> @Model.Height</p>
                                 }
 
                                 @if (Model.Weight > 0)
                                 {
                                     <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Weight</b></h4>
-                                        <p style="padding-left: 25px;">@Model.Weight</p>
+                                    <p style="padding-left: 25px;">@Model.Weight</p>
                                 }
 
                                 @if (!string.IsNullOrEmpty(Model.TimeZone))
                                 {
                                     <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Time Zone</b></h4>
-                                        <p style="padding-left: 25px;">@Model.TimeZone</p>
+                                    <p style="padding-left: 25px;">@Model.TimeZone</p>
                                 }
                             </div>
                         </div>
@@ -162,15 +162,45 @@
 
 
 @section scripts{
-
     <script>
         function myMap() {
-            var mapCanvas = document.getElementById("map");
-            var mapOptions = {
-                center: new google.maps.LatLng(@Model.Latitude, @Model.Longitude),
-                zoom: 5
+
+            var lat = '@Model.Latitude';
+            var lon = '@Model.Longitude';
+
+            if (lat == '' && lon == '') {
+                var mapCanvas = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 8
+                });
+
+                var geocoder = new google.maps.Geocoder();
+                geocodeAddress(geocoder, mapCanvas, '@Model.City');
             }
-            var map = new google.maps.Map(mapCanvas, mapOptions);
+            else {
+
+                var mapCanvas = document.getElementById('map');
+
+                var mapOptions = {
+                    center: new google.maps.LatLng(lat, lon),
+                    zoom: 5
+                }
+                var map = new google.maps.Map(mapCanvas, mapOptions);
+            }
+
+        }
+
+        function geocodeAddress(geocoder, resultsMap, address) {
+            geocoder.geocode({ 'address': address }, function (results, status) {
+                if (status === 'OK') {
+                    resultsMap.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: resultsMap,
+                        position: results[0].geometry.location
+                    });
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
         }
     </script>
 
