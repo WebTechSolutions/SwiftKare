@@ -1,0 +1,70 @@
+﻿@model IEnumerable<DataAccess.SP_GetPatientConsultations_Result>
+
+   @if (Model == null || Model.Count() == 0)
+   {
+    <div class="well">
+        There is no consultation.
+    </div>
+   }
+   else
+   {
+
+    <table id="datatable-responsive" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <tr class="headings">
+                <th class="column-title">Doctor's Name </th>
+                <th class="column-title">Date & Time </th>
+                <th class="column-title">Rating</th>
+                <th class="column-title">ROV </th>
+                <th class="column-title">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model != null)
+            {
+                var j = 1;
+                foreach (var item in Model)
+                {
+                    <tr class="even pointer">
+                        <td>@item.DoctorName</td>
+                        <td>@item.appDate @item.appTime</td>
+                        <td>
+                            @if (item.reviewStar == 0)
+                            {
+
+                                <a href="#" data-toggle="modal" class="thumbnail-col-inner" data-id="@item.consultID" id="@item.consultID" data-target="#myModal1" onclick=$("#pvappid").val(@item.consultID);>Write Review</a>
+
+                            }
+                            else
+                            {
+                               for (var i = 0; i < item.reviewStar; i++)
+                                {
+                                    <a href='javascript:void(0);'><span class='fa fa-star'></span></a>
+                                }
+                                for (var i = 0; i < 5-item.reviewStar; i++)
+                                {
+                                    <a href='javascript:void(0);'><span class='fa fa-star-o'></span></a>
+                                }
+                            }
+                        </td>
+                        <td>@item.rov</td>
+
+                        <td>
+                            <button data-toggle="modal" data-id="@item.consultID" id="@item.consultID" data-target="#myModal4"
+                                    class="btn btn-primary btn-sm m-b-0 " type="button" onclick=showConsult(@item.consultID);>
+                                View
+                            </button>
+                        </td>
+                    </tr>
+                    j = j + 1;
+                }
+            }
+
+
+
+        </tbody>
+    </table>
+
+   }
+

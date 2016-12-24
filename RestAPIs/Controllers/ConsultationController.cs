@@ -28,17 +28,66 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                if (consultID == 0)
-                {
-                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Invalid consultation ID" });
-                    return response;
-                }
-                else
-                {
-                    var result = db.SP_GetConsultationDetails(consultID);
+                    //var result = db.SP_GetConsultationDetails(consultID).ToList();
+                    var result = (from cn in db.Consultations
+                                  where cn.consultID == consultID && cn.active == true
+                                  select new
+                                  {
+                                      consultID = cn.consultID,
+                                      subjective = cn.subjective,
+                                      objective = cn.objective,
+                                      assessment = cn.assessment,
+                                      plans = cn.plans,
+                                      rosItems = (from ros in db.ConsultationROS
+                                                  where ros.consultationID == cn.consultID && ros.active == true
+                                                  select new { systemItemName = ros.systemItemName }).ToList(),
+                                      AppointmentVM = (from app in db.Appointments
+                                                     where app.appID == cn.appID && app.active == true
+                                                     select new
+                                                     {
+                                                         appID = app.appID,
+                                                         rov = app.rov,
+                                                         cheifcomplaints = app.chiefComplaints,
+                                                         payment = app.paymentAmt,
+                                                         appDate = app.appDate,
+                                                         appTime = app.appTime
+                                                     }).FirstOrDefault(),
+                                      PatientVM = (from r in db.Patients
+                                                 where r.patientID == cn.patientID && r.active == true
+                                                 select new
+                                                 {
+                                                     patientID = r.patientID,
+                                                     PatPicture = r.picture,
+                                                     patientName = r.firstName + " " + r.lastName,
+                                                     patientGender = r.gender,
+                                                     pharmacy = r.pharmacy,
+                                                     dob = r.dob,
+                                                     languages = (from l in db.PatientLanguages
+                                                                  where l.patientID == r.patientID && l.active == true
+                                                                  select new { languageName = l.languageName }).ToList()
+                                                 }).FirstOrDefault(),
+                                      DoctorVM = (from doc in db.Doctors
+                                                where doc.doctorID == cn.doctorID && doc.active == true
+                                                select new
+                                                {
+                                                    doctorID = doc.doctorID,
+                                                    docPicture = doc.picture,
+                                                    doctorName = doc.firstName + " " + doc.lastName,
+                                                    doctorGender = doc.gender,
+                                                    dob = doc.dob,
+                                                    city = doc.city,
+                                                    state = doc.state,
+                                                    languages = (from l in db.DoctorLanguages
+                                                                 where l.doctorID == doc.doctorID && l.active == true
+                                                                 select new { languageName = l.languageName }).ToList(),
+                                                    specialities = (from s in db.DoctorSpecialities
+                                                                    where s.doctorID == doc.doctorID && s.active == true
+                                                                    select new { specialityName = s.specialityName }).ToList()
+                                                }).FirstOrDefault()
+                                  }).FirstOrDefault();
                     response = Request.CreateResponse(HttpStatusCode.OK, result);
                     return response;
-                }
+              
             }
             catch (Exception ex)
             {
@@ -137,7 +186,7 @@ namespace RestAPIs.Controllers
                 else
                 {
 
-                    result.mb = model.patientID.ToString();
+                    result.mb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault();
                     result.md = System.DateTime.Now;
                     result.review = model.reviewText;
                     result.reviewStar = model.star;
@@ -146,12 +195,12 @@ namespace RestAPIs.Controllers
 
                 }
 
-                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = model.consultID, message = "" });
+                response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.consultID, message = "" });
                 return response;
             }
             catch (Exception ex)
             {
-                return ThrowError(ex, "AddConsultReview in AppointmentController");
+                return ThrowError(ex, "AddConsultReview in ConsultationController");
             }
 
 
@@ -273,13 +322,13 @@ namespace RestAPIs.Controllers
                     return response;
                 }
                
-                var email = (from d in db.Doctors
-                                where d.doctorID == model.doctorID && d.active == true
-                                select d.email).FirstOrDefault();
+                //var email = (from d in db.Doctors
+                //                where d.doctorID == model.doctorID && d.active == true
+                //                select d.email).FirstOrDefault();
                 Consultation cons = new Consultation();
                 cons.active = true;
                 cons.cd = System.DateTime.Now;
-                cons.cb = email;
+                cons.cb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault();
                 cons.doctorID = model.doctorID;
                 cons.patientID = model.patientID;
                 cons.seesionID = model.sessionID;

@@ -1,0 +1,251 @@
+﻿@using System.Globalization
+
+
+@model DataAccess.CustomModels.ConsultationModel
+@{
+    Layout = null;
+}
+@if (Model != null)
+{
+    var patienName = "";
+    var age = "N.A";
+    var gender = "N.A";
+    var languages = "";
+    var specialities = "";
+
+    var appDate = "";
+    var appTime = "";
+    var rov = "N.A";
+    var chiefComplaints = "N.A";
+    var amount = "N.A";
+    var pharmacy = "N.A";
+    var cellPhone = "N.A";
+    var formattedDate = "";
+    var formattedTime = "";
+    var subjective = "N.A";
+    var objective = "N.A";
+    var assessment = "N.A";
+    var plans = "N.A";
+
+    if (Model.subjective!=null) { subjective = Model.subjective; }
+    if (Model.objective != null) { objective = Model.objective; }
+    if (Model.assessment != null) { assessment = Model.assessment; }
+    if (Model.plans != null) { plans = Model.plans; }
+
+
+
+    appDate = Model.AppointmentVM.appDate;
+    appTime = Model.AppointmentVM.appTime;
+
+
+    patienName = Model.PatientVM.patientName;
+
+    if (Model.PatientVM.pcellPhone != null)
+    {
+        cellPhone = Model.PatientVM.pcellPhone;
+    }
+    if (Model.PatientVM.patientDOB != null) { age = Model.PatientVM.GetAge(); }
+    if (Model.PatientVM.patientGender!= null)
+    {
+        gender = Model.PatientVM.patientGender;
+    }
+    if (Model.PatientVM.pcellPhone != null)
+    {
+        cellPhone = Model.PatientVM.pcellPhone;
+    }
+
+    if (Model.AppointmentVM.rov != null) { rov = Model.AppointmentVM.rov; }
+    if (Model.AppointmentVM.chiefComplaints != null)
+    {
+        chiefComplaints = Model.AppointmentVM.chiefComplaints;
+    }
+    //if (Model.paymentAmt != null)
+    //{
+    amount = Model.AppointmentVM.paymentAmt.ToString();
+    // }
+    pharmacy = Model.PatientVM.pharmacy;
+
+    if (Model.PatientVM.patlanguages != null)
+    {
+        foreach (var item in Model.PatientVM.patlanguages)
+        {
+            languages = languages + item.languageName + ",";
+
+        }
+    }
+
+    if (languages == "") { languages = "N.A"; }
+
+    if (appDate != "")
+    {
+        DateTime date = DateTime.Parse(appDate);
+        //DateTime temp=DateTime.ParseExact(date.Date.ToString(), "MM/dd/yyyy", null);
+        formattedDate = string.Format("{0:dd MMM, yyyy}", date);
+
+    }
+    if (appTime != "")
+    {
+        TimeSpan apptimings = TimeSpan.Parse(appTime);
+        var dateTime = new DateTime(apptimings.Ticks); // Date part is 01-01-0001
+        formattedTime = dateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+    }
+
+
+    <div class="modal-header text-center" style="background: #E4F1FE; border-bottom-color: #c3bebe;">
+        <h2 style="margin: 0; color: #337ab7"><b>Consultation Details</b></h2>
+    </div><!--/.modal header-->
+
+
+    <div class="modal-body text-left">
+        <div class="user-detail">
+            <div class="img-1">
+                <img src="@(string.IsNullOrEmpty(Model.PatientVM.ProfilePhotoBase64) ? WebApp.Helper.SessionHandler.ProfilePhoto : Model.PatientVM.ProfilePhotoBase64)" alt="" class="m-b-10 img-responsive">
+            </div>
+            <div class="name-sec">
+                <h2>@patienName</h2>
+                <p style="font-size:10px">
+                    @age<br>
+                    Gender: @gender<br>
+                    Languages: @languages<br>
+                    Specialities: @specialities<br>
+                    Cell Phone:@cellPhone
+                </p>
+            </div>
+        </div>
+
+        <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 36px -15px -30px; padding: 10px 21px 0; ">
+            <p style="color: #375781;"><span style="width: 150px; float: left;">Pharmacy</span><b>@pharmacy</b></p>
+        </div>
+        <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 36px -15px 20px; padding: 10px 21px 0; ">
+            <p style="color: #375781;"><span style="width: 150px; float: left;">Appointment Date/Time</span><b>@formattedDate-@formattedTime</b></p>
+        </div>
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Reason of Visit:</b><br> @rov</p>
+        <p id="p_chiefComplaints" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Chief Complaint:</b><br> @chiefComplaints</p>
+        <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Consult Charges:</b><br> @amount</p>
+
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Subjective:</b><br> @subjective</p>
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Objective:</b><br> @objective</p>
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Assessment:</b><br> @assessment</p>
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Plans:</b><br> @plans</p>
+        <div class="table-responsive">
+            <table class="table" style="margin-bottom: 5px;">
+                <tbody>
+                    <tr>
+                        <td style="padding: 7px">
+                            <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
+                                <b>Review of Systems:</b><br>
+                                @if (Model.rosItems != null || Model.rosItems.Count > 0)
+                                {
+
+                                    foreach (var item in Model.rosItems)
+                                    {
+
+
+                                        <div class="checkbox" style="display: inline-block; width: 150px;">
+                                            <div class="icheckbox_flat-green checked" style="position: relative;">
+                                                <input type="checkbox" class="flat" checked="checked" disabled style="position: absolute;
+                opacity: 0;"><ins class="iCheck-helper" style="position: absolute;top: 0%;left: 0%;display: block;width: 100%;height: 100%;margin: 0px;padding: 0px;background: rgb(255, 255, 255);border: 0px;opacity: 0;"></ins>
+                                            </div>&nbsp; @item.systemItemName
+
+                                        </div>
+
+
+                                    }
+
+                                }
+                        </p></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+                            <div class="m-t-10" style="margin-top:-26px">
+                                <button onclick=$("#myModal4").hide('hide'); id="consultationDetail" style="width: 100%; border-radius: 0; color: #fff; padding: 15px 5px; font-size: 20px;" type="button" class="btn btn-primary">OK</button>
+
+                            </div>
+
+            </div><!--/.modal body-->
+            }
+
+            <!-- Datatables -->
+            <script>
+                $(document).ready(function () {
+                    var handleDataTableButtons = function () {
+                        if ($("#datatable-buttons").length) {
+                            $("#datatable-buttons").DataTable({
+                                dom: "Bfrtip",
+                                buttons: [
+                                  {
+                                      extend: "copy",
+                                      className: "btn-sm"
+                                  },
+                                  {
+                                      extend: "csv",
+                                      className: "btn-sm"
+                                  },
+                                  {
+                                      extend: "excel",
+                                      className: "btn-sm"
+                                  },
+                                  {
+                                      extend: "pdfHtml5",
+                                      className: "btn-sm"
+                                  },
+                                  {
+                                      extend: "print",
+                                      className: "btn-sm"
+                                  },
+                                ],
+                                responsive: true
+                            });
+                        }
+                    };
+
+                    TableManageButtons = function () {
+                        "use strict";
+                        return {
+                            init: function () {
+                                handleDataTableButtons();
+                            }
+                        };
+                    }();
+
+                    $('#rescheduledatatable').dataTable();
+
+                    $('#datatable-keytable').DataTable({
+                        keys: true
+                    });
+
+                    $('#datatable-responsive').DataTable();
+
+                    $('#datatable-scroller').DataTable({
+                        ajax: "js/datatables/json/scroller-demo.json",
+                        deferRender: true,
+                        scrollY: 380,
+                        scrollCollapse: true,
+                        scroller: true
+                    });
+
+                    $('#datatable-fixed-header').DataTable({
+                        fixedHeader: true
+                    });
+
+                    var $datatable = $('#datatable-checkbox');
+
+                    $datatable.dataTable({
+                        'order': [[1, 'asc']],
+                        'columnDefs': [
+                          { orderable: false, targets: [0] }
+                        ]
+                    });
+                    $datatable.on('draw.dt', function () {
+                        $('input').iCheck({
+                            checkboxClass: 'icheckbox_flat-green'
+                        });
+                    });
+
+                    TableManageButtons.init();
+                });
+            </script>
+            <!-- /Datatables -->

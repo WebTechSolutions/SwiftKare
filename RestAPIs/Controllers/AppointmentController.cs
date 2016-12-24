@@ -41,10 +41,56 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                    var result = db.SP_GetAppDetail(appID).ToList();
-                    response = Request.CreateResponse(HttpStatusCode.OK, result);
-                    return response;
-              
+                //var result = db.SP_GetAppDetail(appID).ToList();
+                var result = (from cn in db.Appointments
+                              where cn.appID == appID && cn.active == true
+                              select new
+                              {
+                                  appID = cn.appID,
+                                  rov = cn.rov,
+                                  cheifcomplaints = cn.chiefComplaints,
+                                  paymentAmt = cn.paymentAmt,
+                                  appDate = cn.appDate,
+                                  appTime = cn.appTime,
+                                  PatientVM = (from r in db.Patients
+                                               where r.patientID == cn.patientID && r.active == true
+                                               select new
+                                               {
+                                                   patPicture = r.picture,
+                                                   patientName = r.firstName + " " + r.lastName,
+                                                   patientGender = r.gender,
+                                                   pharmacy = r.pharmacy,
+                                                   patientDOB = r.dob,
+                                                   pcellPhone = r.cellPhone,
+                                                   city = r.city,
+                                                   state = r.state,
+                                                   patlanguages = (from l in db.PatientLanguages
+                                                                   where l.patientID == r.patientID && l.active == true
+                                                                   select new { languageName = l.languageName }).ToList()
+                                               }).FirstOrDefault(),
+                                  DoctorVM = (from doc in db.Doctors
+                                              where doc.doctorID == cn.doctorID && doc.active == true
+                                              select new
+                                              {
+                                                  docPicture = doc.picture,
+                                                  doctorName = doc.firstName + " " + doc.lastName,
+                                                  doctorGender = doc.gender,
+                                                  doctordob = doc.dob,
+                                                  dcellPhone = doc.cellPhone,
+                                                  city = doc.city,
+                                                  state = doc.state,
+                                                  languages = (from l in db.DoctorLanguages
+                                                               where l.doctorID == cn.doctorID && l.active == true
+                                                               select new { languageName = l.languageName }).ToList(),
+                                                  specialities = (from s in db.DoctorSpecialities
+                                                                  where s.doctorID == cn.doctorID && s.active == true
+                                                                  select new { specialityName = s.specialityName }).ToList()
+
+                                              }).FirstOrDefault()
+                              }).FirstOrDefault();
+                response = Request.CreateResponse(HttpStatusCode.OK, result);
+                return response;
+
             }
             catch (Exception ex)
             {

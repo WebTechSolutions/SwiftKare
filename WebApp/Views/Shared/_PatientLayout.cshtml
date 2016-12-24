@@ -113,21 +113,14 @@
                             <ul class="nav side-menu" style="margin-top: 10px;">
                                 <li class="scheduler">
                                     <a href="@Url.Action("Index","Appointment")"><img src="~/Content/images/appointments.png" alt=""> &nbsp <span class="menu-txt"> Appointment</span></a>
-                                    @*<ul class="nav child_menu">
-                <li><a href="appointments.html">Rescheduled Appointments</a></li>
-                <li><a href="appointments.html">Pending Appointments</a></li>
-                <li><a href="appointments.html">Cancelled Appointments</a></li>
-                <li><a href="appointments.html">Completed Appointments</a></li>
-            </ul>*@
+                                  
                                 </li>
                                 <li class="doctor">
                                     <a href="@Url.Action("SeeDoctor", "SeeDoctor")"><img src="~/Content/images/icon_doc_search.png" alt="">  &nbsp <span class="menu-txt">See a doctor</span> </a>
                                 </li>
                                 <li class="appointment">
-                                    <a href="#"><img src="~/Content/images/history.png" alt="">  &nbsp <span class="menu-txt">Consult History</span></a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="p_call_history.html"> Patient Call History</a></li>
-                                    </ul>
+                                    <a href="@Url.Action("Index","Consultation")"><img src="~/Content/images/history.png" alt=""> &nbsp <span class="menu-txt"> Consult History</span></a>
+                                    
                                 </li>
                                 <li class="patient">
                                     <a href="@Url.Action("Index","MyHealth")"><img src="~/Content/images/my-health.png" alt=""> &nbsp <span class="menu-txt">My Health</span> </a>

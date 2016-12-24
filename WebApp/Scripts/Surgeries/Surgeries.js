@@ -79,11 +79,17 @@ function bindingSurgeriesTable(PSurgeries, GSurgeries) {
     }
     var tableHtml = "<tr><td>";
     for (var i = 0; i < PSurgeries.length; i++) {
-        tableHtml=tableHtml+"<div class='checkbox' style='display: inline-block; width: 150px;'>"+
+        
+        tableHtml = tableHtml + "<div class='checkbox' style='display: inline-block; width: 150px;'>" +
                                                                 "<label style='word-wrap:break-word'>" +
                                                                 "<input onclick='deleteObjSurgery(" + PSurgeries[i].surgeryID + ")' style='margin-left:-15px' id='" + PSurgeries[i].surgeryID + "' type='checkbox' class='icheck' checked='checked'>&nbsp" + PSurgeries[i].bodyPart +
                                                                 "</label></div>";
-                                                           
+//        tableHtml = tableHtml + "<div class='icheckbox_flat-green checked' style='position: relative;'>" +
+//            "<input id='" + PSurgeries[i].surgeryID + "' onclick='deleteObjSurgery(" + PSurgeries[i].surgeryID + ")' type='checkbox' class='flat' checked='checked' style='position: absolute;" +
+//"opacity: 0;'><ins class='iCheck-helper' style='position: absolute;top: 0%;left: 0%;display: block;width: 100%;height: 100%;margin: 0px;padding: 0px;background: rgb(255, 255, 255);border: 0px;opacity: 0;'></ins>" +
+//        "</div>&nbsp;" + PSurgeries[i].bodyPart;
+
+                                                                                      
        
     }
     for (var i = 0; i < GSurgeries.length; i++) {
@@ -91,6 +97,11 @@ function bindingSurgeriesTable(PSurgeries, GSurgeries) {
         tableHtml = tableHtml + "<div class='checkbox' style='display: inline-block; width: 150px;'><label style='word-wrap:break-word'>" +
                                 "<input  onclick='addupdatepredefinedSurgery(this,\"" + existingSurgery + "\")' style='margin-left:-15px' id='" + GSurgeries[i].surgeryName + "' type='checkbox' class='icheck'>&nbsp " + GSurgeries[i].surgeryName +
                                 "</label></div>";
+
+//        tableHtml = tableHtml + "<div class='icheckbox_flat-green' style='position: relative;'>" +
+//           "<input id='" + GSurgeries[i].surgeryName + "' onclick='addupdatepredefinedSurgery(this,\"" + existingSurgery + "\")' type='checkbox' class='flat' style='position: absolute;" +
+//"opacity: 0;'><ins class='iCheck-helper' style='position: absolute;top: 0%;left: 0%;display: block;width: 100%;height: 100%;margin: 0px;padding: 0px;background: rgb(255, 255, 255);border: 0px;opacity: 0;'></ins>" +
+//       "</div>&nbsp;" + GSurgeries[i].surgeryName;
                                 
     }
 

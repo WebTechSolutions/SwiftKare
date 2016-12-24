@@ -45,14 +45,14 @@ namespace WebApp.Repositories.DoctorRepositories
             }
 
         }
-        public List<SP_GetAppDetail_Result> GetAppDetail(long appID)
+        public GetAppDetail GetAppDetail(long appID)
         {
 
             try
             {
 
                 var response = ApiConsumerHelper.GetResponseString("api/GetAppDetail?appID=" + appID);
-                var result = JsonConvert.DeserializeObject<List<SP_GetAppDetail_Result>>(response);
+                var result = JsonConvert.DeserializeObject<GetAppDetail>(response);
                 return result;
             }
             catch (HttpResponseException ex)

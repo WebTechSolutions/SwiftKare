@@ -1,54 +1,99 @@
-﻿@model IEnumerable<DataAccess.SP_GetConsultationDetails_Result>
+﻿@using System.Globalization
+@model DataAccess.CustomModels.ConsultationModel
 @{
     Layout = null;
 }
 @if (Model != null)
 {
     var doctorName = "";
-    var age = "";
-    var gender = "";
+    var age = "N.A";
+    var gender = "N.A";
     var languages = "";
     var specialities = "";
+
     var appDate = "";
-    var rov = "";
-    var chiefComplaints = "";
-   var pharmacy = "";
+    var appTime = "";
+    var rov = "N.A";
+    var chiefComplaints = "N.A";
+    var amount = "N.A";
+    var pharmacy = "N.A";
+    var cellPhone = "N.A";
+    var formattedDate = "";
+    var formattedTime = "";
     var subjective = "";
-    var objective = "";
-    var plans = "";
     var assessment = "";
+    var plans = "";
 
+    
+        appDate = Model.AppointmentVM.appDate;
+        appTime = Model.AppointmentVM.appTime;
+   
 
-    foreach (var item in Model)
+    doctorName = Model.DoctorVM.doctorName;
+
+    if (Model.DoctorVM.dcellPhone != null)
     {
-        doctorName = item.DoctorName;
-        age = item.DoctorAge.ToString();
-        gender = item.DoctorGender;
-        appDate = item.appDate;
-        rov = item.rov;
-        chiefComplaints = item.chiefComplaints;
-        pharmacy = item.pharmacy;
-        subjective = item.pharmacy;
-        objective = item.pharmacy;
-        plans = item.pharmacy;
-        assessment = item.pharmacy;
-
-        if (item.DoctorLanguages != "N.A")
-        {
-            languages = languages + item.DoctorLanguages + ",";
-        }
-
-        if (item.DoctorSpeciality != "N.A")
-        {
-            specialities = specialities + item.DoctorSpeciality + ",";
-        }
-
-        //if (languages != "N.A") { languages = languages.Remove(languages.Length - 1, 1); }
-
-        //if (specialities != "N.A") { specialities = specialities.Remove(specialities.Length - 1, 1); }
-
+        cellPhone = Model.DoctorVM.dcellPhone;
+    }
+    if (Model.DoctorVM.doctordob != null) { age = Model.DoctorVM.GetAge(); }
+    if (Model.DoctorVM.doctorGender != null)
+    {
+        gender = Model.DoctorVM.doctorGender;
+    }
+    if (Model.DoctorVM.dcellPhone != null)
+    {
+        cellPhone = Model.DoctorVM.dcellPhone;
     }
 
+    if (Model.AppointmentVM.rov != null) { rov = Model.AppointmentVM.rov; }
+    if (Model.AppointmentVM.chiefComplaints != null)
+    {
+        chiefComplaints = Model.AppointmentVM.chiefComplaints;
+    }
+    if (Model.AppointmentVM.paymentAmt != null)
+    {
+    amount = Model.AppointmentVM.paymentAmt.ToString();
+    }
+    pharmacy = Model.PatientVM.pharmacy;
+
+    if (Model.DoctorVM.languages != null)
+    {
+        foreach (var item in Model.DoctorVM.languages)
+        {
+            languages = languages + item.languageName + ",";
+
+        }
+    }
+
+    if (languages == "") { languages = "N.A"; }
+
+    if (Model.DoctorVM.specialities != null)
+    {
+        foreach (var item in Model.DoctorVM.specialities)
+        {
+            specialities = specialities + item.specialityName + ",";
+
+        }
+    }
+
+
+if (specialities == "") { specialities = "N.A"; }
+
+
+
+if (appDate != "")
+{
+    DateTime date = DateTime.Parse(appDate);
+    //DateTime temp=DateTime.ParseExact(date.Date.ToString(), "MM/dd/yyyy", null);
+    formattedDate = string.Format("{0:dd MMM, yyyy}", date);
+
+}
+if (appTime != "")
+{
+    TimeSpan apptimings = TimeSpan.Parse(appTime);
+    var dateTime = new DateTime(apptimings.Ticks); // Date part is 01-01-0001
+    formattedTime = dateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+}
 
 
     <div class="modal-header text-center" style="background: #E4F1FE; border-bottom-color: #c3bebe;">
@@ -59,35 +104,33 @@
     <div class="modal-body text-left">
         <div class="user-detail">
             <div class="img-1">
-                <img src="../Content/images/img.jpg" alt="" class="m-b-10 img-responsive">
+                <img src="@(string.IsNullOrEmpty(Model.DoctorVM.ProfilePhotoBase64) ? WebApp.Helper.SessionHandler.ProfilePhoto : Model.DoctorVM.ProfilePhotoBase64)" alt="" class="m-b-10 img-responsive">
             </div>
             <div class="name-sec">
-                <h2>Dr. @doctorName</h2>
-                <p><b>Age:</b> @age Years
-                <p><b>Gender:</b> @gender</p>
-                <p><b>Languages:</b> @languages</p>
-                <p><b>Specialities:</b> @specialities</p>
+                <h2>Dr.@doctorName</h2>
+                <p style="font-size:10px">
+                    @age<br>@*<span>Gender: @gender</span>*@
+                    Gender: @gender<br>
+                    Languages: @languages<br>
+                    Specialities: @specialities<br>
+                    Cell Phone:@cellPhone
+                </p>
             </div>
         </div>
 
-        <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 0 -15px 20px; padding: 10px 21px 0; float: left;">
-            <p style="color: #375781;"><span style="width: 150px; float: left;">Appointment Date/Time</span><b>@appDate</b></p>
+        <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 36px -15px 20px; padding: 10px 21px 0; ">
+            <p style="color: #375781;"><span style="width: 150px; float: left;">Appointment Date/Time</span><b>@formattedDate-@formattedTime</b></p>
         </div>
-        <p id="p_rov" style="color: #375781;"><b>Reason of Visit:</b> @rov</p>
-        <p id="p_chiefComplaints" style="color: #375781;"><b>Chief Complaints:</b> @chiefComplaints</p>
-        <p id="p_pharmacy" style="color: #375781;"><b>Pharmacy:</b> @pharmacy</p>
-       
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Reason of Visit:</b><br> @rov</p>
+        <p id="p_chiefComplaints" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Chief Complaint:</b><br> @chiefComplaints</p>
+        <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Consult Charges:</b><br> @amount</p>
+          
+        <div class="m-t-10" style="margin-top:-26px">
+            <button onclick=$('#myModal4').modal('toggle');  id="consultationDetail" style="width: 100%; border-radius: 0; color: #fff; padding: 15px 5px; font-size: 20px;" type="button" class="btn btn-primary">OK</button>
+            @*<li><a href="#" class="reschedule" data-id="@item.appDate" data-toggle="modal" data-target="#myModal1" data-todo='{"docid":"@item.doctorID","doctorName":"@item.DoctorName","appID":"@item.appID","appDate":"@item.appDate"}' onclick=showDoctorTimings(@item.doctorID,@item.appID) id="@item.doctorID">Reschedule App</a></li>*@
+            
 
-        <div class="m-t-10">
-            <button style="width: 25%; border-radius: 0; padding: 15px 5px; font-size: 15px;" type="button" class="btn btn-primary">OK</button>
-           
         </div>
+
     </div><!--/.modal body-->
 }
-<script>
-    //function sendVariables(doctorid, editappid) {
-    //    alert(editappid+' '+ editappid);
-    //}
-</script>
-
-

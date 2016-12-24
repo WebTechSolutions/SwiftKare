@@ -15,7 +15,7 @@ namespace WebApp.Controllers
     public class AppointmentController : Controller
     {
         AppointmentRepository oAppointmentRepository;
-        long appID = 0;
+       
         public AppointmentController()
         {
             oAppointmentRepository = new AppointmentRepository();
