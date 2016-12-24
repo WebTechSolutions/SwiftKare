@@ -50,14 +50,14 @@ namespace WebApp.Repositories.DoctorRepositories
             }
 
         }
-        public List<SP_GetDoctorInfoforAppointment_Result> GetDoctorInfo(long doctorID)
+        public GetDoctorINFOVM GetDoctorInfo(long doctorID)
         {
 
             try
             {
                 //var strContent = JsonConvert.SerializeObject(searchModel);
                 var response = ApiConsumerHelper.GetResponseString("api/getDoctorInfo/?doctorID=" + doctorID);
-                var result = JsonConvert.DeserializeObject<List<SP_GetDoctorInfoforAppointment_Result>>(response);
+                var result = JsonConvert.DeserializeObject<GetDoctorINFOVM>(response);
                 return result;
             }
             catch (HttpResponseException ex)

@@ -13,16 +13,18 @@ namespace DataAccess
     
     public partial class SP_GetConsultationDetails_Result
     {
+        public long doctorID { get; set; }
+        public long patientID { get; set; }
         public string DoctorName { get; set; }
-        public string gender { get; set; }
-        public string specialityName { get; set; }
-        public Nullable<int> DoctorAge { get; set; }
+        public string DoctorGender { get; set; }
+        public int DoctorAge { get; set; }
         public byte[] picture { get; set; }
         public string PatientName { get; set; }
         public string pharmacy { get; set; }
+        public string PatientGender { get; set; }
         public byte[] PatientPicture { get; set; }
         public Nullable<int> PatientAge { get; set; }
-        public Nullable<System.DateTime> appDate { get; set; }
+        public string appDate { get; set; }
         public string chiefComplaints { get; set; }
         public string rov { get; set; }
         public string subjective { get; set; }

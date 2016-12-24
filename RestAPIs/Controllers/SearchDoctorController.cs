@@ -110,7 +110,28 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                var doctor = db.SP_GetDoctorInfoforAppointment(doctorID).ToList();
+                //var doctor = db.SP_GetDoctorInfoforAppointment(doctorID).ToList();
+                var doctor = (from doc in db.Doctors
+                              where doc.doctorID == doctorID && doc.active == true
+                              select new
+                              {
+                                  docPicture = doc.picture,
+                                  doctorName = doc.firstName + " " + doc.lastName,
+                                  doctorGender = doc.gender,
+                                  doctordob = doc.dob,
+                                  dcellPhone = doc.cellPhone,
+                                  city = doc.city,
+                                  state = doc.state,
+                                  email=doc.email,
+                                  consultCharges=doc.consultCharges,
+                                  languages = (from l in db.DoctorLanguages
+                                               where l.doctorID == doctorID && l.active == true
+                                               select new { languageName = l.languageName }).ToList(),
+                                  specialities = (from s in db.DoctorSpecialities
+                                                  where s.doctorID == doctorID && s.active == true
+                                                  select new { specialityName = s.specialityName }).ToList()
+
+                              }).FirstOrDefault();
                 response = Request.CreateResponse(HttpStatusCode.OK, doctor);
                 return response;
             }

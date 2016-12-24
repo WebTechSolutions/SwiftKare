@@ -472,7 +472,7 @@ namespace WebApp.Controllers
             try
             {
                 SeeDoctorRepository objRepo = new SeeDoctorRepository();
-                List<SP_GetDoctorInfoforAppointment_Result> model = objRepo.GetDoctorInfo(doctorID);
+                GetDoctorINFOVM model = objRepo.GetDoctorInfo(doctorID);
 
                 return Json(new { Success = true, Object = model });
 

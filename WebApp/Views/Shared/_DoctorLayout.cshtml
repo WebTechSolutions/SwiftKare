@@ -19,7 +19,7 @@
     <link href="~/Content/css/style.css" rel="stylesheet">
     <link href="@Url.Content("~/Content/css/select2.min.css")" rel="stylesheet" />
     <link href="~/Content/css/pnotify.css" rel="stylesheet">
-
+    <link href="@Url.Content("/Content/css/green.css")" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://rawgit.com/FezVrasta/bootstrap-material-design/master/dist/js/material.min.js"></script>
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="~/Scripts/custom.min.js"></script>
     <script type="text/javascript" src="~/Scripts/pnotify.js"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.cropit.js")"></script>
-
+    <script src="@Url.Content("~/Scripts/icheck.min.js")"></script>
     <script src="@Url.Content("~/Scripts/select2.min.js")"></script>
     <script src="@Url.Content("~/Scripts/daterangepiker/daterangepicker.js")"></script>
 
@@ -131,10 +131,10 @@
                                     <a href="@Url.Action("DoctorTimings", "Doctor")"><img src="~/Content/images/icon_doc_search.png" alt="">  &nbsp <span class="menu-txt">My Timings</span> </a>
                                 </li>
                                 <li class="appointment">
-                                    <a href="#"><img src="~/Content/images/icon_appointment.png" alt="">  &nbsp <span class="menu-txt">Consult History</span></a>
-                                    <ul class="nav child_menu">
+                                    <a href="@Url.Action("Index","DoctorConsultation")"><img src="~/Content/images/icon_appointment.png" alt="">  &nbsp <span class="menu-txt">Consult History</span></a>
+                                    @*<ul class="nav child_menu">
                                         <li><a href="p_call_history.html"> Patient Call History</a></li>
-                                    </ul>
+                                    </ul>*@
                                 </li>
 
                                 <li class="message">

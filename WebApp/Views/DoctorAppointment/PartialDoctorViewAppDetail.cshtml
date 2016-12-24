@@ -1,4 +1,6 @@
-﻿@model IEnumerable<DataAccess.SP_GetAppDetail_Result>
+﻿@using System.Globalization
+
+@model DataAccess.CustomModels.GetAppDetail
 @{
     Layout = null;
 }
@@ -6,36 +8,62 @@
 @if (Model != null)
 {
     var patientName = "";
-    var age = "";
-    var gender = "";
-    var cellPhone = "";
+    var age = "N.A";
+    var gender = "N.A";
+    var cellPhone = "N.A";
     var languages = "";
     var appDate = "";
     var appTime = "";
-    var rov = "";
-    var chiefComplaints = "";
+    var rov = "N.A";
+    var chiefComplaints = "N.A";
     var amount = "";
     var pharmacy = "";
     var formattedDate = "";
-    foreach (var item in Model)
+    var formattedTime = "";
+
+
+    patientName = Model.PatientVM.patientName;
+    if (Model.PatientVM.GetAge() != null)
+    { age = Model.PatientVM.GetAge(); }
+    if (Model.PatientVM.patientGender != null)
+    { gender = Model.PatientVM.patientGender; }
+    if (Model.PatientVM.pcellPhone != null)
+    { cellPhone = Model.PatientVM.pcellPhone; }
+    appDate = Model.appDate.ToString();
+    appTime = Model.appTime.ToString();
+    if (Model.rov != null)
+    { rov = Model.rov; }
+    if (Model.chiefComplaints != null)
+    { chiefComplaints = Model.chiefComplaints; }
+    amount = Model.paymentAmt.ToString();
+    if (Model.PatientVM.pharmacy != null)
+    { pharmacy = Model.PatientVM.pharmacy; }
+
+    if (Model.PatientVM.patlanguages != null)
     {
-        patientName = item.PatientName;
-        age = item.PatientAge.ToString();
-        gender = item.PatientGender;
-        cellPhone = item.pcellPhone;
-        languages = item.languages;
-        appDate = item.appDate;
-        appTime = item.appTime;
-        rov = item.rov;
-        chiefComplaints = item.chiefComplaints;
-        amount = item.paymentAmt.ToString();
-        pharmacy = item.pharmacy;
+        foreach (var item in Model.PatientVM.patlanguages)
+        {
+            languages = languages + item.languageName + ",";
+
+        }
     }
+
+    if (languages == "") { languages = "N.A"; }
+
 
     if (appDate != "")
     {
-        DateTime date = DateTime.ParseExact(appDate.ToString(), "dd/MM/yyyy", null);
+        DateTime date = DateTime.Parse(appDate);
+        //DateTime temp=DateTime.ParseExact(date.Date.ToString(), "MM/dd/yyyy", null);
         formattedDate = string.Format("{0:dd MMM, yyyy}", date);
+
+
+    }
+    if (appTime != "")
+    {
+        TimeSpan apptimings = TimeSpan.Parse(appTime);
+        var dateTime = new DateTime(apptimings.Ticks); // Date part is 01-01-0001
+        formattedTime = dateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
     }
 
     <div class="modal-header text-center" style="background: #E4F1FE; border-bottom-color: #c3bebe;">
@@ -45,46 +73,42 @@
     <div class="modal-body text-left">
         <div class="user-detail">
             <div class="img-1">
-                <img src="../Content/images/img.jpg" alt="" class="m-b-10 img-responsive">
+                <img src="@(string.IsNullOrEmpty(Model.PatientVM.ProfilePhotoBase64) ? WebApp.Helper.SessionHandler.ProfilePhoto : Model.PatientVM.ProfilePhotoBase64)" alt="" class="m-b-10 img-responsive">
+
             </div>
             <div class="name-sec">
                 <h2>@patientName</h2>
                 <p style="font-size:10px">
-                    @age Years <br>
+                    @age<br>
                     Gender: @gender<br>
                     Languages: @languages<br>
                     Cell Phone:@cellPhone
                 </p>
             </div>
-            
-        </div>
 
+        </div>
+        <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 36px -15px -30px; padding: 10px 21px 0; ">
+            <p style="color: #375781;"><span style="width: 150px; float: left;">Pharmacy</span><b>@pharmacy</b></p>
+        </div>
         <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 36px -15px 20px; padding: 10px 21px 0; ">
-            <p style="color: #375781;"><span style="width: 150px; float: left;">Appointment Date/Time</span><b>@formattedDate-@appTime</b></p>
+            <p style="color: #375781;"><span style="width: 150px; float: left;">Appointment Date/Time</span><b>@formattedDate-@formattedTime</b></p>
         </div>
         <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Reason of Visit:</b><br> @rov</p>
         <p id="p_chiefComplaints" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Chief Complaint:</b><br> @chiefComplaints</p>
-        <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Payment Amount</b><br> @amount</p>
-
-
-        <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 0 -15px -11px; padding: 10px 21px 0; ">
-            <p style="color: #375781;"><span style="width: 150px; float: left;">Pharmacy</span><b>@pharmacy</b></p>
-        </div><br />  
-
-        @*<label style="font-weight: 300;" for="">Please enter the number we should call</label>
-        <input type="text" placeholder="(469)237-3768" style="max-width: 100%;" class="form-control" />*@
-        <div class="m-t-10">
-            <button id="ueditappointment" onclick=usendVariables($("#doctorid").val(),$("#editappid").val(),this) style="width: 100%; border-radius: 0; padding: 15px 5px; font-size: 20px; display:none" type="button" class="btn btn-primary">Reschedule Request</button>
-            <button id="reditappointment" onclick=rsendVariables($("#doctorid").val(),$("#editappid").val(),this) style="width: 100%; border-radius: 0; padding: 15px 5px; font-size: 20px; display:none" type="button" class="btn btn-primary">Cancel Reschedule</button>
-            <input type="text" style="display:none" id="editappid">
-            <input type="text" style="display:none" id="doctorid">
-            @*<button style="width: 100%; border-radius: 0; background: #2AAC39; color: #fff; padding: 15px 5px; font-size: 20px;" class="btn" type="button">ACCEPT</button>
-            <button style="width: 100%; border-radius: 0; background: #DB0029; color: #fff; padding: 15px 5px; font-size: 20px;" class="btn" type="button">DECLINE</button>*@
-        </div>
-    </div><!--/.modal body-->
-
-  
-}
+        <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Consult Charges:</b><br> @amount</p>
+      
+                    @*<label style="font-weight: 300;" for="">Please enter the number we should call</label>
+                        <input type="text" placeholder="(469)237-3768" style="max-width: 100%;" class="form-control" />*@
+                    <div class="m-t-10">
+                        <button id="ueditappointment" onclick=usendVariables($("#doctorid").val(),$("#editappid").val(),this) style="width: 100%; border-radius: 0; padding: 15px 5px; font-size: 20px; display:none" type="button" class="btn btn-primary">Reschedule Request</button>
+                        <button id="reditappointment" onclick=rsendVariables($("#doctorid").val(),$("#editappid").val(),this) style="width: 100%; border-radius: 0; padding: 15px 5px; font-size: 20px; display:none" type="button" class="btn btn-primary">Cancel Reschedule</button>
+                        <input type="text" style="display:none" id="editappid">
+                        <input type="text" style="display:none" id="doctorid">
+                        @*<button style="width: 100%; border-radius: 0; background: #2AAC39; color: #fff; padding: 15px 5px; font-size: 20px;" class="btn" type="button">ACCEPT</button>
+                            <button style="width: 100%; border-radius: 0; background: #DB0029; color: #fff; padding: 15px 5px; font-size: 20px;" class="btn" type="button">DECLINE</button>*@
+                    </div>
+        </div><!--/.modal body-->
+        }
 
 
 
