@@ -21,32 +21,40 @@
     var formattedDate = "";
     var formattedTime = "";
 
+    if(Model.PatientVM!=null)
+    {
+        patientName = Model.PatientVM.patientName;
+        if (Model.PatientVM.GetAge() != null)
+        { age = Model.PatientVM.GetAge(); }
+        if (Model.PatientVM.patientGender != null)
+        { gender = Model.PatientVM.patientGender; }
+        if (Model.PatientVM.pcellPhone != null)
+        { cellPhone = Model.PatientVM.pcellPhone; }
+        if (Model.PatientVM.pharmacy != null)
+        { pharmacy = Model.PatientVM.pharmacy; }
 
-    patientName = Model.PatientVM.patientName;
-    if (Model.PatientVM.GetAge() != null)
-    { age = Model.PatientVM.GetAge(); }
-    if (Model.PatientVM.patientGender != null)
-    { gender = Model.PatientVM.patientGender; }
-    if (Model.PatientVM.pcellPhone != null)
-    { cellPhone = Model.PatientVM.pcellPhone; }
-    appDate = Model.appDate.ToString();
-    appTime = Model.appTime.ToString();
+        if (Model.PatientVM.patlanguages != null)
+        {
+            foreach (var item in Model.PatientVM.patlanguages)
+            {
+                languages = languages + item.languageName + ",";
+
+            }
+        }
+    }
+
+
+
+    if (Model.appDate != null) { appDate = Model.appDate.ToString(); }
+    if (Model.appTime != null)
+    { appTime = Model.appTime.ToString(); }
+
     if (Model.rov != null)
     { rov = Model.rov; }
     if (Model.chiefComplaints != null)
     { chiefComplaints = Model.chiefComplaints; }
-    amount = Model.paymentAmt.ToString();
-    if (Model.PatientVM.pharmacy != null)
-    { pharmacy = Model.PatientVM.pharmacy; }
+    if (Model.paymentAmt != null) { amount = Model.paymentAmt.ToString(); }
 
-    if (Model.PatientVM.patlanguages != null)
-    {
-        foreach (var item in Model.PatientVM.patlanguages)
-        {
-            languages = languages + item.languageName + ",";
-
-        }
-    }
 
     if (languages == "") { languages = "N.A"; }
 

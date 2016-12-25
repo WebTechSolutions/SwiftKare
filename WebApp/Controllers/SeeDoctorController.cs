@@ -24,13 +24,23 @@ namespace WebApp.Controllers
        // GET: SeeDoctor
         public ActionResult SeeDoctor()
         {
+            if (SessionHandler.IsExpired)
+            {
+                return Json(new
+                {
+                    redirectUrl = Url.Action("PatientLogin", "Account"),
+                    isRedirect = true
+                });
+            }
+            else
+            {
+                ViewBag.PatienID = SessionHandler.UserInfo.Id;
 
-            ViewBag.PatienID = SessionHandler.UserInfo.Id;
+                ViewBag.PublisherKey = ConfigurationManager.AppSettings["StripePayPublisherKey"].ToString();
+                ViewBag.Amount = 2000;
 
-            ViewBag.PublisherKey = ConfigurationManager.AppSettings["StripePayPublisherKey"].ToString();
-            ViewBag.Amount = 2000;
-
-            return View();
+                return View();
+            }
         }
 
         [HttpPost]

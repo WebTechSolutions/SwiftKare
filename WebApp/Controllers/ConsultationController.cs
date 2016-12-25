@@ -17,7 +17,7 @@ namespace WebApp.Controllers
         {
             oConsultationRepository = new ConsultationRepository();
 
-        }
+        }//
         // GET: Consultation
         public ActionResult Index()
         {

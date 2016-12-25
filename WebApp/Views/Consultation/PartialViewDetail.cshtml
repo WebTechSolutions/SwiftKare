@@ -24,76 +24,81 @@
     var assessment = "";
     var plans = "";
 
-    
+    if (Model.AppointmentVM != null)
+    {
         appDate = Model.AppointmentVM.appDate;
         appTime = Model.AppointmentVM.appTime;
-   
-
-    doctorName = Model.DoctorVM.doctorName;
-
-    if (Model.DoctorVM.dcellPhone != null)
-    {
-        cellPhone = Model.DoctorVM.dcellPhone;
-    }
-    if (Model.DoctorVM.doctordob != null) { age = Model.DoctorVM.GetAge(); }
-    if (Model.DoctorVM.doctorGender != null)
-    {
-        gender = Model.DoctorVM.doctorGender;
-    }
-    if (Model.DoctorVM.dcellPhone != null)
-    {
-        cellPhone = Model.DoctorVM.dcellPhone;
-    }
-
-    if (Model.AppointmentVM.rov != null) { rov = Model.AppointmentVM.rov; }
-    if (Model.AppointmentVM.chiefComplaints != null)
-    {
-        chiefComplaints = Model.AppointmentVM.chiefComplaints;
-    }
-    if (Model.AppointmentVM.paymentAmt != null)
-    {
-    amount = Model.AppointmentVM.paymentAmt.ToString();
-    }
-    pharmacy = Model.PatientVM.pharmacy;
-
-    if (Model.DoctorVM.languages != null)
-    {
-        foreach (var item in Model.DoctorVM.languages)
+        if (Model.AppointmentVM.rov != null) { rov = Model.AppointmentVM.rov; }
+        if (Model.AppointmentVM.chiefComplaints != null)
         {
-            languages = languages + item.languageName + ",";
-
+            chiefComplaints = Model.AppointmentVM.chiefComplaints;
+        }
+        if (Model.AppointmentVM.paymentAmt != null)
+        {
+            amount = Model.AppointmentVM.paymentAmt.ToString();
         }
     }
+
+
+
+    if (Model.DoctorVM != null)
+    {
+        doctorName = Model.DoctorVM.doctorName;
+        if (Model.DoctorVM.dcellPhone != null)
+        {
+            cellPhone = Model.DoctorVM.dcellPhone;
+        }
+        if (Model.DoctorVM.doctordob != null) { age = Model.DoctorVM.GetAge(); }
+        if (Model.DoctorVM.doctorGender != null)
+        {
+            gender = Model.DoctorVM.doctorGender;
+        }
+        if (Model.DoctorVM.dcellPhone != null)
+        {
+            cellPhone = Model.DoctorVM.dcellPhone;
+        }
+        if (Model.DoctorVM.languages != null)
+        {
+            foreach (var item in Model.DoctorVM.languages)
+            {
+                languages = languages + item.languageName + ",";
+
+            }
+        }
+        if (Model.DoctorVM.specialities != null)
+        {
+            foreach (var item in Model.DoctorVM.specialities)
+            {
+                specialities = specialities + item.specialityName + ",";
+
+            }
+        }
+    }
+
+
+    if (Model.PatientVM != null)
+    { pharmacy = Model.PatientVM.pharmacy; }
+
+
 
     if (languages == "") { languages = "N.A"; }
+    if (specialities == "") { specialities = "N.A"; }
 
-    if (Model.DoctorVM.specialities != null)
+
+
+    if (appDate != "")
     {
-        foreach (var item in Model.DoctorVM.specialities)
-        {
-            specialities = specialities + item.specialityName + ",";
+        DateTime date = DateTime.Parse(appDate);
+        //DateTime temp=DateTime.ParseExact(date.Date.ToString(), "MM/dd/yyyy", null);
+        formattedDate = string.Format("{0:dd MMM, yyyy}", date);
 
-        }
     }
-
-
-if (specialities == "") { specialities = "N.A"; }
-
-
-
-if (appDate != "")
-{
-    DateTime date = DateTime.Parse(appDate);
-    //DateTime temp=DateTime.ParseExact(date.Date.ToString(), "MM/dd/yyyy", null);
-    formattedDate = string.Format("{0:dd MMM, yyyy}", date);
-
-}
-if (appTime != "")
-{
-    TimeSpan apptimings = TimeSpan.Parse(appTime);
-    var dateTime = new DateTime(apptimings.Ticks); // Date part is 01-01-0001
-    formattedTime = dateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
-}
+    if (appTime != "")
+    {
+        TimeSpan apptimings = TimeSpan.Parse(appTime);
+        var dateTime = new DateTime(apptimings.Ticks); // Date part is 01-01-0001
+        formattedTime = dateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+    }
 
 
     <div class="modal-header text-center" style="background: #E4F1FE; border-bottom-color: #c3bebe;">

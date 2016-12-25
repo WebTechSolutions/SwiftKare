@@ -24,16 +24,40 @@
 
     appDate = Model.appDate.ToString();
     appTime = Model.appTime.ToString();
-    doctorName = Model.DoctorVM.doctorName;
-    if (Model.DoctorVM.GetAge()!=null) { age = Model.DoctorVM.GetAge(); }
-    if (Model.DoctorVM.doctorGender != null)
+
+    if (Model.DoctorVM!=null)
     {
-        gender = Model.DoctorVM.doctorGender;
+        doctorName = Model.DoctorVM.doctorName;
+        if (Model.DoctorVM.GetAge() != null) { age = Model.DoctorVM.GetAge(); }
+        if (Model.DoctorVM.doctorGender != null)
+        {
+            gender = Model.DoctorVM.doctorGender;
+        }
+        if (Model.DoctorVM.dcellPhone != null)
+        {
+            cellPhone = Model.DoctorVM.dcellPhone;
+        }
+        if (Model.DoctorVM.languages != null)
+        {
+            foreach (var item in Model.DoctorVM.languages)
+            {
+                languages = languages + item.languageName + ",";
+
+            }
+        }
+        if (Model.DoctorVM.specialities != null)
+        {
+            foreach (var item in Model.DoctorVM.specialities)
+            {
+                specialities = specialities + item.specialityName + ",";
+
+            }
+        }
+
+
     }
-    if (Model.DoctorVM.dcellPhone != null)
-    {
-        cellPhone = Model.DoctorVM.dcellPhone;
-    }
+
+
 
     if (Model.rov != null) { rov = Model.rov; }
     if (Model.chiefComplaints != null)
@@ -42,29 +66,15 @@
     }
     if (Model.paymentAmt != null)
     {
-    amount = Model.paymentAmt.ToString();
-     }
-    pharmacy = Model.PatientVM.pharmacy;
-
-    if(Model.DoctorVM.languages!=null)
-    {
-        foreach (var item in Model.DoctorVM.languages)
-        {
-            languages = languages+item.languageName + ",";
-
-        }
+        amount = Model.paymentAmt.ToString();
     }
+    if (Model.PatientVM != null)
+    { pharmacy = Model.PatientVM.pharmacy; }
+
 
     if (languages == "") { languages = "N.A"; }
 
-    if (Model.DoctorVM.specialities != null)
-    {
-        foreach (var item in Model.DoctorVM.specialities)
-        {
-            specialities = specialities + item.specialityName + ",";
 
-        }
-    }
 
     if (specialities == "") { specialities = "N.A"; }
 

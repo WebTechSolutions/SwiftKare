@@ -33,44 +33,46 @@
     if (Model.plans != null) { plans = Model.plans; }
 
 
-
-    appDate = Model.AppointmentVM.appDate;
-    appTime = Model.AppointmentVM.appTime;
-
-
-    patienName = Model.PatientVM.patientName;
-
-    if (Model.PatientVM.pcellPhone != null)
+    if(Model.AppointmentVM != null)
     {
-        cellPhone = Model.PatientVM.pcellPhone;
-    }
-    if (Model.PatientVM.patientDOB != null) { age = Model.PatientVM.GetAge(); }
-    if (Model.PatientVM.patientGender!= null)
-    {
-        gender = Model.PatientVM.patientGender;
-    }
-    if (Model.PatientVM.pcellPhone != null)
-    {
-        cellPhone = Model.PatientVM.pcellPhone;
-    }
-
-    if (Model.AppointmentVM.rov != null) { rov = Model.AppointmentVM.rov; }
-    if (Model.AppointmentVM.chiefComplaints != null)
-    {
-        chiefComplaints = Model.AppointmentVM.chiefComplaints;
-    }
-    //if (Model.paymentAmt != null)
-    //{
-    amount = Model.AppointmentVM.paymentAmt.ToString();
-    // }
-    pharmacy = Model.PatientVM.pharmacy;
-
-    if (Model.PatientVM.patlanguages != null)
-    {
-        foreach (var item in Model.PatientVM.patlanguages)
+        appDate = Model.AppointmentVM.appDate;
+        appTime = Model.AppointmentVM.appTime;
+        pharmacy = Model.PatientVM.pharmacy;
+        if (Model.AppointmentVM.rov != null) { rov = Model.AppointmentVM.rov; }
+        if (Model.AppointmentVM.chiefComplaints != null)
         {
-            languages = languages + item.languageName + ",";
+            chiefComplaints = Model.AppointmentVM.chiefComplaints;
+        }
+        if (Model.AppointmentVM.paymentAmt != null)
+        {
+            amount = Model.AppointmentVM.paymentAmt.ToString();
+        }
+    }
 
+
+    if (Model.PatientVM != null)
+    {
+        patienName = Model.PatientVM.patientName;
+        if (Model.PatientVM.pcellPhone != null)
+        {
+            cellPhone = Model.PatientVM.pcellPhone;
+        }
+        if (Model.PatientVM.patientDOB != null) { age = Model.PatientVM.GetAge(); }
+        if (Model.PatientVM.patientGender != null)
+        {
+            gender = Model.PatientVM.patientGender;
+        }
+        if (Model.PatientVM.pcellPhone != null)
+        {
+            cellPhone = Model.PatientVM.pcellPhone;
+        }
+        if (Model.PatientVM.patlanguages != null)
+        {
+            foreach (var item in Model.PatientVM.patlanguages)
+            {
+                languages = languages + item.languageName + ",";
+
+            }
         }
     }
 
