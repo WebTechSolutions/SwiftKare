@@ -50,7 +50,7 @@ namespace WebApp.Controllers
                 ViewBag.Error = ex.Response.ReasonPhrase.ToString();
                 ViewBag.Success = "";
             }
-            return PartialView("PartialViewConsultation");
+            return PartialView("PartialViewDoctorConsultation");
         }
 
         public ActionResult ViewDetail(long? consultID)
