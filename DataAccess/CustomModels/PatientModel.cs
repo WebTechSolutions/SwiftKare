@@ -24,5 +24,12 @@ namespace DataAccess.CustomModels
         public string secretAnswer3 { get; set; }
 
         public Nullable<bool> active { get; set; }
+
+        public string title { get; set; }
+        public string timeZone { get; set; }
+        public string role { get; set; }
+
+        public string iOSToken { get; set; }
+        public string AndroidToken { get; set; }
     }
 }

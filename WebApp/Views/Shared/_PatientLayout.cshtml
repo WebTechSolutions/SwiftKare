@@ -12,11 +12,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
     <!-- Font Awesome -->
     <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet">
+    <link href="@Url.Content("~/Content/css/font-awesome.min.css")" rel="stylesheet">
 
     <!-- Custom Theme Style -->
-    <link href="~/Content/css/custom.min.css" rel="stylesheet">
-    <link href="~/Content/css/style.css" rel="stylesheet">
+    <link href="@Url.Content("~/Content/css/custom.min.css")" rel="stylesheet">
+    <link href="@Url.Content("~/Content/css/style.css")" rel="stylesheet">
     @Styles.Render("~/Content/NewCss")
 
 
@@ -100,9 +100,9 @@
                                 <img src="@SessionHandler.ProfilePhoto" alt="..." class="img-circle profile_img">
                             </a>
                         </div>
-                        <div class="profile_info">
+                        <div class="profile_info" style="word-break:break-word">
                             <span>Welcome,</span>
-                            <h2>@SessionHandler.UserName</h2>
+                            <h2>@SessionHandler.UserInfo.title&nbsp;@SessionHandler.UserInfo.FirstName&nbsp;@SessionHandler.UserInfo.LastName</h2>
                         </div>
                     </div>
                     <!-- /menu profile quick info -->
@@ -318,7 +318,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li role="presentation" class="dropdown">
+                            @*<li role="presentation" class="dropdown">
                                 <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-envelope-o"></i>
                                     <span class="badge bg-green">6</span>
@@ -381,7 +381,7 @@
                                         </div>
                                     </li>
                                 </ul>
-                            </li>
+                            </li>*@
                         </ul>
                     </nav>
                 </div>
@@ -572,12 +572,13 @@
     </script>
     <script>
         $(document).ajaxSuccess(function (evt, request, settings) {
-            console.log(request.responseText);
-            //if (response.isRedirect) {
-            //    window.location.href = response.redirectUrl;
-            //}
+            console.log(request.response);
+            if (request.response != null) {
+                if (request.response.redirectUrl != null)
+                    window.location.href = request.response.redirectUrl;
+            }
         });
-        </script>
+    </script>
 
 
     @RenderSection("scripts", required: false)

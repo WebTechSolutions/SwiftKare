@@ -45,6 +45,22 @@ namespace WebApp.Repositories.DoctorRepositories
             }
 
         }
+        public List<ReschedulePendingAppModel> GetPendingApp(long doctorID)
+        {
+
+            try
+            {
+
+                var response = ApiConsumerHelper.GetResponseString("api/GetPendingAppforDoctor?doctorID=" + doctorID);
+                var result = JsonConvert.DeserializeObject<List<ReschedulePendingAppModel>>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+
+        }
         public GetAppDetail GetAppDetail(long appID)
         {
 

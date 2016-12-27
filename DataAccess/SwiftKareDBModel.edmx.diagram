@@ -62,28 +62,28 @@
         <EntityTypeShape EntityType="SwiftKareDBModel.SecretQuestion" Width="1.5" PointX="16.375" PointY="20.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.LifeStyleQuestion" Width="1.5" PointX="18.375" PointY="20.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.UserFile" Width="1.5" PointX="6" PointY="18.375" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Doctor" Width="1.5" PointX="0.75" PointY="15.375" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_DoctorLanguages_Doctor" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_DoctorLicenseStates_Doctor" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_DoctorSpeciality_Doctor" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_DoctorTimings_Doctor" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_UserFiles_Doctor" />
         <EntityTypeShape EntityType="SwiftKareDBModel.TimeZone" Width="1.5" PointX="20.375" PointY="20.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.ChatLog" Width="1.5" PointX="21.375" PointY="0.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.LiveReqLog" Width="1.5" PointX="21.375" PointY="3.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.VCLog" Width="1.5" PointX="21.375" PointY="16.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.Consultation" Width="1.5" PointX="8.25" PointY="19.5" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_ConsultationROS" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Doctor" />
         <EntityTypeShape EntityType="SwiftKareDBModel.Appointment" Width="1.5" PointX="3" PointY="25.25" />
         <AssociationConnector Association="SwiftKareDBModel.FK_AppAttachment_Appointments" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_Appointments_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Appointments" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Patient" Width="1.5" PointX="0.75" PointY="26.875" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Doctor" Width="1.5" PointX="3.75" PointY="17.125" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Patient" Width="1.5" PointX="0.75" PointY="22.625" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_Appointments_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Appointments_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Conditions_Patient" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_ConsultationROS_Patient" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_DoctorLanguages_Doctor" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_DoctorLicenseStates_Doctor" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_DoctorSpeciality_Doctor" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_DoctorTimings_Doctor" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_UserFiles_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Medications_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Allergies_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_FamilyHX_Patient" />

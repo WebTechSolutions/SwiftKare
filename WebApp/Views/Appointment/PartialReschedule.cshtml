@@ -47,7 +47,7 @@ else
                                 <li><a href="#" data-toggle="modal" class="thumbnail-col-inner" data-id="@item.doctorID" id="@item.appID" data-target="#myModal4" onclick=$("#pvappid").val(@item.appID);>View Detail</a></li>
                                 
                                 <li><a href="#" class="reschedule" data-id="@item.appDate" data-toggle="modal" data-target="#myModal1" data-todo='{"docid":"@item.doctorID","doctorName":"@item.DoctorName","appID":"@item.appID","appDate":"@item.appDate"}' onclick=showDoctorTimings(@item.doctorID,@item.appID,'@item.appDate') id="@item.doctorID">Reschedule App</a></li>
-
+                                <li><input type="text" style="display:none" id="apptype" value="R"></li>
                             </ul>
                         </div>
                     </td>

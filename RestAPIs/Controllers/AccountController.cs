@@ -103,11 +103,19 @@ namespace RestAPIs.Controllers
                                 userModel.Id = doctor.doctorID;
                                 userModel.FirstName = doctor.firstName;
                                 userModel.LastName = doctor.lastName;
+                                userModel.Email = doctor.email;
+                                userModel.userId = doctor.userId;
+                                userModel.title = doctor.title;
+                                userModel.timeZone = doctor.timezone;
+                                userModel.userId = doctor.userId;
+                                userModel.role = model.Role;
+                                userModel.iOSToken = doctor.iOSToken;
+                                userModel.AndroidToken = doctor.AndroidToken;
                             }
                             else
                             {
                                 userModel.Errors = new List<string>();
-                                userModel.Errors.Add("User is not exist with this role.");
+                                userModel.Errors.Add("User does not exist with this role.");
                             }
 
                         }
@@ -121,11 +129,18 @@ namespace RestAPIs.Controllers
                                 userModel.Id = patient.patientID;
                                 userModel.FirstName = patient.firstName;
                                 userModel.LastName = patient.lastName;
+                                userModel.userId = patient.userId;
+                                userModel.title = patient.title;
+                                userModel.timeZone = patient.timezone;
+                                userModel.userId = patient.userId;
+                                userModel.role = model.Role;
+                                userModel.iOSToken = patient.iOSToken;
+                                userModel.AndroidToken = patient.AndroidToken;
                             }
                             else
                             {
                                 userModel.Errors = new List<string>();
-                                userModel.Errors.Add("User is not exist with this role.");
+                                userModel.Errors.Add("User does not exist with this role.");
                             }
 
                         }

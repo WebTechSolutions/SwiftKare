@@ -31,6 +31,7 @@ namespace WebApp.Repositories.PatientRepositories
             }
 
         }
+       
         public List<RescheduleAppModel> GetRescheduleApp(long patientID)
         {
 
@@ -47,7 +48,22 @@ namespace WebApp.Repositories.PatientRepositories
             }
 
         }
+        public List<ReschedulePendingAppModel> GetPendingApp(long patientID)
+        {
 
+            try
+            {
+
+                var response = ApiConsumerHelper.GetResponseString("api/GetPendingAppforPatient?patientID=" + patientID);
+                var result = JsonConvert.DeserializeObject<List<ReschedulePendingAppModel>>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+
+        }
         public List<RescheduleAppModel> GetUpcomingApp(long pateintID)
         {
 

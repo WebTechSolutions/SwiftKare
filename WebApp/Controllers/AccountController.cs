@@ -146,6 +146,12 @@ namespace WebApp.Controllers
                             userModel.Email = doctor.email;
                             userModel.FirstName = doctor.firstName;
                             userModel.LastName = doctor.lastName;
+                            userModel.userId = doctor.userId;
+                            userModel.title = doctor.title;
+                            userModel.timeZone = doctor.timeZone;
+                            userModel.role = doctor.role;
+                            userModel.iOSToken = doctor.iOSToken;
+                            userModel.AndroidToken = doctor.AndroidToken;
                             SessionHandler.UserInfo = userModel;
 
                             if (doctor.picture != null && doctor.picture.Count() > 0) {
@@ -164,6 +170,12 @@ namespace WebApp.Controllers
                             userModel.Email = patient.email;
                             userModel.FirstName = patient.firstName;
                             userModel.LastName = patient.lastName;
+                            userModel.userId = patient.userId;
+                            userModel.title = patient.title;
+                            userModel.timeZone = patient.timeZone;
+                            userModel.role = patient.role;
+                            userModel.iOSToken = patient.iOSToken;
+                            userModel.AndroidToken = patient.AndroidToken;
                             SessionHandler.UserInfo = userModel;
 
                             if (patient.active == null || (bool)patient.active)
@@ -217,6 +229,12 @@ namespace WebApp.Controllers
                         userModel.Email = patient.email;
                         userModel.FirstName = patient.firstName;
                         userModel.LastName = patient.lastName;
+                        userModel.userId = patient.userId;
+                        userModel.title = patient.title;
+                        userModel.timeZone = patient.timeZone;
+                        userModel.role = patient.role;
+                        userModel.iOSToken = patient.iOSToken;
+                        userModel.AndroidToken = patient.AndroidToken;
                         SessionHandler.UserInfo = userModel;
 
                         if (patient.picture != null && patient.picture.Count() > 0)
@@ -225,7 +243,7 @@ namespace WebApp.Controllers
                         }
 
                         if (patient.active == null || (bool)patient.active)
-                            return RedirectToAction("Index", "Patient");
+                            return RedirectToAction("Index", "Appointment");
                     }
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
@@ -323,6 +341,12 @@ namespace WebApp.Controllers
                         userModel.Email = doctor.email;
                         userModel.FirstName = doctor.firstName;
                         userModel.LastName = doctor.lastName;
+                        userModel.userId = doctor.userId;
+                        userModel.title = doctor.title;
+                        userModel.timeZone = doctor.timeZone;
+                        userModel.role = doctor.role;
+                        userModel.iOSToken = doctor.iOSToken;
+                        userModel.AndroidToken = doctor.AndroidToken;
                         SessionHandler.UserInfo = userModel;
 
                         if (doctor.picture != null && doctor.picture.Count() > 0)

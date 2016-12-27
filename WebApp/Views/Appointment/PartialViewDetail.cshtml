@@ -137,9 +137,12 @@
             <input type="text" value="@cellPhone" style="max-width: 100%;" class="form-control" />*@
         <div class="m-t-10" style="margin-top:-26px">
             <button onclick=sendVariables($("#st").val(),$("#doctorid").val(),$("#editappid").val(),this); data-assigned-id="@doctorName" data-todo='{"docid":"$("#doctorid").val()","doctorName":"@doctorName"}' data-toggle="modal" data-target="#myModal1" id="editappointment" style="width: 100%; border-radius: 0; color: #fff; padding: 15px 5px; font-size: 20px;" type="button" class="btn btn-primary">Reschedule App</button>
+            <button onclick=completeConsult($("#editappid").val(),$("#cid").val()); data-assigned-id="@doctorName" data-todo='{"docid":"$("#doctorid").val()","doctorName":"@doctorName"}' id="cc" style="display:none;width: 100%; border-radius: 0; color: #fff; padding: 15px 5px; font-size: 20px;" type="button" class="btn btn-primary">Complete Consult</button>
             @*<li><a href="#" class="reschedule" data-id="@item.appDate" data-toggle="modal" data-target="#myModal1" data-todo='{"docid":"@item.doctorID","doctorName":"@item.DoctorName","appID":"@item.appID","appDate":"@item.appDate"}' onclick=showDoctorTimings(@item.doctorID,@item.appID) id="@item.doctorID">Reschedule App</a></li>*@
             <input type="text" style="display:none" id="editappid">
             <input type="text" style="display:none" id="doctorid">
+            <input type="text" style="display:none" id="cid">
+           
             <input type="text" style="display:none" id="st" value="@showTimings">
            
         </div>

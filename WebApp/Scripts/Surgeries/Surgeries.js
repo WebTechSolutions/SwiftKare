@@ -29,7 +29,7 @@ function GetSurgeries() {
 
 
         },
-        //error: errorRes
+        error: errorRes
 
     });
 
@@ -66,7 +66,7 @@ function GetPatientSurgeries(patientid) {
             }
            return false;
         },
-        //error: errorRes
+        error: errorRes
 
     });
 
@@ -189,7 +189,7 @@ function addupdatepredefinedSurgery(chkbox,surgeryName)
                     }
 
                 },
-                //error: errorRes
+                error: errorRes
 
             });
            
@@ -265,7 +265,7 @@ function addupdateSurgery(patientid) {
                 }
 
             },
-            //error: errorRes
+            error: errorRes
 
         });
 
@@ -311,7 +311,7 @@ function deleteObjSurgery(surgeryID) {
             }
 
        },
-        //error: errorRes
+        error: errorRes
 
     });
 }
@@ -349,6 +349,17 @@ function removeSurgery(value) {
             break;
         }
     }
+}
+
+function errorRes(data) {
+    var err = eval("(" + data.responseText + ")");
+    //alert(err.Message);
+    new PNotify({
+        title: 'Error',
+        text: err.Message,
+        type: 'error',
+        styling: 'bootstrap3'
+    });
 }
 
 

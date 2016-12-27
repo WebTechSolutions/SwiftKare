@@ -1,5 +1,5 @@
 ﻿@using WebApp.Helper
-@model IEnumerable<DataAccess.CustomModels.RescheduleAppModel>
+@model IEnumerable<DataAccess.CustomModels.ReschedulePendingAppModel>
 @{
     Layout = null;
 }
@@ -8,17 +8,16 @@
 @if (Model == null || Model.Count() == 0)
 {
     <div class="well">
-        There is no upcoming appointment.
+        There is no pending appointment.
     </div>
-   
 }
 else
 {
-
+    
     <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr class="headings">
-                <th class="column-title">Patient Name </th>
+                <th class="column-title">Doctor's Name </th>
                 <th class="column-title">Appointment Time</th>
                 <th class="column-title">Reason of Visit </th>
                 <th class="column-title">ChiefComplaint</th>
@@ -30,26 +29,38 @@ else
             @if (Model != null)
             {
                 var j = 1;
+                var consultId = 0;
                 foreach (var item in Model)
                 {
+                    consultId = 0;
+                    if (item.consultID!=null)
+                    {
+                        consultId = Convert.ToInt32(item.consultID);
+                    }
 
                     <tr class="even pointer">
-                        <td>@item.PatientName</td>
+                        <td>@item.DoctorName</td>
                         <td>@item.appDate @item.appTime</td>
                         <td>@item.rov</td>
                         <td>@item.chiefComplaints</td>
                         <!-- <td><button class="btn btn-primary btn-sm m-b-0 " type="submit">View</button></td> -->
                         <td>
                             <div class="btn-group" role="group">
+
                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Action
                                     <span class="caret"></span>
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#" data-toggle="modal" class="thumbnail-col-inner" data-id="@item.appID" id="@item.doctorID" data-target="#myModal5" onclick=$("#pvappid").val(@item.appID);>View Detail</a></li>
-                                  
-                                    <li><a href="#" class="reschedule" data-id="@item.doctorID" id="@item.appID">Reschedule Req</a></li>
 
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    @*<li><a href='#' data-toggle="modal" class="thumbnail-col-inner"  data-id="@item.doctorID" id="@item.appID" data-target="#myModal4"
+                                        data-todo='{"appID":"@item.appID","appDateTime":"@item.appDate@item.appTime","rov":"@item.rov","chiefComplaints":"@item.chiefComplaints","amount":"@item.paymentAmount","pharmacy":"@item.pharmacy"
+                                        ,"cellPhone":"@item.cellphone"}'>View Detail</a></li>*@
+                                    <li><a href="#" data-toggle="modal" class="pendingviewdetail" data-id="@item.doctorID" id="@item.appID" data-target="#myModal4" onclick=$("#pvappid").val(@item.appID);$("#pvcid").val(@item.consultID);>View Detail</a></li>
+                                    <li><a href="#" class="reschedule" data-id="@item.appDate" data-toggle="modal" data-target="#myModal1" data-todo='{"docid":"@item.doctorID","doctorName":"@item.DoctorName","appID":"@item.appID","appDate":"@item.appDate"}' onclick=showDoctorTimings(@item.doctorID,@item.appID,'@item.appDate') id="@item.doctorID">Reschedule App</a></li>
+                                    <li><a href="#" onclick="callConsult(@consultId,@item.appID)">Complete Consult</a></li>
+                                    <li><input type="text" style="display:none" id="@consultId" value="@consultId"></li>
+                                    <li><input type="text" style="display:none" id="apptype" value="P"></li>
                                 </ul>
                             </div>
                         </td>
@@ -127,9 +138,10 @@ else
         var $datatable = $('#datatable-checkbox');
 
         $datatable.dataTable({
-          'order': [[ 1, 'asc' ]],
+          'order': [[ 2, 'asc' ]],
           'columnDefs': [
-            { orderable: false, targets: [0] }
+            { orderable: false, targets: [0] },
+
           ]
         });
         $datatable.on('draw.dt', function() {
@@ -144,43 +156,44 @@ else
 <!-- /Datatables -->
 
 <script>
-    function setTab(cTab) {
-        currentTab = cTab;
-
-    }
-    function usendVariables(doctorid, editappid, elem) {
-        var objCRR = {};
-        //objCRR["doctorID"] = doctorid;
-        objCRR["appID"] = editappid;
-        objCRR["appType"] = currentTab;
-        objCRR["userID"] = '@SessionHandler.UserInfo.userId';
+    function callConsult(consultID,appID)
+    {
+        var objCRR={};
+        //alert(consultID);
+        if(consultID==0)
+        {
+            alert('Consultation not found for this appointment.');
+            return;
+        }
+        objCRR["userID"] = '@SessionHandler.UserInfo.userId.ToString()';
+        objCRR["appID"] = appID;
         $.ajax({
-            url: '@Url.Action("Reschedule", "DoctorAppointment")',
+            url: '@Url.Action("CompleteApp", "Appointment")',
             type: "POST",
             data: objCRR,
             dataType: 'json',
             success: function (result) {
+
                 //Reload container
                 if (result.Message != undefined) {
-                    alert(result.Message.ReasonPhrase);
-                    new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                    //alert(result.Message.ReasonPhrase);
+                    new PNotify({ title: 'Error', text: "Consultation "+" "+result.Message, type: 'error', styling: 'bootstrap3' });
                     //stopLoader();
                 }
                 else {
-                    alert('Appointment is rescheduled successfully.');
-                    $('#myModal5').modal('hide');
+                    new PNotify({ title: 'Success', text: "Consultation is marked as completed successfully.", type: 'success', styling: 'bootstrap3' });
+                    //alert('Consultation is marked as completed successfully.');
                     reloadContainer(function () {
-                       
-                        // new PNotify({ title: 'Success', text: "Reschedule request is cancelled successfully.", type: 'success', styling: 'bootstrap3' });
+
+
                         //Stop displaying loader
                         //stopLoader();
-
                     });
                 }
 
             },
             error: function (err) {
-                alert(err.statusText);
+                //alert(err.statusText);
                 new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
                 //Stop displaying loader
                 //stopLoader();
@@ -188,7 +201,7 @@ else
         });
     }
     $(function () {
-        $(".reschedule").click(function () {
+        @*$(".completeconsult").click(function () {
 
             //showLoader();
             var objCRR = {};
@@ -196,26 +209,34 @@ else
             var $buttonClicked = $(this);
             //var AppDetailPostBackURL = '/DoctorAppointment/CancelReschedule';
             var appID = $buttonClicked.attr('id');
-            var doctorID = $buttonClicked.attr('data-id');
-            objCRR["doctorID"] = doctorID;
+            var consultID = $buttonClicked.attr('data-id');
+            alert(consultID);
+            if(consultID==null)
+            {
+                alert('Consultation not found for this appointment.');
+                return;
+            }
+            objCRR["userID"] = '@SessionHandler.UserInfo.userId.ToString()';
             objCRR["appID"] = appID;
             $.ajax({
-                url: '@Url.Action("Reschedule", "DoctorAppointment")',
+                url: '@Url.Action("CompleteApp", "Appointment")',
                 type: "POST",
                 data: objCRR,
                 dataType: 'json',
                 success: function (result) {
+
                     //Reload container
                     if (result.Message != undefined) {
-                        alert(result.Message.ReasonPhrase);
-                        //new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                        //alert(result.Message.ReasonPhrase);
+                        new PNotify({ title: 'Error', text: "Consultation "+" "+result.Message, type: 'error', styling: 'bootstrap3' });
                         //stopLoader();
                     }
                     else {
-                        alert('Appointment is rescheduled successfully.');
+                        new PNotify({ title: 'Success', text: "Consultation is marked as completed successfully.", type: 'success', styling: 'bootstrap3' });
+                        //alert('Consultation is marked as completed successfully.');
                         reloadContainer(function () {
-                         
-                            // new PNotify({ title: 'Success', text: "Reschedule request is cancelled successfully.", type: 'success', styling: 'bootstrap3' });
+
+
                             //Stop displaying loader
                             //stopLoader();
                         });
@@ -223,88 +244,18 @@ else
 
                 },
                 error: function (err) {
-                    alert(err.statusText);
-                    //new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                    //alert(err.statusText);
+                    new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
                     //Stop displaying loader
                     //stopLoader();
                 }
             });
 
-        });
+        });*@
 
         //$("#closbtn").click(function () {
         //    $('#myModal4').modal('hide');
         //});
     });
-    </script>
-
-<script>
-    $(function () {
-        $(".thumbnail-col-inner").click(function () {
-            //debugger;
-            var $buttonClicked = $(this);
-            var AppDetailPostBackURL = '/DoctorAppointment/ViewAppDetails';
-            var id = $buttonClicked.attr('data-id');
-            var docid = $buttonClicked.attr('id');
-            reloadModelContainer(function () {
-                var $modal = $('#myModal5');
-                $editappid = $modal.find('#editappid');
-                $doctorid = $modal.find('#doctorid');
-                $reditappointment = $modal.find('#reditappointment');
-                $ueditappointment = $modal.find('#ueditappointment');
-                $reditappointment.show();
-                $ueditappointment.hide();
-                $editappid.val(id);
-                $doctorid.val(docid);
-                $reditappointment = $modal.find('#reditappointment');
-                $ueditappointment = $modal.find('#ueditappointment');
-                $ueditappointment.show();
-                $reditappointment.hide();
-                $editappointment = $modal.find('#editappointment');
-                $editappointment.text('Reschedule Request');
-                //Stop displaying loader
-                //stopLoader();
-
-            });
-            //$.ajax({
-            //    type: "GET",
-            //    url: AppDetailPostBackURL,
-            //    contentType: "application/json; charset=utf-8",
-            //    data: { "appID": id },
-            //    datatype: "json",
-            //    success: function (data) {
-            //        $('#myModalContent').html(data);
-            //        $('#myModal5').modal('show');
-            //        var $modal = $('#myModal5');
-            //        $editappid = $modal.find('#editappid');
-            //        $doctorid = $modal.find('#doctorid');
-            //        $editappid.val(id);
-            //        $doctorid.val(docid);
-            //        $reditappointment = $modal.find('#reditappointment');
-            //        $ueditappointment = $modal.find('#ueditappointment');
-            //        $ueditappointment.show();
-            //        $reditappointment.hide();
-            //        //$editappointment = $modal.find('#editappointment');
-            //        //$editappointment.text('Reschedule Request');
-            //    },
-            //    error: function () {
-            //        alert("Dynamic content load failed.");
-            //    }
-            //});
-
-        });
-
-        //$("#closbtn").click(function () {
-        //    $('#myModal4').modal('hide');
-        //});
-    });
-    function reloadModelContainer(callback) {
-        var appid = $("#pvappid").val();
-
-        $("#myModalContent").load('@Url.Action("ViewAppDetails", "DoctorAppointment")?appID=' + appid, function () {
-            callback();
-        });
-
-    }
 </script>
 

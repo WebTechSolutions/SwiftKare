@@ -64,6 +64,8 @@ namespace DataAccess
         public string state { get; set; }
         public Nullable<double> lat { get; set; }
         public Nullable<double> lon { get; set; }
+        public string iOSToken { get; set; }
+        public string AndroidToken { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }

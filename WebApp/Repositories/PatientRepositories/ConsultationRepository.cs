@@ -1,4 +1,5 @@
 ﻿using DataAccess;
+using DataAccess.CommonModels;
 using DataAccess.CustomModels;
 using Newtonsoft.Json;
 using System;
@@ -62,6 +63,23 @@ namespace WebApp.Repositories.PatientRepositories
 
         }
 
-       
+        public ApiResultModel CompleteConsult(CompleteConsultPatient model)
+        {
+
+            try
+            {
+
+                var strContent = JsonConvert.SerializeObject(model);
+                var response = ApiConsumerHelper.PostData("api/CompleteConsultByPatient", strContent);
+                var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+
+        }
+
     }
 }

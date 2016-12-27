@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DataAccess.CustomModels.RescheduleAppModel>
+﻿@using WebApp.Helper
+@model IEnumerable<DataAccess.CustomModels.RescheduleAppModel>
 @{
     Layout = null;
 }
@@ -151,11 +152,16 @@ else
 <!-- /Datatables -->
 
 <script>
+    function setTab(cTab) {
+        currentTab = cTab;
 
+    }
     function rsendVariables(doctorid, editappid, elem) {
         var objCRR = {};
-        objCRR["doctorID"] = doctorid;
+        //objCRR["doctorID"] = doctorid;
         objCRR["appID"] = editappid;
+        objCRR["appType"] = currentTab;
+        objCRR["userID"] = '@SessionHandler.UserInfo.userId';
         $.ajax({
             url: '@Url.Action("CancelReschedule", "DoctorAppointment")',
             type: "POST",

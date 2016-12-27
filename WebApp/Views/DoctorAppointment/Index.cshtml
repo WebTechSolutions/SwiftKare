@@ -52,10 +52,13 @@
     <div class="" role="tabpanel" data-example-id="togglable-tabs" style="padding-bottom: 180px;">
         <ul id="myTab" class="nav nav-tabs bar_tabs m-b-40" role="tablist">
             <li role="presentation" class="active">
-                <a href="#call_history" id="doctor" role="tab" data-toggle="tab" aria-expanded="true">Upcoming</a>
+                <a href="#call_history" id="doctor" role="tab" data-toggle="tab" aria-expanded="true" onclick="setTab('U')">Upcoming</a>
             </li>
             <li role="presentation" class="">
-                <a href="#find_doctor" role="tab" id="history" data-toggle="tab" aria-expanded="false">Reschedule</a>
+                <a href="#find_doctor" role="tab" id="history" data-toggle="tab" aria-expanded="false" onclick="setTab('R')">Reschedule</a>
+            </li>
+            <li role="presentation" class="">
+                <a href="#pending_doctor" role="tab" id="ppending_doctor" data-toggle="tab" aria-expanded="false" onclick="setTab('P')">Pending</a>
             </li>
 
         </ul>
@@ -92,6 +95,22 @@
                     </div>
                 </div>
             </div>
+            <div role="tabpanel" class="tab-pane fade" id="pending_doctor" aria-labelledby="pending_doctor">
+                <div class="x_panel">
+
+
+                    <div class="x_content">
+                        <div id="divPending" class="table-responsive">
+
+                            @{
+                                Html.RenderAction("PartialDoctorPending", "DoctorAppointment");
+                            }
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
@@ -120,7 +139,11 @@
 <!-- /page content -->
 <!-- Load View App Detail Popup -->
 <script>
+    var currentTab = "";
+    $(document).ready(function () {
+        currentTab = "U";
 
+    });
     
     //$("#myModal4").on('show.bs.modal', function (e) {
 
@@ -152,7 +175,9 @@
         $("#divUpcoming").load('@Url.Action("PartialDoctorUpcoming", "DoctorAppointment")', function () {
             callback();
         });
-
+       $("#divPending").load('@Url.Action("PartialDoctorPending", "DoctorAppointment")', function () {
+           callback();
+       });
 
     }
 </script>
