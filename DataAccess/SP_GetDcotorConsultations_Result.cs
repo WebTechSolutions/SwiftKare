@@ -18,6 +18,7 @@ namespace DataAccess
         public int duration { get; set; }
         public string review { get; set; }
         public int reviewStar { get; set; }
+        public Nullable<bool> reviewStatus { get; set; }
         public string appTime { get; set; }
         public string appDate { get; set; }
         public string rov { get; set; }
