@@ -13,8 +13,8 @@
 }
 else
 {
-    
-    <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+
+    <table id="datatablepending" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr class="headings">
                 <th class="column-title">Doctor's Name </th>
@@ -33,7 +33,7 @@ else
                 foreach (var item in Model)
                 {
                     consultId = 0;
-                    if (item.consultID!=null)
+                    if (item.consultID != null)
                     {
                         consultId = Convert.ToInt32(item.consultID);
                     }
@@ -60,7 +60,7 @@ else
                                     <li><a href="#" class="reschedule" data-id="@item.appDate" data-toggle="modal" data-target="#myModal1" data-todo='{"docid":"@item.doctorID","doctorName":"@item.DoctorName","appID":"@item.appID","appDate":"@item.appDate"}' onclick=showDoctorTimings(@item.doctorID,@item.appID,'@item.appDate') id="@item.doctorID">Reschedule App</a></li>
                                     <li><a href="#" onclick="callConsult(@consultId,@item.appID)">Complete Consult</a></li>
                                     <li><input type="text" style="display:none" id="@consultId" value="@consultId"></li>
-                                    <li><input type="text" style="display:none" id="apptype" value="P"></li>
+
                                 </ul>
                             </div>
                         </td>
@@ -115,7 +115,7 @@ else
           };
         }();
 
-        $('#datatable').dataTable();
+        $('#datatablepending').dataTable();
 
         $('#datatable-keytable').DataTable({
           keys: true
@@ -137,13 +137,7 @@ else
 
         var $datatable = $('#datatable-checkbox');
 
-        $datatable.dataTable({
-          'order': [[ 2, 'asc' ]],
-          'columnDefs': [
-            { orderable: false, targets: [0] },
-
-          ]
-        });
+        
         $datatable.on('draw.dt', function() {
           $('input').iCheck({
             checkboxClass: 'icheckbox_flat-green'
@@ -154,6 +148,7 @@ else
       });
 </script>
 <!-- /Datatables -->
+
 
 <script>
     function callConsult(consultID,appID)

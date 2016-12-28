@@ -37,15 +37,38 @@ else
                         else
                         {
                             <td>
-                                @for (var i = 0; i < item.reviewStar; i++)
+                                @if (item.reviewStar >= 3)
                                 {
+                                    for (var i = 0; i < item.reviewStar; i++)
+                                    {
 
-                                    <a href='javascript:void(0);'><span class='fa fa-star'></span></a>
+                                        <a href='javascript:void(0);'><span class='fa fa-star'></span></a>
+                                    }
+                                    for (var i = 0; i < 5 - item.reviewStar; i++)
+                                    {
+                                        <a href='javascript:void(0);'><span class='fa fa-star-o'></span></a>
+                                    }
                                 }
-                                @for (var i = 0; i < 5 - item.reviewStar; i++)
-                            {
-                                    <a href='javascript:void(0);'><span class='fa fa-star-o'></span></a>
+                                else if (item.reviewStar < 3)
+                                {
+                                    if (item.reviewStatus == true)
+                                    {
+                                        for (var i = 0; i < item.reviewStar; i++)
+                                        {
+                                            <a href='javascript:void(0);'><span class='fa fa-star'></span></a>
+                                        }
+                                        for (var i = 0; i < 5 - item.reviewStar; i++)
+                                        {
+                                            <a href='javascript:void(0);'><span class='fa fa-star-o'></span></a>
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <a href='javascript:void(0);'>Approval Pending</a>
+                                    }
                                 }
+
 
                             </td>
                         }
