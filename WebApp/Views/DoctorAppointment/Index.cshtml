@@ -3,7 +3,35 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_DoctorLayout.cshtml";
 }
-<link href="~/Content/css/pnotify.css" rel="stylesheet">
+<style>
+    .user-detail {
+	max-width: 250px;
+	margin: 0 auto;
+	color: #375781;
+	height: 100px;
+}
+
+    .img-viewdetail {
+        float: left;
+        border-radius: 50%;
+        max-width: 100px;
+    }
+
+    .img-1 {
+        float: left;
+    }
+
+        .img-1 img {
+            border-radius: 50%;
+            max-width: 100px;
+        }
+
+    .name-sec {
+       
+        margin-left: 20px;
+    }
+</style>
+
 @*<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
 <script type="text/javascript" src="~/Scripts/~/Scripts/bootstrap.min.js"></script>*@
 <script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
@@ -24,10 +52,13 @@
     <div class="" role="tabpanel" data-example-id="togglable-tabs" style="padding-bottom: 180px;">
         <ul id="myTab" class="nav nav-tabs bar_tabs m-b-40" role="tablist">
             <li role="presentation" class="active">
-                <a href="#call_history" id="doctor" role="tab" data-toggle="tab" aria-expanded="true">Upcoming</a>
+                <a href="#call_history" id="doctor" role="tab" data-toggle="tab" aria-expanded="true" onclick="setTab('U')">Upcoming</a>
             </li>
             <li role="presentation" class="">
-                <a href="#find_doctor" role="tab" id="history" data-toggle="tab" aria-expanded="false">Reschedule</a>
+                <a href="#find_doctor" role="tab" id="history" data-toggle="tab" aria-expanded="false" onclick="setTab('R')">Reschedule</a>
+            </li>
+            <li role="presentation" class="">
+                <a href="#pending_doctor" role="tab" id="ppending_doctor" data-toggle="tab" aria-expanded="false" onclick="setTab('P')">Pending</a>
             </li>
 
         </ul>
@@ -64,14 +95,33 @@
                     </div>
                 </div>
             </div>
+            <div role="tabpanel" class="tab-pane fade" id="pending_doctor" aria-labelledby="pending_doctor">
+                <div class="x_panel">
+
+
+                    <div class="x_content">
+                        <div id="divPending" class="table-responsive">
+
+                            @{
+                                Html.RenderAction("PartialDoctorPending", "DoctorAppointment");
+                            }
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
     </div>
+    <input type="text" style="display:none" id="pvappid" value="0">
     <div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4">
         <div class="modal-dialog" style="width: 350px;">
             <div id='myModalContent' class="modal-content" style="border-radius: 0;">
-
+                @{
+                    Html.RenderAction("ViewAppDetails", "DoctorAppointment", new { appID = 0 });
+                }
             </div>
         </div>
     </div><!-- View App Detail -->
@@ -89,7 +139,11 @@
 <!-- /page content -->
 <!-- Load View App Detail Popup -->
 <script>
+    var currentTab = "";
+    $(document).ready(function () {
+        currentTab = "U";
 
+    });
     
     //$("#myModal4").on('show.bs.modal', function (e) {
 
@@ -121,7 +175,9 @@
         $("#divUpcoming").load('@Url.Action("PartialDoctorUpcoming", "DoctorAppointment")', function () {
             callback();
         });
-
+       $("#divPending").load('@Url.Action("PartialDoctorPending", "DoctorAppointment")', function () {
+           callback();
+       });
 
     }
 </script>

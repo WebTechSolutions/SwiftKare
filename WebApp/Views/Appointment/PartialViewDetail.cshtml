@@ -1,63 +1,102 @@
-﻿@model IEnumerable<DataAccess.SP_GetAppDetail_Result>
+﻿@using System.Globalization
+@model DataAccess.CustomModels.GetAppDetail
 @{
     Layout = null;
 }
-@if (Model != null)
+@if (Model != null && Model.appID!=0)
 {
     var doctorName = "";
-    var age = "";
-    var gender = "";
+    var age = "N.A";
+    var gender = "N.A";
     var languages = "";
     var specialities = "";
 
     var appDate = "";
     var appTime = "";
-    var rov = "";
-    var chiefComplaints = "";
-    var amount = "";
-    var pharmacy = "";
-    var cellPhone = "";
+    var rov = "N.A";
+    var chiefComplaints = "N.A";
+    var amount = "N.A";
+    var pharmacy = "N.A";
+    var cellPhone = "N.A";
+    var formattedDate = "";
+    var formattedTime= "";
+    var showTimings = "";
 
-    foreach (var item in Model)
+    appDate = Model.appDate.ToString();
+    appTime = Model.appTime.ToString();
+
+    if (Model.DoctorVM!=null)
     {
-        doctorName = item.DoctorName;
-        age = item.DoctorAge.ToString();
-        gender = item.DoctorGender;
-        cellPhone = item.pcellPhone;
-        appDate = item.appDate;
-        appTime = item.appTime;
-        rov = item.rov;
-        chiefComplaints = item.chiefComplaints;
-        amount = item.paymentAmt.ToString();
-        pharmacy = item.pharmacy;
+        doctorName = Model.DoctorVM.doctorName;
+        if (Model.DoctorVM.GetAge() != null) { age = Model.DoctorVM.GetAge(); }
+        if (Model.DoctorVM.doctorGender != null)
+        {
+            gender = Model.DoctorVM.doctorGender;
+        }
+        if (Model.DoctorVM.dcellPhone != null)
+        {
+            cellPhone = Model.DoctorVM.dcellPhone;
+        }
+        if (Model.DoctorVM.languages != null)
+        {
+            foreach (var item in Model.DoctorVM.languages)
+            {
+                languages = languages + item.languageName + ",";
 
-        if (item.languageName != "N.A")
-        {
-            languages = languages + item.languageName+ ",";
+            }
         }
-        else
+        if (Model.DoctorVM.specialities != null)
         {
-            languages = item.languageName;
-        }
+            foreach (var item in Model.DoctorVM.specialities)
+            {
+                specialities = specialities + item.specialityName + ",";
 
-        if (item.specialityName != "N.A")
-        {
-            specialities = specialities + item.specialityName+",";
-        }
-        else
-        {
-            specialities = item.specialityName;
+            }
         }
 
-        //if (languages != "N.A") { languages = languages.Remove(languages.Length - 1, 1); }
-
-        //if (specialities != "N.A") { specialities = specialities.Remove(specialities.Length - 1, 1); }
 
     }
 
 
 
-        <div class="modal-header text-center" style="background: #E4F1FE; border-bottom-color: #c3bebe;">
+    if (Model.rov != null) { rov = Model.rov; }
+    if (Model.chiefComplaints != null)
+    {
+        chiefComplaints = Model.chiefComplaints;
+    }
+    if (Model.paymentAmt != null)
+    {
+        amount = Model.paymentAmt.ToString();
+    }
+    if (Model.PatientVM != null)
+    { pharmacy = Model.PatientVM.pharmacy; }
+
+
+    if (languages == "") { languages = "N.A"; }
+
+
+
+    if (specialities == "") { specialities = "N.A"; }
+
+
+
+    if (appDate!="")
+    {
+        DateTime date = DateTime.Parse(appDate);
+        //DateTime temp=DateTime.ParseExact(date.Date.ToString(), "MM/dd/yyyy", null);
+        formattedDate = string.Format("{0:dd MMM, yyyy}", date);
+        showTimings= string.Format(" {0:dd/MM/yyyy}", date);
+
+    }
+    if (appTime != "")
+    {
+        TimeSpan apptimings = TimeSpan.Parse(appTime);
+        var dateTime = new DateTime(apptimings.Ticks); // Date part is 01-01-0001
+        formattedTime = dateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+    }
+
+
+    <div class="modal-header text-center" style="background: #E4F1FE; border-bottom-color: #c3bebe;">
             <h2 style="margin: 0; color: #337ab7"><b>Appoinment Details</b></h2>
         </div><!--/.modal header-->
 
@@ -65,41 +104,50 @@
     <div class="modal-body text-left">
         <div class="user-detail">
             <div class="img-1">
-                <img src="../Content/images/img.jpg" alt="" class="m-b-10 img-responsive">
+                <img src="@(string.IsNullOrEmpty(Model.DoctorVM.ProfilePhotoBase64) ? WebApp.Helper.SessionHandler.ProfilePhoto : Model.DoctorVM.ProfilePhotoBase64)" alt="" class="m-b-10 img-responsive">
             </div>
             <div class="name-sec">
-                <h2>Dr. @doctorName</h2>
-                <p><b>Age:</b> @age Years @*<br><span>Gender: @gender</span>*@</p>
-                <p><b>Gender:</b> @gender</p>
-                <p id="cellPhone"><b>Cell Phone:</b> @cellPhone</p>
-                <p><b>Languages:</b> @languages</p>
-                <p><b>Specialities:</b> @specialities</p>
-            </div>
+                <h2>Dr.@doctorName</h2>
+                <p style="font-size:10px">
+                    @age<br>@*<span>Gender: @gender</span>*@
+                    Gender: @gender<br>
+                    Languages: @languages<br>
+                    Specialities: @specialities<br>
+                    Cell Phone:@cellPhone
+                </p>
+</div>
         </div>
 
-        <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 0 -15px 20px; padding: 10px 21px 0; float: left;">
-            <p style="color: #375781;"><span style="width: 150px; float: left;">Appointment Date/Time</span><b>@appDate - @appTime</b></p>
+         <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 36px -15px 20px; padding: 10px 21px 0; ">
+            <p style="color: #375781;"><span style="width: 150px; float: left;">Appointment Date/Time</span><b>@formattedDate-@formattedTime</b></p>
         </div>
-        <p id="p_rov" style="color: #375781;"><b>Reason of Visit:</b> @rov</p>
-        <p id="p_chiefComplaints" style="color: #375781;"><b>Chief Complaint:</b> @chiefComplaints</p>
-        <p id="p_pharmacy" style="color: #375781;"><b>Pharmacy:</b> @pharmacy</p>
-        <p id="p_amount" style="color: #375781;"><b>Payment Amount</b> @amount</p>
-
-        @*<label style="font-weight: 300;" for="">Please enter the number we should call</label>
-            <input type="text" placeholder="(469)237-3768" style="max-width: 100%;" class="form-control" />*@
-        <div class="m-t-10">
-            <button onclick=sendVariables($("#doctorid").val(),$("#editappid").val(),this) data-assigned-id="@doctorName" data-todo='{"docid":"$("#doctorid").val()","doctorName":"@doctorName"}' data-toggle="modal" data-target="#myModal1" id="editappointment" style="width: 100%; border-radius: 0; padding: 15px 5px; font-size: 20px;" type="button" class="btn btn-primary">Edit Appointment</button>
+        @*<div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 0 -15px 20px; padding: 10px 21px 0; float: left;">
+        <p style="color: #375781;"><span style="width: 150px; float: left;">Reason of Visit</span><b>@rov</b></p>
+    </div>*@
+       
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Reason of Visit:</b><br> @rov</p>
+        <p id="p_chiefComplaints" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Chief Complaint:</b><br> @chiefComplaints</p>
+        <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Consult Charges:</b><br> @amount</p>
+        
+       
+        @*<div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 0 -15px -11px; padding: 10px 21px 0; ">
+            <p style="color: #375781;"><span style="width: 150px; float: left;">Pharmacy</span><b>@pharmacy</b></p>
+        </div><br />*@    
+         @*<label style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">Cell Phone</label>
+            <input type="text" value="@cellPhone" style="max-width: 100%;" class="form-control" />*@
+        <div class="m-t-10" style="margin-top:-26px">
+            <button onclick=sendVariables($("#st").val(),$("#doctorid").val(),$("#editappid").val(),this); data-assigned-id="@doctorName" data-todo='{"docid":"$("#doctorid").val()","doctorName":"@doctorName"}' data-toggle="modal" data-target="#myModal1" id="editappointment" style="width: 100%; border-radius: 0; color: #fff; padding: 15px 5px; font-size: 20px;" type="button" class="btn btn-primary">Reschedule App</button>
+            <button onclick=completeConsult($("#editappid").val(),$("#cid").val()); data-assigned-id="@doctorName" data-todo='{"docid":"$("#doctorid").val()","doctorName":"@doctorName"}' id="cc" style="display:none;width: 100%; border-radius: 0; color: #fff; padding: 15px 5px; font-size: 20px;" type="button" class="btn btn-primary">Complete Consult</button>
             @*<li><a href="#" class="reschedule" data-id="@item.appDate" data-toggle="modal" data-target="#myModal1" data-todo='{"docid":"@item.doctorID","doctorName":"@item.DoctorName","appID":"@item.appID","appDate":"@item.appDate"}' onclick=showDoctorTimings(@item.doctorID,@item.appID) id="@item.doctorID">Reschedule App</a></li>*@
             <input type="text" style="display:none" id="editappid">
             <input type="text" style="display:none" id="doctorid">
-            @*<button style="width: 100%; border-radius: 0; background: #2AAC39; color: #fff; padding: 15px 5px; font-size: 20px;" class="btn" type="button">ACCEPT</button>
-                <button style="width: 100%; border-radius: 0; background: #DB0029; color: #fff; padding: 15px 5px; font-size: 20px;" class="btn" type="button">DECLINE</button>*@
+            <input type="text" style="display:none" id="cid">
+           
+            <input type="text" style="display:none" id="st" value="@showTimings">
+           
         </div>
+
     </div><!--/.modal body-->
 }
-<script>
-    //function sendVariables(doctorid, editappid) {
-    //    alert(editappid+' '+ editappid);
-    //}
-    </script>
+
 

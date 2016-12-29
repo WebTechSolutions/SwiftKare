@@ -8,9 +8,17 @@ namespace DataAccess.CustomModels
 {
     public class CreateConsultModel
     {
-        public long doctorID { get; set;}
-        public long patientID { get; set; }
+        public string userID { get; set; }
+        public long appID { get; set; }
         public string sessionID { get; set; }
         public string token { get; set; }
+    }
+
+    public class ConsultROSModel
+    {
+        public string userID { get; set; }
+        public long consultID { get; set; }
+        public string sysitemname { get; set; }
+        public long sysitemid { get; set; }
     }
 }

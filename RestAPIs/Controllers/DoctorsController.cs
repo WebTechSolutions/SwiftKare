@@ -118,6 +118,13 @@ namespace RestAPIs.Controllers
                 objModel.secretAnswer1 = doctor.secretAnswer1;
                 objModel.secretAnswer2 = doctor.secretAnswer2;
                 objModel.secretAnswer3 = doctor.secretAnswer3;
+                objModel.role = (from r in db.AspNetRoles
+                                 where r.Id == doctor.userId
+                                 select r.Name).FirstOrDefault();
+                objModel.timeZone = doctor.timezone;
+                objModel.title = doctor.title;
+                objModel.iOSToken = doctor.iOSToken;
+                objModel.AndroidToken = doctor.AndroidToken;
 
                 return objModel;
             }

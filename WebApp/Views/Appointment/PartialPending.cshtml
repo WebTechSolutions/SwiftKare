@@ -1,0 +1,256 @@
+﻿@using WebApp.Helper
+@model IEnumerable<DataAccess.CustomModels.ReschedulePendingAppModel>
+@{
+    Layout = null;
+}
+
+
+@if (Model == null || Model.Count() == 0)
+{
+    <div class="well">
+        There is no pending appointment.
+    </div>
+}
+else
+{
+
+    <table id="datatablepending" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <tr class="headings">
+                <th class="column-title">Doctor's Name </th>
+                <th class="column-title">Appointment Time</th>
+                <th class="column-title">Reason of Visit </th>
+                <th class="column-title">ChiefComplaint</th>
+                <th class="column-title">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model != null)
+            {
+                var j = 1;
+                var consultId = 0;
+                foreach (var item in Model)
+                {
+                    consultId = 0;
+                    if (item.consultID != null)
+                    {
+                        consultId = Convert.ToInt32(item.consultID);
+                    }
+
+                    <tr class="even pointer">
+                        <td>@item.DoctorName</td>
+                        <td>@item.appDate @item.appTime</td>
+                        <td>@item.rov</td>
+                        <td>@item.chiefComplaints</td>
+                        <!-- <td><button class="btn btn-primary btn-sm m-b-0 " type="submit">View</button></td> -->
+                        <td>
+                            <div class="btn-group" role="group">
+
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Action
+                                    <span class="caret"></span>
+                                </button>
+
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    @*<li><a href='#' data-toggle="modal" class="thumbnail-col-inner"  data-id="@item.doctorID" id="@item.appID" data-target="#myModal4"
+                                        data-todo='{"appID":"@item.appID","appDateTime":"@item.appDate@item.appTime","rov":"@item.rov","chiefComplaints":"@item.chiefComplaints","amount":"@item.paymentAmount","pharmacy":"@item.pharmacy"
+                                        ,"cellPhone":"@item.cellphone"}'>View Detail</a></li>*@
+                                    <li><a href="#" data-toggle="modal" class="pendingviewdetail" data-id="@item.doctorID" id="@item.appID" data-target="#myModal4" onclick=$("#pvappid").val(@item.appID);$("#pvcid").val(@item.consultID);>View Detail</a></li>
+                                    <li><a href="#" class="reschedule" data-id="@item.appDate" data-toggle="modal" data-target="#myModal1" data-todo='{"docid":"@item.doctorID","doctorName":"@item.DoctorName","appID":"@item.appID","appDate":"@item.appDate"}' onclick=showDoctorTimings(@item.doctorID,@item.appID,'@item.appDate') id="@item.doctorID">Reschedule App</a></li>
+                                    <li><a href="#" onclick="callConsult(@consultId,@item.appID)">Complete Consult</a></li>
+                                    <li><input type="text" style="display:none" id="@consultId" value="@consultId"></li>
+
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    j = j + 1;
+                }
+
+            }
+        </tbody>
+    </table>
+}
+<!-- Datatables -->
+<script>
+      $(document).ready(function() {
+        var handleDataTableButtons = function() {
+          if ($("#datatable-buttons").length) {
+            $("#datatable-buttons").DataTable({
+              dom: "Bfrtip",
+              buttons: [
+                {
+                  extend: "copy",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "csv",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "excel",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "pdfHtml5",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "print",
+                  className: "btn-sm"
+                },
+              ],
+              responsive: true
+            });
+          }
+        };
+
+        TableManageButtons = function() {
+          "use strict";
+          return {
+            init: function() {
+              handleDataTableButtons();
+            }
+          };
+        }();
+
+        $('#datatablepending').dataTable();
+
+        $('#datatable-keytable').DataTable({
+          keys: true
+        });
+
+        $('#datatable-responsive').DataTable();
+
+        $('#datatable-scroller').DataTable({
+          ajax: "js/datatables/json/scroller-demo.json",
+          deferRender: true,
+          scrollY: 380,
+          scrollCollapse: true,
+          scroller: true
+        });
+
+        $('#datatable-fixed-header').DataTable({
+          fixedHeader: true
+        });
+
+        var $datatable = $('#datatable-checkbox');
+
+        
+        $datatable.on('draw.dt', function() {
+          $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+          });
+        });
+
+        TableManageButtons.init();
+      });
+</script>
+<!-- /Datatables -->
+
+
+<script>
+    function callConsult(consultID,appID)
+    {
+        var objCRR={};
+        //alert(consultID);
+        if(consultID==0)
+        {
+            alert('Consultation not found for this appointment.');
+            return;
+        }
+        objCRR["userID"] = '@SessionHandler.UserInfo.userId.ToString()';
+        objCRR["appID"] = appID;
+        $.ajax({
+            url: '@Url.Action("CompleteApp", "Appointment")',
+            type: "POST",
+            data: objCRR,
+            dataType: 'json',
+            success: function (result) {
+
+                //Reload container
+                if (result.Message != undefined) {
+                    //alert(result.Message.ReasonPhrase);
+                    new PNotify({ title: 'Error', text: "Consultation "+" "+result.Message, type: 'error', styling: 'bootstrap3' });
+                    //stopLoader();
+                }
+                else {
+                    new PNotify({ title: 'Success', text: "Consultation is marked as completed successfully.", type: 'success', styling: 'bootstrap3' });
+                    //alert('Consultation is marked as completed successfully.');
+                    reloadContainer(function () {
+
+
+                        //Stop displaying loader
+                        //stopLoader();
+                    });
+                }
+
+            },
+            error: function (err) {
+                //alert(err.statusText);
+                new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                //Stop displaying loader
+                //stopLoader();
+            }
+        });
+    }
+    $(function () {
+        @*$(".completeconsult").click(function () {
+
+            //showLoader();
+            var objCRR = {};
+
+            var $buttonClicked = $(this);
+            //var AppDetailPostBackURL = '/DoctorAppointment/CancelReschedule';
+            var appID = $buttonClicked.attr('id');
+            var consultID = $buttonClicked.attr('data-id');
+            alert(consultID);
+            if(consultID==null)
+            {
+                alert('Consultation not found for this appointment.');
+                return;
+            }
+            objCRR["userID"] = '@SessionHandler.UserInfo.userId.ToString()';
+            objCRR["appID"] = appID;
+            $.ajax({
+                url: '@Url.Action("CompleteApp", "Appointment")',
+                type: "POST",
+                data: objCRR,
+                dataType: 'json',
+                success: function (result) {
+
+                    //Reload container
+                    if (result.Message != undefined) {
+                        //alert(result.Message.ReasonPhrase);
+                        new PNotify({ title: 'Error', text: "Consultation "+" "+result.Message, type: 'error', styling: 'bootstrap3' });
+                        //stopLoader();
+                    }
+                    else {
+                        new PNotify({ title: 'Success', text: "Consultation is marked as completed successfully.", type: 'success', styling: 'bootstrap3' });
+                        //alert('Consultation is marked as completed successfully.');
+                        reloadContainer(function () {
+
+
+                            //Stop displaying loader
+                            //stopLoader();
+                        });
+                    }
+
+                },
+                error: function (err) {
+                    //alert(err.statusText);
+                    new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                    //Stop displaying loader
+                    //stopLoader();
+                }
+            });
+
+        });*@
+
+        //$("#closbtn").click(function () {
+        //    $('#myModal4').modal('hide');
+        //});
+    });
+</script>
+

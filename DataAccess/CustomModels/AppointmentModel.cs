@@ -19,15 +19,28 @@ namespace DataAccess.CommonModels
         public string appTypeAV { get; set; }
         public string chiefComplaints { get; set; }
         public string rov { get; set; }
-        public string consultationType { get; set; }
-        public string consultationStatus { get; set; }
+        //public string consultationType { get; set; }
+        //public string consultationStatus { get; set; }
     }
 
     public class RescheduleAppointmentModel
     {
         public long appID { get; set; }
-        public Nullable<long> patientID { get; set; }
+        public string userID { get; set; }
         public string appDate { get; set; }
         public string appTime { get; set; }
+        public string appType { get; set; }
+    }
+    public class CompleteConsultPatient
+    {
+        public long appID { get; set; }
+        public string userID { get; set; }
+        
+    }
+    public class CompleteConsultDoctor
+    {
+        public long appID { get; set; }
+        public string userID { get; set; }
+
     }
 }

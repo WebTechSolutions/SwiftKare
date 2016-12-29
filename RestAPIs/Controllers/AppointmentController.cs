@@ -41,10 +41,56 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                    var result = db.SP_GetAppDetail(appID).ToList();
-                    response = Request.CreateResponse(HttpStatusCode.OK, result);
-                    return response;
-              
+                //var result = db.SP_GetAppDetail(appID).ToList();
+                var result = (from cn in db.Appointments
+                              where cn.appID == appID && cn.active == true
+                              select new
+                              {
+                                  appID = cn.appID,
+                                  rov = cn.rov,
+                                  cheifcomplaints = cn.chiefComplaints,
+                                  paymentAmt = cn.paymentAmt,
+                                  appDate = cn.appDate,
+                                  appTime = cn.appTime,
+                                  PatientVM = (from r in db.Patients
+                                               where r.patientID == cn.patientID && r.active == true
+                                               select new
+                                               {
+                                                   patPicture = r.picture,
+                                                   patientName = r.firstName + " " + r.lastName,
+                                                   patientGender = r.gender,
+                                                   pharmacy = r.pharmacy,
+                                                   patientDOB = r.dob,
+                                                   pcellPhone = r.cellPhone,
+                                                   city = r.city,
+                                                   state = r.state,
+                                                   patlanguages = (from l in db.PatientLanguages
+                                                                   where l.patientID == r.patientID && l.active == true
+                                                                   select new { languageName = l.languageName }).ToList()
+                                               }).FirstOrDefault(),
+                                  DoctorVM = (from doc in db.Doctors
+                                              where doc.doctorID == cn.doctorID && doc.active == true
+                                              select new
+                                              {
+                                                  docPicture = doc.picture,
+                                                  doctorName = doc.firstName + " " + doc.lastName,
+                                                  doctorGender = doc.gender,
+                                                  doctordob = doc.dob,
+                                                  dcellPhone = doc.cellPhone,
+                                                  city = doc.city,
+                                                  state = doc.state,
+                                                  languages = (from l in db.DoctorLanguages
+                                                               where l.doctorID == cn.doctorID && l.active == true
+                                                               select new { languageName = l.languageName }).ToList(),
+                                                  specialities = (from s in db.DoctorSpecialities
+                                                                  where s.doctorID == cn.doctorID && s.active == true
+                                                                  select new { specialityName = s.specialityName }).ToList()
+
+                                              }).FirstOrDefault()
+                              }).FirstOrDefault();
+                response = Request.CreateResponse(HttpStatusCode.OK, result);
+                return response;
+
             }
             catch (Exception ex)
             {
@@ -53,6 +99,7 @@ namespace RestAPIs.Controllers
 
 
         }
+
         [Route("api/PatientPreviousROV")]
         public HttpResponseMessage GetROV(long patientID)
         {
@@ -72,6 +119,7 @@ namespace RestAPIs.Controllers
 
 
         }
+
         [Route("api/GetROVs")]
         public HttpResponseMessage GetROVs()
         {
@@ -91,6 +139,7 @@ namespace RestAPIs.Controllers
 
 
         }
+
         [Route("api/GetPatientChiefComplaints")]
         public HttpResponseMessage GetPatientChiefComplaints(long id)
         {
@@ -192,9 +241,9 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment ID." });
                     return response;
                 }
-                if (model.patientID == 0)
+                if (model.userID == "")
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid user ID." });
                     return response;
                 }
                 Appointment result = db.Appointments.Where(rapp => rapp.appID == model.appID && rapp.active == true).FirstOrDefault();
@@ -208,51 +257,145 @@ namespace RestAPIs.Controllers
                 TimeSpan cat = TimeSpan.Parse(To24HrTime(model.appTime.ToString()).ToString());
                 DateTime cappDateTime = cad + cat;
 
-                TimeSpan ctimediff = cappDateTime- appDateTime ;
+                TimeSpan ctimediff = appDateTime-cappDateTime;
                 TimeSpan timediff = appDateTime - cdt;
-                 string RescheduleLimit = ConfigurationManager.AppSettings["RescheduleLimit"].ToString();
-                //if (ctimediff.TotalHours < 0 )
-                //{
-                //    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Reschedule is not allowed on back date." });
-                //    return response;
-                //}
-                if (timediff.TotalHours < Convert.ToInt32(RescheduleLimit))
+                string RescheduleLimit = ConfigurationManager.AppSettings["RescheduleLimit"].ToString();
+                if (model.appType=="U")
                 {
-                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Reschedule is not allowed when appointment is about to start within 24 hours." });
+                    if (timediff.TotalHours < Convert.ToInt32(RescheduleLimit))
+                    {
+                        response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Reschedule not allowed when appointment is about to start within 24 hours." });
+                        return response;
+                    }
+                    else
+                    {
+
+                        result.appTime = To24HrTime(model.appTime);
+                        result.appDate = Convert.ToDateTime(model.appDate);
+                        result.mb = model.userID;
+                        result.md = System.DateTime.Now;
+                        result.appointmentStatus = "C";
+                        result.rescheduleRequiredBy = "P";
+                        db.Entry(result).State = EntityState.Modified;
+                        await db.SaveChangesAsync();
+                        Alert alert = new Alert();
+                        alert.alertFor = result.doctorID.ToString();
+                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + result.appDate + " " + result.appTime + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " " + model.appTime;
+                        alert.cd = System.DateTime.Now;
+                        alert.cb = model.userID;
+                        alert.active = true;
+                        alert.active = true;
+                        db.Alerts.Add(alert);
+                        await db.SaveChangesAsync();
+                        response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
+                        return response;
+                    }
+                }
+                if (model.appType == "R")
+                {
+                        result.appTime = To24HrTime(model.appTime);
+                        result.appDate = Convert.ToDateTime(model.appDate);
+                        result.mb = model.userID;
+                        result.md = System.DateTime.Now;
+                        result.appointmentStatus = "C";
+                        db.Entry(result).State = EntityState.Modified;
+                        await db.SaveChangesAsync();
+                        Alert alert = new Alert();
+                        alert.alertFor = result.doctorID.ToString();
+                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + result.appDate + " " + result.appTime + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " " + model.appTime;
+                        alert.cd = System.DateTime.Now;
+                        alert.cb = model.userID;
+                        alert.active = true;
+                        alert.active = true;
+                        db.Alerts.Add(alert);
+                        await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
                     return response;
                 }
-                else
+                if (model.appType == "P")
                 {
-
                     result.appTime = To24HrTime(model.appTime);
                     result.appDate = Convert.ToDateTime(model.appDate);
-                    result.mb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault();
+                    result.mb = model.userID;
                     result.md = System.DateTime.Now;
                     result.appointmentStatus = "C";
-                    if(result.rescheduleRequiredBy!="D" || result.rescheduleRequiredBy==null)
-                    {
-                        result.rescheduleRequiredBy = "P";
-                    }
                     db.Entry(result).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                     Alert alert = new Alert();
                     alert.alertFor = result.doctorID.ToString();
-                    alert.alertText="Your appointment on "+ model.appDate+" at "+model.appTime + " is rescheduled by patient.";
-                    alert.cd = System.DateTime.UtcNow;
-                    alert.cb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault();
+                    alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + result.appDate + " " + result.appTime + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " " + model.appTime;
+                    alert.cd = System.DateTime.Now;
+                    alert.cb = model.userID;
                     alert.active = true;
                     alert.active = true;
                     db.Alerts.Add(alert);
                     await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
+                    return response;
                 }
+                else
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "Provide appointment type." });
+                    return response;
+                }
+               
             }
             catch (Exception ex)
             {
                 return ThrowError(ex, "AddAppointments in AppointmentController.");
             }
 
-            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
-            return response;
+           
+        }
+
+        [Route("api/GetPendingAppforPatient")]
+        public HttpResponseMessage GetPendingAppforPatient(long patientID)
+        {
+            try
+            {
+                if (patientID == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Invalid patient ID" });
+                    return response;
+                }
+                else
+                {
+                    var result = db.SP_GetPendingAppforPatient(patientID).ToList();
+                    response = Request.CreateResponse(HttpStatusCode.OK, result);
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetPendingAppforPatient in AppointmentController");
+            }
+
+
+        }
+
+        [Route("api/GetPendingAppforDoctor")]
+        public HttpResponseMessage GetPendingAppforDoctor(long doctorID)
+        {
+            try
+            {
+                if (doctorID == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Invalid patient ID" });
+                    return response;
+                }
+                else
+                {
+                    var result = db.SP_GetPendingAppforDoctor(doctorID).ToList();
+                    response = Request.CreateResponse(HttpStatusCode.OK, result);
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetPendingAppforPatient in AppointmentController");
+            }
+
+
         }
 
         private TimeSpan To24HrTime(string time)
@@ -273,6 +416,7 @@ namespace RestAPIs.Controllers
 
             return new TimeSpan(hour, minute,seconds);
         }
+
         [Route("api/GetRescheduleAppforPatient")]
         public HttpResponseMessage GetRescheduleAppforPatient(long patientID)
         {
@@ -297,6 +441,7 @@ namespace RestAPIs.Controllers
 
 
         }
+
         [Route("api/GetRescheduleAppforDoctor")]
         public HttpResponseMessage GetRescheduleAppforDoctor(long doctorID)
         {
@@ -371,6 +516,7 @@ namespace RestAPIs.Controllers
 
 
         }
+
         [Route("api/GetCancelledAppforPatient")]
         public HttpResponseMessage GetCancelledAppforPatient(long patientID)
         {
@@ -427,9 +573,9 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                if(model.doctorID==0)
+                if(model.userID=="")
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid user ID." });
                     return response;
                 }
                 if (model.appID == 0 )
@@ -445,30 +591,43 @@ namespace RestAPIs.Controllers
                 }
                 else
                 {
-                    string currDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                    DateTime ad = Convert.ToDateTime(result.appDate);
-                    TimeSpan at = TimeSpan.Parse(result.appTime.ToString());
-                    //string appDateTime = ad.ToString("g") + " "+at.ToString();
-                    DateTime appDateTime = ad + at;
-                    DateTime cdt = Convert.ToDateTime(currDateTime);
-                    //DateTime adt = Convert.ToDateTime(appDateTime);
-                    TimeSpan timediff = appDateTime-cdt ;
-                    string RescheduleLimit = ConfigurationManager.AppSettings["RescheduleLimit"].ToString();
-                    if (timediff.TotalHours < Convert.ToInt32(RescheduleLimit))
-                    {
-                        
-                        response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Appointment reschedule is not allowed when less than 24 hrs are left for appointment." });
-                        return response;
-                    }
-                    else
+                    if(model.appType=="P")
                     {
                         result.rescheduleRequiredBy = "D";
                         result.appointmentStatus = "R";
-                        result.mb = db.Doctors.Where(p => p.doctorID == model.doctorID && p.active == true).Select(pt => pt.userId).FirstOrDefault();
+                        result.mb = model.userID;
                         result.md = System.DateTime.Now;
                         db.Entry(result).State = EntityState.Modified;
                         await db.SaveChangesAsync();
                     }
+                    if (model.appType == "U")
+                    {
+                        string currDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                        DateTime ad = Convert.ToDateTime(result.appDate);
+                        TimeSpan at = TimeSpan.Parse(result.appTime.ToString());
+                        //string appDateTime = ad.ToString("g") + " "+at.ToString();
+                        DateTime appDateTime = ad + at;
+                        DateTime cdt = Convert.ToDateTime(currDateTime);
+                        //DateTime adt = Convert.ToDateTime(appDateTime);
+                        TimeSpan timediff = appDateTime - cdt;
+                        string RescheduleLimit = ConfigurationManager.AppSettings["RescheduleLimit"].ToString();
+                        if (timediff.TotalHours < Convert.ToInt32(RescheduleLimit))
+                        {
+
+                            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Reschedule not allowed when appointment is about to start within 24 hours." });
+                            return response;
+                        }
+                        else
+                        {
+                            result.rescheduleRequiredBy = "D";
+                            result.appointmentStatus = "R";
+                            result.mb = model.userID;
+                            result.md = System.DateTime.Now;
+                            db.Entry(result).State = EntityState.Modified;
+                            await db.SaveChangesAsync();
+                        }
+                    }
+                    
                 }
                 
                 response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.appID, message = "" });
@@ -498,7 +657,7 @@ namespace RestAPIs.Controllers
                 {
                     result.rescheduleRequiredBy = "";
                     result.appointmentStatus = "C";
-                    result.mb = db.Doctors.Where(p => p.doctorID == model.doctorID && p.active == true).Select(pt => pt.userId).FirstOrDefault();
+                    result.mb = model.userID;
                     result.md = System.DateTime.Now;
                     db.Entry(result).State = EntityState.Modified;
                     await db.SaveChangesAsync();
@@ -515,7 +674,7 @@ namespace RestAPIs.Controllers
 
 
         }
-
+       
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");

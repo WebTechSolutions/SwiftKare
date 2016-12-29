@@ -1,4 +1,5 @@
-﻿using DataAccess.CustomModels;
+﻿using DataAccess.CommonModels;
+using DataAccess.CustomModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,18 +14,24 @@ namespace WebApp.Controllers
     {
         // GET: DoctorAppointment
         DoctorAppointmentRepositroy oAppointmentRepository;
+        DoctorConsultationRepository oDoctorConsultationRepositroy;
         SeeDoctorRepository oSeeDoctorRepository;
         public DoctorAppointmentController()
         {
             oAppointmentRepository = new DoctorAppointmentRepositroy();
             oSeeDoctorRepository = new SeeDoctorRepository();
+            oDoctorConsultationRepositroy = new DoctorConsultationRepository();
         }
         // GET: Appointment
         public ActionResult Index()
         {
             if (SessionHandler.IsExpired)
             {
-                return RedirectToAction("DoctorLogin", "Account");
+                return Json(new
+                {
+                    redirectUrl = Url.Action("DoctorLogin", "Account"),
+                    isRedirect = true
+                });
             }
             else
             {
@@ -74,11 +81,33 @@ namespace WebApp.Controllers
            
         }
 
-        public ActionResult ViewAppDetails(int appID)
+        public PartialViewResult PartialDoctorPending()
         {
             try
             {
-                var oData = oAppointmentRepository.GetAppDetail(appID);
+                var oData = oAppointmentRepository.GetPendingApp(SessionHandler.UserInfo.Id);
+                ViewBag.errorMessage = "";
+                ViewBag.successMessage = "";
+                return PartialView("PartialDoctorPending", oData);
+
+            }
+
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                ViewBag.errorMessage = ex.Response.ReasonPhrase.ToString();
+                ViewBag.successMessage = "";
+
+                return PartialView("PartialDoctorPending");
+            }
+
+        }
+
+        public PartialViewResult ViewAppDetails(long? appID)
+        {
+            try
+            {
+                long apID = Convert.ToInt64(appID);
+                var oData = oAppointmentRepository.GetAppDetail(apID);
                 return PartialView("PartialDoctorViewAppDetail", oData);
             }
 
@@ -124,6 +153,22 @@ namespace WebApp.Controllers
 
         }
 
-        
+        public JsonResult CompleteApp(CompleteConsultDoctor _objCAPP)
+        {
+            try
+            {
+                ApiResultModel apiresult = new ApiResultModel();
+                apiresult = oDoctorConsultationRepositroy.CompleteConsult(_objCAPP);
+                return Json(new { Success = true, ApiResultModel = apiresult });
+
+            }
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                return Json(new { Message = ex.Response });
+            }
+
+        }
+
+
     }
 }

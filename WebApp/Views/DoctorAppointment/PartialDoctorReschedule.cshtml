@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DataAccess.CustomModels.RescheduleAppModel>
+﻿@using WebApp.Helper
+@model IEnumerable<DataAccess.CustomModels.RescheduleAppModel>
 @{
     Layout = null;
 }
@@ -54,7 +55,7 @@ else
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a href="#" data-toggle="modal" class="thumbnail-col-innerr" data-id="@item.appID" id="@item.doctorID" data-target="#myModal5">View Detail</a></li>
+                                <li><a href="#" data-toggle="modal" class="thumbnail-col-innerr" data-id="@item.appID" id="@item.doctorID" data-target="#myModal5" onclick=$("#pvappid").val(@item.appID);>View Detail</a></li>
                                 <li><a href="#" class="cancelreschedule" data-id="@item.doctorID" id="@item.appID">Cancel Reschedule Req</a></li>
 
                             </ul>
@@ -151,11 +152,16 @@ else
 <!-- /Datatables -->
 
 <script>
+    function setTab(cTab) {
+        currentTab = cTab;
 
+    }
     function rsendVariables(doctorid, editappid, elem) {
         var objCRR = {};
-        objCRR["doctorID"] = doctorid;
+        //objCRR["doctorID"] = doctorid;
         objCRR["appID"] = editappid;
+        objCRR["appType"] = currentTab;
+        objCRR["userID"] = '@SessionHandler.UserInfo.userId';
         $.ajax({
             url: '@Url.Action("CancelReschedule", "DoctorAppointment")',
             type: "POST",
@@ -251,30 +257,45 @@ else
             var AppDetailPostBackURL = '/DoctorAppointment/ViewAppDetails';
             var id = $buttonClicked.attr('data-id');
             var docid = $buttonClicked.attr('id');
-            //alert(detailfor);
-            $.ajax({
-                type: "GET",
-                url: AppDetailPostBackURL,
-                contentType: "application/json; charset=utf-8",
-                data: { "appID": id },
-                datatype: "json",
-                success: function (data) {
-                    $('#myModalContent').html(data);
-                    $('#myModal5').modal('show');
-                    var $modal = $('#myModal5');
-                    $editappid = $modal.find('#editappid');
-                    $doctorid = $modal.find('#doctorid');
-                    $reditappointment = $modal.find('#reditappointment');
-                    $ueditappointment = $modal.find('#ueditappointment');
-                    $reditappointment.show();
-                    $ueditappointment.hide();
-                    $editappid.val(id);
-                    $doctorid.val(docid);
-                },
-                error: function () {
-                    alert("Dynamic content load failed.");
-                }
+            
+            reloadModelContainer(function () {
+                var $modal = $('#myModal5');
+                $editappid = $modal.find('#editappid');
+                $doctorid = $modal.find('#doctorid');
+                $reditappointment = $modal.find('#reditappointment');
+                $ueditappointment = $modal.find('#ueditappointment');
+                $reditappointment.show();
+                $ueditappointment.hide();
+                $editappid.val(id);
+                $doctorid.val(docid);
+                //Stop displaying loader
+                //stopLoader();
+
             });
+            //alert(detailfor);
+            //$.ajax({
+            //    type: "GET",
+            //    url: AppDetailPostBackURL,
+            //    contentType: "application/json; charset=utf-8",
+            //    data: { "appID": id },
+            //    datatype: "json",
+            //    success: function (data) {
+            //        $('#myModalContent').html(data);
+            //        $('#myModal5').modal('show');
+            //        var $modal = $('#myModal5');
+            //        $editappid = $modal.find('#editappid');
+            //        $doctorid = $modal.find('#doctorid');
+            //        $reditappointment = $modal.find('#reditappointment');
+            //        $ueditappointment = $modal.find('#ueditappointment');
+            //        $reditappointment.show();
+            //        $ueditappointment.hide();
+            //        $editappid.val(id);
+            //        $doctorid.val(docid);
+            //    },
+            //    error: function () {
+            //        alert("Dynamic content load failed.");
+            //    }
+            //});
 
         });
 
@@ -282,4 +303,13 @@ else
         //    $('#myModal4').modal('hide');
         //});
     });
+
+    function reloadModelContainer(callback) {
+        var appid = $("#pvappid").val();
+
+        $("#myModalContent").load('@Url.Action("ViewAppDetails", "DoctorAppointment")?appID=' + appid, function () {
+            callback();
+        });
+
+    }
     </script>

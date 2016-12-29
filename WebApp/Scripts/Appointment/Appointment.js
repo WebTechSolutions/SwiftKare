@@ -69,37 +69,37 @@ function showDoctorInfo()
         success: function (response) {
             if (response.Object != null || response.Object != undefined)
             {
+                
                 var spec = "";
-
-                $.each(response.Object, function (item) {
-                    spec = spec + response.Object[item].specialityName + ",";
-
-                });
                 var lang = "";
+                for (var i = 0; i < response.Object.specialities.length; i++)
+                {
+                    spec = spec + response.Object.specialities[i].specialityName + ",";
+                }
+                for (var i = 0; i < response.Object.languages.length; i++) {
+                    lang = lang + response.Object.languages[i].languageName + ",";
+                }
+              
+                spec = spec.slice(0, -1);
+                lang = lang.slice(0, -1);
 
-                $.each(response.Object, function (item) {
-                    lang = lang + response.Object[item].languageName + ",";
-
-                });
-
-                var specresult = spec.substring(0, spec.length - 1);
-                var langresult = lang.substring(0, lang.length - 1);
-                var doccell = "NA";
-                var docemail = "NA";
-                var cc = "NA";
-                var docstate = "NA";
+                if (response.Object.specialities.length == 0) { spec = "N.A"; }
+                if (response.Object.languages.length == 0) { lang = "N.A"; }
+                var doccell = "N.A";
+                var docemail = "N.A";
+                var cc = "N.A";
+                var docstate = "N.A";
                 var gender = "";
-                if (specresult == "null") { specresult = "NA"; }
-                if (langresult == "null") { langresult = "NA"; }
-                if (response.Object[0].cellPhone != null) { doccell = response.Object[0].cellPhone; }
-                if (response.Object[0].email != null) { docemail = response.Object[0].email; }
-                if (response.Object[0].consultCharges != null) { cc = response.Object[0].consultCharges; }
-                if (response.Object[0].state != null) { docstate = response.Object[0].state; }
-                if (response.Object[0].gender != null) { gender = " (" + response.Object[0].gender + ")"; }
+                
+                if (response.Object.cellPhone != null) { doccell = response.Object.cellPhone; }
+                if (response.Object.email != null) { docemail = response.Object.email; }
+                if (response.Object.consultCharges != null) { cc = response.Object.consultCharges; }
+                if (response.Object.state != null) { docstate = response.Object.state; }
+                if (response.Object.gender != null) { gender = " (" + response.Object.gender + ")"; }
                 tableHtml = "<address>" +
-                         "<strong>Dr. " + response.Object[0].doctorName + gender + "</strong>" +
-                         "<br><strong>Specaility: </strong>&nbsp;" + specresult +
-                         "<br><strong>Languages: </strong>&nbsp;" + langresult +
+                         "<strong>Dr. " + response.Object.doctorName + gender + "</strong>" +
+                         "<br><strong>Specaility: </strong>&nbsp;" + spec +
+                         "<br><strong>Languages: </strong>&nbsp;" + lang +
                          "<br><strong>State: </strong>&nbsp;" + docstate +
                          "<br><strong>Phone: </strong>&nbsp;" + doccell +
                          "<br><strong>Email: </strong>&nbsp; " + docemail +

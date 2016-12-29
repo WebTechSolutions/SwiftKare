@@ -22,23 +22,124 @@ namespace RestAPIs.Controllers
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
         HttpResponseMessage response;
 
+        //add consultROS
+        //conid,sysitemitemname,sysid,userId
 
+        [HttpPost]
+        [Route("api/addconsultROS")]
+        public async Task<HttpResponseMessage> AddconsultROS(ConsultROSModel model)
+        {
+            try
+            {
+                if (model.userID == "")
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid user ID." });
+                    return response;
+                }
+
+                if (model.sysitemname == "" || model.sysitemname == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "System item name is required." });
+                    return response;
+                }
+                if (model.sysitemid == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid system item ID." });
+                    return response;
+                }
+
+                Consultation conres = db.Consultations.Where(a => a.consultID == model.consultID).FirstOrDefault();
+                if (conres == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Consultation not found." });
+                    return response;
+                }
+                else
+                {
+                    ConsultationRO cons = new ConsultationRO();
+                    cons.active = true;
+                    cons.cd = System.DateTime.Now;
+                    cons.cb = model.userID;
+                    cons.systemItemID = model.sysitemid;
+                    cons.systemItemName = model.sysitemname;
+                    cons.consultationID = model.consultID;
+                    db.ConsultationROS.Add(cons);
+                    await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = cons.consultationRosID, message = "" });
+                    return response;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "AddconsultROS in ConsultController");
+            }
+        }
         [Route("api/getConsultationDetails")]
         public HttpResponseMessage GetConsultationDetails(long consultID)
         {
             try
             {
-                if (consultID == 0)
-                {
-                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Invalid consultation ID" });
-                    return response;
-                }
-                else
-                {
-                    var result = db.SP_GetConsultationDetails(consultID);
+                    //var result = db.SP_GetConsultationDetails(consultID).ToList();
+                    var result = (from cn in db.Consultations
+                                  where cn.consultID == consultID && cn.active == true
+                                  select new
+                                  {
+                                      consultID = cn.consultID,
+                                      subjective = cn.subjective,
+                                      objective = cn.objective,
+                                      assessment = cn.assessment,
+                                      plans = cn.plans,
+                                      rosItems = (from ros in db.ConsultationROS
+                                                  where ros.consultationID == cn.consultID && ros.active == true
+                                                  select new { systemItemName = ros.systemItemName }).ToList(),
+                                      AppointmentVM = (from app in db.Appointments
+                                                     where app.appID == cn.appID && app.active == true
+                                                     select new
+                                                     {
+                                                         appID = app.appID,
+                                                         rov = app.rov,
+                                                         cheifcomplaints = app.chiefComplaints,
+                                                         payment = app.paymentAmt,
+                                                         appDate = app.appDate,
+                                                         appTime = app.appTime
+                                                     }).FirstOrDefault(),
+                                      PatientVM = (from r in db.Patients
+                                                 where r.patientID == cn.patientID && r.active == true
+                                                 select new
+                                                 {
+                                                     patientID = r.patientID,
+                                                     PatPicture = r.picture,
+                                                     patientName = r.firstName + " " + r.lastName,
+                                                     patientGender = r.gender,
+                                                     pharmacy = r.pharmacy,
+                                                     dob = r.dob,
+                                                     languages = (from l in db.PatientLanguages
+                                                                  where l.patientID == r.patientID && l.active == true
+                                                                  select new { languageName = l.languageName }).ToList()
+                                                 }).FirstOrDefault(),
+                                      DoctorVM = (from doc in db.Doctors
+                                                where doc.doctorID == cn.doctorID && doc.active == true
+                                                select new
+                                                {
+                                                    doctorID = doc.doctorID,
+                                                    docPicture = doc.picture,
+                                                    doctorName = doc.firstName + " " + doc.lastName,
+                                                    doctorGender = doc.gender,
+                                                    dob = doc.dob,
+                                                    city = doc.city,
+                                                    state = doc.state,
+                                                    languages = (from l in db.DoctorLanguages
+                                                                 where l.doctorID == doc.doctorID && l.active == true
+                                                                 select new { languageName = l.languageName }).ToList(),
+                                                    specialities = (from s in db.DoctorSpecialities
+                                                                    where s.doctorID == doc.doctorID && s.active == true
+                                                                    select new { specialityName = s.specialityName }).ToList()
+                                                }).FirstOrDefault()
+                                  }).FirstOrDefault();
                     response = Request.CreateResponse(HttpStatusCode.OK, result);
                     return response;
-                }
+              
             }
             catch (Exception ex)
             {
@@ -137,7 +238,7 @@ namespace RestAPIs.Controllers
                 else
                 {
 
-                    result.mb = model.patientID.ToString();
+                    result.mb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault();
                     result.md = System.DateTime.Now;
                     result.review = model.reviewText;
                     result.reviewStar = model.star;
@@ -146,12 +247,12 @@ namespace RestAPIs.Controllers
 
                 }
 
-                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = model.consultID, message = "" });
+                response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.consultID, message = "" });
                 return response;
             }
             catch (Exception ex)
             {
-                return ThrowError(ex, "AddConsultReview in AppointmentController");
+                return ThrowError(ex, "AddConsultReview in ConsultationController");
             }
 
 
@@ -252,16 +353,12 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                if (model.doctorID == 0)
+                if (model.userID == "")
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid user ID." });
                     return response;
                 }
-                if (model.patientID == 0)
-                {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
-                    return response;
-                }
+                
                 if (model.sessionID == "" || model.sessionID == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Seesion ID is missing." });
@@ -272,22 +369,28 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Token is missing." });
                     return response;
                 }
+
+                Appointment appres = db.Appointments.Where(a => a.appID == model.appID).FirstOrDefault();
+                if(appres==null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Appointment not found." });
+                    return response;
+                }
+                else
+                {
+                    Consultation cons = new Consultation();
+                    cons.active = true;
+                    cons.appID = model.appID;
+                    cons.cd = System.DateTime.Now;
+                    cons.cb = model.userID;
+                    cons.seesionID = model.sessionID;
+                    cons.token = model.token;
+                    db.Consultations.Add(cons);
+                    await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = cons.consultID, message = "" });
+                    return response;
+                }
                
-                var email = (from d in db.Doctors
-                                where d.doctorID == model.doctorID && d.active == true
-                                select d.email).FirstOrDefault();
-                Consultation cons = new Consultation();
-                cons.active = true;
-                cons.cd = System.DateTime.Now;
-                cons.cb = email;
-                cons.doctorID = model.doctorID;
-                cons.patientID = model.patientID;
-                cons.seesionID = model.sessionID;
-                cons.token = model.token;
-                db.Consultations.Add(cons);
-                await db.SaveChangesAsync();
-                response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = cons.consultID, message = "" });
-                return response;
             }
             catch (Exception ex)
             {
@@ -460,6 +563,73 @@ namespace RestAPIs.Controllers
             {
                 return ThrowError(ex, "addDoctorNotes in ConsultController");
             }
+        }
+
+        [HttpPost]
+        [Route("api/CompleteConsultByPatient")]
+        public async Task<HttpResponseMessage> CompleteConsultByPatient(CompleteConsultPatient model)
+        {
+            try
+            {
+                Consultation con = db.Consultations.Where(app => app.appID == model.appID && app.active == true).FirstOrDefault();
+                if (con == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Consultation not found" });
+                    return response;
+                }
+
+                else
+                {
+                    con.status = "C";
+                    con.mb = model.userID;
+                    con.md = System.DateTime.Now;
+                    db.Entry(con).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+
+                }
+
+                response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.appID, message = "" });
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "CompleteConsultByPatient in ConsultController");
+            }
+
+
+        }
+        [HttpPost]
+        [Route("api/CompleteConsultByDoctor")]
+        public async Task<HttpResponseMessage> CompleteConsultByDoctor(CompleteConsultDoctor model)
+        {
+            try
+            {
+                Consultation con = db.Consultations.Where(app => app.appID == model.appID && app.active == true).FirstOrDefault();
+                if (con == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Consultation not found" });
+                    return response;
+                }
+
+                else
+                {
+                    con.status = "C";
+                    con.mb = model.userID;
+                    con.md = System.DateTime.Now;
+                    db.Entry(con).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+
+                }
+
+                response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.appID, message = "" });
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "CompleteConsultByDoctor in ConsultController");
+            }
+
+
         }
 
     }

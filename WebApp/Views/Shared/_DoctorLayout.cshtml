@@ -12,33 +12,33 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
     <!-- Font Awesome -->
     <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet">
+    <link href="@Url.Content("~/Content/css/font-awesome.min.css")" rel="stylesheet">
     
     <!-- Custom Theme Style -->
-    <link href="~/Content/css/custom.min.css" rel="stylesheet">
-    <link href="~/Content/css/style.css" rel="stylesheet">
+    <link href="@Url.Content("~/Content/css/custom.min.css")" rel="stylesheet">
+    <link href="@Url.Content("~/Content/css/style.css")" rel="stylesheet">
     <link href="@Url.Content("~/Content/css/select2.min.css")" rel="stylesheet" />
-    <link href="~/Content/css/pnotify.css" rel="stylesheet">
-
+    <link href="@Url.Content("~/Content/css/pnotify.css")" rel="stylesheet">
+    <link href="@Url.Content("/Content/css/green.css")" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://rawgit.com/FezVrasta/bootstrap-material-design/master/dist/js/material.min.js"></script>
     <script type="text/javascript" src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/custom.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/pnotify.js"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/custom.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/pnotify.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.cropit.js")"></script>
-
+    <script src="@Url.Content("~/Scripts/icheck.min.js")"></script>
     <script src="@Url.Content("~/Scripts/select2.min.js")"></script>
     <script src="@Url.Content("~/Scripts/daterangepiker/daterangepicker.js")"></script>
 
-    <script src="~/Scripts/blockUI.js"></script>
-    <script src="~/Scripts/jquery.cookie.js"></script>
-    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
+    <script src="@Url.Content("~/Scripts/blockUI.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.cookie.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.signalR-2.2.1.min.js")"></script>
 
 
     <!--  If this is an MVC project then use the following -->
     <!--  <script src="~/signalr/hubs" type="text/javascript"></script> -->
-    <script src="~/signalr/hubs"></script>
+    <script src="@Url.Content("~/signalr/hubs")"></script>
     <style type="text/css">
         .redBorder, .redBorder:focus, .redBorder:active{
                border-color: red
@@ -107,9 +107,9 @@
                             <a href="@Url.Action("Profile","DoctorProfile")">
                             <img src="@SessionHandler.ProfilePhoto" alt="..." class="img-circle profile_img"></a>
                         </div>
-                        <div class="profile_info">
+                        <div class="profile_info" style="word-break:break-word">
                             <span>Welcome,</span>
-                            <h2>@SessionHandler.UserName</h2>
+                            <h2>@SessionHandler.UserInfo.FirstName&nbsp;@SessionHandler.UserInfo.LastName</h2>
                         </div>
                     </div>
                     <!-- /menu profile quick info -->
@@ -131,15 +131,15 @@
                                     <a href="@Url.Action("DoctorTimings", "Doctor")"><img src="~/Content/images/icon_doc_search.png" alt="">  &nbsp <span class="menu-txt">My Timings</span> </a>
                                 </li>
                                 <li class="appointment">
-                                    <a href="#"><img src="~/Content/images/icon_appointment.png" alt="">  &nbsp <span class="menu-txt">Consult History</span></a>
-                                    <ul class="nav child_menu">
+                                    <a href="@Url.Action("Index","DoctorConsultation")"><img src="~/Content/images/icon_appointment.png" alt="">  &nbsp <span class="menu-txt">Consult History</span></a>
+                                    @*<ul class="nav child_menu">
                                         <li><a href="p_call_history.html"> Patient Call History</a></li>
-                                    </ul>
+                                    </ul>*@
                                 </li>
 
-                                <li class="message">
+                                @*<li class="message">
                                     <a href="@Url.Action("Index", "Messages")"><img src="~/Content/images/icon_messages.png" alt=""> &nbsp <span class="menu-txt">Messages</span> </a>
-                                </li>
+                                </li>*@
 
                                 <li class="call_history">
                                     <a href="@Url.Action("Index","News")"><img src="~/Content/images/icon_call-history.png" alt="">  &nbsp <span class="menu-txt">Whats New</span> </a>
@@ -323,7 +323,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li role="presentation" class="dropdown">
+                            @*<li role="presentation" class="dropdown">
                                 <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-envelope-o"></i>
                                     <span class="badge bg-green">6</span>
@@ -386,7 +386,7 @@
                                         </div>
                                     </li>
                                 </ul>
-                            </li>
+                            </li>*@
                         </ul>
                     </nav>
                 </div>
@@ -498,6 +498,15 @@
         });
 
 
+    </script>
+    <script>
+        $(document).ajaxSuccess(function (evt, request, settings) {
+            console.log(request.response);
+            if (request.response != null) {
+                if (request.response.redirectUrl != null)
+                    window.location.href = request.response.redirectUrl;
+            }
+        });
     </script>
 
     @RenderSection("scripts", required: false)

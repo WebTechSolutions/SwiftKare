@@ -9,9 +9,9 @@ using System.Web;
 using System.Web.Http;
 using WebApp.Helper;
 
-namespace WebApp.Repositories.PatientRepositories
+namespace WebApp.Repositories.DoctorRepositories
 {
-    public class ConsultationRepository
+    public class DoctorConsultationRepository
     {
         public ConsultationModel GetConsultationDetail(long cID)
         {
@@ -29,14 +29,14 @@ namespace WebApp.Repositories.PatientRepositories
             }
 
         }
-        public List<SP_GetPatientConsultations_Result> GetPatientConsultations(long pID)
+        public List<SP_GetDcotorConsultations_Result> GetDoctorConsultations(long dID)
         {
 
             try
             {
 
-                var response = ApiConsumerHelper.GetResponseString("api/getPatientConsultations?patientID=" + pID);
-                var result = JsonConvert.DeserializeObject<List<SP_GetPatientConsultations_Result>>(response);
+                var response = ApiConsumerHelper.GetResponseString("api/getDcotorConsultations?doctorID=" + dID);
+                var result = JsonConvert.DeserializeObject<List<SP_GetDcotorConsultations_Result>>(response);
                 return result;
             }
             catch (HttpResponseException ex)
@@ -45,14 +45,15 @@ namespace WebApp.Repositories.PatientRepositories
             }
 
         }
-        public ApiResultModel WriteReview(AddConsultReviewodel model)
+
+        public ApiResultModel CompleteConsult(CompleteConsultDoctor model)
         {
 
             try
             {
 
                 var strContent = JsonConvert.SerializeObject(model);
-                var response = ApiConsumerHelper.PostData("api/addConsultReview", strContent);
+                var response = ApiConsumerHelper.PostData("api/CompleteConsultByDoctor", strContent);
                 var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
                 return result;
             }
@@ -62,24 +63,5 @@ namespace WebApp.Repositories.PatientRepositories
             }
 
         }
-
-        public ApiResultModel CompleteConsult(CompleteConsultPatient model)
-        {
-
-            try
-            {
-
-                var strContent = JsonConvert.SerializeObject(model);
-                var response = ApiConsumerHelper.PostData("api/CompleteConsultByPatient", strContent);
-                var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
-                return result;
-            }
-            catch (HttpResponseException ex)
-            {
-                throw ex;
-            }
-
-        }
-
     }
 }

@@ -275,7 +275,7 @@ function addupdateAllergies(patientid) {
                 resetAllergies();
 
             },
-           // error: errorRes
+            error: errorRes
 
         });
 
@@ -300,6 +300,8 @@ function deleteAllergies(allergyID) {
         dataType: 'json',
         success: function (response) {
             if (response.Success == true) {
+                if (response.Message != undefined)
+                    PageTransitionEvent
                 if (response.ApiResultModel.message == "")
                 {
                     new PNotify({
@@ -329,7 +331,7 @@ function deleteAllergies(allergyID) {
 
 
         },
-        //error: errorRes
+        error: errorRes
 
     });
 }
@@ -401,6 +403,17 @@ function removeAllergy(value) {
             break;
         }
     }
+}
+
+function errorRes(data) {
+    var err = eval("(" + data.responseText + ")");
+    //alert(err.Message);
+    new PNotify({
+        title: 'Error',
+        text: err.Message,
+        type: 'error',
+        styling: 'bootstrap3'
+    });
 }
 
 

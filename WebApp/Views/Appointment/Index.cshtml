@@ -3,7 +3,32 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_PatientLayout.cshtml";
 }
+<style>
+    .user-detail {
+	max-width: 250px;
+	margin: 0 auto;
+	color: #375781;
+	height: 100px;
+}
 
+.img-viewdetail
+{
+    float: left;
+    border-radius: 50%;
+	max-width: 100px;
+}
+.img-1 {
+	float: left;
+}
+.img-1 img {
+	border-radius: 50%;
+	max-width: 100px;
+}
+.name-sec {
+	float: left;
+	margin-left: 20px;
+}
+</style>
 <!-- page content -->
 <div class="right_col">
     <div class="page-title">
@@ -16,11 +41,15 @@
     <div class="" role="tabpanel" data-example-id="togglable-tabs" style="padding-bottom: 180px;">
         <ul id="myTab" class="nav nav-tabs bar_tabs m-b-40" role="tablist">
             <li role="presentation" class="active">
-                <a href="#call_history" id="doctor" role="tab" data-toggle="tab" aria-expanded="true">Upcoming</a>
+                <a href="#call_history" id="doctor" role="tab" data-toggle="tab" aria-expanded="true" onclick="setTab('U')">Upcoming</a>
             </li>
             <li role="presentation" class="">
-                <a href="#find_doctor" role="tab" id="history" data-toggle="tab" aria-expanded="false">Reschedule</a>
+                <a href="#find_doctor" role="tab" id="history" data-toggle="tab" aria-expanded="false" onclick="setTab('R')">Reschedule</a>
             </li>
+            <li role="presentation" class="">
+                <a href="#pending_doctor" role="tab" id="ppending_doctor" data-toggle="tab" aria-expanded="false" onclick="setTab('P')">Pending</a>
+            </li>
+
            
         </ul>
         <div id="myTabContent" class="tab-content">
@@ -56,17 +85,38 @@
                     </div>
                 </div>
             </div>
+            <div role="tabpanel" class="tab-pane fade" id="pending_doctor" aria-labelledby="pending_doctor">
+                <div class="x_panel">
+
+
+                    <div class="x_content">
+                        <div id="divPending" class="table-responsive">
+
+                            @{
+                                Html.RenderAction("PartialPending", "Appointment");
+                            }
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
             </div>
+    <input type="text" style="display:none" id="pvappid" value="0">
+    <input type="text" style="display:none" id="pvcid" value="0">
     <div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4">
         <div class="modal-dialog" role="document" style="width: 350px;">
             <div id='myModalContent' class="modal-content" style="border-radius: 0;">
-               
+                @{
+                    Html.RenderAction("ViewAppDetails", "Appointment",new {appID=0});
+                }
             </div>
         </div>
     </div><!-- View App Detail -->
+    
 
     <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
         <div class="modal-dialog" role="document">
@@ -76,14 +126,16 @@
                     <h4 class="modal-title" id="timingsmodaltitle"></h4>
                 </div><!--/.modal header-->
 
-                <div class="modal-body text-left">
+                <div class="modal-body text-left" >
                     <div class="row" id="docrow">
                         <input type="text" style="display:none" id="doctorid">
 
                         <form class="form-horizontal form-label-left">
-                            <div class="col-sm-offset-4 col-sm-4">
-                                <div class="xdisplay_inputx form-group has-feedback">
+                            <div class="col-sm-offset-4 col-sm-4" style="width:320px">
+                                <button style="font-size:14px" type="button" class="btn btn-primary btn-sm pull-right" id="RAPP" onclick="rescheduleApp($('#RAppID').val())">Reschedule App</button>
+                                <div class="xdisplay_inputx form-group has-feedback" style="width:168px">
                                     <input type="text" class="form-control has-feedback-left active" id="fetchdate" placeholder="Choose a Date" aria-describedby="inputSuccess2Status">
+                                    
                                     <span class="fa fa-calendar-o form-control-feedback left date" aria-hidden="true"></span>
                                     <span id="inputSuccess2Status" class="sr-only">(success)</span>
                                 </div>
@@ -91,11 +143,11 @@
                         </form>
                       
                         <form class="form-horizontal form-label-left">
-                            <div class="col-sm-12 text-center">
+                            <div class="col-sm-12 text-center" style="height:230px;overflow:auto">
                                 <ul class="doctor_time" id="TimingsData"></ul>
                             </div>
                             <input type="text" style="display:none" id="RAppID">
-                            <button type="button" class="btn btn-primary btn-sm pull-right" id="RAPP" onclick="rescheduleApp($('#RAppID').val())">Save</button>
+                           
                         </form>
 
                     </div><!-- Timing Slots -->
@@ -109,18 +161,72 @@
 
  <!-- Load View App Detail Popup -->
 <script>
+    var currentTab = "";
    
-
+    var fetchDate="";
     var _objAppointment = {};
     var _doctorName="";
     var _doctorID="";
-    var appdate="";
-    function sendVariables(doctorid, editappid,elem) {
-        
+    var appdate = "";
+    $(document).ready(function () {
+        currentTab = "U";
+       
+    });
+    function setTab(cTab) {
+        currentTab = cTab;
+       
+    }
+
+
+    function sendVariables(appDate,doctorid, editappid,elem) {
+
         _doctorID=doctorid;
         _doctorName= $(elem).data('assigned-id');
-       
-        showDoctorTimings(doctorid,editappid);
+        showDoctorTimings(doctorid,editappid,appDate);
+    }
+
+    function completeConsult(editappid,cid) {
+      
+               //showLoader();
+                var objCRR = {};
+                
+                objCRR["userID"] = '@SessionHandler.UserInfo.userId';
+                objCRR["appID"] = editappid;
+                $.ajax({
+                    url: '@Url.Action("CompleteApp", "Appointment")',
+                    type: "POST",
+                    data: objCRR,
+                    dataType: 'json',
+                    success: function (result) {
+                        
+                        //Reload container
+                        if (result.Message != undefined) {
+                           
+                            new PNotify({ title: 'Error', text: "Consultation "+" "+result.Message, type: 'error', styling: 'bootstrap3' });
+                            $('#myModal4').modal('hide');
+                            //stopLoader();
+                        }
+                        else {
+                            new PNotify({ title: 'Success', text: "Consultation is marked as completed successfully.", type: 'success', styling: 'bootstrap3' });
+                            $('#myModal4').modal('hide');
+                           
+                            reloadContainer(function () {
+
+                                
+                                //Stop displaying loader
+                                //stopLoader();
+                            });
+                        }
+
+                    },
+                    error: function (err) {
+                        //alert(err.statusText);
+                        new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                        //Stop displaying loader
+                        //stopLoader();
+                    }
+                });
+
     }
 
     $(function () {
@@ -131,49 +237,76 @@
             var AppDetailPostBackURL = '/Appointment/ViewAppDetails';
             var docid = $buttonClicked.attr('data-id');
             var appID = $buttonClicked.attr('id');
-           
-           
-            $.ajax({
-                type: "GET",
-                url: AppDetailPostBackURL,
-                contentType: "application/json; charset=utf-8",
-                data: { "appID": appID },
-                datatype: "json",
-                success: function (data) {
-                    if(data!=undefined|| data!=null)
-                    {
-                        $('#myModalContent').html(data);
-                        $('#myModal4').modal('show');
-                        var $modal = $('#myModal4');
-                        $editappid = $modal.find('#editappid');
-                        $doctorid = $modal.find('#doctorid');
-                        $editappid.val(appID);
-                        $doctorid.val(docid);
-                    }
-                    else
-                    {
-                        new PNotify({ title: 'Error', text: "Dynamic content load failed.", type: 'error', styling: 'bootstrap3' });
-                        
-                    }
-                    
-                },
-                error: function (err) {
-                    new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
-                }
+            //$('#myModalContent').html(data);
+            //$('#myModal4').modal('show');
+            //$("#myModalContent").load('@Url.Action("ViewAppDetails", "Appointment")', function () {
+                //callback();
+            //});
+            //$('#myModal4').modal('show');
+            
+            reloadModelContainer(function ()
+            {
+                var $modal = $('#myModal4');
+                $editappid = $modal.find('#editappid');
+                $doctorid = $modal.find('#doctorid');
+                $editappid.val(appID);
+                $doctorid.val(docid);
+                //Stop displaying loader
+                //stopLoader();
+
             });
+            
+        });
+
+
+    });
+    $(function () {
+        $(".pendingviewdetail").click(function () {
+            //alert($("#pvcid").val());
+            //debugger;
+            var $buttonClicked = $(this);
+            var AppDetailPostBackURL = '/Appointment/ViewAppDetails';
+            var docid = $buttonClicked.attr('data-id');
+            var appID = $buttonClicked.attr('id');
+            //$('#myModalContent').html(data);
+            //$('#myModal4').modal('show');
+            //$("#myModalContent").load('@Url.Action("ViewAppDetails", "Appointment")', function () {
+            //callback();
+            //});
+            //$('#myModal4').modal('show');
+            
+            reloadModelContainer(function ()
+            {
+                var $modal = $('#myModal4');
+                $editappid = $modal.find('#editappid');
+                $doctorid = $modal.find('#doctorid');
+                $editappid.val(appID);
+                $doctorid.val(docid);
+                if($("#pvcid").val()!=0)
+                {
+                    $cc = $modal.find('#cc');
+                    $cc.show();
+                }
+                
+                //Stop displaying loader
+                //stopLoader();
+
+            });
+            
         });
 
 
     });
 
-   
     //Reschedule App
-    
+
     function rescheduleApp(appID)
     {
 
-        _objAppointment["appID"] =  $("#RAppID").val();
-        _objAppointment["patientID"] = @SessionHandler.UserInfo.Id;
+        _objAppointment["appID"] = $("#RAppID").val();
+        _objAppointment["appType"] = currentTab;
+        
+        _objAppointment["userID"] = '@SessionHandler.UserInfo.userId';
         $.ajax({
             url: '@Url.Action("RescheduleApp", "Appointment")',
             type: "POST",
@@ -198,7 +331,7 @@
                             {
                                 //Stop displaying loader
                                 //stopLoader();
-                               
+
                             });
                         }
                         else
@@ -206,7 +339,7 @@
                             new PNotify({ title: 'Error', text: result.ApiResultModel.message, type: 'error', styling: 'bootstrap3' });
                             $('#myModal1').modal('hide');
                             $('#myModal4').modal('hide');
-                            
+
                         }
 
 
@@ -228,7 +361,7 @@
         //debugger;
         var $buttonClicked = $(this);
         appdate = $buttonClicked.attr('data-id');
-
+        //alert($('#fetchdate').val());
     });
     $("#myModal1").on('show.bs.modal', function (e) {
         var $modal = $(this);
@@ -246,9 +379,10 @@
 
             docName = $('#' + mydocid).data('todo').doctorName;
         }
-        
+
         $("#doctorid").val(todoId);
-        $("#timingsmodaltitle").text(docName + " Timings");
+        var cap=docName.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        $("#timingsmodaltitle").text("Dr. "+cap + " Timings");
 
 
 
@@ -261,7 +395,7 @@
     });
     $('#fetchdate').on('apply.daterangepicker', function (ev, picker) {
         //do something, like clearing an input
-        //alert($('#fetchdate').val());
+        
         fetchTimings( $('#fetchdate').val());
 
     });
@@ -293,7 +427,7 @@
                     var tablehtml = "";
                     $.each(response.Object, function (item) {
 
-                        tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + fetchdate + "\")'>" + response.Object[item] + "</button></li>";
+                        tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + fetchdate + "\")' style='width:85px'>" + response.Object[item] + "</button></li>";
 
                     });
 
@@ -306,8 +440,10 @@
         });
     }
 
-    function showDoctorTimings(doctorID,appID) {
-
+    function showDoctorTimings(doctorID,appID,appDate) {
+        
+        var cappDate = appDate.split("/");
+        var f = new Date(cappDate[2], cappDate[1] - 1, cappDate[0]);
         $("#RAppID").val(appID);
         var today = new Date();
         var dd = today.getDate();
@@ -326,7 +462,17 @@
         $('#fetchdate').val(today);
         var _objSearch = {};
 
-        _objSearch["appDate"] = $('#fetchdate').val();
+        _objSearch["appDate"] = appDate;
+        $('#fetchdate').val(appDate);
+        debugger;
+        //var d1 = new Date(appDate.ToString());
+        //var d2 = new Date(today.ToString());
+        //alert(new Date(today) > new Date(appDate));
+        if (new Date(today) > new Date(appDate))
+        {
+            //alert('previous date app reschedule');
+            $('#fetchdate').val(today);
+        }
         _objSearch["doctorID"] = doctorID;
 
         var div = "";
@@ -343,7 +489,7 @@
                     var tablehtml = "";
                     $.each(response.Object, function (item) {
 
-                        tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + $("#fetchdate").val() + "\")'>" + response.Object[item] + "</button></li>";
+                        tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + response.Object[item] + "</button></li>";
 
                     });
 
@@ -377,15 +523,26 @@
     }
 
     function reloadContainer(callback) {
-        
+
         $("#divReschedule").load('@Url.Action("PartialReschedule", "Appointment")', function () {
             callback();
         });
         $("#divUpcoming").load('@Url.Action("PartialUpcoming", "Appointment")', function () {
             callback();
         });
+        $("#divPending").load('@Url.Action("PartialPending", "Appointment")', function () {
+            callback();
+        });
 
 
+    }
+    function reloadModelContainer(callback) {
+        var appid=$("#pvappid").val();
+      
+        $("#myModalContent").load('@Url.Action("ViewAppDetails", "Appointment")?appID='+appid, function () {
+            callback();
+        });
+       
     }
 
 </script> 

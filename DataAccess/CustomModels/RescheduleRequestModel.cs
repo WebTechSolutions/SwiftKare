@@ -8,7 +8,8 @@ namespace DataAccess.CustomModels
 {
     public class RescheduleRequestModel
     {
-        public long doctorID { get; set; }
+        public string userID { get; set; }
         public long appID { get; set; }
+        public string appType { get; set; }
     }
 }

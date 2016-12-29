@@ -13,12 +13,14 @@ namespace DataAccess
     
     public partial class SP_GetPatientConsultations_Result
     {
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public Nullable<int> duration { get; set; }
+        public long consultID { get; set; }
+        public string DoctorName { get; set; }
+        public int duration { get; set; }
         public string review { get; set; }
-        public Nullable<int> reviewStar { get; set; }
-        public Nullable<System.TimeSpan> appTime { get; set; }
-        public Nullable<System.DateTime> appDate { get; set; }
+        public int reviewStar { get; set; }
+        public Nullable<bool> reviewStatus { get; set; }
+        public string appTime { get; set; }
+        public string appDate { get; set; }
+        public string rov { get; set; }
     }
 }

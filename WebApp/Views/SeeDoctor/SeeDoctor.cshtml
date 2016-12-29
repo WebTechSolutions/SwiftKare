@@ -341,8 +341,8 @@
                                         <div class="row" id="docrow">
                                             <input type="text" style="display:none" id="doctorid">
 
-                                            <form class="form-horizontal form-label-left">
-                                                <div class="col-sm-offset-4 col-sm-4">
+                                            <form class="form-horizontal form-label-left"> @*style="height:230px"*@
+                                                <div class="col-sm-offset-4 col-sm-4" style="width: 182px;">
                                                     <div class="xdisplay_inputx form-group has-feedback">
                                                         <input type="text" class="form-control has-feedback-left active" id="fetchdate" placeholder="Choose a Date" aria-describedby="inputSuccess2Status">
                                                         <span class="fa fa-calendar-o form-control-feedback left date" aria-hidden="true"></span>
@@ -362,7 +362,7 @@
 
 
                                             <form class="form-horizontal form-label-left">
-                                                <div class="col-sm-12 text-center">
+                                                <div class="col-sm-12 text-center" style="height:230px;overflow:auto">
                                                     <ul class="doctor_time" id="TimingsData"></ul>
                                                 </div>
                                                 @*<button type="button" class="btn btn-primary btn-sm pull-right" id="apply">Apply</button>*@
@@ -918,7 +918,8 @@
         $("#doctorid").val(mydocid);
         var todoId = $('#' + mydocid).data('todo').id;
         var docName = $('#' + mydocid).data('todo').doctorName;
-        $("#timingsmodaltitle").text(docName+" Timings");
+        var cap=docName.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        $("#timingsmodaltitle").text("Dr. "+cap + " Timings");
     });
     $("#myModal8").on('show.bs.modal', function (e) {
         var $modal = $(this);
@@ -929,34 +930,7 @@
     });
 
 
-    //$(function () {
-    //    Dropzone.options.mydropzone = {
-    //        maxFiles: 2,
-    //        addRemoveLinks: true,
-    //        url:'/SeeDoctor/UploadFiles',
-    //        dictResponseError: 'Server not Configured',
-    //        acceptedFiles: ".pdf,.png,.jpg,.gif,.bmp,.jpeg",
-    //        autoDiscover:false,
-    //        uploadMultiple: true,
-    //        autoProcessQueue: false
-    //    };
-    //})
-    //$(document).ready(function () {
-    //    Dropzone.autoDiscover = false;
-    //    //Simple Dropzonejs
-    //    $("#dZUpload").dropzone({
-    //        url: 'SeeDoctor/ProcessRequest',
-    //        addRemoveLinks: true,
-    //        success: function (file, response) {
-    //            var imgName = response;
-    //            file.previewElement.classList.add("dz-success");
-    //            console.log("Successfully uploaded :" + imgName);
-    //        },
-    //        error: function (file, response) {
-    //            file.previewElement.classList.add("dz-error");
-    //        }
-    //    });
-    //});
+    
 
 </script>
 

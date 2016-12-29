@@ -259,8 +259,7 @@ function untoggle(docid, patid) {
 }
 function SearchDoctor(patientID) {
 
-    //blockUI();
-    //$.blockUI({ message: "<h2>test</h2>" });
+    
     var _objSearch = {};
     _objSearch["language"] = $("#Language").find(":selected").text();
     _objSearch["speciality"] = $("#Speciality").find(":selected").text();
@@ -396,7 +395,7 @@ function fetchTimings(fetchdate) {
                 var tablehtml = "";
                 $.each(response.Object, function (item) {
 
-                    tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + fetchdate + "\")'>" + response.Object[item] + "</button></li>";
+                    tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + fetchdate + "\")' style='width:85px'>" + response.Object[item] + "</button></li>";
 
                 });
 
@@ -444,7 +443,7 @@ function showDoctorTimings(doctorID) {
             var tablehtml = "";
             $.each(response.Object, function (item) {
 
-                tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + $("#fetchdate").val() + "\")'>" + response.Object[item] + "</button></li>";
+                tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + response.Object[item] + "</button></li>";
 
             });
 
@@ -458,11 +457,11 @@ function showDoctorTimings(doctorID) {
 
 
 function errorRes(data) {
-   // var err = eval("(" + data.responseText + ")");
+    var err = eval("(" + data.responseText + ")");
     //alert(err.Message);
     new PNotify({
         title: 'Error',
-        text: data.Message,
+        text: err.Message,
         type: 'error',
         styling: 'bootstrap3'
     });

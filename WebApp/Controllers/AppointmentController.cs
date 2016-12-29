@@ -9,17 +9,18 @@ using WebApp.Helper;
 
 using WebApp.Repositories.PatientRepositories;
 
-
+//
 namespace WebApp.Controllers
 {
     public class AppointmentController : Controller
     {
         AppointmentRepository oAppointmentRepository;
- 
+        ConsultationRepository oConsultationRepository;
+
         public AppointmentController()
         {
             oAppointmentRepository = new AppointmentRepository();
-         
+            oConsultationRepository = new ConsultationRepository();
         }
         // GET: Appointment
         public ActionResult Index()
@@ -57,7 +58,23 @@ namespace WebApp.Controllers
             }
             return PartialView("PartialReschedule");
         }
+        public PartialViewResult PartialPending()
+        {
+            try
+            {
+                var oData = oAppointmentRepository.GetPendingApp(SessionHandler.UserInfo.Id);
 
+                return PartialView("PartialPending", oData);
+
+            }
+
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                ViewBag.Error = ex.Response.ReasonPhrase.ToString();
+                ViewBag.Success = "";
+            }
+            return PartialView("PartialPending");
+        }
         public PartialViewResult PartialUpcoming()
         {
             try
@@ -76,11 +93,13 @@ namespace WebApp.Controllers
             return PartialView("PartialUpcoming");
         }
 
-        public ActionResult ViewAppDetails(int appID)
+      
+        public PartialViewResult ViewAppDetails(long? appID)
         {
             try
             {
-                var oData = oAppointmentRepository.GetAppDetail(appID);
+                long apID = Convert.ToInt64(appID);
+                var oData = oAppointmentRepository.GetAppDetail(apID);
                 return PartialView("PartialViewDetail", oData);
             }
             catch (System.Web.Http.HttpResponseException ex)
@@ -103,6 +122,22 @@ namespace WebApp.Controllers
             catch (System.Web.Http.HttpResponseException ex)
             {
                 return Json(new { Message = ex.Response });
+            }
+
+        }
+
+        public JsonResult CompleteApp(CompleteConsultPatient _objCAPP)
+        {
+            try
+            {
+                ApiResultModel apiresult = new ApiResultModel();
+                apiresult = oConsultationRepository.CompleteConsult(_objCAPP);
+                return Json(new { Success = true, ApiResultModel = apiresult });
+
+            }
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                return Json(new { Message = ex.Response.ReasonPhrase.ToString() });
             }
 
         }
