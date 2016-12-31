@@ -507,6 +507,7 @@
                     window.location.href = request.response.redirectUrl;
             }
         });
+        $('#menu_toggle').click(function () { if (document.body.className == "nav-md footer_fixed") { ($("body").attr("class", "nav-sm footer_fixed")); $('.fa-angle-down').show(); } else { $("body").attr("class", "nav-md footer_fixed"); } });
     </script>
 
     @RenderSection("scripts", required: false)

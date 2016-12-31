@@ -73,7 +73,7 @@
     </style>
 </head>
 
-<body class="nav-md">
+<body class="nav-md footer_fixed">
     <div style="display:none">
         <input type="text" id="receiverConnectionId" value="" style="display:none;" />
         Please select the doctor before calling...
@@ -578,6 +578,8 @@
                     window.location.href = request.response.redirectUrl;
             }
         });
+
+        $('#menu_toggle').click(function () { if (document.body.className == "nav-md footer_fixed") { ($("body").attr("class", "nav-sm footer_fixed")); $('.fa-angle-down').show(); } else { $("body").attr("class", "nav-md footer_fixed"); } });
     </script>
 
 
