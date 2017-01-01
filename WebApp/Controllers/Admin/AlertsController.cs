@@ -40,18 +40,18 @@ namespace SwiftKare.Controllers
 
                 try
                 {
-                    var alerttext = Request.Form["alerttext"].ToString();
-                    var alertfor = Request.Form["alertfor"].ToString();
-                    var alert = (
-                                    from p in db.Alerts
-                                    where (p.alertFor == alertfor && p.alertText == alerttext)
-                                    select p
-                                ).FirstOrDefault();
-                    if (alert == null)
-                    {
-                        db.SP_AddAlerts(alerttext, alertfor, Session["LogedUserID"].ToString());
-                        db.SaveChanges();
-                    }
+                    //var alerttext = Request.Form["alerttext"].ToString();
+                    //var alertfor = Request.Form["alertfor"].ToString();
+                    //var alert = (
+                    //                from p in db.Alerts
+                    //                where (p.alertFor == alertfor && p.alertText == alerttext)
+                    //                select p
+                    //            ).FirstOrDefault();
+                    //if (alert == null)
+                    //{
+                    //    db.SP_AddAlerts(alerttext, alertfor, Session["LogedUserID"].ToString());
+                    //    db.SaveChanges();
+                    //}
                     return RedirectToAction("Index");
 
                 }
@@ -76,19 +76,19 @@ namespace SwiftKare.Controllers
             {
                 try
                 {
-                    var id = Request.Form["id"].ToString();
-                    var alerttext = Request.Form["alerttext"].ToString();
-                    var alertfor = Request.Form["alertfor"].ToString();
-                    var alert = (
-                                    from p in db.Alerts
-                                    where (p.alertFor == alertfor && p.alertText == alerttext)
-                                    select p
-                                ).FirstOrDefault();
-                    if (alert == null)
-                    {
-                        db.sp_UpdateAlerts(Convert.ToInt64(id), alerttext, alertfor, Session["LogedUserID"].ToString(), System.DateTime.Now);
-                        db.SaveChanges();
-                    }
+                    //var id = Request.Form["id"].ToString();
+                    //var alerttext = Request.Form["alerttext"].ToString();
+                    //var alertfor = Request.Form["alertfor"].ToString();
+                    //var alert = (
+                    //                from p in db.Alerts
+                    //                where (p.alertFor == alertfor && p.alertText == alerttext)
+                    //                select p
+                    //            ).FirstOrDefault();
+                    //if (alert == null)
+                    //{
+                    //    db.sp_UpdateAlerts(Convert.ToInt64(id), alerttext, alertfor, Session["LogedUserID"].ToString(), System.DateTime.Now);
+                    //    db.SaveChanges();
+                    //}
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)

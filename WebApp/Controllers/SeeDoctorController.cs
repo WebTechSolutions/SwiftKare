@@ -42,7 +42,24 @@ namespace WebApp.Controllers
                 return View();
             }
         }
+        public PartialViewResult MyCareTeam()
+        {
+            try
+            {
+                SeeDoctorRepository objDoctorRepo = new SeeDoctorRepository();
+                var favdoc = objDoctorRepo.MyCareTeam(SessionHandler.UserInfo.Id);
 
+                return PartialView("MyCareTeamView", favdoc);
+
+            }
+
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                ViewBag.Error = ex.Response.ReasonPhrase.ToString();
+                ViewBag.Success = "";
+            }
+            return PartialView("MyCareTeamView");
+        }
         [HttpPost]
         // Languages
         public JsonResult GetAllLanguages()
@@ -443,7 +460,7 @@ namespace WebApp.Controllers
 
         //Patient Medication
         [HttpPost]
-        public JsonResult GetMedicines()
+        public JsonResult GetMedicines(string prefix)
         {
             try
             {
@@ -797,6 +814,23 @@ namespace WebApp.Controllers
 
         }
 
+        [HttpPost]
+        public JsonResult AutoCompleteMedicine(string prefix)
+        {
+
+            try
+            {
+                MedicationRepository objRepo = new MedicationRepository();
+                var medicine = objRepo.GetMedicines(prefix);
+                return Json(medicine, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                return Json(new { Message = ex.Response });
+            }
+            //return Json(customers);
+        }
 
         #region Stripe Pay
 

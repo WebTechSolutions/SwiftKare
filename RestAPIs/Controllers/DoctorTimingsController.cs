@@ -144,8 +144,9 @@ namespace RestAPIs.Controllers
         }
 
         // DELETE: api/DoctorTimings/5
+        [Route("api/deleteDoctorTiming")]
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> DeleteDoctorTiming(long id)
+        public async Task<IHttpActionResult> RemoveDoctorTiming(long id)
         {
 
             DoctorTiming doctorTiming = await db.DoctorTimings.FindAsync(id);

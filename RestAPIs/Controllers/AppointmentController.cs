@@ -223,6 +223,8 @@ namespace RestAPIs.Controllers
         public async Task<HttpResponseMessage> RescheduleAppointments(RescheduleAppointmentModel model)
         {
             Appointment app = new Appointment();
+            DateTime? tempappdate;
+            TimeSpan? tempapptime;
             try
             {
                 if (model.appDate == null)
@@ -269,7 +271,8 @@ namespace RestAPIs.Controllers
                     }
                     else
                     {
-
+                        tempappdate = result.appDate.Value.Date;
+                        tempapptime = result.appTime;
                         result.appTime = To24HrTime(model.appTime);
                         result.appDate = Convert.ToDateTime(model.appDate);
                         result.mb = model.userID;
@@ -279,8 +282,8 @@ namespace RestAPIs.Controllers
                         db.Entry(result).State = EntityState.Modified;
                         await db.SaveChangesAsync();
                         Alert alert = new Alert();
-                        alert.alertFor = result.doctorID.ToString();
-                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + result.appDate + " " + result.appTime + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " " + model.appTime;
+                        alert.alertFor = result.doctorID;
+                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + tempappdate + " at " + tempapptime + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
                         alert.cd = System.DateTime.Now;
                         alert.cb = model.userID;
                         alert.active = true;
@@ -293,7 +296,9 @@ namespace RestAPIs.Controllers
                 }
                 if (model.appType == "R")
                 {
-                        result.appTime = To24HrTime(model.appTime);
+                    tempappdate = result.appDate.Value.Date;
+                    tempapptime = result.appTime;
+                    result.appTime = To24HrTime(model.appTime);
                         result.appDate = Convert.ToDateTime(model.appDate);
                         result.mb = model.userID;
                         result.md = System.DateTime.Now;
@@ -301,9 +306,9 @@ namespace RestAPIs.Controllers
                         db.Entry(result).State = EntityState.Modified;
                         await db.SaveChangesAsync();
                         Alert alert = new Alert();
-                        alert.alertFor = result.doctorID.ToString();
-                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + result.appDate + " " + result.appTime + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " " + model.appTime;
-                        alert.cd = System.DateTime.Now;
+                        alert.alertFor = result.doctorID;
+                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + tempappdate + " at " + tempapptime + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
+                    alert.cd = System.DateTime.Now;
                         alert.cb = model.userID;
                         alert.active = true;
                         alert.active = true;
@@ -314,6 +319,8 @@ namespace RestAPIs.Controllers
                 }
                 if (model.appType == "P")
                 {
+                    tempappdate = result.appDate.Value.Date;
+                    tempapptime = result.appTime;
                     result.appTime = To24HrTime(model.appTime);
                     result.appDate = Convert.ToDateTime(model.appDate);
                     result.mb = model.userID;
@@ -322,8 +329,8 @@ namespace RestAPIs.Controllers
                     db.Entry(result).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                     Alert alert = new Alert();
-                    alert.alertFor = result.doctorID.ToString();
-                    alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + result.appDate + " " + result.appTime + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " " + model.appTime;
+                    alert.alertFor = result.doctorID;
+                    alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + tempappdate + " at " + tempapptime + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
                     alert.cd = System.DateTime.Now;
                     alert.cb = model.userID;
                     alert.active = true;
