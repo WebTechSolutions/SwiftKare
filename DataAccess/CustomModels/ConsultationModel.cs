@@ -32,4 +32,23 @@ namespace DataAccess.CustomModels
         public string chiefComplaints { get; set; }
         public int? paymentAmt { get; set; }
     }
+
+    public class ROSItem {
+
+        public ROSItem() {
+            systemItems = new List<ROSItemDetail>();
+        }
+
+        public long systemID { get; set; }
+        public string systemName { get; set; }
+
+        public List<ROSItemDetail> systemItems { get; set; }
+    }
+
+    public class ROSItemDetail
+    {
+        public long systemItemID { get; set; }
+        public string systemItemName { get; set; }
+    }
+
 }

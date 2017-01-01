@@ -56,90 +56,157 @@ namespace RestAPIs.Controllers
                 }
                 else
                 {
-                    ConsultationRO cons = new ConsultationRO();
-                    cons.active = true;
-                    cons.cd = System.DateTime.Now;
-                    cons.cb = model.userID;
-                    cons.systemItemID = model.sysitemid;
-                    cons.systemItemName = model.sysitemname;
-                    cons.consultationID = model.consultID;
-                    db.ConsultationROS.Add(cons);
+                    long consultRosId = 0;
+
+                    //Check if already exists
+                    var oConsultRos = db.ConsultationROS.FirstOrDefault
+                        (x => x.consultationID == model.consultID && x.systemItemName == model.sysitemname);
+
+                    if (oConsultRos != null)
+                    {
+                        //If, yes then update existing entry
+                        oConsultRos.active = true;
+                        db.Entry(oConsultRos).State = EntityState.Modified;
+
+                        consultRosId = oConsultRos.consultationRosID;
+                    }
+                    else {
+                        //Else, add new entry
+                        ConsultationRO cons = new ConsultationRO();
+                        cons.active = true;
+                        cons.cd = System.DateTime.Now;
+                        cons.cb = model.userID;
+                        cons.systemItemID = model.sysitemid;
+                        cons.systemItemName = model.sysitemname;
+                        cons.consultationID = model.consultID;
+                        db.ConsultationROS.Add(cons);
+
+                        consultRosId = cons.consultationRosID;
+                    }
+
                     await db.SaveChangesAsync();
-                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = cons.consultationRosID, message = "" });
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = consultRosId, message = "" });
                     return response;
                 }
-
             }
             catch (Exception ex)
             {
                 return ThrowError(ex, "AddconsultROS in ConsultController");
             }
         }
+
+        [HttpPost]
+        [Route("api/removeconsultROS")]
+        public async Task<HttpResponseMessage> RemoveconsultROS(ConsultROSModel model)
+        {
+            try
+            {
+                if (model.userID == "")
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid user ID." });
+                    return response;
+                }
+
+                if (model.sysitemname == "" || model.sysitemname == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "System item name is required." });
+                    return response;
+                }
+                if (model.sysitemid == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid system item ID." });
+                    return response;
+                }
+
+                var oConsultRos = db.ConsultationROS.FirstOrDefault(x => x.consultationID == model.consultID && x.systemItemName == model.sysitemname);
+                if (oConsultRos != null)
+                {
+                    oConsultRos.active = false;
+
+                    db.Entry(oConsultRos).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = oConsultRos.consultationRosID, message = "" });
+                }
+                else
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "" });
+                }
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "RemoveConsultROS in ConsultController");
+            }
+        }
+
+
         [Route("api/getConsultationDetails")]
         public HttpResponseMessage GetConsultationDetails(long consultID)
         {
             try
             {
-                    //var result = db.SP_GetConsultationDetails(consultID).ToList();
-                    var result = (from cn in db.Consultations
-                                  where cn.consultID == consultID && cn.active == true
-                                  select new
-                                  {
-                                      consultID = cn.consultID,
-                                      subjective = cn.subjective,
-                                      objective = cn.objective,
-                                      assessment = cn.assessment,
-                                      plans = cn.plans,
-                                      rosItems = (from ros in db.ConsultationROS
-                                                  where ros.consultationID == cn.consultID && ros.active == true
-                                                  select new { systemItemName = ros.systemItemName }).ToList(),
-                                      AppointmentVM = (from app in db.Appointments
-                                                     where app.appID == cn.appID && app.active == true
-                                                     select new
-                                                     {
-                                                         appID = app.appID,
-                                                         rov = app.rov,
-                                                         cheifcomplaints = app.chiefComplaints,
-                                                         payment = app.paymentAmt,
-                                                         appDate = app.appDate,
-                                                         appTime = app.appTime
-                                                     }).FirstOrDefault(),
-                                      PatientVM = (from r in db.Patients
-                                                 where r.patientID == cn.patientID && r.active == true
-                                                 select new
-                                                 {
-                                                     patientID = r.patientID,
-                                                     PatPicture = r.picture,
-                                                     patientName = r.firstName + " " + r.lastName,
-                                                     patientGender = r.gender,
-                                                     pharmacy = r.pharmacy,
-                                                     dob = r.dob,
-                                                     languages = (from l in db.PatientLanguages
-                                                                  where l.patientID == r.patientID && l.active == true
-                                                                  select new { languageName = l.languageName }).ToList()
-                                                 }).FirstOrDefault(),
-                                      DoctorVM = (from doc in db.Doctors
-                                                where doc.doctorID == cn.doctorID && doc.active == true
-                                                select new
-                                                {
-                                                    doctorID = doc.doctorID,
-                                                    docPicture = doc.picture,
-                                                    doctorName = doc.firstName + " " + doc.lastName,
-                                                    doctorGender = doc.gender,
-                                                    dob = doc.dob,
-                                                    city = doc.city,
-                                                    state = doc.state,
-                                                    languages = (from l in db.DoctorLanguages
-                                                                 where l.doctorID == doc.doctorID && l.active == true
-                                                                 select new { languageName = l.languageName }).ToList(),
-                                                    specialities = (from s in db.DoctorSpecialities
-                                                                    where s.doctorID == doc.doctorID && s.active == true
-                                                                    select new { specialityName = s.specialityName }).ToList()
-                                                }).FirstOrDefault()
-                                  }).FirstOrDefault();
-                    response = Request.CreateResponse(HttpStatusCode.OK, result);
-                    return response;
-              
+                //var result = db.SP_GetConsultationDetails(consultID).ToList();
+                var result = (from cn in db.Consultations
+                              where cn.consultID == consultID && cn.active == true
+                              select new
+                              {
+                                  consultID = cn.consultID,
+                                  subjective = cn.subjective,
+                                  objective = cn.objective,
+                                  assessment = cn.assessment,
+                                  plans = cn.plans,
+                                  rosItems = (from ros in db.ConsultationROS
+                                              where ros.consultationID == cn.consultID && ros.active == true
+                                              select new { systemItemName = ros.systemItemName }).ToList(),
+                                  AppointmentVM = (from app in db.Appointments
+                                                   where app.appID == cn.appID && app.active == true
+                                                   select new
+                                                   {
+                                                       appID = app.appID,
+                                                       rov = app.rov,
+                                                       cheifcomplaints = app.chiefComplaints,
+                                                       payment = app.paymentAmt,
+                                                       appDate = app.appDate,
+                                                       appTime = app.appTime
+                                                   }).FirstOrDefault(),
+                                  PatientVM = (from r in db.Patients
+                                               where r.patientID == cn.patientID && r.active == true
+                                               select new
+                                               {
+                                                   patientID = r.patientID,
+                                                   PatPicture = r.picture,
+                                                   patientName = r.firstName + " " + r.lastName,
+                                                   patientGender = r.gender,
+                                                   pharmacy = r.pharmacy,
+                                                   dob = r.dob,
+                                                   languages = (from l in db.PatientLanguages
+                                                                where l.patientID == r.patientID && l.active == true
+                                                                select new { languageName = l.languageName }).ToList()
+                                               }).FirstOrDefault(),
+                                  DoctorVM = (from doc in db.Doctors
+                                              where doc.doctorID == cn.doctorID && doc.active == true
+                                              select new
+                                              {
+                                                  doctorID = doc.doctorID,
+                                                  docPicture = doc.picture,
+                                                  doctorName = doc.firstName + " " + doc.lastName,
+                                                  doctorGender = doc.gender,
+                                                  dob = doc.dob,
+                                                  city = doc.city,
+                                                  state = doc.state,
+                                                  languages = (from l in db.DoctorLanguages
+                                                               where l.doctorID == doc.doctorID && l.active == true
+                                                               select new { languageName = l.languageName }).ToList(),
+                                                  specialities = (from s in db.DoctorSpecialities
+                                                                  where s.doctorID == doc.doctorID && s.active == true
+                                                                  select new { specialityName = s.specialityName }).ToList()
+                                              }).FirstOrDefault()
+                              }).FirstOrDefault();
+                response = Request.CreateResponse(HttpStatusCode.OK, result);
+                return response;
+
             }
             catch (Exception ex)
             {
@@ -219,12 +286,12 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid consultation ID." });
                     return response;
                 }
-                if (model.patientID == 0 )
+                if (model.patientID == 0)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
                     return response;
                 }
-                if (model.star == 0  || model.star > 5 || model.star < 0)
+                if (model.star == 0 || model.star > 5 || model.star < 0)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid review star." });
                     return response;
@@ -265,12 +332,13 @@ namespace RestAPIs.Controllers
             {
                 var rosItems = (from ps in db.PatientSystems
                                 where ps.active == true
-                                select new {
-                                    systemID= ps.systemID,
-                                    systemName=ps.systemName,
+                                select new ROSItem
+                                {
+                                    systemID = ps.systemID,
+                                    systemName = ps.systemName,
                                     systemItems = (from si in db.SystemItemsses
-                                        where si.systemID == ps.systemID && si.active == true
-                                        select new { systemItemID = si.systemItemID, systemItemName = si.systemItemName }).ToList()
+                                                   where si.systemID == ps.systemID && si.active == true
+                                                   select new ROSItemDetail { systemItemID = si.systemItemID, systemItemName = si.systemItemName }).ToList()
                                 }).ToList();
                 //select db.SystemItemsses.Where(si => si.systemID == ps.systemID && si.active == true).ToList());
                 //(from si in db.SystemItemsses
@@ -295,8 +363,8 @@ namespace RestAPIs.Controllers
             try
             {
                 var consNotes = (from cn in db.Consultations
-                                 where cn.consultID==consultID && cn.active == true
-                                 select new { consultID = cn.consultID, subjective = cn.subjective ,objective=cn.objective,assessment=cn.assessment,plans=cn.plans}).ToList();
+                                 where cn.consultID == consultID && cn.active == true
+                                 select new { consultID = cn.consultID, subjective = cn.subjective, objective = cn.objective, assessment = cn.assessment, plans = cn.plans }).ToList();
 
                 response = Request.CreateResponse(HttpStatusCode.OK, consNotes);
                 return response;
@@ -305,8 +373,6 @@ namespace RestAPIs.Controllers
             {
                 return ThrowError(ex, "GetConsultationNotes in ConsultationController");
             }
-
-
         }
 
         [Route("api/getConsultationInfo")]
@@ -317,11 +383,18 @@ namespace RestAPIs.Controllers
             {
                 var consNotes = (from cn in db.Consultations
                                  where cn.consultID == consultID && cn.active == true
-                                 select new { consultID = cn.consultID, subjective = cn.subjective, objective = cn.objective, assessment = cn.assessment, plans = cn.plans,
-                                              consultTime=cn.duration,
-                                     ros = (from r in db.ConsultationROS where r.consultationID==consultID && r.active==true
-                                            select new {id= r.consultationRosID, systemItemID= r.systemItemID, systemItemName= r.systemItemName }).ToList()
-                                    }).ToList();
+                                 select new
+                                 {
+                                     consultID = cn.consultID,
+                                     subjective = cn.subjective,
+                                     objective = cn.objective,
+                                     assessment = cn.assessment,
+                                     plans = cn.plans,
+                                     consultTime = cn.duration,
+                                     ros = (from r in db.ConsultationROS
+                                            where r.consultationID == consultID && r.active == true
+                                            select new { id = r.consultationRosID, systemItemID = r.systemItemID, systemItemName = r.systemItemName }).ToList()
+                                 }).ToList();
 
                 response = Request.CreateResponse(HttpStatusCode.OK, consNotes);
                 return response;
@@ -358,7 +431,7 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid user ID." });
                     return response;
                 }
-                
+
                 if (model.sessionID == "" || model.sessionID == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Seesion ID is missing." });
@@ -371,7 +444,7 @@ namespace RestAPIs.Controllers
                 }
 
                 Appointment appres = db.Appointments.Where(a => a.appID == model.appID).FirstOrDefault();
-                if(appres==null)
+                if (appres == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Appointment not found." });
                     return response;
@@ -390,13 +463,57 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = cons.consultID, message = "" });
                     return response;
                 }
-               
+
             }
             catch (Exception ex)
             {
                 return ThrowError(ex, "CreateConsult in ConsultController");
             }
         }
+
+
+        [HttpPost]
+        [Route("api/createConsultWithoutAppointment")]
+        public async Task<HttpResponseMessage> CreateConsultWithoutAppointment(CreateConsultModel model)
+        {
+            try
+            {
+                if (model.userID == "")
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid user ID." });
+                    return response;
+                }
+
+                if (model.sessionID == "" || model.sessionID == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Seesion ID is missing." });
+                    return response;
+                }
+                if (model.token == "" || model.token == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Token is missing." });
+                    return response;
+                }
+
+                Consultation cons = new Consultation();
+                cons.active = true;
+                cons.appID = null;
+                cons.cd = System.DateTime.Now;
+                cons.cb = model.userID;
+                cons.seesionID = model.sessionID;
+                cons.token = model.token;
+                db.Consultations.Add(cons);
+                await db.SaveChangesAsync();
+                response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = cons.consultID, message = "" });
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "CreateConsult in ConsultController");
+            }
+        }
+
 
         [HttpPost]
         [Route("api/addConsultStartTime")]
@@ -466,7 +583,7 @@ namespace RestAPIs.Controllers
                     cons.endTime = TimeSpan.Parse(System.DateTime.Now.ToString("HH:mm"));
                     TimeSpan st = TimeSpan.Parse(cons.startTime.ToString());
                     TimeSpan et = TimeSpan.Parse(cons.endTime.ToString());
-                    TimeSpan duration=et.Subtract(st);
+                    TimeSpan duration = et.Subtract(st);
                     cons.duration = duration.Minutes;
                     cons.endby = model.userEmail;
                     db.Entry(cons).State = EntityState.Modified;
@@ -564,6 +681,184 @@ namespace RestAPIs.Controllers
                 return ThrowError(ex, "addDoctorNotes in ConsultController");
             }
         }
+
+
+
+        [HttpPost]
+        [Route("api/addDoctorNotesSubjective")]
+        public async Task<HttpResponseMessage> AddDoctorNotesSubjective(long consultId, string subjective)
+        {
+            try
+            {
+                if (consultId == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid consultation ID." });
+                    return response;
+                }
+
+                if (subjective == "" || subjective == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Provide subject details." });
+                    return response;
+                }
+
+                Consultation conss = db.Consultations.Where(c => c.consultID == consultId && c.active == true).FirstOrDefault();
+                if (conss != null)
+                {
+                    conss.md = System.DateTime.Now;
+                    conss.subjective = subjective;
+                    db.Entry(conss).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = conss.consultID, message = "" });
+                    return response;
+                }
+                else
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Consultation not found." });
+                    return response;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "addDoctorNotesSubjective in ConsultController");
+            }
+        }
+
+
+        [HttpPost]
+        [Route("api/addDoctorNotesObjective")]
+        public async Task<HttpResponseMessage> AddDoctorNotesObjective(long consultId, string objective)
+        {
+            try
+            {
+                if (consultId == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid consultation ID." });
+                    return response;
+                }
+
+                if (objective == "" || objective == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Provide subject details." });
+                    return response;
+                }
+
+                Consultation conss = db.Consultations.Where(c => c.consultID == consultId && c.active == true).FirstOrDefault();
+                if (conss != null)
+                {
+                    conss.md = System.DateTime.Now;
+                    conss.objective = objective;
+                    db.Entry(conss).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = conss.consultID, message = "" });
+                    return response;
+                }
+                else
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Consultation not found." });
+                    return response;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "addDoctorNotesObjective in ConsultController");
+            }
+        }
+
+
+        [HttpPost]
+        [Route("api/addDoctorNotesAssessment")]
+        public async Task<HttpResponseMessage> AddDoctorNotesAssessment(long consultId, string assessment)
+        {
+            try
+            {
+                if (consultId == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid consultation ID." });
+                    return response;
+                }
+
+                if (assessment == "" || assessment == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Provide subject details." });
+                    return response;
+                }
+
+                Consultation conss = db.Consultations.Where(c => c.consultID == consultId && c.active == true).FirstOrDefault();
+                if (conss != null)
+                {
+                    conss.md = System.DateTime.Now;
+                    conss.assessment = assessment;
+                    db.Entry(conss).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = conss.consultID, message = "" });
+                    return response;
+                }
+                else
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Consultation not found." });
+                    return response;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "addDoctorNotesAssessment in ConsultController");
+            }
+        }
+
+
+        [HttpPost]
+        [Route("api/addDoctorNotesPlans")]
+        public async Task<HttpResponseMessage> AddDoctorNotesPlans(long consultId, string plans)
+        {
+            try
+            {
+                if (consultId == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid consultation ID." });
+                    return response;
+                }
+
+                if (plans == "" || plans == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Provide subject details." });
+                    return response;
+                }
+
+                Consultation conss = db.Consultations.Where(c => c.consultID == consultId && c.active == true).FirstOrDefault();
+                if (conss != null)
+                {
+                    conss.md = System.DateTime.Now;
+                    conss.plans = plans;
+                    db.Entry(conss).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = conss.consultID, message = "" });
+                    return response;
+                }
+                else
+                {
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 0, message = "Consultation not found." });
+                    return response;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "addDoctorNotesPlans in ConsultController");
+            }
+        }
+
+
+
+
+
+
+
+
+
 
         [HttpPost]
         [Route("api/CompleteConsultByPatient")]

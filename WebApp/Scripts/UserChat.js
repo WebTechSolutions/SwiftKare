@@ -276,19 +276,41 @@ var UserChat = function (apiKey, sessionId, token) {
 
 
     //Database connection end points - Starts
+
+    function networkDisconntected() {
+        //Get Consult Id From localStorage
+        var consultationId = localStorage.getItem('consultationKey');
+
+        var cUrl = '/UserChat/AddVCLog?consultId=' + consultationId + '&endReason=networkDisconnected';
+        $.post(cUrl);
+    }
+
     function SaveSessionStart(sessionId, callerId, calleId) {
-        //TODO: implement save to database logic here
+        //Get Consult Id From localStorage
+        var consultationId = localStorage.getItem('consultationKey');
+
+        var cUrl = '/UserChat/StartConsultation?consultId=' + consultationId;
+        $.post(cUrl);
     }
 
     function SaveSessionEnd(sessionId) {
-        //TODO: implement save to database logic here, and redirect.
-        alert("Call has ended. implement database save and redirect here.")
+        //Get Consult Id From localStorage
+        var consultationId = localStorage.getItem('consultationKey');
+
+        var cUrl = '/UserChat/StopConsultation?consultId=' + consultationId;
+        $.post(cUrl);
+
+        localStorage.removeItem('consultationKey');
 
         history.back(-1);
     }
 
     function SaveChatMessage(sessionId, senderId, receiverId, message) {
-        //TODO: implement save to database logic here
+        //Get Consult Id From localStorage
+        var consultationId = localStorage.getItem('consultationKey');
+
+        var cUrl = '/UserChat/AddChatMessages?consultId=' + consultationId + '&message=' + message + '&sender=' + senderId + '&receiver=' + receiverId;
+        $.post(cUrl);
     }
     //Database connection end points - Ends
 
@@ -331,6 +353,8 @@ var UserChat = function (apiKey, sessionId, token) {
                 //alert(event.reason);
 
                 if (event.reason == "networkDisconnected") {
+                    networkDisconntected();
+
                     //Try reconnecting till network available
                 } else {
                     stopCall();

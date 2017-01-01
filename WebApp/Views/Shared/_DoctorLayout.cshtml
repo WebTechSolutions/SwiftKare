@@ -447,7 +447,6 @@
             });
 
             chat.client.receiveMessage = function (msgFrom, msg, receiverId, senderid) {
-
                 $('#messages').empty();
 
                 if (msgFrom != 'ChatHub') {
@@ -458,8 +457,20 @@
                     var confirmCall = confirm(fromJson.name + " want to have a video consultation, Please press OK to accept!");
                     if (confirmCall == true) {
                         txt = "Accepted";
+
+                        //Log Call Accepted - Starts
+                        var cCallLogUrl = '@Url.Action("DoctorAcceptedCall", "UserChat")?patientId=' + senderid;
+                        $.post(cCallLogUrl);
+                        //Log Call Accepted - Ends
+
                     } else {
                         txt = "Declined";
+
+                        //Log Call Declined - Starts
+                        var cCallLogUrl = '@Url.Action("DoctorDeclinedCall", "UserChat")?patientId=' + senderid;
+                        $.post(cCallLogUrl);
+                        //Log Call Declined - Ends
+
                     }
 
                     //Save SignalR Information to local storage so that it can be used whenever needed.
@@ -487,7 +498,9 @@
                         var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=" + signalRInfo.SenderId + "&userType=Doctor&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + fromJson.name;
 
                         $.post(cUrlReadyForCall, function (oResp) {
-                            if (oResp == "True") {
+                            if (oResp) {
+                                localStorage.setItem('consultationKey', oResp);
+
                                 //Redirect doctor to call
                                 window.location = '@Url.Action("Index","UserChat")';
                             }

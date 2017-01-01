@@ -64,13 +64,13 @@ namespace RestAPIs.Controllers
                     return response;
                 }
 
-                if (model.sender == "" || model.sender == null || !(IsValid(model.sender)))
-                {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Provide valid email for sender." });
-                    return response;
-                }
+                //if (model.sender == "" || model.sender == null)//|| !(IsValid(model.sender)
+                //{
+                //    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Provide valid email for sender." });
+                //    return response;
+                //}
 
-                if (model.reciever == "" || model.reciever == null || !(IsValid(model.reciever)))
+                if (model.reciever == "" || model.reciever == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Provide valid email for reciever." });
                     return response;

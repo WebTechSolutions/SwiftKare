@@ -1,9 +1,11 @@
-﻿using OpenTokSDK;
+﻿using DataAccess.CustomModels;
+using OpenTokSDK;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Web;
+using WebApp.Repositories.VideoCallRepository;
 
 namespace WebApp.Helper
 {
@@ -15,6 +17,7 @@ namespace WebApp.Helper
         public string ReceiverId { get; set; }
         public string SessionId { get; set; }
         public string TokenId { get; set; }
+        public string ConsultId { get; set; }
     }
 
     public class UserChatHelper
@@ -59,6 +62,18 @@ namespace WebApp.Helper
                     UserType = userType,
                     RecipientName = recipientName
                 };
+
+                //Create consult ID
+                var oRetConsultInfo = new VideoCallRepository().CreateConsultWithoutAppointment(
+                    new CreateConsultModel
+                    {
+                        sessionID = sessionId,
+                        token = tokenId,
+                        userID = senderId
+                    });
+
+                oRet.ConsultId = oRetConsultInfo.ID.ToString();
+
                 lstAllOpenTokSessions.Add(oRet);
             }
 

@@ -472,6 +472,11 @@
             var PatientName = "Patient";
             //alert("calling");
 
+            //Log Call Info - Starts
+            var cCallLogUrl = '@Url.Action("PatientCallDoctor", "UserChat")?doctorId=' + $(e).attr("data-doctorid"); 
+            $.post(cCallLogUrl);
+            //Log Call Info- Ends
+
             chat.server.sendMessageToDoctor(
             {
                 SenderId: '@SessionHandler.UserInfo.Id',
