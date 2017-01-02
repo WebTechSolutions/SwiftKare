@@ -23,7 +23,7 @@ namespace WebApp.Repositories.DoctorRepositories
 
         public void Delete(long id)
         {
-            var response = ApiConsumerHelper.DeleteData("api/DoctorTimings/"+id);
+            var response = ApiConsumerHelper.PostData("api/deleteDoctorTiming/" + id,"");
             var result = JsonConvert.DeserializeObject<DoctorTimingsModel>(response);
         }
 

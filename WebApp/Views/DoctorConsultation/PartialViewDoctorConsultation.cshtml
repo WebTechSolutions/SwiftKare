@@ -11,11 +11,11 @@ else
     <table id="datatable-responsive" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr class="headings">
-                <th class="column-title">Patient's Name </th>
-                <th class="column-title">Date & Time </th>
-                <th class="column-title">Rating</th>
-                <th class="column-title">ROV </th>
-                <th class="column-title">Action</th>
+                <th class="column-title" style="text-align:center">Patient's Name </th>
+                <th class="column-title" style="text-align:center">Consultation Time</th>
+                <th class="column-title" style="text-align:center">Rating</th>
+                <th class="column-title" style="text-align:center">Reason of Visit</th>
+                <th class="column-title" style="text-align:center">Action</th>
             </tr>
         </thead>
 
@@ -26,17 +26,17 @@ else
                 foreach (var item in Model)
                 {
                     <tr class="even pointer">
-                        <td>@item.PatientName</td>
-                        <td>@item.appDate @item.appTime</td>
+                        <td style="text-align:center;width:20%">@item.PatientName</td>
+                        <td style="text-align:center;width:15%">@item.appDate @item.appTime</td>
                         @if (item.reviewStar == 0)
                         {
-                            <td>
+                            <td style="text-align:center;width:10%">
                                 Pending
                             </td>
                         }
                         else
                         {
-                            <td>
+                            <td style="text-align:center;width:10%">
                                 @if (item.reviewStar >= 3)
                                 {
                                     for (var i = 0; i < item.reviewStar; i++)
@@ -72,9 +72,9 @@ else
 
                             </td>
                         }
-                        <td>@item.rov</td>
+                        <td style="text-align:center;width:20%">@item.rov</td>
 
-                        <td>
+                        <td style="text-align:center;width:10%">
                             <button data-toggle="modal" data-id="@item.consultID" id="@item.consultID" data-target="#myModal4"
                                     class="btn btn-primary btn-sm m-b-0 " type="button" onclick=showConsult(@item.consultID);>
                                 View Detail
@@ -134,14 +134,19 @@ else
           };
         }();
 
-        $('#rescheduledatatable').dataTable();
+        
 
         $('#datatable-keytable').DataTable({
           keys: true
         });
 
-        $('#datatable-responsive').DataTable();
-
+       
+        $('#datatable-responsive').dataTable({
+            'order': [[1, 'desc']],
+            columnDefs: [
+              { type: 'date-dd-mmm-yyyy', targets: 1 }
+            ]
+        });
         $('#datatable-scroller').DataTable({
           ajax: "js/datatables/json/scroller-demo.json",
           deferRender: true,

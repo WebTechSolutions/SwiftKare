@@ -7,7 +7,6 @@
       <Diagram DiagramId="4d36abb2f49a47c18a8ca7fb1a61b785" Name="Diagram1">
         <EntityTypeShape EntityType="SwiftKareDBModel.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.AdminUser" Width="1.5" PointX="8" PointY="10" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Alert" Width="1.5" PointX="0.75" PointY="3.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.Allergy" Width="1.5" PointX="10.75" PointY="6.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.AppAttachment" Width="1.5" PointX="5.25" PointY="32.5" />
         <EntityTypeShape EntityType="SwiftKareDBModel.AspNetRole" Width="1.5" PointX="5.75" PointY="2.625" />
@@ -89,6 +88,7 @@
         <AssociationConnector Association="SwiftKareDBModel.FK_FamilyHX_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Surgeries_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_UserFiles_Patient" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Alert" Width="1.5" PointX="0.75" PointY="3.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -13,27 +13,26 @@
 </style>
 <style>
     #loader {
-    border: 5px solid #0061B2;
-    border-radius: 50%;
-    border-top: 5px solid #FE0000;
-    width: 40px;
-    height: 40px;
-    -webkit-animation: spin 2s linear infinite;
-    animation: spin 2s linear infinite;
-    
-}
-    </style>
-<script src="~/Scripts/Appointment/Appointment.js"></script>
-<script src="~/Scripts/HealthConditions/HealthConditions.js"></script>
-<script src="~/Scripts/Medicine/Medicine.js"></script>
-<script src="~/Scripts/PatientAllergies/PateintAllergies.js"></script>
-<script src="~/Scripts/Surgeries/Surgeries.js"></script>
+        border: 5px solid #0061B2;
+        border-radius: 50%;
+        border-top: 5px solid #FE0000;
+        width: 40px;
+        height: 40px;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+    }
+</style>
 
+<script src="@Url.Content("~/Scripts/Appointment/Appointment.js")"></script>
+<script src="@Url.Content("~/Scripts/HealthConditions/HealthConditions.js")"></script>
+<script src="@Url.Content("~/Scripts/Medicine/Medicine.js")"></script>
+<script src="@Url.Content("~/Scripts/PatientAllergies/PateintAllergies.js")"></script>
+<script src="@Url.Content("~/Scripts/Surgeries/Surgeries.js")"></script>
 <script src="https://checkout.stripe.com/checkout.js"></script>
-<script src="~/Scripts/SeeDoctor/SearchDoctor.js"></script>
-<script src="~/Scripts/icheck.min.js"></script>
+<script src="@Url.Content("~/Scripts/SeeDoctor/SearchDoctor.js")"></script>
+<script src="@Url.Content("~/Scripts/icheck.min.js")"></script>
 
-<script src="~/Scripts/jquery.blockUI.js"></script>
+@*<script src="~/Scripts/jquery.blockUI.js"></script>*@
 
 
 <script src="@Url.Content("~/Scripts/StripePay.js")"></script>
@@ -140,7 +139,28 @@
                         </ul>
 
                         <div id="step-1">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>My Favourite Doctors</h2>
+                                    <ul class="nav navbar-right panel_toolbox">
 
+                                        <li>
+                                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                        </li>
+                                    </ul>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content" style="float: none;">
+                                    <div id="mycareteam" class="table-responsive">
+                                        @{
+                                            Html.RenderAction("MyCareTeam", "SeeDoctor");
+                                        }
+
+                                    </div>
+                                   
+
+                                </div>
+                            </div>
                             <div class="x_panel">
                                 <div class="x_title">
                                     <h2>Search Doctor</h2>
@@ -341,7 +361,8 @@
                                         <div class="row" id="docrow">
                                             <input type="text" style="display:none" id="doctorid">
 
-                                            <form class="form-horizontal form-label-left"> @*style="height:230px"*@
+                                            <form class="form-horizontal form-label-left">
+                                                @*style="height:230px"*@
                                                 <div class="col-sm-offset-4 col-sm-4" style="width: 182px;">
                                                     <div class="xdisplay_inputx form-group has-feedback">
                                                         <input type="text" class="form-control has-feedback-left active" id="fetchdate" placeholder="Choose a Date" aria-describedby="inputSuccess2Status">
@@ -406,8 +427,8 @@
                                 <div class="x_title">
                                     <h2>My Health Conditions</h2>
                                     @*<ul class="nav navbar-right panel_toolbox">
-                                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                    </ul>*@
+                                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                        </ul>*@
                                     <div class="clearfix"></div>
                                 </div>
                                 <input id="conditionID" type="number" style="display:none" value="0" />
@@ -422,7 +443,7 @@
                                                         <div class="text-right" style="vertical-align:bottom">
 
                                                             <label style="display:none;">
-                                                                No <input  type="checkbox" class="js-switch" id="conditionCheckbox" /> Yes
+                                                                No <input type="checkbox" class="js-switch" id="conditionCheckbox" /> Yes
                                                             </label>
                                                         </div>
                                                     </td>
@@ -472,8 +493,8 @@
                                 <div class="x_title">
                                     <h2>My Medications</h2>
                                     @*<ul class="nav navbar-right panel_toolbox">
-                                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                    </ul>*@
+                                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                        </ul>*@
                                     <div class="clearfix"></div>
                                 </div>
 
@@ -497,7 +518,7 @@
                                                     <td width="50%">
                                                         <div class="form-group">
                                                             <div style="color:red; display:none;float:right" id="divmedicine">Medicine is required.</div>
-                                                            <input maxlength="50" style="display:block" type="text" name="country" placeholder="Search Medicine" id="myMedicine" class="form-control" />
+                                                            <input maxlength="50" style="display:block" type="text" name="country" placeholder="Search Medicine" id="myMedicine" class="form-control"/>
                                                         </div>
                                                     </td>
                                                     <td width="25%">
@@ -543,8 +564,8 @@
                                 <div class="x_title">
                                     <h2>My Allergies</h2>
                                     @*<ul class="nav navbar-right panel_toolbox">
-                                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                    </ul>*@
+                                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                        </ul>*@
                                     <div class="clearfix"></div>
                                 </div>
 
@@ -625,10 +646,10 @@
                                 <div class="x_title">
                                     <h2>My Surgeries and Procedures</h2>
                                     @*<ul class="nav navbar-right panel_toolbox">
-                                        <li>
-                                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                        </li>
-                                    </ul>*@
+                                            <li>
+                                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                            </li>
+                                        </ul>*@
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="x_content">
@@ -763,8 +784,8 @@
                                             <h2>Appointment Information</h2>
                                             <ul class="nav navbar-right panel_toolbox">
                                                 @*<li>
-                                                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                                </li>*@
+                                                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                                    </li>*@
                                             </ul>
                                             <div class="clearfix"></div>
                                         </div>
@@ -793,33 +814,39 @@
 
 
 <script>
+    function reloadContainer(callback) {
+
+        $("#mycareteam").load('@Url.Action("MyCareTeam", "SeeDoctor")', function () {
+            callback();
+        });
+
+    }
     $(document).ready(function () {
         if($("#wizard").smartWizard('currentStep','1'))
         {
             $('.buttonNext').hide();
             $('.buttonPrevious').hide();
-        
+
         }
-        
+
         GetAllLanguages();
         GetAllSpecialities();
         GetROV(@ViewBag.PatienID);
-        //GetPatientROV(@ViewBag.PatienID);
-        //GetPatientChiefComplaints(@ViewBag.PatienID);
+        
 
         //initialize autocomplete with custom appendTo
         //$('#pharmacy').autocomplete({
         //    lookup: pharmacyArray
         //});
-       
-        
+
+
         var oStripePayCheckout = new StripePayCheckout({
             publisherKey: '@publisherKey',
             amount: @amount,
             targetButton: "#btnProceedWithPayment",
             actionUrl: '@Url.Action("ProceedWithPay", "seedoctor")',
             handleSuccess: function () {
-                
+
                 CreateAppointment(@ViewBag.PatienID,@amount);
                 var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
 
@@ -842,14 +869,14 @@
         });
 
         oStripePayCheckout.initialize();
-        
+
 
     });
-      
+
     function searchDoctor() {
-              
+
         SearchDoctor(@ViewBag.PatienID)
-        
+
 
     }
     $(function () {
@@ -873,10 +900,7 @@
             }
         });
     });
-    function savePharmacy(name)
-    {
-        alert(name);
-    }
+   
     $('#searchdate').bootstrapMaterialDatePicker
             ({
                 time: false,
@@ -884,7 +908,7 @@
                 format: 'DD/MM/YYYY ',
 
             });
-    
+
 
     $("#fetchdate").daterangepicker({
         singleDatePicker: true,
@@ -912,10 +936,11 @@
     //$('#time').bootstrapMaterialDatePicker('setTime', moment());// update check in sp for null time
     $("#myModal1").on('show.bs.modal', function (e) {
         var $modal = $(this);
-       
+        
         mydocid = e.relatedTarget.id;
        
         $("#doctorid").val(mydocid);
+        //alert($('#' + mydocid).data('todo').id+' '+$('#' + mydocid).data('todo').doctorName);
         var todoId = $('#' + mydocid).data('todo').id;
         var docName = $('#' + mydocid).data('todo').doctorName;
         var cap=docName.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
@@ -930,7 +955,7 @@
     });
 
 
-    
+
 
 </script>
 
@@ -989,8 +1014,12 @@
 
 @*For Medicine*@
 <script>
+    jQuery('#myMedicine').on('input', function() {
+        //alert($("#myMedicine").val());
+        //GetMedicines($("#myMedicine").val());
+    });
     $(document).ready(function () {
-        GetMedicines();
+        GetMedicines($("#myMedicine").val());
         GetMedications(@ViewBag.PatienID);
         GetFrequency();
         $('#medicinestable').DataTable({
@@ -1002,6 +1031,8 @@
                { "width": "15%", "targets": [4] }
             ]
         });
+
+        
     });
     $('#addmedicine').on('click', function () {
         if ($("#myMedicine").val() == "") {
@@ -1062,7 +1093,7 @@
                 { "width": "20%", "targets": [3] },
                { "width": "15%", "targets": [5] }
             ]
-            
+
 
         });
     });
@@ -1117,8 +1148,8 @@
     $(document).ready(function () {
         GetSurgeries();
         GetPatientSurgeries(@ViewBag.PatienID);
-             
-   
+
+
         $('#addsurgery').on('click', function () {
             if ($("#myBodyPart").val() == "") {
                 document.getElementById("divsurgery").style.display = "block";
@@ -1192,7 +1223,7 @@
             };
         }();
 
-        
+
         $('#datatable').dataTable();
 
         $('#datatable-keytable').DataTable({
@@ -1236,7 +1267,7 @@
 <script>
     $(document).ready(function () {
 
-      //  $('#wizard').smartWizard('onShowStep', 2);
+        //  $('#wizard').smartWizard('onShowStep', 2);
         $('#wizard_verticle').smartWizard({
             transitionEffect: 'slide'
 

@@ -1,0 +1,91 @@
+﻿@using WebApp.Helper;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+<!-- page content -->
+<div class="right_col" role="main">
+    <div class="clearfix"></div>
+
+    <div class="x_panel" style="margin-bottom: 190px;">
+        <div class="x_title">
+            <h2>Alerts</h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="x_content">
+            <div class="table-responsive" id="divAlert">
+                @{
+                    Html.RenderAction("PartialAlertView", "Alert");
+                }
+            </div>
+        </div>
+    </div>
+   
+   
+</div>
+
+<!-- /page content -->
+<script>
+    function deleteAlert(alertID)
+    {
+       
+        var objDelete = {};
+        objDelete["alertID"] = alertID;
+        objDelete["userID"] = '@SessionHandler.UserId';
+        $.ajax({
+            url: '@Url.Action("DeleteAlert", "Alert")',
+            type: "POST",
+            data: objDelete,
+            dataType: 'json',
+            success: function (result) {
+                //Reload container
+                if (result.Message != undefined) {
+                    new PNotify({ title: 'Error', text: result.Message, type: 'error', styling: 'bootstrap3' });
+                    $('#myModal1').modal('hide');
+                    $('#myModal4').modal('hide');
+                    //stopLoader();
+                }
+                else {
+
+                    if(result.ApiResultModel.message=="")
+                    {
+                        new PNotify({ title: 'Success', text: "Alert is deleted successfully.", type: 'success', styling: 'bootstrap3' });
+                        reloadConsultation(function ()
+                        {
+                            //Stop displaying loader
+                            //stopLoader();
+
+                        });
+                    }
+                    else
+                    {
+                        new PNotify({ title: 'Error', text: result.ApiResultModel.message, type: 'error', styling: 'bootstrap3' });
+                    }
+
+
+                }
+
+            },
+            error: function (err) {
+                //alert(err.statusText);
+                new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                //Stop displaying loader
+                //stopLoader();
+            }
+        });
+    }
+
+    function reloadConsultation(callback) {
+
+        $("#divAlert").load('@Url.Action("PartialAlertView", "Alert")', function () {
+            callback();
+        });
+    }
+</script>

@@ -21,6 +21,13 @@ namespace WebApp.Repositories.PatientRepositories
             var result = JsonConvert.DeserializeObject<List<Frequency>>(response);
             return result;
         }
+        public List<MedicineModel> GetMedicines(string search)
+        {
+
+            var response = ApiConsumerHelper.GetResponseString("api/getMedicines/?search="+search);
+            var result = JsonConvert.DeserializeObject<List<MedicineModel>>(response);
+            return result;
+        }
         public List<MedicineModel> GetMedicines()
         {
 
@@ -28,7 +35,6 @@ namespace WebApp.Repositories.PatientRepositories
             var result = JsonConvert.DeserializeObject<List<MedicineModel>>(response);
             return result;
         }
-      
         public List<GetMedication> LoadMedications(long pid)
         {
 

@@ -17,7 +17,25 @@ namespace WebApp.Repositories.DoctorRepositories
 {
     public class SeeDoctorRepository
     {
-            public List<DoctorDataset> SeeDoctor(SearchDoctorModel searchModel)
+        public List<DoctorDataset> MyCareTeam(long patientID)
+        {
+
+
+            try
+            {
+                
+                var response = ApiConsumerHelper.GetResponseString("api/getMyFavDoctors/?patientID=" + patientID);
+                var result = JsonConvert.DeserializeObject<List<DoctorDataset>>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+
+                throw ex;
+            }
+
+        }
+        public List<DoctorDataset> SeeDoctor(SearchDoctorModel searchModel)
             {
 
                

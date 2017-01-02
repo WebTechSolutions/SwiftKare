@@ -16,7 +16,7 @@ namespace DataAccess
     {
         public long alertID { get; set; }
         public string alertText { get; set; }
-        public string alertFor { get; set; }
+        public Nullable<long> alertFor { get; set; }
         public string cb { get; set; }
         public Nullable<System.DateTime> cd { get; set; }
         public string mb { get; set; }

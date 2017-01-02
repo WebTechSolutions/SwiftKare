@@ -22,14 +22,31 @@ namespace RestAPIs.Controllers
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
         HttpResponseMessage response;
 
+        [Route("api/getMedicines")]
+        public HttpResponseMessage GetMedicines(string search)
+        {
+            try
+            {
+                var medicines = (from l in db.Medicines
+                                 where l.active == true && l.medicineName.Contains(search)
+                                 select new { medicineName=l.medicineName.Trim() }).Take(10).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, medicines);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetMedicine in PatientMedicationController");
+            }
+
+        }
         [Route("api/getMedicine")]
         public HttpResponseMessage GetMedicines()
         {
             try
             {
                 var medicines = (from l in db.Medicines
-                                   where l.active == true
-                                   select new MedicineModel { medicineID = l.medicineID, medicineName = l.medicineName.Trim() }).ToList();
+                                 where l.active == true
+                                 select new MedicineModel { medicineID=l.medicineID, medicineName = l.medicineName.Trim() }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, medicines);
                 return response;
             }

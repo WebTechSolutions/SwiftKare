@@ -1,0 +1,115 @@
+﻿@model IEnumerable<DataAccess.CustomModels.AlertModel>
+@using WebApp.Helper;
+@if (Model == null || Model.Count() == 0)
+{
+    if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                new PNotify({
+                    title: 'Error',
+                    text: "@ViewBag.Error",
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+            });
+
+        </script>
+    }
+    else
+    {
+        <li role="presentation" class="dropdown">
+            <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-bell"></i>
+                
+            </a>
+            <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                <li>
+                    <a>
+                        <span class="message">
+                           There is no alert.
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    }
+
+}
+else
+{
+    var count = 0;
+    foreach(var i in Model)
+    {
+        if(i.isRead==false|| i.isRead==null)
+        {
+            count++;
+        }
+    }
+   
+    <li role="presentation" class="dropdown">
+        <a id="notify" style="display:block" href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false" onclick="readAllAlerts()">
+            <i class="fa fa-bell"></i>
+            @if (count > 0)
+            {
+                <span class="badge bg-green">@count</span>
+            }
+                     
+        </a>
+        <a id="nonotify" style="display:none" href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-bell"></i>
+            <span class="badge bg-green"></span>
+        </a>
+        <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+            @foreach (var item in Model)
+            {
+                if (item.isRead == false || item.isRead == null)
+                {
+                <li>
+                    <a>
+                        @*<span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>*@
+                        @*<span>
+                                <span>John Smith</span>
+                                <span class="time">3 mins ago</span>
+                            </span>*@
+                        <span class="message">
+                            @item.alertText
+                        </span>
+                    </a>
+                </li>
+                }
+            }
+            <li>
+                <div class="text-center">
+                    <a href="@Url.Action("Index", "Alert")">
+                        <strong>See All Alerts</strong>
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </div>
+            </li>
+
+        </ul>
+    </li>
+}
+<script>
+    function readAllAlerts()
+    {
+        $("#notify").css("display", "none");
+        $("#nonotify").css("display", "block");
+        $.ajax({
+        url: '@Url.Action("ReadAllAlerts", "Alert")',
+        type: "POST",
+        data: {"id":'@SessionHandler.UserInfo.Id'},
+        dataType: 'json',
+        success: function (result) {
+            
+        },
+        error: function (err) {
+        //alert(err.statusText);
+        new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+        //Stop displaying loader
+        //stopLoader();
+        }
+        });
+        }
+    </script>

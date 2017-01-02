@@ -1,4 +1,5 @@
 ﻿@using WebApp.Helper;
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,7 +28,7 @@
     <script src="@Url.Content("~/Scripts/blockUI.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.cropit.js")"></script>
     <script src="@Url.Content("~/Scripts/daterangepiker/daterangepicker.js")"></script>
-
+   
     <style type="text/css">
         .redBorder, .redBorder:focus, .redBorder:active {
             border-color: red;
@@ -128,15 +129,16 @@
                                 <li class="message">
                                     <a href="@Url.Action("Index","PatientFiles")"><img src="~/Content/images/my-files.png" alt=""> &nbsp <span class="menu-txt">My Files</span> </a>
                                 </li>
-                                <li class="call_history">
+                                @*<li class="call_history">
                                     <a href="#"><img src="~/Content/images/my-doctors1.png" alt="">  &nbsp <span class="menu-txt">My Doctors</span> </a>
                                     <ul class="nav child_menu">
                                         <li><a href="#">Dashboard</a></li>
                                     </ul>
-                                </li>
+                                </li>*@
                                 <li class="call_history">
                                     <a href="@Url.Action("Index","News")"><img src="~/Content/images/whats-new.png" alt="">  &nbsp <span class="menu-txt">Whats New</span> </a>
                                 </li>
+                               
                             </ul>
                         </div>
                     </div>
@@ -241,7 +243,7 @@
                                     </li>
                                     <li>
                                         <div class="text-center">
-                                            <a href="#">
+                                            <a href="@Url.Action("Index","Alert")">
                                                 <strong>See All Messages</strong>
                                                 <i class="fa fa-angle-right"></i>
                                             </a>
@@ -249,70 +251,20 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li role="presentation" class="dropdown">
+                            <li>
+                            <div id="divAlerts">
+                            @{
+                                Html.RenderAction("AlertView", "Alert");
+                            }
+                            </div>
+                            </li>
+                            @*<li role="presentation" class="dropdown">
                                 <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-bell"></i>
                                     <span class="badge bg-green">6</span>
                                 </a>
-                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <div class="text-center">
-                                            <a href="messages.html">
-                                                <strong>See All Alerts</strong>
-                                                <i class="fa fa-angle-right"></i>
-                                            </a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
+                                
+                            </li>*@
                             @*<li role="presentation" class="dropdown">
                                 <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-envelope-o"></i>
@@ -409,7 +361,15 @@
     <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
     <script src="~/signalr/hubs"></script>
     <script type="text/javascript">
-
+        
+        $('#menu_toggle').click(function ()
+        {
+            if (document.body.className == "nav-md")
+            {
+                ($("body").attr("class", "nav-sm"))
+            }
+            else $("body").attr("class", "nav-md");
+        });
         // Proxy created on the fly
         var chat = $.connection.chatHub;
         var senderConnectionId;
@@ -478,7 +438,23 @@
                 UserGroup: 'doctors'
             });
         }
+        @*function makeCallToPatient(e) {
+            //setDoctorID($(e).attr("data-doctorid"));
+            var curElem = $(e);
+            var DoctorName = 'Dr. ' + '@SessionHandler.UserInfo.FirstName' + ' ' + '@SessionHandler.UserInfo.LastName';
+            //alert("calling");
 
+            chat.server.SendMessageToPatient(
+            {
+                SenderId: '@SessionHandler.UserInfo.Id',
+                UserName: '@SessionHandler.UserInfo.Email',
+                ReceiverConnectionId: curElem.data("connId"),
+                ReceiverId: '20',
+                SenderType: 'Doctor',
+                Message: JSON.stringify({ status: 'call', name: DoctorName }),
+                UserGroup: 'doctors'
+            });
+        }*@
 
         $(function () {
 

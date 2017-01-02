@@ -1,0 +1,160 @@
+﻿@model IEnumerable<DataAccess.CustomModels.DoctorDataset>
+@using WebApp.Helper
+@{
+    Layout = null;
+}
+
+
+@if (Model == null || Model.Count() == 0)
+{
+    
+    <div class="well">
+        There is no favourite doctor.
+    </div>
+}
+else
+{
+
+
+
+    <ul class="doctor_details">
+        
+        @foreach (var item in Model)
+        {
+    <li>
+        <div class="well profile_view clsDivDocList" style="position:relative;">
+            <a class="hrt" href="#" style="color: #5A738E;"><span id="@(item.doctorID + "nofavv")" class="fa fa-heart-o" onclick=ttogglefav("@item.doctorID","@SessionHandler.UserInfo.Id"); style="display:none"></span></a>
+            <a class="hrt" href="#" style="color: #5A738E;"><span id="@(item.doctorID + "favv")" class="fa fa-heart" onclick=uuntogglefav("@item.doctorID","@SessionHandler.UserInfo.Id"); style="display:block"></span></a>
+            <i class="crl fa fa-circle clsAvailableSpot" aria-hidden="true" style="color: red; cursor: pointer;font-size: 12px; position:absolute; right:2%;"></i>
+            <img src="../Content/images/img.jpg" alt="" class="img-circle img-responsive m-b-10 m-t-0" style="margin: 0 auto;display: inline-block;">
+            <h2 class="m-0">
+
+                <a href="javascript(void);" class="thumbnail-col-inner m-b-15" data-toggle="modal" data-target="#myModal2" style="word-wrap: break-word;font-size: 12px">
+                    Dr.@item.firstName &nbsp; @item.lastName
+                </a>
+
+            </h2>
+            <h4 class="brief m-0 clsAvailbleForCall" style="color: green; display:none;font-size: 14px">Available</h4><h4 class="brief m-0 clsNotAvailbleForCall" style="color: red;font-size: 14px">Not Available</h4>
+            <p class="ratings m-t-5 m-b-0" style="text-align: center;">
+
+                <a style="word-wrap:break-word;" href="javascript(void);" class="thumbnail-col-inner" data-toggle="modal" data-target="#myModal1" 
+                   data-todo='{"id":"@item.doctorID","doctorName":"@item.firstName @item.lastName"}' onclick=showDoctorTimings("@item.doctorID") id="@item.doctorID">
+                  
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+
+                </a>
+               <a href="javascript(void);"><i class="fa fa-star"></i></a>
+                <a href="javascript(void);"><i class="fa fa-star"></i></a>
+                <a href="javascript(void);"><i class="fa fa-star"></i></a>
+               <a href="javascript(void);"><i class="fa fa-star"></i></a>
+                <a href="javascript(void);"><i class="fa fa-star"></i></a>
+               <i class="fa fa-phone clsNotMakePhone" aria-hidden="true"></i><a class="clsMakeCall" title="Call doctor @item.firstName @item.lastName" onclick=makeCallToDoctor(this) data-doctorid="@item.doctorID" style="display:none;" href="javascript(void);">
+
+                    <i class="fa fa-phone" aria-hidden="true"></i>
+
+                </a>
+
+            </p>
+
+        </div>
+
+    </li>
+        }
+    </ul>
+   
+}
+<script>
+    function ttogglefav(docid, patid) {
+       
+        _objFav = {};
+        _objFav["docID"] = docid;
+        _objFav["patID"] = patid;
+        $.ajax({
+            type: 'POST',
+            url: '/SeeDoctor/AddFavourite',
+            data: _objFav,
+            dataType: 'json',
+            success: function (response) {
+                if (response.Success == true) {
+                    if (response.ApiResultModel.message != "") {
+                        new PNotify({
+                            title: 'Error',
+                            text: response.ApiResultModel.message,
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                    }
+                    else if (response.ApiResultModel.message == "") {
+                        new PNotify({
+                            title: 'Success',
+                            text: "Doctor is made favourite successfully.",
+                            type: 'success',
+                            styling: 'bootstrap3'
+                        });
+                        reloadContainer(function () {
+
+                        });
+                        document.getElementById("" + docid + "nofavv").style.display = "none";
+                        document.getElementById("" + docid + "favv").style.display = "block";
+
+                    }
+
+
+
+                }
+
+            },
+            
+        });
+        return false;
+
+    }
+    function uuntogglefav(docid, patid) {
+       
+        _objFav = {};
+        _objFav["docID"] = docid;
+        _objFav["patID"] = patid;
+        $.ajax({
+            type: 'POST',
+            url: '/SeeDoctor/UpdateFavourite',
+            data: _objFav,
+            dataType: 'json',
+            success: function (response) {
+                if (response.Success == true) {
+                    if (response.ApiResultModel.message != "") {
+                        new PNotify({
+                            title: 'Error',
+                            text: response.ApiResultModel.message,
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                    }
+                    else if (response.ApiResultModel.message == "") {
+                        new PNotify({
+                            title: 'Success',
+                            text: "Doctor is made unfavourite successfully.",
+                            type: 'success',
+                            styling: 'bootstrap3'
+                        });
+                        reloadContainer(function () {
+
+                        });
+                        document.getElementById("" + docid + "nofavv").style.display = "block";
+                        document.getElementById("" + docid + "favv").style.display = "none";
+
+                    }
+
+
+
+                }
+
+            },
+           
+        });
+
+        return false;
+
+
+    }
+    
+    </script>
