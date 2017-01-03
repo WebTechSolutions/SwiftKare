@@ -51,6 +51,9 @@ namespace WebApp.Controllers
             {
                 oModel.ConvertBase64ToByteArray();
                 var oRetMsg = oProfileRepository.UpdateDoctorProfileWithAllValues(oModel);
+
+                SessionHandler.ProfilePhoto = oModel.ProfilePhotoBase64;
+
                 return oRetMsg.message;
             }
             catch (Exception ex)
@@ -115,6 +118,9 @@ namespace WebApp.Controllers
         private void setInitialViewData()
         {
             var oInitialData = oProfileRepository.GetDoctorProfileInitialValues();
+
+            ViewBag.drpdnTitle = oInitialData.lstTitleVM.Select(x => new SelectListItem { Text = x.titleName, Value = x.titleName }).ToList();
+            ViewBag.drpdnSuffix = oInitialData.lstSuffixVM.Select(x => new SelectListItem { Text = x.suffixName, Value = x.suffixName }).ToList();
 
             ViewBag.drpdnSpeciality = oInitialData.lstSpecialityVM.Select(x => new SelectListItem { Text = x.specialityName, Value = x.specialityName }).ToList();
             ViewBag.drpdnLanguage = oInitialData.lstLanguageVM.Select(x => new SelectListItem { Text = x.languageName, Value = x.languageName }).ToList();

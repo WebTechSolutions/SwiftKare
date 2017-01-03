@@ -68,8 +68,6 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-10 col-md-8 col-xs-12">
-
-
                                     <div class="row">
                                         <div class="col-lg-4 col-md-4 col-sm-12">
                                             <div class="form-group">
@@ -77,7 +75,7 @@
                                                     Title
                                                 </label>
                                                 <div class="">
-                                                    @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+                                                    @Html.DropDownListFor(x => x.TitleName, (List<SelectListItem>)ViewBag.drpdnTitle, "Select", new { @class = "form-control" })
                                                 </div>
                                             </div>
                                         </div>
@@ -87,7 +85,7 @@
                                                     Suffix
                                                 </label>
                                                 <div class="">
-                                                    @Html.TextBoxFor(x => x.Prefix, new { @class = "form-control" })
+                                                    @Html.DropDownListFor(x => x.Prefix, (List<SelectListItem>)ViewBag.drpdnSuffix, "Select", new { @class = "form-control" })
                                                 </div>
                                             </div>
                                         </div>
@@ -153,8 +151,9 @@
                                                 <label class="control-label">
                                                     Time Zone<span class="required">*</span>
                                                 </label>
+                                                <span id="spnErrorTimeZone" style="display:none; color:red; float:right;">TimeZone is required</span>
                                                 <div class="">
-                                                    @Html.DropDownListFor(x => x.TimeZone, (List<SelectListItem>)ViewBag.drpdnTimeZone, new { @class = "form-control" })
+                                                    @Html.DropDownListFor(x => x.TimeZone, (List<SelectListItem>)ViewBag.drpdnTimeZone, "Select TimeZone", new { @class = "form-control" })
                                                 </div>
                                             </div>
                                         </div>
@@ -320,21 +319,21 @@
                                     </div>
                                     <form id="frmSecretAnswer">
                                         <div class="form-group">
-                                            <label>
+                                            <label style="width:100%;">
                                                 @Html.DropDownListFor(x => x.SectetQuestion1, (List<SelectListItem>)ViewBag.SecretQuestion, new { @class = "form-control" })
                                             </label>
                                             <span id="spnErrorAnswer1" style="display:none; color:red; float:right;">Please provide answer.</span>
                                             @Html.TextBoxFor(x => x.SectetAnswer1, new { @class = "form-control" })
                                         </div>
                                         <div class="form-group">
-                                            <label>
+                                            <label style="width:100%;">
                                                 @Html.DropDownListFor(x => x.SectetQuestion2, (List<SelectListItem>)ViewBag.SecretQuestion, new { @class = "form-control" })
                                             </label>
                                             <span id="spnErrorAnswer2" style="display:none; color:red; float:right;">Please provide answer.</span>
                                             @Html.TextBoxFor(x => x.SectetAnswer2, new { @class = "form-control" })
                                         </div>
                                         <div class="form-group">
-                                            <label>
+                                            <label style="width:100%;">
                                                 @Html.DropDownListFor(x => x.SectetQuestion3, (List<SelectListItem>)ViewBag.SecretQuestion, new { @class = "form-control" })
                                             </label>
                                             <span id="spnErrorAnswer3" style="display:none; color:red; float:right;">Please provide answer.</span>
@@ -381,6 +380,54 @@
 
     <script>
 
+        $(document).ready(function () {
+            //Bind unobstructive validations - Starts
+
+            $("#FirstName").change(function () {
+                if ($("#spnErrorFirstName").is(":visible") && $("#FirstName").val() != "") {
+                    $("#FirstName").removeClass("redBorder");
+                    $("#spnErrorFirstName").hide();
+                }
+            });
+            $("#LastName").change(function () {
+                if ($("#spnErrorLastName").is(":visible") && $("#LastName").val() != "") {
+                    $("#LastName").removeClass("redBorder");
+                    $("#spnErrorLastName").hide();
+                }
+            });
+            $("#DOB").change(function () {
+                if ($("#spnErrorDOB").is(":visible") && $("#DOB").val() != "") {
+                    $("#DOB").removeClass("redBorder");
+                    $("#spnErrorDOB").hide();
+                }
+            });
+            $("#TimeZone").change(function () {
+                if ($("#spnErrorTimeZone").is(":visible") && $("#TimeZone").val() != "") {
+                    $("#TimeZone").removeClass("redBorder");
+                    $("#spnErrorTimeZone").hide();
+                }
+            });
+
+            $("#Languages").change(function () {
+                if ($("#spnErrorLanguages").is(":visible") && $("#Languages").val() != "") {
+                    $("#Languages").removeClass("redBorder");
+                    $("#spnErrorLanguages").hide();
+                }
+            });
+
+            ////Bind unobstructive validations - Ends
+
+            //Add masking on phone no
+            document.getElementById('CellPhone').addEventListener('input', function (e) {
+                var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+                e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+            });
+            document.getElementById('HomePhone').addEventListener('input', function (e) {
+                var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+                e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+            });
+        });
+
         function validateProfileForm() {
 
             var isValid = true;
@@ -422,6 +469,16 @@
             else {
                 $("#DOB").removeClass("redBorder");
                 $("#spnErrorDOB").hide();
+            }
+
+            if (($("#TimeZone").val() || "") == "") {
+                isValid = false;
+                $("#TimeZone").addClass("redBorder").focus();
+                $("#spnErrorTimeZone").show();
+            }
+            else {
+                $("#TimeZone").removeClass("redBorder");
+                $("#spnErrorTimeZone").hide();
             }
 
             if ($("#Languages").val() == null) {
@@ -635,40 +692,5 @@
             $("#divImageEditing").hide();
             $("#divImageDisplay").show();
         }
-
-        //});
-        function showLoader() {
-            blockUI();
-        }
-
-        function hideLoader() {
-            $.unblockUI();
-        }
-
-        //Center the element
-        $.fn.center = function () {
-            this.css("position", "absolute");
-            this.css("top", ($(window).height() - this.height()) / 2 + $(window).scrollTop() + "px");
-            this.css("left", ($(window).width() - this.width()) / 2 + $(window).scrollLeft() + "px");
-            return this;
-        }
-
-        //blockUI
-        function blockUI() {
-            $.blockUI({
-                css: {
-                    backgroundColor: 'transparent',
-                    border: 'none'
-                },
-                message: '<div class="spinner"></div>',
-                baseZ: 1500,
-                overlayCSS: {
-                    backgroundColor: '#FFFFFF',
-                    opacity: 0.7,
-                    cursor: 'wait'
-                }
-            });
-            $('.blockUI.blockMsg').center();
-        }//end Blockui
     </script>
 }

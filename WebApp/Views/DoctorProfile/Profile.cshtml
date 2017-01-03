@@ -39,7 +39,7 @@
                                         <i class="fa fa-language" aria-hidden="true"></i>
                                         @foreach (var item in Model.Languages)
                                         {
-                                        <span>@item</span><span>&nbsp;</span>
+                                            <span>@item</span><span>&nbsp;</span>
                                         }
                                     </p>
                                     <div class="gray-bdr-b-1"></div>
@@ -51,7 +51,7 @@
                                         <i class="fa fa-circle-o" aria-hidden="true"></i>&nbsp Speciality:
                                         @foreach (var item in Model.Speciality)
                                         {
-                                        <span>@item</span><span>&nbsp;</span>
+                                            <span>@item</span><span>&nbsp;</span>
                                         }
                                     </p>
                                     <div class="gray-bdr-b-1"></div>
@@ -59,7 +59,7 @@
                                         <i class="fa fa-circle" aria-hidden="true"></i>&nbsp License States:
                                         @foreach (var item in Model.LicenseStates)
                                         {
-                                        <span>@item</span><span>&nbsp;</span>
+                                            <span>@item</span><span>&nbsp;</span>
                                         }
                                     </p>
                                     @*<div class="text-center">
@@ -82,31 +82,31 @@
 
                                 @if (!string.IsNullOrEmpty(Model.WorkExperience))
                                 {
-                                <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Work Experience</b></h4>
-                                <p style="padding-left: 25px;"> @Model.WorkExperience</p>
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Work Experience</b></h4>
+                                    <p style="padding-left: 25px;"> @Model.WorkExperience</p>
                                 }
 
                                 @if (!string.IsNullOrEmpty(Model.Specialization))
                                 {
-                                <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Specialization</b></h4>
-                                <p style="padding-left: 25px;">@Model.Specialization</p>
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Specialization</b></h4>
+                                    <p style="padding-left: 25px;">@Model.Specialization</p>
                                 }
 
                                 @if (!string.IsNullOrEmpty(Model.Education))
                                 {
-                                <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Education</b></h4>
-                                <p style="padding-left: 25px;">@Model.Education</p>
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Education</b></h4>
+                                    <p style="padding-left: 25px;">@Model.Education</p>
                                 }
 
                                 @if (!string.IsNullOrEmpty(Model.Publication))
                                 {
-                                <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Publications</b></h4>
-                                <p style="padding-left: 25px;">@Model.Publication</p>
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Publications</b></h4>
+                                    <p style="padding-left: 25px;">@Model.Publication</p>
                                 }
                                 @if (!string.IsNullOrEmpty(Model.TimeZone))
                                 {
-                                <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Time Zone</b></h4>
-                                <p style="padding-left: 25px;">@Model.TimeZone</p>
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Time Zone</b></h4>
+                                    <p style="padding-left: 25px;">@Model.TimeZone</p>
                                 }
                             </div>
                         </div>
@@ -121,18 +121,50 @@
 
 @section scripts{
 
-<script>
-function myMap() {
-  var mapCanvas = document.getElementById("map");
-  var mapOptions = {
-    center: new google.maps.LatLng(@Model.Latitude, @Model.Longitude),
-    zoom: 5
-  }
-  var map = new google.maps.Map(mapCanvas, mapOptions);
-}
-</script>
-    
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEPd0Djg3V92IbdK1u77KPZCWa-1se_H8&callback=myMap"></script>
+    <script>
+        function myMap() {
+
+            var lat = '@Model.Latitude';
+            var lon = '@Model.Longitude';
+
+            if (lat == '' && lon == '')
+            {
+                var mapCanvas = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 8
+                });
+
+                var geocoder = new google.maps.Geocoder();
+                geocodeAddress(geocoder, mapCanvas, '@Model.City');
+            }
+            else {
+
+                var mapCanvas = document.getElementById('map');
+
+                var mapOptions = {
+                    center: new google.maps.LatLng(lat,lon),
+                    zoom: 5
+                }
+                var map = new google.maps.Map(mapCanvas, mapOptions);
+            }
+
+        }
+
+        function geocodeAddress(geocoder, resultsMap, address) {
+            geocoder.geocode({'address': address}, function(results, status) {
+                if (status === 'OK') {
+                    resultsMap.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: resultsMap,
+                        position: results[0].geometry.location
+                    });
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEPd0Djg3V92IbdK1u77KPZCWa-1se_H8&callback=myMap"></script>
 
 
 }

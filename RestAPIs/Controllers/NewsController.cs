@@ -80,6 +80,7 @@ namespace RestAPIs.Controllers
                                   select new NewsVM
                                   {
                                       newsID = l.newsID,
+                                      newsThumbnail = l.newsThumbnail,
                                       newsImage = l.newsImage,
                                       newsTitle = l.newsTitle,
                                       newsDetail = l.newsDetail,

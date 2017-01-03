@@ -38,7 +38,7 @@ namespace WebApp.Controllers
 
         public ActionResult Profile()
         {
-            var oModel = oProfileRepository.GetPatientProfileWithAllValues(SessionHandler.UserInfo.Id);
+            var oModel = oProfileRepository.GetPatientProfileViewOnly(SessionHandler.UserInfo.Id);
             oModel.ConvertByteArrayToBase64();
 
             return View(oModel);
@@ -51,6 +51,9 @@ namespace WebApp.Controllers
             {
                 oModel.ConvertBase64ToByteArray();
                 var oRetMsg = oProfileRepository.UpdatePatientProfileWithAllValues(oModel);
+
+                SessionHandler.ProfilePhoto = oModel.ProfilePhotoBase64;
+
                 return oRetMsg.message;
             }
             catch (Exception ex)
@@ -101,6 +104,9 @@ namespace WebApp.Controllers
         private void setInitialViewData()
         {
             var oInitialData = oProfileRepository.GetPatientProfileInitialValues();
+
+            ViewBag.drpdnTitle = oInitialData.lstTitleVM.Select(x => new SelectListItem { Text = x.titleName, Value = x.titleName }).ToList();
+            ViewBag.drpdnSuffix = oInitialData.lstSuffixVM.Select(x => new SelectListItem { Text = x.suffixName, Value = x.suffixName }).ToList();
 
             ViewBag.drpdnLanguage = oInitialData.lstLanguageVM.Select(x => new SelectListItem { Text = x.languageName, Value = x.languageName }).ToList();
             ViewBag.drpdnTimeZone = oInitialData.lstTimeZoneVM.Select(x => new SelectListItem { Text = x.timeZone, Value = x.timeZone }).ToList();

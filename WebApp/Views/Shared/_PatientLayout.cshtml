@@ -26,6 +26,7 @@
     @*@Scripts.Render("~/bundles/jquery")*@
     @Scripts.Render("~/bundles/js")
     <script src="@Url.Content("~/Scripts/blockUI.js")"></script>
+    <script src="@Url.Content("~/Scripts/general.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.cropit.js")"></script>
     <script src="@Url.Content("~/Scripts/daterangepiker/daterangepicker.js")"></script>
    
@@ -426,6 +427,11 @@
             var curElem = $(e);
             var PatientName = "Patient";
             //alert("calling");
+
+            //Log Call Info - Starts
+            var cCallLogUrl = '@Url.Action("PatientCallDoctor", "UserChat")?doctorId=' + $(e).attr("data-doctorid"); 
+            $.post(cCallLogUrl);
+            //Log Call Info- Ends
 
             chat.server.sendMessageToDoctor(
             {
