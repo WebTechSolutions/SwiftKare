@@ -12,6 +12,9 @@ namespace DataAccess.CustomModels
         public long appID { get; set; }
         public string sessionID { get; set; }
         public string token { get; set; }
+
+        public long doctorId { get; set; }
+        public long patientId { get; set; }
     }
 
     public class ConsultROSModel

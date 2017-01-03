@@ -122,6 +122,23 @@ namespace WebApp.Repositories.ProfileRepositories
             }
         }
 
+        public PatientProfileWithExtraInfoVM GetPatientProfileViewOnly(long patientID)
+        {
+            try
+            {
+                var request = ApiConsumerHelper.GetResponseString("api/getPatientProfileViewOnly?patientID=" + patientID);
+                var result = JsonConvert.DeserializeObject<PatientProfileWithExtraInfoVM>(request);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                httpResponseMessage.Content = new StringContent(ex.Message);
+                throw new HttpResponseException(httpResponseMessage);
+            }
+        }
+
+
         public ApiResultModel UpdatePatientProfileWithAllValues(PatientProfileVM model)
         {
             var strContent = JsonConvert.SerializeObject(model);

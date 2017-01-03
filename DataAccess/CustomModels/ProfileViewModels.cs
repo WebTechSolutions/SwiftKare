@@ -16,7 +16,7 @@ namespace DataAccess.CustomModels
         public string ProfilePhotoBase64 { get; set; }
         public byte[] ProfilePhoto { get; set; }
 
-        public string Title { get; set; }
+        public string TitleName { get; set; }
         public string Prefix { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -117,6 +117,8 @@ namespace DataAccess.CustomModels
             lstTimeZoneVM = new List<TimeZoneVM>();
             lstCityVM = new List<CityVM>();
             lstStateVM = new List<StateVM>();
+            lstTitleVM = new List<TitleVM>();
+            lstSuffixVM = new List<SuffixVM>();
         }
 
         public List<SpecialityVM> lstSpecialityVM { get; set; }
@@ -125,6 +127,8 @@ namespace DataAccess.CustomModels
         public List<TimeZoneVM> lstTimeZoneVM { get; set; }
         public List<CityVM> lstCityVM { get; set; }
         public List<StateVM> lstStateVM { get; set; }
+        public List<TitleVM> lstTitleVM { get; set; }
+        public List<SuffixVM> lstSuffixVM { get; set; }
     }
 
     public class PatientProfileInitialValues
@@ -136,6 +140,8 @@ namespace DataAccess.CustomModels
             lstTimeZoneVM = new List<TimeZoneVM>();
             lstCityVM = new List<CityVM>();
             lstStateVM = new List<StateVM>();
+            lstTitleVM = new List<TitleVM>();
+            lstSuffixVM = new List<SuffixVM>();
         }
 
         public List<LanguageVM> lstLanguageVM { get; set; }
@@ -143,6 +149,8 @@ namespace DataAccess.CustomModels
         public List<TimeZoneVM> lstTimeZoneVM { get; set; }
         public List<CityVM> lstCityVM { get; set; }
         public List<StateVM> lstStateVM { get; set; }
+        public List<TitleVM> lstTitleVM { get; set; }
+        public List<SuffixVM> lstSuffixVM { get; set; }
     }
 
 
@@ -154,7 +162,7 @@ namespace DataAccess.CustomModels
         public string ProfilePhotoBase64 { get; set; }
         public byte[] ProfilePhoto { get; set; }
 
-        public string Title { get; set; }
+        public string TitleName { get; set; }
         public string Prefix { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -237,6 +245,122 @@ namespace DataAccess.CustomModels
         #endregion
     }
 
+    public class PatientMedicationVM {
+        public string MedicineName { get; set; }
+        public string Frequency { get; set; }
+    }
+
+    public class PatientAllergiesVM
+    {
+        public string AllergyName { get; set; }
+        public string Severiaty { get; set; }
+        public string Reaction { get; set; }
+    }
+
+    public class PatientSurgeryVM
+    {
+        public string BodyPartName { get; set; }
+    }
+
+    public class PatientFamilyHistoryVM
+    {
+        public string DeasesName { get; set; }
+        public string Relation { get; set; }
+    }
+
+    public class PatientProfileWithExtraInfoVM
+    {
+        public PatientProfileWithExtraInfoVM() {
+            lstPatientMedicationVM = new List<PatientMedicationVM>();
+            lstPatientAllergiesVM = new List<PatientAllergiesVM>();
+            lstPatientSurgeryVM = new List<PatientSurgeryVM>();
+            lstPatientFamilyHistoryVM = new List<PatientFamilyHistoryVM>();
+        }
+
+        //Patient Profile
+        public long PatientID { get; set; }
+
+        public string ProfilePhotoBase64 { get; set; }
+        public byte[] ProfilePhoto { get; set; }
+
+        public string TitleName { get; set; }
+        public string Prefix { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Gender { get; set; }
+
+        public DateTime? DOB { get; set; }
+        public string TimeZone { get; set; }
+
+        public int? Height { get; set; }
+        public int? Weight { get; set; }
+
+        public string[] Languages { get; set; }
+
+        public string Address1 { get; set; }
+        public string Address2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string ZipCode { get; set; }
+        public string HomePhone { get; set; }
+        public string CellPhone { get; set; }
+
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
+
+        public List<PatientMedicationVM> lstPatientMedicationVM { get; set; }
+        public List<PatientAllergiesVM> lstPatientAllergiesVM { get; set; }
+        public List<PatientSurgeryVM> lstPatientSurgeryVM { get; set; }
+        public List<PatientFamilyHistoryVM> lstPatientFamilyHistoryVM { get; set; }
+
+        #region Methods
+
+        public void ConvertBase64ToByteArray()
+        {
+            if (!string.IsNullOrEmpty(ProfilePhotoBase64))
+            {
+                ProfilePhoto = Encoding.ASCII.GetBytes(ProfilePhotoBase64);
+            }
+        }
+
+        public void ConvertByteArrayToBase64()
+        {
+            if (ProfilePhoto != null && ProfilePhoto.Count() > 0)
+            {
+                ProfilePhotoBase64 = Encoding.ASCII.GetString(ProfilePhoto);
+            }
+        }
+
+        public string GetAge()
+        {
+            try
+            {
+                if (DOB.HasValue)
+                {
+
+                    var today = DateTime.Today;
+
+                    // Calculate the age.
+                    var age = today.Year - DOB.Value.Year;
+
+                    // Do stuff with it.
+                    if (DOB.Value > today.AddYears(-age)) age--;
+
+                    return string.Format("{0} year", age);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
+
+        #endregion
+    }
 
     public class SpecialityVM
     {
@@ -272,6 +396,18 @@ namespace DataAccess.CustomModels
     {
         public long stateID { get; set; }
         public string stateName { get; set; }
+    }
+
+    public class TitleVM
+    {
+        public int titleId { get; set; }
+        public string titleName { get; set; }
+    }
+
+    public class SuffixVM
+    {
+        public int suffixId { get; set; }
+        public string suffixName { get; set; }
     }
 
 }

@@ -57,6 +57,15 @@ namespace RestAPIs.Controllers
                                   where c.active == true
                                   select new StateVM { stateID = c.stateID, stateName = c.stateName }).ToList();
 
+                var lstTitleVM = (from p in db.TitleMasters
+                                  where p.active == true
+                                  select new TitleVM { titleId = p.titleID, titleName = p.titleName }).ToList();
+
+                var lstSuffixVM = (from p in db.SuffixMasters
+                                   where p.active == true
+                                   select new SuffixVM { suffixId = p.SuffixID, suffixName = p.SuffixName }).ToList();
+
+
                 var oRetModel = new DoctorProfileInitialValues
                 {
                     lstCityVM = lstCityVM,
@@ -64,7 +73,9 @@ namespace RestAPIs.Controllers
                     lstSecretQuestionVM = lstSecretQuestionVM,
                     lstSpecialityVM = lstSpecialityVM,
                     lstStateVM = lstStateVM,
-                    lstTimeZoneVM = lstTimeZoneVM
+                    lstTimeZoneVM = lstTimeZoneVM,
+                    lstTitleVM = lstTitleVM,
+                    lstSuffixVM = lstSuffixVM
                 };
 
                 response = Request.CreateResponse(HttpStatusCode.OK, oRetModel);
@@ -108,7 +119,7 @@ namespace RestAPIs.Controllers
                                         {
                                             DoctorID = l.doctorID,
                                             ProfilePhoto = l.picture,
-                                            Title = l.title,
+                                            TitleName = l.title,
                                             Prefix = l.suffix,
                                             FirstName = l.firstName,
                                             LastName = l.lastName,
@@ -215,7 +226,7 @@ namespace RestAPIs.Controllers
 
                     doctor.picture = model.ProfilePhoto;
 
-                    doctor.title = model.Title;
+                    doctor.title = model.TitleName;
                     doctor.firstName = model.FirstName;
                     doctor.lastName = model.LastName;
                     doctor.suffix = model.Prefix;
@@ -525,13 +536,23 @@ namespace RestAPIs.Controllers
                                   where c.active == true
                                   select new StateVM { stateID = c.stateID, stateName = c.stateName }).ToList();
 
+                var lstTitleVM = (from p in db.TitleMasters
+                                  where p.active == true
+                                  select new TitleVM { titleId = p.titleID, titleName = p.titleName }).ToList();
+
+                var lstSuffixVM = (from p in db.SuffixMasters
+                                   where p.active == true
+                                   select new SuffixVM { suffixId = p.SuffixID, suffixName = p.SuffixName }).ToList();
+
                 var oRetModel = new PatientProfileInitialValues
                 {
                     lstCityVM = lstCityVM,
                     lstLanguageVM = lstLanguageVM,
                     lstSecretQuestionVM = lstSecretQuestionVM,
                     lstStateVM = lstStateVM,
-                    lstTimeZoneVM = lstTimeZoneVM
+                    lstTimeZoneVM = lstTimeZoneVM,
+                    lstTitleVM = lstTitleVM,
+                    lstSuffixVM = lstSuffixVM
                 };
 
                 response = Request.CreateResponse(HttpStatusCode.OK, oRetModel);
@@ -569,46 +590,128 @@ namespace RestAPIs.Controllers
                     var oPatientProfileVM = new PatientProfileVM();
 
                     oPatientProfileVM = (from l in db.Patients
-                                        where l.active == true && l.patientID == patientID
-                                        select new PatientProfileVM
-                                        {
-                                            PatientID = l.patientID,
-                                            ProfilePhoto = l.picture,
-                                            Title = l.title,
-                                            Prefix = l.suffix,
-                                            FirstName = l.firstName,
-                                            LastName = l.lastName,
-                                            Gender = l.gender,
+                                         where l.active == true && l.patientID == patientID
+                                         select new PatientProfileVM
+                                         {
+                                             PatientID = l.patientID,
+                                             ProfilePhoto = l.picture,
+                                             TitleName = l.title,
+                                             Prefix = l.suffix,
+                                             FirstName = l.firstName,
+                                             LastName = l.lastName,
+                                             Gender = l.gender,
 
-                                            DOB = l.dob,
-                                            TimeZone = l.timezone,
+                                             DOB = l.dob,
+                                             TimeZone = l.timezone,
 
-                                            Height = l.height,
-                                            Weight = l.weight,
+                                             Height = l.height,
+                                             Weight = l.weight,
 
-                                            Address1 = l.address1,
-                                            Address2 = l.address2,
-                                            City = l.city,
-                                            State = l.state,
-                                            ZipCode = l.zip,
-                                            HomePhone = l.homePhone,
-                                            CellPhone = l.cellPhone,
+                                             Address1 = l.address1,
+                                             Address2 = l.address2,
+                                             City = l.city,
+                                             State = l.state,
+                                             ZipCode = l.zip,
+                                             HomePhone = l.homePhone,
+                                             CellPhone = l.cellPhone,
 
-                                            Latitude = l.lat,
-                                            Longitude = l.lon,
+                                             Latitude = l.lat,
+                                             Longitude = l.lon,
 
-                                            SectetQuestion1 = l.secretQuestion1,
-                                            SectetQuestion2 = l.secretQuestion2,
-                                            SectetQuestion3 = l.secretQuestion3,
+                                             SectetQuestion1 = l.secretQuestion1,
+                                             SectetQuestion2 = l.secretQuestion2,
+                                             SectetQuestion3 = l.secretQuestion3,
 
-                                            SectetAnswer1 = l.secretAnswer1,
-                                            SectetAnswer2 = l.secretAnswer2,
-                                            SectetAnswer3 = l.secretAnswer3
-                                        }).FirstOrDefault();
+                                             SectetAnswer1 = l.secretAnswer1,
+                                             SectetAnswer2 = l.secretAnswer2,
+                                             SectetAnswer3 = l.secretAnswer3
+                                         }).FirstOrDefault();
 
                     if (oPatientProfileVM != null)
                     {
                         oPatientProfileVM.Languages = db.PatientLanguages.Where(x => x.patientID == patientID).Select(x => x.languageName).ToArray();
+                    }
+
+                    response = Request.CreateResponse(HttpStatusCode.OK, oPatientProfileVM);
+                    return response;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetPatientProfileWithAllValues in ProfilesController.");
+            }
+        }
+
+        [HttpGet]
+        [Route("api/getPatientProfileViewOnly")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage GetPatientProfileViewOnly(long patientID)
+        {
+            Patient patient = new Patient();
+            try
+            {
+                if (patientID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient ID is not valid." });
+                    return response;
+                }
+                patient = db.Patients.Where(m => m.patientID == patientID && m.active == true).FirstOrDefault();
+                if (patient == null)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient does not exist." });
+                    return response;
+                }
+                else
+                {
+                    var oPatientProfileVM = new PatientProfileWithExtraInfoVM();
+
+                    oPatientProfileVM = (from l in db.Patients
+                                         where l.active == true && l.patientID == patientID
+                                         select new PatientProfileWithExtraInfoVM
+                                         {
+                                             PatientID = l.patientID,
+                                             ProfilePhoto = l.picture,
+                                             TitleName = l.title,
+                                             Prefix = l.suffix,
+                                             FirstName = l.firstName,
+                                             LastName = l.lastName,
+                                             Gender = l.gender,
+
+                                             DOB = l.dob,
+                                             TimeZone = l.timezone,
+
+                                             Height = l.height,
+                                             Weight = l.weight,
+
+                                             Address1 = l.address1,
+                                             Address2 = l.address2,
+                                             City = l.city,
+                                             State = l.state,
+                                             ZipCode = l.zip,
+                                             HomePhone = l.homePhone,
+                                             CellPhone = l.cellPhone,
+
+                                             Latitude = l.lat,
+                                             Longitude = l.lon
+
+                                         }).FirstOrDefault();
+
+                    if (oPatientProfileVM != null)
+                    {
+                        oPatientProfileVM.Languages = db.PatientLanguages.Where(x => x.patientID == patientID).Select(x => x.languageName).ToArray();
+
+                        //--My Medications
+                        oPatientProfileVM.lstPatientMedicationVM = db.Medications.Where(x => x.patientId == patientID).Select(x => new PatientMedicationVM { Frequency = x.frequency, MedicineName = x.medicineName }).ToList();
+
+                        //--My Allergies
+                        oPatientProfileVM.lstPatientAllergiesVM = db.PatientAllergies.Where(x => x.patientID == patientID).Select(x => new PatientAllergiesVM { AllergyName = x.allergyName, Reaction = x.reaction, Severiaty = x.severity }).ToList();
+
+                        //--My Surgeries
+                        oPatientProfileVM.lstPatientSurgeryVM = db.PatientSurgeries.Where(x => x.patientID == patientID).Select(x => new PatientSurgeryVM { BodyPartName = x.bodyPart }).ToList();
+
+                        //--My Family History
+                        oPatientProfileVM.lstPatientFamilyHistoryVM = db.PatientFamilyHXes.Where(x => x.patientID == patientID).Select(x => new PatientFamilyHistoryVM { DeasesName = x.name, Relation = x.relationship }).ToList();
                     }
 
                     response = Request.CreateResponse(HttpStatusCode.OK, oPatientProfileVM);
@@ -672,7 +775,7 @@ namespace RestAPIs.Controllers
 
                     patient.picture = model.ProfilePhoto;
 
-                    patient.title = model.Title;
+                    patient.title = model.TitleName;
                     patient.firstName = model.FirstName;
                     patient.lastName = model.LastName;
                     patient.suffix = model.Prefix;

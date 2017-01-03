@@ -809,7 +809,9 @@
                 var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
 
                 $.post(cUrlReadyForCall, function (oResp) {
-                    if (oResp == "True") {
+                    if (oResp) {
+                        localStorage.setItem('consultationKey', oResp);
+                        
                         //Redirect doctor to call
                         window.location = '@Url.Action("Index","UserChat")';
                     }
