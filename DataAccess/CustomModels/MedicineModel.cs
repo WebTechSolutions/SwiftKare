@@ -8,7 +8,7 @@ namespace DataAccess.CommonModels
 {
     public class MedicineModel
     {
-        public long medicineID { get; set; }
+        //public long medicineID { get; set; }
         public string medicineName { get; set; }
     }
 }

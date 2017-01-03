@@ -26,10 +26,10 @@ namespace WebApp.Repositories.PatientRepositories
             var result = JsonConvert.DeserializeObject<List<ReactionModel>>(response);
             return result;
         }
-        public List<AllergiesModel> GetAllergies()
+        public List<AllergiesModel> GetAllergies(string prefix)
         {
 
-            var response = ApiConsumerHelper.GetResponseString("api/getAllergy");
+            var response = ApiConsumerHelper.GetResponseString("api/getAllergy/?search="+prefix);
             var result = JsonConvert.DeserializeObject<List<AllergiesModel>>(response);
             return result;
         }

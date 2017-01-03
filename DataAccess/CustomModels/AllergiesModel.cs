@@ -8,7 +8,7 @@ namespace DataAccess.CustomModels
 {
     public class AllergiesModel
     {
-        public long allergyID { get; set; }
+        //public long allergyID { get; set; }
         public string allergyName { get; set; }
     }
 }

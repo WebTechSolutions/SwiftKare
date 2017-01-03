@@ -10,6 +10,13 @@ namespace WebApp.Repositories.PatientRepositories
 {
     public class SurgeriesRepository
     {
+        public List<SurgeriesModel> AutocompleteSurgery(string prefix)
+        {
+
+            var response = ApiConsumerHelper.GetResponseString("api/getAutoCompleteSurgeries/?search="+prefix);
+            var result = JsonConvert.DeserializeObject<List<SurgeriesModel>>(response);
+            return result;
+        }
         public List<SurgeriesModel> GetSurgeries()
         {
 
@@ -18,11 +25,11 @@ namespace WebApp.Repositories.PatientRepositories
             return result;
         }
 
-        public List<GetPatientSurgeries> LoadPatientSurgeries(long patientID)
+        public List<PSurgeries> LoadPatientSurgeries(long patientID)
         {
 
             var response = ApiConsumerHelper.GetResponseString("api/getPatienSurgeries/?patientID=" + patientID);
-            var result = JsonConvert.DeserializeObject<List<GetPatientSurgeries>>(response);
+            var result = JsonConvert.DeserializeObject<List<PSurgeries>>(response);
             return result;
         }
 

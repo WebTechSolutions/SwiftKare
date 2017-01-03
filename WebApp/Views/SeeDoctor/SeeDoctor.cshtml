@@ -33,10 +33,12 @@
 <script src="@Url.Content("~/Scripts/icheck.min.js")"></script>
 
 @*<script src="~/Scripts/jquery.blockUI.js"></script>*@
-
-
+ 
 <script src="@Url.Content("~/Scripts/StripePay.js")"></script>
+<!--Added for autocomplete-->
 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <div class="right_col">
     <div class="clearfix"></div>
     <!--Forms-->
@@ -262,7 +264,7 @@
                                 </div>
                             </div>
                         </div>@*step1*@
-
+                        
 
                         <div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8">
                             <div class="modal-dialog" role="document">
@@ -411,16 +413,12 @@
                                 </div>
                             </form>
                             <p>Add a photo(helpful for rashes, cut, etc)</p>
-                            @*<form action="test.html" class="dropzone" id="mydropzone">
-
-                                </form>*@
-                            <div id="dZUpload" class="dropzone">
+                            <form action="test.html" class="dropzone" id="mydropzone">
                                 <div class="dz-default dz-message"></div>
-                            </div>
-                            @*<input type="button" value="Upload Files to Server" id="btnUpload">*@
+                            </form>
                             <p>Only .pdf, .gif, .png, .jpeg formats are allowed</p>
                         </div>
-
+                        <br>
 
                         <div id="step-3">
                             <div class="x_panel">
@@ -488,7 +486,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <br>
                             <div class="x_panel">
                                 <div class="x_title">
                                     <h2>My Medications</h2>
@@ -558,7 +556,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <br>
 
                             <div class="x_panel">
                                 <div class="x_title">
@@ -640,7 +638,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <br>
 
                             <div class="x_panel">
                                 <div class="x_title">
@@ -653,58 +651,14 @@
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="x_content">
-                                    <div class="table-responsive">
-                                        <table id="surgeriestable" class="table" style="margin-bottom: 5px;">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="border-top: none">Have you ever had any surgeries or medical procedures?</td>
-                                                    <td style="border-top: none"></td>
-                                                    <td style="border-top: none"></td>
-                                                    <td style="border-top: none">
-                                                        <div class="text-right" style="width: 87px;">
-                                                            <label style="display:none;">
-                                                                No <input type="checkbox" class="js-switch" id="surgeryCheckbox" /> Yes
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td>
-
-                                                        <div class="input-group" style="width: 100%;">
-                                                            <div style="color:red; display:none;float:right" id="divsurgery">Surgery is required.</div>
-                                                            <input style="display:block" maxlength="50" type="text" name="country" placeholder="Add Surgeries" id="myBodyPart" class="form-control" />
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div style="color:red;display:none" id="btnsurgery"><label></label></div>
-                                                        <button style="display:block" id="addsurgery" class="btn btn-primary" type="button">Add Surgeries</button>
-
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Have you ever had any of the following? (Check All that Apply)</b></td>
-                                                    <td><b></b></td>
-                                                </tr>
-                                                @*<tr>
-                                                        <td>
-                                                            <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                                <label>
-                                                                    <input type="checkbox" class="flat" checked="checked">&nbsp Ankle
-                                                                </label>
-
-
-                                                            </div>
-
-                                                        </td>
-                                                       <td></td>
-                                                    </tr>*@
-                                            </tbody>
-                                        </table>
+                                    <div id="divSurgery" class="table-responsive">
+                                        @{
+                                            Html.RenderAction("PartialViewSurgery", "SeeDoctor");
+                                        }
                                     </div>
                                 </div>
                             </div>
+                            <br>
                         </div>
 
                         <div id="step-4">
@@ -809,6 +763,7 @@
             </div>
         </div>
     </div>
+    <br><br><br>
 </div> @*end class="right_col"*@
 
 
@@ -818,6 +773,7 @@
 
         $("#mycareteam").load('@Url.Action("MyCareTeam", "SeeDoctor")', function () {
             callback();
+           
         });
 
     }
@@ -1016,12 +972,32 @@
 
 @*For Medicine*@
 <script>
-    jQuery('#myMedicine').on('input', function() {
+    //jQuery('#myMedicine').on('input', function() {
         //alert($("#myMedicine").val());
         //GetMedicines($("#myMedicine").val());
-    });
+    //});
     $(document).ready(function () {
-        GetMedicines($("#myMedicine").val());
+        $("#myMedicine").autocomplete({  
+            source: function (request, response) {  
+                $.ajax({  
+                    url: "/SeeDoctor/AutoCompleteMedicine",  
+                    type: "POST",  
+                    dataType: "json",  
+                    data: { "prefix": request.term },  
+                    success: function (data) {  
+                        response($.map(data, function (item) {  
+                            return { label: item.medicineName, value: item.medicineName };  
+                        }))  
+  
+                    }  
+                })  
+            },  
+            messages: {  
+                noResults: "", results: ""  
+            }  
+        });  
+
+        //GetMedicines($("#myMedicine").val());
         GetMedications(@ViewBag.PatienID);
         GetFrequency();
         $('#medicinestable').DataTable({
@@ -1082,7 +1058,26 @@
 @*For Allergies*@
 <script>
     $(document).ready(function () {
-        GetAllergies();
+        //GetAllergies();
+        $("#myAllergy").autocomplete({  
+            source: function (request, response) {  
+                $.ajax({  
+                    url: "/SeeDoctor/GetAllergies",  
+                    type: "POST",  
+                    dataType: "json",  
+                    data: { "prefix": request.term },  
+                    success: function (data) {  
+                        response($.map(data, function (item) {  
+                            return { label: item.allergyName, value: item.allergyName };  
+                        }))  
+  
+                    }  
+                })  
+            },  
+            messages: {  
+                noResults: "", results: ""  
+            }  
+        });  
         GetSensitivities();
         GetReactions();
         GetPatientAllergies(@ViewBag.PatienID);
@@ -1147,9 +1142,178 @@
 
 @*For Surgeries*@
 <script>
+    $(function()
+    {
+
+        $('input').on('ifToggled', function(event)
+        {
+            if($("#"+this.id).prop('checked') == false)
+            {
+                if (confirm("Are you sure you want to delete?")) {
+                    //showLoader();
+                    var surgeryID = this.id.replace(/[^0-9]/g, '');
+                    
+                   $.ajax({
+            url: '@Url.Action("DeleteSurgery", "SeeDoctor")',
+            type: "POST",
+            data: {"surgeryID":surgeryID},
+            dataType: 'json',
+            success: function (result) {
+                //Reload container
+                if (result.Message != undefined)
+                {
+                    new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                    //stopLoader();
+                }
+                else
+                {
+                    //reloadContainer(function () {
+                    new PNotify({ title: 'Success', text: "Surgery is deleted successfully.", type: 'success', styling: 'bootstrap3' });
+                    //Stop displaying loader
+                    //stopLoader();
+                    //});
+                }
+
+            },
+            error: function (err) {
+                new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                //Stop displaying loader
+                //stopLoader();
+            }
+        });
+                    return;
+                }
+                else
+                {
+
+                    $('#' + this.id).iCheck('toggle');
+                }
+            }
+            else
+            {
+
+                var surgeryID = this.id.replace(/[^0-9]/g, '');
+                var bodyPart = this.name.replace(/[0-9]/g, '');
+
+                if(surgeryID!=0)
+                {
+                    var objFHX = {};
+                    objFHX["patientID"]=@SessionHandler.UserInfo.Id;
+                    objFHX["bodyPart"]=bodyPart;
+                    restore(objFHX,surgeryID);
+                }
+                if(surgeryID==0)
+                {
+                    var objFHX = {};
+                    objFHX["patientID"]=@SessionHandler.UserInfo.Id;
+                    objFHX["bodyPart"]=bodyPart;
+                    var _objFHXX=objFHX;
+                    addFamilyHX(_objFHXX);
+                }
+            }
+        });
+    });
+    function restore(_objFHX,surgeryID)
+    {
+
+        //showLoader();
+        $.ajax({
+            url: '@Url.Action("AddUpdateSurgeries", "SeeDoctor")',
+            type: "POST",
+            data: {"surgeryID":surgeryID,"surgery":_objFHX},
+            dataType: 'json',
+            success: function (result) {
+                //Reload container
+                if (result.Message != undefined)
+                {
+                    new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                    //stopLoader();
+                }
+                else
+                {
+                    //reloadContainer(function () {
+                    new PNotify({ title: 'Success', text: "Surgery is added successfully.", type: 'success', styling: 'bootstrap3' });
+                    //Stop displaying loader
+                    //stopLoader();
+                    //});
+                }
+
+            },
+            error: function (err) {
+                new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                //Stop displaying loader
+                //stopLoader();
+            }
+        });
+    }
+    function addFamilyHX(_objFHX)
+    {
+        //Start displaying loader
+        //showLoader();
+
+        $.ajax({
+            url: '@Url.Action("AddUpdateSurgeries", "SeeDoctor")',
+            type: "POST",
+            data: {"surgeryID":0,"surgery":_objFHX},
+            dataType: 'json',
+            success: function (result) {
+                //Reload container
+                if (result.Message != undefined)
+                {
+                    new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                    $("#Relationship").val($("#Relationship option:first").val());
+                    //stopLoader();
+                }
+                else
+                {
+                    new PNotify({ title: 'Success', text: "Surgery is added successfully.", type: 'success', styling: 'bootstrap3' });
+                    reloadSurgeries(function () {
+                        
+                        //Stop displaying loader
+                        //stopLoader();
+                    });
+                }
+
+            },
+            error: function (err) {
+                new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                //Stop displaying loader
+                //stopLoader();
+            }
+        });
+    }
+    function reloadSurgeries() {
+        $("#divSurgery").load('@Url.Action("PartialViewSurgery", "SeeDoctor")', function () {
+            //callback();
+            test();
+           
+        });
+
+
+    }
+    
     $(document).ready(function () {
-        GetSurgeries();
-        GetPatientSurgeries(@ViewBag.PatienID);
+        $("#myBodyPart").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/SeeDoctor/AutocompleteSurgery",
+                    type: "POST",
+                    dataType: "json",
+                    data: { "prefix": request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.surgeryName, value: item.surgeryName };
+                        }))
+
+                    }
+                })
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+        //GetSurgeries();
+        //GetPatientSurgeries(@ViewBag.PatienID);
 
 
         $('#addsurgery').on('click', function () {
@@ -1182,88 +1346,7 @@
 
 </script>
 
-<script>
-    $(document).ready(function () {
 
-        var handleDataTableButtons = function () {
-            if ($("#datatable-buttons").length) {
-                $("#datatable-buttons").DataTable({
-                    dom: "Bfrtip",
-                    buttons: [
-                      {
-                          extend: "copy",
-                          className: "btn-sm"
-                      },
-                      {
-                          extend: "csv",
-                          className: "btn-sm"
-                      },
-                      {
-                          extend: "excel",
-                          className: "btn-sm"
-                      },
-                      {
-                          extend: "pdfHtml5",
-                          className: "btn-sm"
-                      },
-                      {
-                          extend: "print",
-                          className: "btn-sm"
-                      },
-                    ],
-                    responsive: true
-                });
-            }
-        };
-
-        TableManageButtons = function () {
-            "use strict";
-            return {
-                init: function () {
-                    handleDataTableButtons();
-                }
-            };
-        }();
-
-
-        $('#datatable').dataTable();
-
-        $('#datatable-keytable').DataTable({
-            keys: true
-        });
-
-        $('#datatable-responsive').DataTable();
-
-        $('#datatable-scroller').DataTable({
-            ajax: "js/datatables/json/scroller-demo.json",
-            deferRender: true,
-            scrollY: 380,
-            scrollCollapse: true,
-            scroller: true
-        });
-
-        $('#datatable-fixed-header').DataTable({
-            fixedHeader: true
-        });
-
-        var $datatable = $('#datatable-checkbox');
-
-        $datatable.dataTable({
-            'order': [[1, 'desc']],
-            "columnDefs": [ {
-                "targets": 0,
-                "orderable": false
-            } ]
-        });
-        $datatable.on('draw.dt', function () {
-            $('input').iCheck({
-                checkboxClass: 'icheckbox_flat-green'
-            });
-        });
-
-        TableManageButtons.init();
-    });
-</script>
 
 <!-- /jQuery Smart Wizard -->
 <script>
