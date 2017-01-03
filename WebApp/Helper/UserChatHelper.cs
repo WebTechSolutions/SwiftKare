@@ -69,7 +69,9 @@ namespace WebApp.Helper
                     {
                         sessionID = sessionId,
                         token = tokenId,
-                        userID = senderId
+                        userID = senderId,
+                        doctorId = Convert.ToInt64(senderId),
+                        patientId = Convert.ToInt64(receiverId)
                     });
 
                 oRet.ConsultId = oRetConsultInfo.ID.ToString();

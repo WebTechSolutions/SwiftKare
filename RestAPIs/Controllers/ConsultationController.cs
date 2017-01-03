@@ -498,6 +498,10 @@ namespace RestAPIs.Controllers
                 Consultation cons = new Consultation();
                 cons.active = true;
                 cons.appID = null;
+
+                cons.doctorID = model.doctorId;
+                cons.patientID = model.patientId;
+
                 cons.cd = System.DateTime.Now;
                 cons.cb = model.userID;
                 cons.seesionID = model.sessionID;
