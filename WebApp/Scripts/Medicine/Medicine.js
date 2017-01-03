@@ -7,14 +7,13 @@ var date = new Date();
 var ticks = date.getTime();
 var medicines = null;
 
-function GetMedicines()
+function GetMedicines(prefix)
 {
-    var param = {};
-
+    
     $.ajax({
         type: 'POST',
         url: '/SeeDoctor/GetMedicines',
-        data:param,
+        data: {"prefix":prefix},
         dataType: 'json',
         success: function (response) {
             if (response.Success == true) {
@@ -33,8 +32,10 @@ function GetMedicines()
         //error: errorRes
 
     });
+
       
 }
+
 function GetFrequency() {
     var param = "{}";
     var listitems;
@@ -67,8 +68,9 @@ function GetFrequency() {
 }
 function bindtoTextBoxMedicine(medicines)
 {
-
+    
     var medicinesArray = $.map(medicines, function (el) {
+        
         return el.medicineName;
     });
     

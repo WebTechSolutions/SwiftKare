@@ -16,11 +16,11 @@ else
     <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr class="headings">
-                <th class="column-title">Doctor's Name </th>
-                <th class="column-title">Appointment Time</th>
-                <th class="column-title">Reason of Visit </th>
-                <th class="column-title">ChiefComplaint</th>
-                <th class="column-title">Action</th>
+                <th class="column-title" style="text-align:center">Doctor's Name </th>
+                <th class="column-title" style="text-align:center">Appointment Time</th>
+                <th class="column-title" style="text-align:center">Reason of Visit </th>
+                <th class="column-title" style="text-align:center">ChiefComplaint</th>
+                <th class="column-title" style="text-align:center">Action</th>
             </tr>
         </thead>
 
@@ -32,12 +32,12 @@ else
                 {
 
                 <tr class="even pointer">
-                    <td>@item.DoctorName</td>
-                    <td>@item.appDate @item.appTime</td>
-                    <td>@item.rov</td>
-                    <td>@item.chiefComplaints</td>
+                    <td style="text-align:center">@item.DoctorName</td>
+                    <td style="text-align:center">@item.appDate @item.appTime</td>
+                    <td style="text-align:center">@item.rov</td>
+                    <td style="text-align:center">@item.chiefComplaints</td>
                     <!-- <td><button class="btn btn-primary btn-sm m-b-0 " type="submit">View</button></td> -->
-                    <td>
+                    <td style="text-align:center">
                         <div class="btn-group" role="group">
                             
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -106,8 +106,14 @@ else
           };
         }();
 
-        $('#datatable').dataTable();
-
+       // $('#datatable').dataTable();
+        $('#datatable').dataTable({
+            'order': [[1, 'desc']],
+            columnDefs: [
+              { type: 'date-dd-mmm-yyyy', targets: 1 },
+             
+            ]
+        });
         $('#datatable-keytable').DataTable({
           keys: true
         });
@@ -127,9 +133,9 @@ else
         });
 
         var $datatable = $('#datatable-checkbox');
-
+       
         //$datatable.dataTable({
-        //  'order': [[ 2, 'asc' ]],
+        //  'order': [[ 1, 'desc' ]],
         //  'columnDefs': [
         //    { orderable: false, targets: [0] },
              

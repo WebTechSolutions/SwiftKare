@@ -27,6 +27,32 @@ namespace RestAPIs.Controllers
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
         private HttpResponseMessage response;
 
+        [Route("api/getMyFavDoctors")]
+        public HttpResponseMessage GetMyCareTeam(long patientID)
+        {
+            try
+            {
+                //Doctor.doctorID, Doctor.firstName, Doctor.lastName,Doctor.picture
+                var favdoc = (from l in db.FavouriteDoctors
+                              where l.patientID == patientID && l.active == true
+                              select (from doc in db.Doctors where doc.doctorID == l.doctorID && doc.active == true
+                                              select new DoctorDataset
+                                              {
+                                                  doctorID = doc.doctorID,
+                                                  firstName = doc.firstName,
+                                                  lastName = doc.lastName,
+                                                  picture = doc.picture
+                                              }).FirstOrDefault()).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, favdoc);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetFavouriteDoctors in SearchDoctorController");
+            }
+
+
+        }
         [Route("api/GetFavouriteDoctors")]
         public HttpResponseMessage GetFavouriteDoctors(long patientID)
         {

@@ -196,6 +196,9 @@ function toggle(docid, patid) {
                         type: 'success',
                         styling: 'bootstrap3'
                     });
+                    reloadContainer(function () {
+
+                    });
                     document.getElementById("" + docid + "nofav").style.display = "none";
                     document.getElementById("" + docid + "fav").style.display = "block";
 
@@ -238,6 +241,9 @@ function untoggle(docid, patid) {
                         text: "Doctor is made unfavourite successfully.",
                         type: 'success',
                         styling: 'bootstrap3'
+                    });
+                    reloadContainer(function () {
+
                     });
                     document.getElementById("" + docid + "nofav").style.display = "block";
                     document.getElementById("" + docid + "fav").style.display = "none";

@@ -1,4 +1,5 @@
 ﻿@using WebApp.Helper;
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,7 +29,7 @@
     <script src="@Url.Content("~/Scripts/general.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.cropit.js")"></script>
     <script src="@Url.Content("~/Scripts/daterangepiker/daterangepicker.js")"></script>
-
+   
     <style type="text/css">
         .redBorder, .redBorder:focus, .redBorder:active {
             border-color: red;
@@ -74,7 +75,7 @@
     </style>
 </head>
 
-<body class="nav-md">
+<body class="nav-md footer_fixed">
     <div style="display:none">
         <input type="text" id="receiverConnectionId" value="" style="display:none;" />
         Please select the doctor before calling...
@@ -82,9 +83,9 @@
 
         <input type="button" id="sendmessage" value="Call to Doctor" />
     </div>
-    <div class="container body">
-        <div class="main_container">
-            <div class="col-md-3 left_col">
+    <div class="container body" style="background-color: #2a3f54;">
+        <div class="main_container" main_container>
+            <div class="col-md-3 left_col menu_fixed">
                 <div class="left_col scroll-view">
                     <div class="navbar nav_title" style="border: 0;">
                         <a href="index.html" class="">
@@ -129,26 +130,27 @@
                                 <li class="message">
                                     <a href="@Url.Action("Index","PatientFiles")"><img src="~/Content/images/my-files.png" alt=""> &nbsp <span class="menu-txt">My Files</span> </a>
                                 </li>
-                                <li class="call_history">
+                                @*<li class="call_history">
                                     <a href="#"><img src="~/Content/images/my-doctors1.png" alt="">  &nbsp <span class="menu-txt">My Doctors</span> </a>
                                     <ul class="nav child_menu">
                                         <li><a href="#">Dashboard</a></li>
                                     </ul>
-                                </li>
+                                </li>*@
                                 <li class="call_history">
                                     <a href="@Url.Action("Index","News")"><img src="~/Content/images/whats-new.png" alt="">  &nbsp <span class="menu-txt">Whats New</span> </a>
                                 </li>
+                               
                             </ul>
                         </div>
                     </div>
                     <div class="sidebar-footer hidden-small">
-                        <a data-toggle="tooltip" data-placement="top" title="Settings">
+                        <a data-toggle="tooltip" data-placement="top" title="My Profile">
                             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                         </a>
                         <a data-toggle="tooltip" data-placement="top" title="FullScreen">
                             <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
                         </a>
-                        <a data-toggle="tooltip" data-placement="top" title="Ticket">
+                        <a data-toggle="tooltip" data-placement="top" title="Create Help Ticket">
                             <span class="fa fa-ticket" aria-hidden="true"></span>
                         </a>
                         @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
@@ -177,14 +179,9 @@
                                     <span class="fa fa-angle-down"></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                    <li><a href="@Url.Action("Index","PatientProfile")"> Profile</a></li>
-                                    <li>
-                                        <a href="javascript:;">
-                                            <span class="badge bg-red pull-right">50%</span>
-                                            <span>Settings</span>
-                                        </a>
-                                    </li>
-                                    <li><a href="javascript:;">Help</a></li>
+                                    <li><a href="@Url.Action("Index","PatientProfile")">My Profile</a></li>
+                                   
+                                    <li><a href="javascript:;">Create Help Ticket</a></li>
                                     <li>
                                         <a href="javascript:document.getElementById('logoutForm').submit()">
                                             <i class="fa fa-sign-out pull-right"></i>
@@ -247,7 +244,7 @@
                                     </li>
                                     <li>
                                         <div class="text-center">
-                                            <a href="#">
+                                            <a href="@Url.Action("Index","Alert")">
                                                 <strong>See All Messages</strong>
                                                 <i class="fa fa-angle-right"></i>
                                             </a>
@@ -255,70 +252,20 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li role="presentation" class="dropdown">
+                            <li>
+                            <div id="divAlerts">
+                            @{
+                                Html.RenderAction("AlertView", "Alert");
+                            }
+                            </div>
+                            </li>
+                            @*<li role="presentation" class="dropdown">
                                 <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-bell"></i>
                                     <span class="badge bg-green">6</span>
                                 </a>
-                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <div class="text-center">
-                                            <a href="messages.html">
-                                                <strong>See All Alerts</strong>
-                                                <i class="fa fa-angle-right"></i>
-                                            </a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
+                                
+                            </li>*@
                             @*<li role="presentation" class="dropdown">
                                 <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-envelope-o"></i>
@@ -415,7 +362,15 @@
     <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
     <script src="~/signalr/hubs"></script>
     <script type="text/javascript">
-
+        
+        $('#menu_toggle').click(function ()
+        {
+            if (document.body.className == "nav-md")
+            {
+                ($("body").attr("class", "nav-sm"))
+            }
+            else $("body").attr("class", "nav-md");
+        });
         // Proxy created on the fly
         var chat = $.connection.chatHub;
         var senderConnectionId;
@@ -489,7 +444,23 @@
                 UserGroup: 'doctors'
             });
         }
+        @*function makeCallToPatient(e) {
+            //setDoctorID($(e).attr("data-doctorid"));
+            var curElem = $(e);
+            var DoctorName = 'Dr. ' + '@SessionHandler.UserInfo.FirstName' + ' ' + '@SessionHandler.UserInfo.LastName';
+            //alert("calling");
 
+            chat.server.SendMessageToPatient(
+            {
+                SenderId: '@SessionHandler.UserInfo.Id',
+                UserName: '@SessionHandler.UserInfo.Email',
+                ReceiverConnectionId: curElem.data("connId"),
+                ReceiverId: '20',
+                SenderType: 'Doctor',
+                Message: JSON.stringify({ status: 'call', name: DoctorName }),
+                UserGroup: 'doctors'
+            });
+        }*@
 
         $(function () {
 
@@ -584,6 +555,8 @@
                     window.location.href = request.response.redirectUrl;
             }
         });
+
+        $('#menu_toggle').click(function () { if (document.body.className == "nav-md footer_fixed") { ($("body").attr("class", "nav-sm footer_fixed")); $('.fa-angle-down').show(); } else { $("body").attr("class", "nav-md footer_fixed"); } });
     </script>
 
 

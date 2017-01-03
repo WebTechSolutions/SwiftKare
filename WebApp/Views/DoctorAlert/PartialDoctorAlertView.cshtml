@@ -1,0 +1,146 @@
+﻿@model IEnumerable<DataAccess.CustomModels.AlertModel>
+
+@if (Model == null || Model.Count() == 0)
+{
+    if (ViewBag.Error != "")
+    {
+        <script>
+            $(function () {
+                new PNotify({
+                    title: 'Error',
+                    text: "@ViewBag.Error",
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+            });
+
+        </script>
+    }
+    else
+    {
+        <div class="well">
+            There is no alert message.
+        </div>
+    }
+
+}
+else
+{
+
+    <table id="datatablealert" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <tr class="headings">
+                <th class="column-title" style="text-align:center">Alert Text </th>
+                <th class="column-title" style="text-align:center">Date & Time </th>
+                <th class="column-title" style="text-align:center">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model != null)
+            {
+                var j = 1;
+                foreach (var item in Model)
+                {
+                    <tr class="even pointer">
+                        <td style="text-align:left;width:60%;word-wrap:break-word">@item.alertText</td>
+                        <td style="text-align:center;width:10%;">@item.alertDate.Value.ToString("dd/MM/yyyy")</td>
+                        <td style="text-align:center;width:5%;">
+                            <button id="@item.alertID" class="btn btn-primary btn-sm m-b-0 " type="button"
+                                    onclick=deleteAlert(@item.alertID);>
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                    j = j + 1;
+                }
+            }
+
+
+
+        </tbody>
+    </table>
+
+}
+<!-- Datatables -->
+<script>
+      $(document).ready(function() {
+        var handleDataTableButtons = function() {
+          if ($("#datatable-buttons").length) {
+            $("#datatable-buttons").DataTable({
+              dom: "Bfrtip",
+              buttons: [
+                {
+                  extend: "copy",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "csv",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "excel",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "pdfHtml5",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "print",
+                  className: "btn-sm"
+                },
+              ],
+              responsive: true
+            });
+          }
+        };
+
+        TableManageButtons = function() {
+          "use strict";
+          return {
+            init: function() {
+              handleDataTableButtons();
+            }
+          };
+        }();
+
+
+        $('#datatablealert').dataTable({
+            'order': [[1, 'desc']],
+            columnDefs: [
+              { type: 'date-dd-mmm-yyyy', targets: 1 }
+            ]
+        });
+        $('#datatable-keytable').DataTable({
+          keys: true
+        });
+
+        $('#datatable-responsive').DataTable();
+
+        $('#datatable-scroller').DataTable({
+          ajax: "js/datatables/json/scroller-demo.json",
+          deferRender: true,
+          scrollY: 380,
+          scrollCollapse: true,
+          scroller: true
+        });
+
+        $('#datatable-fixed-header').DataTable({
+          fixedHeader: true
+        });
+
+        var $datatable = $('#datatable-checkbox');
+
+
+        $datatable.on('draw.dt', function() {
+          $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+          });
+        });
+
+        TableManageButtons.init();
+      });
+</script>
+<!-- /Datatables -->
+

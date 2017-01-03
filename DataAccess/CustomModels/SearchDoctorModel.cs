@@ -15,4 +15,5 @@ namespace DataAccess.CommonModels
         public Nullable<TimeSpan> appTime { get; set; }
         public string gender { get; set; }
     }
+   
 }

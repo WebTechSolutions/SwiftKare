@@ -33,12 +33,12 @@
 </style>
 
 @*<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
-<script type="text/javascript" src="~/Scripts/~/Scripts/bootstrap.min.js"></script>*@
-<script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="~/Scripts/dataTables.bootstrap.min.js"></script>
-<script type="text/javascript" src="~/Scripts/dataTables.buttons.min.js"></script>
-<script type="text/javascript" src="~/Scripts/dataTables.responsive.min.js"></script>
-<script type="text/javascript" src= "~/Scripts/pnotify.js"></script>
+    <script type="text/javascript" src="~/Scripts/~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/dataTables.responsive.min.js"></script>*@
+
 
 <!-- page content -->
 <div class="right_col">
@@ -179,6 +179,15 @@
            callback();
        });
 
+   }
+    function reloadUpcomingandPendingApp(callback)
+    {
+        $("#divUpcoming").load('@Url.Action("PartialDoctorUpcoming", "DoctorAppointment")', function () {
+            callback();
+        });
+        $("#divPending").load('@Url.Action("PartialDoctorPending", "DoctorAppointment")', function () {
+            callback();
+        });
     }
 </script>
 
