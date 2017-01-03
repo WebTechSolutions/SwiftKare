@@ -16,14 +16,14 @@ function GetSurgeries() {
         data: param,
         dataType: 'json',
         success: function (response) {
-            if (response.Success == true) {
+            
 
-                if (response.Surgeries != null) {
-                    surgeries = response.Surgeries;
-                    bindtoTextBox(surgeries);
+            if (response != null) {
+                    surgeries = response;
+                    //bindtoTextBox(surgeries);
                 }
 
-            }
+           
             return false;
             // else {alert(data.ErrorMessage);}
 

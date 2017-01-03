@@ -60,6 +60,42 @@ namespace WebApp.Controllers
             }
             return PartialView("MyCareTeamView");
         }
+
+        public PartialViewResult PartialViewSurgery()
+        {
+            try
+            {
+                SurgeriesRepository oSurgeriesRepository=new SurgeriesRepository();
+                var oAllSurgeries = oSurgeriesRepository.GetSurgeries();
+                var oAllPAllSurgeries = oSurgeriesRepository.LoadPatientSurgeries(SessionHandler.UserInfo.Id);
+               
+                List<PSurgeries> oSurgeires = new List<PSurgeries> { };
+                foreach (var item in oAllPAllSurgeries)
+                {
+                    oSurgeires.Add(new PSurgeries {surgeryID=item.surgeryID, patientID = item.patientID,bodyPart=item.bodyPart});
+                }
+                foreach (var item in oAllSurgeries)
+                {
+                    var flag = oSurgeires.Where(os => os.bodyPart == item.surgeryName).FirstOrDefault();
+                    if (flag == null)
+                    {
+                        oSurgeires.Add(new PSurgeries { surgeryID =0,patientID = 0, bodyPart = item.surgeryName});
+                    }
+
+                }
+                return PartialView("PartialViewSurgery", oSurgeires);
+
+            }
+
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                ViewBag.Error = ex.Response.ReasonPhrase.ToString();
+                ViewBag.Success = "";
+                return PartialView("PartialViewSurgery");
+            }
+           
+        }
+
         [HttpPost]
         // Languages
         public JsonResult GetAllLanguages()
@@ -465,7 +501,7 @@ namespace WebApp.Controllers
             try
             {
                 MedicationRepository objRepo = new MedicationRepository();
-                List<MedicineModel> model = objRepo.GetMedicines();
+                List<MedicineModel> model = objRepo.GetMedicines(prefix);
 
                 return Json(new { Success = true, Medicines = model });
 
@@ -580,16 +616,16 @@ namespace WebApp.Controllers
         }
 
 
-        //Patient Allergies
+        //Allergies
         [HttpPost]
-        public JsonResult GetAllergies()
+        public JsonResult GetAllergies(string prefix)
         {
             try
             {
                AllergiesRepository objRepo = new AllergiesRepository();
-               List<AllergiesModel> model = objRepo.GetAllergies();
+               var allergies = objRepo.GetAllergies(prefix);
 
-                return Json(new { Success = true, Allergies = model });
+                return Json(allergies, JsonRequestBehavior.AllowGet);
 
             }
             catch (Exception ex)
@@ -708,9 +744,26 @@ namespace WebApp.Controllers
             try
             {
                 SurgeriesRepository objRepo = new SurgeriesRepository();
-                List<SurgeriesModel> model = objRepo.GetSurgeries();
+               var surgeries= objRepo.GetSurgeries();
 
-                return Json(new { Success = true, Surgeries = model });
+                return Json(surgeries, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+
+            }
+        }
+        [HttpPost]
+        public JsonResult AutocompleteSurgery(string prefix)
+        {
+            try
+            {
+                SurgeriesRepository objRepo = new SurgeriesRepository();
+                var surgeries = objRepo.AutocompleteSurgery(prefix);
+
+                return Json(surgeries, JsonRequestBehavior.AllowGet);
 
             }
             catch (Exception ex)
@@ -720,31 +773,31 @@ namespace WebApp.Controllers
             }
         }
 
-        [HttpPost]
-        public JsonResult LoadPatientSurgeries(long patientid)
-        {
-            try
-            {
-                List<GetPatientSurgeries> psurgeries = new List<GetPatientSurgeries>();
-                var objRepo = new SurgeriesRepository();
-                psurgeries = objRepo.LoadPatientSurgeries(patientid);
-                return Json(new { Success = true, Surgeries = psurgeries });
-            }
-            catch (Exception ex)
-            {
-                return Json(ex.Message, JsonRequestBehavior.AllowGet);
-            }
-        }
+        //[HttpPost]
+        //public JsonResult LoadPatientSurgeries(long patientid)
+        //{
+        //    try
+        //    {
+        //        List<GetPatientSurgeries> psurgeries = new List<GetPatientSurgeries>();
+        //        var objRepo = new SurgeriesRepository();
+        //        psurgeries = objRepo.LoadPatientSurgeries(patientid);
+        //        return Json(new { Success = true, Surgeries = psurgeries });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(ex.Message, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
 
         [HttpPost]
         public JsonResult AddUpdateSurgeries(long surgeryID, PatientSurgery_Custom surgery)
         {
             try
             {
-                if (surgery.bodyPart == null || surgery.bodyPart == "" || !Regex.IsMatch(surgery.bodyPart, "^[0-9a-zA-Z ]+$"))//!Regex.IsMatch(surgery.bodyPart, @"^[a-zA-Z\s]+$"))
+                if (surgery.bodyPart == null || surgery.bodyPart == "")//!Regex.IsMatch(surgery.bodyPart, @"^[a-zA-Z\s]+$"))
                 {
                     ApiResultModel apiresult = new ApiResultModel();
-                    apiresult.message = "Invalid body part name.Only letters and numbers are allowed.";
+                    apiresult.message = "Provide surgery name.";
                     return Json(new { Success = true, ApiResultModel = apiresult });
                 }
                 SurgeriesRepository objRepo = new SurgeriesRepository();

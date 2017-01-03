@@ -21,13 +21,13 @@ namespace RestAPIs.Controllers
         HttpResponseMessage response;
 
         [Route("api/getAllergy")]
-        public HttpResponseMessage GetAllergies()
+        public HttpResponseMessage GetAllergies(string search)
         {
             try
             {
                 var allergies = (from l in db.Allergies
-                                 where l.active == true
-                                 select new AllergiesModel { allergyID = l.allergyID, allergyName = l.allergyName.Trim() }).ToList();
+                                 where l.active == true && l.allergyName.Contains(search)
+                                 select new AllergiesModel { allergyName = l.allergyName.Trim() }).Take(10).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, allergies);
                 return response;
             }

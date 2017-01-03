@@ -21,14 +21,31 @@ namespace RestAPIs.Controllers
         HttpResponseMessage response;
 
 
+        [Route("api/getAutoCompleteSurgeries")]
+        public HttpResponseMessage getAutoCompleteSurgeries(string search)
+        {
+            try
+            {
+                var surgeries = (from l in db.Surgeries
+                                 where l.active == true && l.surgeryName.Contains(search)
+                                 select new SurgeriesModel { surgeryName = l.surgeryName.Trim() }).Take(10).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, surgeries);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetSurgeries in PatientSurgeriesController");
+            }
+
+        }
         [Route("api/getSurgeries")]
-        public HttpResponseMessage GetSurgeries()
+        public HttpResponseMessage getSurgeries()
         {
             try
             {
                 var surgeries = (from l in db.Surgeries
                                  where l.active == true
-                                 select new SurgeriesModel { surgeryID = l.surgeryID, surgeryName = l.surgeryName.Trim() }).ToList();
+                                 select new SurgeriesModel { surgeryName = l.surgeryName.Trim() }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, surgeries);
                 return response;
             }
@@ -46,7 +63,7 @@ namespace RestAPIs.Controllers
             {
                 var surgeries = (from l in db.PatientSurgeries
                                  where l.active == true && l.patientID == patientID
-                                 select new GetPatientSurgeries { surgeryID = l.surgeryID, bodyPart = l.bodyPart.Trim() }).ToList();
+                                 select new PSurgeries {surgeryID=l.surgeryID, patientID = l.patientID, bodyPart = l.bodyPart.Trim() }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, surgeries);
                 return response;
             }

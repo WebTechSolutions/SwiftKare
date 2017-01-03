@@ -46,7 +46,7 @@ namespace RestAPIs.Controllers
             {
                 var medicines = (from l in db.Medicines
                                  where l.active == true
-                                 select new MedicineModel { medicineID=l.medicineID, medicineName = l.medicineName.Trim() }).ToList();
+                                 select new MedicineModel { medicineName = l.medicineName.Trim() }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, medicines);
                 return response;
             }
