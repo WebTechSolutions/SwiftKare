@@ -302,7 +302,8 @@ var UserChat = function (apiKey, sessionId, token) {
 
         localStorage.removeItem('consultationKey');
 
-        history.back(-1);
+        //cEndCallUrl is defined in page
+        window.location = cEndCallUrl;
     }
 
     function SaveChatMessage(sessionId, senderId, receiverId, message) {

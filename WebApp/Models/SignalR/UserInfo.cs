@@ -17,5 +17,6 @@ namespace WebApp.Models.SignalR
         public string UserGroup { get; set; }
         public int UserID { get; set; }
         public int AdminID { get; set; }
+        public string UserType { get; set; }
     }
 }

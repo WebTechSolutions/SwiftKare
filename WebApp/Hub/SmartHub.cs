@@ -19,21 +19,22 @@ namespace WebApp.Hub
     }
     public class ChatHub : Microsoft.AspNet.SignalR.Hub
     {
+        public static ConcurrentDictionary<string, UserInfo> AllUserList =
+            new ConcurrentDictionary<string, UserInfo>();
 
-        public static ConcurrentDictionary<string, UserInfo> DoctorsList = new ConcurrentDictionary<string, UserInfo>();//doctorsList
         static List<MessageInfo> MessageList = new List<MessageInfo>();
 
         public override Task OnDisconnected(bool trythis)
         {
             UserInfo Value;
-            DoctorsList.TryRemove(Context.ConnectionId, out Value);
+            AllUserList.TryRemove(Context.ConnectionId, out Value);
             MessageList.Clear();
-            //MessageList.Remove(MessageList.SingleOrDefault(o => o.ConnectionId == Context.ConnectionId));
-            return Clients.Group("doctors").showConnected(DoctorsList);
+
+            return Clients.Group("doctors").showConnected(AllUserList);
         }
+
         public override Task OnConnected()
         {
-            //string username = Context.QueryString["username"].ToString();
             string clientId = Context.ConnectionId;
             string data = clientId;
             Clients.Caller.receiveMessage("ChatHub", data, 0);
@@ -63,6 +64,31 @@ namespace WebApp.Hub
             Clients.Client(message.ReceiverConnectionId).receiveMessage(message.UserName, message.Message, message.SenderConnectionId, message.SenderId);
         }
 
+        public void CallPatient(MessageInfo message) {
+            var ConnectionId = Context.ConnectionId;
+            message.SenderConnectionId = ConnectionId;
+            message.SenderType = "Doctor";
+            message.MsgDate = DateTime.Now.ToString();
+            //Clients.Caller.receiveMessage(message.UserName, message.Message, ConnectionId);
+            Clients.Client(message.ReceiverConnectionId).incomingCallFromDoctor(message.UserName, message.Message, message.SenderConnectionId, message.SenderId, message.AppId, message.DoctorName);
+        }
+
+        public void PatientAcceptedCall(MessageInfo message)
+        {
+            var ConnectionId = Context.ConnectionId;
+            Clients.Client(message.ReceiverConnectionId).patientAcceptedCall(message.UserName, message.SenderId, message.AppId);
+        }
+
+        public void PatientRejectedCall(MessageInfo message)
+        {
+            var ConnectionId = Context.ConnectionId;
+            Clients.Client(message.ReceiverConnectionId).patientRejectedCall(message.UserName, message.SenderId, message.AppId);
+        }
+
+        public void PatientRedirectedToCall(string connId, string consultId, string patId, string patientName) {
+            Clients.Client(connId).patientRedirectedToCallHandle(consultId, patId, patientName);
+        }
+
         public void SendMessage(MessageInfo message)
         {
             var ConnectionId = Context.ConnectionId;
@@ -72,8 +98,6 @@ namespace WebApp.Hub
             Clients.Client(message.ReceiverConnectionId).receiveMessage(message.UserName, message.Message, message.SenderConnectionId);
         }
 
-
-
         public void AdminJoin()//patient
         {
             Groups.Add(Context.ConnectionId, "doctors");
@@ -81,8 +105,21 @@ namespace WebApp.Hub
 
         public void GetUsers()
         {
-            Clients.Group("doctors").showConnected(DoctorsList);
+            Clients.Group("doctors").showConnected(AllUserList);
         }
+
+        public void GetUsersDoctor()
+        {
+            var oRet = AllUserList.Where(x => x.Value.UserType == "Doctor");
+            Clients.Group("doctors").showConnected(oRet);
+        }
+
+        public void GetUsersPatient()
+        {
+            var oRet = AllUserList.Where(x => x.Value.UserType == "Patient");
+            Clients.Group("doctors").showConnected(oRet);
+        }
+
 
         public void Join(UserInfo data)
         {
@@ -97,8 +134,8 @@ namespace WebApp.Hub
             //data.LastName = SessionHandler.UserInfo.LastName;
 
             data.Ip = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
-            DoctorsList.TryAdd(Context.ConnectionId, data);
-            Clients.Group("doctors").showConnected(DoctorsList);
+            AllUserList.TryAdd(Context.ConnectionId, data);
+            Clients.Group("doctors").showConnected(AllUserList);
         }
     }
 }

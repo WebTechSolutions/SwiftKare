@@ -12,7 +12,8 @@ namespace WebApp.Helper
     public class OpenTokSession
     {
         public string UserType { get; set; }
-        public string RecipientName { get; set; }
+        public string DoctorName { get; set; }
+        public string PatientName { get; set; }
         public string SenderId { get; set; }
         public string ReceiverId { get; set; }
         public string SessionId { get; set; }
@@ -33,7 +34,7 @@ namespace WebApp.Helper
 
         #region Public Methods
 
-        public static OpenTokSession GetOpenTokSessionInformation(string senderId, string receiverId, string userType, string recipientName)
+        public static OpenTokSession GetOpenTokSessionInformation(string senderId, string receiverId, string userType, string doctorName, string patientName,  string appId = "")
         {
             OpenTokSession oRet = null;
 
@@ -60,21 +61,41 @@ namespace WebApp.Helper
                     SessionId = sessionId,
                     TokenId = tokenId,
                     UserType = userType,
-                    RecipientName = recipientName
+                    DoctorName = doctorName,
+                    PatientName = patientName
                 };
 
                 //Create consult ID
-                var oRetConsultInfo = new VideoCallRepository().CreateConsultWithoutAppointment(
-                    new CreateConsultModel
-                    {
-                        sessionID = sessionId,
-                        token = tokenId,
-                        userID = senderId,
-                        doctorId = Convert.ToInt64(senderId),
-                        patientId = Convert.ToInt64(receiverId)
-                    });
 
-                oRet.ConsultId = oRetConsultInfo.ID.ToString();
+                if (appId == "")
+                {
+                    var oRetConsultInfo = new VideoCallRepository().CreateConsultWithoutAppointment(
+                        new CreateConsultModel
+                        {
+                            sessionID = sessionId,
+                            token = tokenId,
+                            userID = senderId,
+                            doctorId = Convert.ToInt64(senderId),
+                            patientId = Convert.ToInt64(receiverId)
+                        });
+
+                    oRet.ConsultId = oRetConsultInfo.ID.ToString();
+                }
+                else
+                {
+                    var oRetConsultInfo = new VideoCallRepository().CreateConsult(
+                        new CreateConsultModel
+                        {
+                            sessionID = sessionId,
+                            appID = Convert.ToInt64(appId),
+                            token = tokenId,
+                            userID = senderId,
+                            doctorId = Convert.ToInt64(senderId),
+                            patientId = Convert.ToInt64(receiverId)
+                        });
+
+                    oRet.ConsultId = oRetConsultInfo.ID.ToString();
+                }
 
                 lstAllOpenTokSessions.Add(oRet);
             }
