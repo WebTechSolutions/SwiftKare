@@ -757,7 +757,7 @@
         //    alert('no');
         //}
         
-        
+       
         if(plsid==0)
         {
             var objLifeStyle = {};
@@ -773,13 +773,15 @@
             var _objPLS=objLifeStyle;
             //Start displaying loader
             showLoader();
-
+         
             $.ajax({
                 url: '@Url.Action("AddLifeStyle", "MyHealth")',
                 type: "POST",
                 data: _objPLS,
                 dataType: 'json',
                 success: function (result) {
+                    debugger;
+                    var newID=result.ApiResultModel.ID;
                     //Reload container
                     if (result.Message != undefined)
                     {
@@ -788,11 +790,17 @@
                     }
                     else
                     {
-                        
-                        reloadLifeStyle(function () {
+                        $('#lfs'+id).attr('onclick','').unbind('click');
+                        $('#lfs'+id).click(function(){
+                            
+                            addLifeStyle(id,'Do you drink alcohol?',newID);   // code goes here
+                        });
+                        new PNotify({ title: 'Success', text: "Life style is added successfully.", type: 'success', styling: 'bootstrap3' });
+                        stopLoader();
+                       /* reloadLifeStyle(function () {
                             new PNotify({ title: 'Success', text: "Life style is added successfully.", type: 'success', styling: 'bootstrap3' });
                             stopLoader();
-                        });
+                        });*/
 
                     }
 
