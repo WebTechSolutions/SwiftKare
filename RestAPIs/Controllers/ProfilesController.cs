@@ -1331,7 +1331,7 @@ namespace RestAPIs.Controllers
                 }
                 else
                 {
-                    //var patprofile = db.SP_ViewPatientProfile(patientID).ToList();
+                   
                     var patprofile = (from l in db.Patients
                                       where l.active == true && l.patientID == patientID
                                       select new
@@ -1344,33 +1344,33 @@ namespace RestAPIs.Controllers
                                           picture = l.picture,
                                           dateofbirth = l.dob,
                                           languages = (from pl in db.PatientLanguages
-                                                       where pl.patientID == l.patientID && pl.active == true
-                                                       select new { languageName = pl.languageName }).ToList(),
+                                                          where pl.patientID == l.patientID && pl.active == true
+                                                          select new { languageName = pl.languageName }).ToList(),
                                           allergies = (from pl in db.PatientAllergies
-                                                       where pl.patientID == l.patientID && pl.active == true
-                                                       select new { allergyName = pl.allergyName, severity = pl.severity, reaction = pl.reaction }).ToList(),
-                                          conditions = (from pl in db.Conditions
                                                         where pl.patientID == l.patientID && pl.active == true
-                                                        select new { conditionName = pl.conditionName }).ToList(),
-                                          familyhx = (from pl in db.PatientFamilyHXes
-                                                      where pl.patientID == l.patientID && pl.active == true
-                                                      select new { conditionName = pl.name, relationship = pl.relationship }).ToList(),
-
-
-                                          medication = (from pl in db.Medications
-                                                        where pl.patientId == l.patientID && pl.active == true
-                                                        select new { medicineName = pl.medicineName, frequency = pl.frequency }).ToList(),
-
-                                          surgery = (from pl in db.PatientSurgeries
+                                                        select new { allergyName = pl.allergyName,severity=pl.severity, reaction=pl.reaction }).ToList(),
+                                          conditions = (from pl in db.Conditions
                                                      where pl.patientID == l.patientID && pl.active == true
-                                                     select new { surgeryeName = pl.bodyPart }).ToList(),
+                                                     select new { conditionName = pl.conditionName }).ToList(),
+                                          familyhx = (from pl in db.PatientFamilyHXes
+                                                         where pl.patientID == l.patientID && pl.active == true
+                                                         select new { conditionName = pl.name,relationship=pl.relationship }).ToList(),
+                                         
+                                          
+                                          medication = (from pl in db.Medications
+                                                           where pl.patientId == l.patientID && pl.active == true
+                                                           select new { medicineName = pl.medicineName, frequency = pl.frequency }).ToList(),
+                                          
+                                          surgery = (from pl in db.PatientSurgeries
+                                                        where pl.patientID == l.patientID && pl.active == true
+                                                        select new {surgeryeName = pl.bodyPart}).ToList(),
 
-
+                                          
                                           title = l.title,
                                           suffix = l.suffix,
                                           zip = l.zip
                                       }).FirstOrDefault();
-
+                    
                     response = Request.CreateResponse(HttpStatusCode.OK, patprofile);
                     return response;
                 }
@@ -1382,7 +1382,6 @@ namespace RestAPIs.Controllers
             }
 
         }
-
 
 
         //Patient Profile Section
@@ -1961,6 +1960,33 @@ namespace RestAPIs.Controllers
         {
             response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Following Error occurred at method: " + Action + "\n" + ex.Message });
             return response;
+        }
+        public string GetAge(DateTime? patientDOB)
+        {
+            try
+            {
+                if (patientDOB.HasValue)
+                {
+
+                    var today = DateTime.Today;
+
+                    // Calculate the age.
+                    var age = today.Year - patientDOB.Value.Year;
+
+                    // Do stuff with it.
+                    if (patientDOB.Value > today.AddYears(-age)) age--;
+
+                    return string.Format("{0} Years", age);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            catch (Exception)
+            {
+                return "";
+            }
         }
 
 
