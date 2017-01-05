@@ -1,10 +1,10 @@
-﻿
+﻿@using WebApp.Helper;
 @{
     Layout = null;
 }
 <link href="~/Content/css/style.css" rel="stylesheet">
    
-        <div class="row">
+        <div class="row" id="patientFamilyHX">
             <ul class="to_do">
                 <li style="display: inline-block; width: 100%; margin-bottom: 5px;">
                     <div class="col-sm-12">
@@ -92,83 +92,141 @@
     
 <!-- Datatables -->
 <script>
-      $(document).ready(function() {
-        var handleDataTableButtons = function() {
-          if ($("#datatable-buttons").length) {
-            $("#datatable-buttons").DataTable({
-              dom: "Bfrtip",
-              buttons: [
-                {
-                  extend: "copy",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "csv",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "excel",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "pdfHtml5",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "print",
-                  className: "btn-sm"
-                },
-              ],
-              responsive: true
-            });
-          }
-        };
+      
 
-        TableManageButtons = function() {
-          "use strict";
-          return {
-            init: function() {
-              handleDataTableButtons();
+    $(document).ready(function () {
+        
+            
+        $("#btnAdd").click(function () {
+
+            if ($("#nametxt").val() == "" && $("#Relationship option:selected").text()!="Relationship") {
+
+                document.getElementById("divfhx").style.display = "block";
+                document.getElementById("divrel").style.display = "none";
+                return;
             }
-          };
-        }();
+            if ($("#nametxt").val() != "" && $("#Relationship option:selected").text()=="Relationship") {
 
-        $('#rescheduledatatable').dataTable();
+                document.getElementById("divfhx").style.display = "none";
+                document.getElementById("divrel").style.display = "block";
+                return;
+            }
+            if ($("#nametxt").val() == "" && $("#Relationship option:selected").text()=="Relationship") {
 
-        $('#datatable-keytable').DataTable({
-          keys: true
+                document.getElementById("divfhx").style.display = "block";
+                document.getElementById("divrel").style.display = "block";
+                return;
+            }
+            if ($("#nametxt").val() == "") {
+
+                document.getElementById("divfhx").style.display = "block";
+                return;
+            }
+            if($("#Relationship option:selected").text()=="Relationship") {
+
+                document.getElementById("divrel").style.display = "block";
+                return;
+            }
+
+
+            document.getElementById("divfhx").style.display = "none";
+            document.getElementById("divrel").style.display = "none";
+            var objFamilyHX = {};
+            objFamilyHX["patientID"]=@SessionHandler.UserInfo.Id;
+            objFamilyHX["name"]=$("#nametxt").val();
+            if($("#Relationship option:selected").text()=="Relationship")
+            {
+                objFamilyHX["relationship"]="";
+            }
+            else
+            {
+                objFamilyHX["relationship"]=$("#Relationship option:selected").text();
+            }
+
+            var _objFHX=objFamilyHX;
+            addFamilyHX(_objFHX);
+
         });
 
-        $('#datatable-responsive').DataTable();
+       
 
-        $('#datatable-scroller').DataTable({
-          ajax: "js/datatables/json/scroller-demo.json",
-          deferRender: true,
-          scrollY: 380,
-          scrollCollapse: true,
-          scroller: true
-        });
+                
+            $('#patientFamilyHX input').on('ifToggled', function(event){
+           
+                if($("#"+this.id).prop('checked') == false)
+                {
+                    if (confirm("Are you sure you want to delete?")) {
+                        showLoader();
+                        var delfhxID = this.name.replace(/[^0-9]/g, '');
+                        var delrelID=this.id.replace(/[^0-9]/g, '');
+                        var cUrl = "@Url.Action("deleteFamilyHX", "MyHealth")?fhxID=" + delfhxID;
+                        $.post(cUrl, function (oResp) {
+                            if (oResp.message == "") {
+                                //reloadContainer(function () {
+                                new PNotify({ title: 'Success', text: 'Family History is deleted successfully.', type: 'success', styling: 'bootstrap3' });
+                                $("#UR"+delrelID).val($("#UR"+delrelID+ " option:first").val());
+                                stopLoader();
+                                //});
+                            } else {
+                                new PNotify({ title: 'Error', text: oResp.message, type: 'error', styling: 'bootstrap3' });
+                                stopLoader();
+                            }
 
-        $('#datatable-fixed-header').DataTable({
-          fixedHeader: true
-        });
+                        });
+                        return;
+                    }
+                    else
+                    {
 
-        var $datatable = $('#datatable-checkbox');
+                        $('#' + this.id).iCheck('toggle');
+                    }
+                }
+                else
+                {
+               
+                    var fhxID = this.name.replace(/[^0-9]/g, '');
+                    var name = this.name.replace(/[0-9]/g, '');
+                    var relID=this.id.replace(/[^0-9]/g, '');
+                    if(fhxID!=0)
+                    {
+                        var objFHX = {};
+                        objFHX["patientID"]=@SessionHandler.UserInfo.Id;
+                        objFHX["name"]=name;
+                       if($("#UR"+relID+" option:selected").text()=="Relationship")
+                        {
+                            objFHX["relationship"]="";
+                        }
+                        else
+                        {
+                            objFHX["relationship"]=$("#UR"+chkid+" option:selected").text();
+                        }
+                        $("#UR"+relID+" option").prop('disabled', false);
+                        restore(objFHX);
+                    }
+                    if(fhxID==0)
+                    {
+                        var objFHX = {};
+                        objFHX["patientID"]=@SessionHandler.UserInfo.Id;
+                        objFHX["name"]=name;
 
-        $datatable.dataTable({
-          'order': [[ 1, 'asc' ]],
-          'columnDefs': [
-            { orderable: false, targets: [0] }
-          ]
-        });
-        $datatable.on('draw.dt', function() {
-          $('input').iCheck({
-            checkboxClass: 'icheckbox_flat-green'
-          });
-        });
+                        if($("#UR"+relID+" option:selected").text()=="Relationship")
+                        {
+                            objFHX["relationship"]="";
+                        }
+                        else
+                        {
+                            objFHX["relationship"]=$("#UR"+relID+" option:selected").text();
+                        }
+                        var _objFHXX=objFHX;
+                        $("#UR"+relID+" option").prop('disabled', false);
+                        addFamilyHX(_objFHXX);
+                    }
+                }
 
-        TableManageButtons.init();
-      });
+            });
+        
+
+    });
 </script>
 <!-- /Datatables -->
 

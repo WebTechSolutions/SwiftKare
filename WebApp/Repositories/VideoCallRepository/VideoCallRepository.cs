@@ -35,6 +35,17 @@ namespace WebApp.Repositories.VideoCallRepository
             });
         }
 
+        public ApiResultModel DoctorCallPatient(long doctorId, string doctorEmail, long patientId)
+        {
+            return AddLiveReqLog(new LiveReqLogModel
+            {
+                doctorID = doctorId,
+                patientID = patientId,
+                From = doctorEmail,
+                message = string.Format("Doctor {0} called patient", doctorEmail)
+            });
+        }
+
 
         /// <summary>
         /// Doctor accepts call
@@ -51,6 +62,18 @@ namespace WebApp.Repositories.VideoCallRepository
                 patientID = patientId,
                 From = doctorEmail,
                 message = string.Format("Doctor {0} accepted call", doctorEmail)
+            });
+        }
+
+
+        public ApiResultModel PatientAcceptsCall(long patientId, long doctorId, string patientEmail)
+        {
+            return AddLiveReqLog(new LiveReqLogModel
+            {
+                doctorID = doctorId,
+                patientID = patientId,
+                From = patientEmail,
+                message = string.Format("Patient {0} accepted call", patientEmail)
             });
         }
 
@@ -71,6 +94,19 @@ namespace WebApp.Repositories.VideoCallRepository
                 message = string.Format("Doctor {0} rejected call", doctorEmail)
             });
         }
+
+        public ApiResultModel PatientRejectsCall(long patientId, long doctorId, string patientEmail)
+        {
+            return AddLiveReqLog(new LiveReqLogModel
+            {
+                doctorID = doctorId,
+                patientID = patientId,
+                From = patientEmail,
+                message = string.Format("Patient {0} rejected call", patientEmail)
+            });
+        }
+
+
 
         /// <summary>
         /// Adds live request logs into database

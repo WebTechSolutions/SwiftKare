@@ -10,6 +10,16 @@
 
 
     var lstRosItems = (List<DataAccess.CustomModels.ROSItem>)ViewBag.RosItems;
+
+    string cEndCallUrl = "";
+    if (userType.ToLower() == "patient")
+    {
+        cEndCallUrl = Url.Action("Index", "Appointment");
+    }
+    else {
+        cEndCallUrl = Url.Action("Index", "DoctorAppointment");
+    }
+
 }
 
 <!DOCTYPE html>
@@ -83,7 +93,7 @@
             <a href="#" id="aHideMyCamera" style="display:none;">
                 <div id="divPrimaryVideo" class="xs-video-img img-responsive" style="display:block;"></div>
                 <img id="imgPrimaryVideo" class="xs-video-img img-responsive" src="@Url.Content("~/Content/images/img.jpg")" alt="">
-                <img class="video_small_icons" src="@Url.Content("~/Content/images/video_h.png")" alt="">
+                <img class="video_small_icons" src="@WebApp.Helper.SessionHandler.ProfilePhoto" alt="">
             </a>
             <a href="#">
                 <img id="aShowMyCamera" class="small_video_icon video_small_icons" src="@Url.Content("~/Content/images/video.png")" alt="">
@@ -142,8 +152,8 @@
                                 <div class="panel-body">
                                     <textarea id="txtDoctorNoteSubjective" class="form-control" rows="2"></textarea>
                                 </div>
-                                <div class="panel-footer">
-                                    <button class="btn btn-primary" onclick="saveDoctorNoteSubjective();" type="button">Save</button>
+                                <div class="panel-footer text-center">
+                                    <button class="btn btn-primary" onclick="saveDoctorNoteSubjective();" type="button">Save Subjective</button>
                                 </div>
                             </div>
                         </div>
@@ -162,8 +172,8 @@
                                 <div class="panel-body">
                                     <textarea id="txtDoctorNoteObjective" class="form-control" rows="2"></textarea>
                                 </div>
-                                <div class="panel-footer">
-                                    <button class="btn btn-primary" onclick="saveDoctorNoteObjective();" type="button">Save</button>
+                                <div class="panel-footer text-center">
+                                    <button class="btn btn-primary" onclick="saveDoctorNoteObjective();" type="button">Save Objective</button>
                                 </div>
                             </div>
                         </div>
@@ -182,8 +192,8 @@
                                 <div class="panel-body">
                                     <textarea id="txtDoctorNoteAssessment" class="form-control" rows="2"></textarea>
                                 </div>
-                                <div class="panel-footer">
-                                    <button class="btn btn-primary" onclick="saveDoctorNoteAssessment();" type="button">Save</button>
+                                <div class="panel-footer text-center">
+                                    <button class="btn btn-primary" onclick="saveDoctorNoteAssessment();" type="button">Save Assessment</button>
                                 </div>
                             </div>
                         </div>
@@ -202,8 +212,8 @@
                                 <div class="panel-body">
                                     <textarea id="txtDoctorNotePlans" class="form-control" rows="2"></textarea>
                                 </div>
-                                <div class="panel-footer">
-                                    <button class="btn btn-primary" onclick="saveDoctorNotePlans();" type="button">Save</button>
+                                <div class="panel-footer text-center">
+                                    <button class="btn btn-primary" onclick="saveDoctorNotePlans();" type="button">Save Plan</button>
                                 </div>
                             </div>
                         </div>
@@ -295,6 +305,8 @@
 
     <script src="@Url.Content("~/Scripts/UserChat.js")"></script>
     <script>
+        var cEndCallUrl = '@cEndCallUrl';
+
         var oUserChat = new UserChat('@openTokApi', '@openTokSession', '@openTokToken');
         oUserChat.initialize();
 
@@ -303,28 +315,28 @@
         function saveDoctorNoteSubjective() {
             var cUrl = '@Url.Action("AddDoctorNotesSubjective","UserChat")';
             $.post(cUrl, { consultId: consultId, cValues: $("#txtDoctorNoteSubjective").val() }, function () {
-                alert("Saved successfully.");
+                //alert("Saved successfully.");
             });
         }
 
         function saveDoctorNoteObjective() {
             var cUrl = '@Url.Action("AddDoctorNotesObjective", "UserChat")';
             $.post(cUrl, { consultId: consultId, cValues: $("#txtDoctorNoteObjective").val() }, function () {
-                alert("Saved successfully.");
+                //alert("Saved successfully.");
             });
         }
 
         function saveDoctorNoteAssessment() {
             var cUrl = '@Url.Action("AddDoctorNotesAssessment", "UserChat")';
             $.post(cUrl, { consultId: consultId, cValues: $("#txtDoctorNoteAssessment").val() }, function () {
-                alert("Saved successfully.");
+                //alert("Saved successfully.");
             });
         }
 
         function saveDoctorNotePlans() {
             var cUrl = '@Url.Action("AddDoctorNotesPlans", "UserChat")';
             $.post(cUrl, { consultId: consultId, cValues: $("#txtDoctorNotePlans").val() }, function () {
-                alert("Saved successfully.");
+                //alert("Saved successfully.");
             });
         }
 

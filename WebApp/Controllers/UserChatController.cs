@@ -1,4 +1,7 @@
 ﻿using DataAccess.CustomModels;
+using Identity.Membership;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,12 +27,12 @@ namespace WebApp.Controllers
         #endregion
 
         [HttpPost]
-        public string ReadyForCall(string senderId, string receiverId, string userType, string recipientName)
+        public string ReadyForCall(string senderId, string receiverId, string userType, string doctorName, string patientName, string aptId = "")
         {
             try
             {
-                var openTokSession = UserChatHelper.GetOpenTokSessionInformation(senderId, receiverId, userType, recipientName);
-                openTokSession.RecipientName = recipientName;
+                var openTokSession = UserChatHelper.GetOpenTokSessionInformation(senderId, receiverId, userType, doctorName, patientName, aptId);
+
                 if (openTokSession == null || string.IsNullOrEmpty(openTokSession.SessionId) || string.IsNullOrEmpty(openTokSession.TokenId))
                 {
                     return "";
@@ -57,7 +60,16 @@ namespace WebApp.Controllers
             }
 
             ViewBag.UserType = openTokSession.UserType;
-            ViewBag.RecipientName = openTokSession.RecipientName;
+
+            var userMgr = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            var roles = userMgr.GetRoles(SessionHandler.UserId);
+            if (roles.Contains("Doctor"))
+            {
+                ViewBag.RecipientName = openTokSession.PatientName;
+            }
+            else {
+                ViewBag.RecipientName = openTokSession.DoctorName;
+            }
             ViewBag.OpenTokApiKey = UserChatHelper.TokBoxApiKey;
             ViewBag.OpenTokSession = openTokSession.SessionId;
             ViewBag.OpenTokToken = openTokSession.TokenId;
@@ -77,16 +89,37 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
+        public void DoctorCallPatient(long patientId)
+        {
+            oVideoCallRepository.DoctorCallPatient(SessionHandler.UserInfo.Id, SessionHandler.UserInfo.Email, patientId);
+        }
+
+
+        [HttpPost]
         public void DoctorAcceptedCall(long patientId)
         {
             oVideoCallRepository.DoctorAcceptsCall(patientId, SessionHandler.UserInfo.Id, SessionHandler.UserInfo.Email);
         }
 
         [HttpPost]
+        public void PatientAcceptedCall(long doctorId)
+        {
+            oVideoCallRepository.PatientAcceptsCall(SessionHandler.UserInfo.Id, doctorId, SessionHandler.UserInfo.Email);
+        }
+
+
+        [HttpPost]
         public void DoctorDeclinedCall(long patientId)
         {
             oVideoCallRepository.DoctorRejectsCall(patientId, SessionHandler.UserInfo.Id, SessionHandler.UserInfo.Email);
         }
+
+        [HttpPost]
+        public void PatientDeclinedCall(long doctorId)
+        {
+            oVideoCallRepository.PatientRejectsCall(SessionHandler.UserInfo.Id, doctorId, SessionHandler.UserInfo.Email);
+        }
+
 
         [HttpPost]
         public string CreateConsult(CreateConsultModel oModel)
@@ -96,29 +129,33 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public void StartConsultation(long consultId) {
+        public void StartConsultation(long consultId)
+        {
             oVideoCallRepository.AddConsultStartTime(new AddConsultTimeModel { consultID = consultId, userEmail = SessionHandler.UserInfo.Email });
         }
 
         [HttpPost]
-        public void StopConsultation(long consultId) {
+        public void StopConsultation(long consultId)
+        {
             oVideoCallRepository.AddConsultEndTime(new AddConsultTimeModel { consultID = consultId, userEmail = SessionHandler.UserInfo.Email });
             oVideoCallRepository.AddVCLog(new VCLogModel { consultID = consultId, endBy = SessionHandler.UserInfo.Email, endReason = "Natural Call Stop", logBy = SessionHandler.UserInfo.Email });
         }
 
         [HttpPost]
-        public void AddVCLog(long consultId, string endReason) {
+        public void AddVCLog(long consultId, string endReason)
+        {
             oVideoCallRepository.AddVCLog(new VCLogModel { consultID = consultId, endBy = SessionHandler.UserInfo.Email, endReason = endReason, logBy = SessionHandler.UserInfo.Email });
         }
 
         [HttpPost]
         public void AddChatMessages(long consultId, string message, string sender, string receiver)
         {
-            oVideoCallRepository.AddChatMessages(new ChatMessageModel { consultID = consultId, message = message, sender = "", reciever = SessionHandler.UserInfo.Email});
+            oVideoCallRepository.AddChatMessages(new ChatMessageModel { consultID = consultId, message = message, sender = "", reciever = SessionHandler.UserInfo.Email });
         }
 
         [HttpPost]
-        public void AddDoctorNotesSubjective(long consultId, string cValues) {
+        public void AddDoctorNotesSubjective(long consultId, string cValues)
+        {
             oVideoCallRepository.AddDoctorNotesSubjective(consultId, cValues);
         }
 
@@ -142,7 +179,8 @@ namespace WebApp.Controllers
 
 
         [HttpPost]
-        public void AddConsultROS(long consultID, long sysitemid, string sysitemname) {
+        public void AddConsultROS(long consultID, long sysitemid, string sysitemname)
+        {
             oVideoCallRepository.AddConsultROS(new ConsultROSModel { consultID = consultID, sysitemid = sysitemid, sysitemname = sysitemname, userID = SessionHandler.UserInfo.Id.ToString() });
         }
 

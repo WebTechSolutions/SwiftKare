@@ -438,141 +438,8 @@
 <!--Family History-->
 <script type="text/javascript">
 
-    $(document).ready(function () {
-        //$('input').iCheck('check', function(){
-        //    alert('Well done, Sir');
-        //});
-
-          $("#btnAdd").click(function () {
-
-            if ($("#nametxt").val() == "" && $("#Relationship option:selected").text()!="Relationship") {
-
-                document.getElementById("divfhx").style.display = "block";
-                document.getElementById("divrel").style.display = "none";
-                return;
-            }
-            if ($("#nametxt").val() != "" && $("#Relationship option:selected").text()=="Relationship") {
-
-                document.getElementById("divfhx").style.display = "none";
-                document.getElementById("divrel").style.display = "block";
-                return;
-            }
-            if ($("#nametxt").val() == "" && $("#Relationship option:selected").text()=="Relationship") {
-
-                document.getElementById("divfhx").style.display = "block";
-                document.getElementById("divrel").style.display = "block";
-                return;
-            }
-            if ($("#nametxt").val() == "") {
-
-                document.getElementById("divfhx").style.display = "block";
-                return;
-            }
-            if($("#Relationship option:selected").text()=="Relationship") {
-
-                document.getElementById("divrel").style.display = "block";
-                return;
-            }
-
-
-            document.getElementById("divfhx").style.display = "none";
-            document.getElementById("divrel").style.display = "none";
-                var objFamilyHX = {};
-                objFamilyHX["patientID"]=@SessionHandler.UserInfo.Id;
-                objFamilyHX["name"]=$("#nametxt").val();
-                if($("#Relationship option:selected").text()=="Relationship")
-                {
-                    objFamilyHX["relationship"]="";
-                }
-                else
-                {
-                    objFamilyHX["relationship"]=$("#Relationship option:selected").text();
-                }
-
-                var _objFHX=objFamilyHX;
-                addFamilyHX(_objFHX);
-
-        });
-    });
-    $(function() {
-
-
-       
-        $('input').on('ifToggled', function(event){
-           
-            if($("#"+this.id).prop('checked') == false)
-            {
-                if (confirm("Are you sure you want to delete?")) {
-                    showLoader();
-                    var delfhxID = this.name.replace(/[^0-9]/g, '');
-                    var delrelID=this.id.replace(/[^0-9]/g, '');
-                    var cUrl = "@Url.Action("deleteFamilyHX", "MyHealth")?fhxID=" + delfhxID;
-                    $.post(cUrl, function (oResp) {
-                        if (oResp.message == "") {
-                            //reloadContainer(function () {
-                            new PNotify({ title: 'Success', text: 'Family History is deleted successfully.', type: 'success', styling: 'bootstrap3' });
-                            $("#UR"+delrelID).val($("#UR"+delrelID+ " option:first").val());
-                            stopLoader();
-                            //});
-                        } else {
-                            new PNotify({ title: 'Error', text: oResp.message, type: 'error', styling: 'bootstrap3' });
-                            stopLoader();
-                        }
-
-                    });
-                    return;
-                }
-                else
-                {
-
-                    $('#' + this.id).iCheck('toggle');
-                }
-            }
-            else
-            {
-               
-                var fhxID = this.name.replace(/[^0-9]/g, '');
-                var name = this.name.replace(/[0-9]/g, '');
-                var relID=this.id.replace(/[^0-9]/g, '');
-                if(fhxID!=0)
-                {
-                    var objFHX = {};
-                    objFHX["patientID"]=@SessionHandler.UserInfo.Id;
-                    objFHX["name"]=name;
-                    //objFHX["relationship"]="";
-                    if($("#UR"+relID+" option:selected").text()=="Relationship")
-                    {
-                        objFHX["relationship"]="";
-                    }
-                    else
-                    {
-                        objFHX["relationship"]=$("#UR"+chkid+" option:selected").text();
-                    }
-                    $("#UR"+relID+" option").prop('disabled', false);
-                    restore(objFHX);
-                }
-                if(fhxID==0)
-                {
-                    var objFHX = {};
-                    objFHX["patientID"]=@SessionHandler.UserInfo.Id;
-                    objFHX["name"]=name;
-
-                    if($("#UR"+relID+" option:selected").text()=="Relationship")
-                    {
-                        objFHX["relationship"]="";
-                    }
-                    else
-                    {
-                        objFHX["relationship"]=$("#UR"+relID+" option:selected").text();
-                    }
-                    var _objFHXX=objFHX;
-                    $("#UR"+relID+" option").prop('disabled', false);
-                    addFamilyHX(_objFHXX);
-                }
-            }
-
-        });
-    });
+  
+    
     function addFamilyHX(_objFHX)
     {
         //Start displaying loader
@@ -703,7 +570,10 @@
    
     function reloadContainer(callback) {
         $("#divResultContainer").load('@Url.Action("PartialFamilyHX", "MyHealth")', function () {
-             callback();
+            callback();
+            $('#patientFamilyHX input').iCheck({
+                checkboxClass: 'icheckbox_flat-green'
+            });
         });
 
 
@@ -757,7 +627,7 @@
         //    alert('no');
         //}
         
-        
+       
         if(plsid==0)
         {
             var objLifeStyle = {};
@@ -773,13 +643,15 @@
             var _objPLS=objLifeStyle;
             //Start displaying loader
             showLoader();
-
+         
             $.ajax({
                 url: '@Url.Action("AddLifeStyle", "MyHealth")',
                 type: "POST",
                 data: _objPLS,
                 dataType: 'json',
                 success: function (result) {
+                    debugger;
+                    var newID=result.ApiResultModel.ID;
                     //Reload container
                     if (result.Message != undefined)
                     {
@@ -788,11 +660,17 @@
                     }
                     else
                     {
-                        
-                        reloadLifeStyle(function () {
+                        $('#lfs'+id).attr('onclick','').unbind('click');
+                        $('#lfs'+id).click(function(){
+                            
+                            addLifeStyle(id,'Do you drink alcohol?',newID);   // code goes here
+                        });
+                        new PNotify({ title: 'Success', text: "Life style is added successfully.", type: 'success', styling: 'bootstrap3' });
+                        stopLoader();
+                       /* reloadLifeStyle(function () {
                             new PNotify({ title: 'Success', text: "Life style is added successfully.", type: 'success', styling: 'bootstrap3' });
                             stopLoader();
-                        });
+                        });*/
 
                     }
 

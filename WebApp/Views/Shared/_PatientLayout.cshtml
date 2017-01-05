@@ -29,7 +29,7 @@
     <script src="@Url.Content("~/Scripts/general.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.cropit.js")"></script>
     <script src="@Url.Content("~/Scripts/daterangepiker/daterangepicker.js")"></script>
-   
+
     <style type="text/css">
         .redBorder, .redBorder:focus, .redBorder:active {
             border-color: red;
@@ -115,14 +115,14 @@
                             <ul class="nav side-menu" style="margin-top: 10px;">
                                 <li class="scheduler">
                                     <a href="@Url.Action("Index","Appointment")"><img src="~/Content/images/appointments.png" alt=""> &nbsp <span class="menu-txt"> Appointment</span></a>
-                                  
+
                                 </li>
                                 <li class="doctor">
                                     <a href="@Url.Action("SeeDoctor", "SeeDoctor")"><img src="~/Content/images/icon_doc_search.png" alt="">  &nbsp <span class="menu-txt">See a doctor</span> </a>
                                 </li>
                                 <li class="appointment">
                                     <a href="@Url.Action("Index","Consultation")"><img src="~/Content/images/history.png" alt=""> &nbsp <span class="menu-txt"> Consult History</span></a>
-                                    
+
                                 </li>
                                 <li class="patient">
                                     <a href="@Url.Action("Index","MyHealth")"><img src="~/Content/images/my-health.png" alt=""> &nbsp <span class="menu-txt">My Health</span> </a>
@@ -131,15 +131,15 @@
                                     <a href="@Url.Action("Index","PatientFiles")"><img src="~/Content/images/my-files.png" alt=""> &nbsp <span class="menu-txt">My Files</span> </a>
                                 </li>
                                 @*<li class="call_history">
-                                    <a href="#"><img src="~/Content/images/my-doctors1.png" alt="">  &nbsp <span class="menu-txt">My Doctors</span> </a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="#">Dashboard</a></li>
-                                    </ul>
-                                </li>*@
+                                        <a href="#"><img src="~/Content/images/my-doctors1.png" alt="">  &nbsp <span class="menu-txt">My Doctors</span> </a>
+                                        <ul class="nav child_menu">
+                                            <li><a href="#">Dashboard</a></li>
+                                        </ul>
+                                    </li>*@
                                 <li class="call_history">
                                     <a href="@Url.Action("Index","News")"><img src="~/Content/images/whats-new.png" alt="">  &nbsp <span class="menu-txt">Whats New</span> </a>
                                 </li>
-                               
+
                             </ul>
                         </div>
                     </div>
@@ -180,7 +180,7 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-usermenu pull-right">
                                     <li><a href="@Url.Action("Index","PatientProfile")">My Profile</a></li>
-                                   
+
                                     <li><a href="javascript:;">Create Help Ticket</a></li>
                                     <li>
                                         <a href="javascript:document.getElementById('logoutForm').submit()">
@@ -253,83 +253,83 @@
                                 </ul>
                             </li>
                             <li>
-                            <div id="divAlerts">
-                            @{
-                                Html.RenderAction("AlertView", "Alert");
-                            }
-                            </div>
+                                <div id="divAlerts">
+                                    @{
+                                        Html.RenderAction("AlertView", "Alert");
+                                    }
+                                </div>
                             </li>
                             @*<li role="presentation" class="dropdown">
-                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa fa-bell"></i>
-                                    <span class="badge bg-green">6</span>
-                                </a>
-                                
-                            </li>*@
+                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-bell"></i>
+                                        <span class="badge bg-green">6</span>
+                                    </a>
+
+                                </li>*@
                             @*<li role="presentation" class="dropdown">
-                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa fa-envelope-o"></i>
-                                    <span class="badge bg-green">6</span>
-                                </a>
-                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <div class="text-center">
-                                            <a href="messages.html">
-                                                <strong>See All Messages</strong>
-                                                <i class="fa fa-angle-right"></i>
+                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-envelope-o"></i>
+                                        <span class="badge bg-green">6</span>
+                                    </a>
+                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                        <li>
+                                            <a>
+                                                <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
+                                                <span>
+                                                    <span>John Smith</span>
+                                                    <span class="time">3 mins ago</span>
+                                                </span>
+                                                <span class="message">
+                                                    Film festivals used to be do-or-die moments for movie makers. They were where...
+                                                </span>
                                             </a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>*@
+                                        </li>
+                                        <li>
+                                            <a>
+                                                <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
+                                                <span>
+                                                    <span>John Smith</span>
+                                                    <span class="time">3 mins ago</span>
+                                                </span>
+                                                <span class="message">
+                                                    Film festivals used to be do-or-die moments for movie makers. They were where...
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a>
+                                                <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
+                                                <span>
+                                                    <span>John Smith</span>
+                                                    <span class="time">3 mins ago</span>
+                                                </span>
+                                                <span class="message">
+                                                    Film festivals used to be do-or-die moments for movie makers. They were where...
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a>
+                                                <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
+                                                <span>
+                                                    <span>John Smith</span>
+                                                    <span class="time">3 mins ago</span>
+                                                </span>
+                                                <span class="message">
+                                                    Film festivals used to be do-or-die moments for movie makers. They were where...
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <div class="text-center">
+                                                <a href="messages.html">
+                                                    <strong>See All Messages</strong>
+                                                    <i class="fa fa-angle-right"></i>
+                                                </a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>*@
                         </ul>
                     </nav>
                 </div>
@@ -362,11 +362,9 @@
     <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
     <script src="~/signalr/hubs"></script>
     <script type="text/javascript">
-        
-        $('#menu_toggle').click(function ()
-        {
-            if (document.body.className == "nav-md")
-            {
+
+        $('#menu_toggle').click(function () {
+            if (document.body.className == "nav-md") {
                 ($("body").attr("class", "nav-sm"))
             }
             else $("body").attr("class", "nav-md");
@@ -423,13 +421,22 @@
         }
 
         function makeCallToDoctor(e) {
+
+            var docId = $(e).attr("data-doctorid");
+
+            var oDocInfo = null;
+            for (var i = 0; i < availableDoctors.doctor.length; i++) {
+                if (availableDoctors.doctor[i].docId == docId) {
+                    oDocInfo = availableDoctors.doctor[i];
+                    break;
+                }
+            }
+
             setDoctorID($(e).attr("data-doctorid"));
             var curElem = $(e);
-            var PatientName = "Patient";
-            //alert("calling");
 
             //Log Call Info - Starts
-            var cCallLogUrl = '@Url.Action("PatientCallDoctor", "UserChat")?doctorId=' + $(e).attr("data-doctorid"); 
+            var cCallLogUrl = '@Url.Action("PatientCallDoctor", "UserChat")?doctorId=' + $(e).attr("data-doctorid");
             $.post(cCallLogUrl);
             //Log Call Info- Ends
 
@@ -437,10 +444,12 @@
             {
                 SenderId: '@SessionHandler.UserInfo.Id',
                 UserName: '@SessionHandler.UserInfo.Email',
-                ReceiverConnectionId: curElem.data("connId"),
-                ReceiverId: '20',
+                ReceiverConnectionId: oDocInfo.connectionId,
+                ReceiverId: docId,
+                DoctorName: oDocInfo.firstName + ' ' + oDocInfo.lastName,
+                PatientName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
                 SenderType: 'Patient',
-                Message: JSON.stringify({ status: 'call', name: PatientName }),
+                Message: JSON.stringify({ status: 'call', name: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)' }),
                 UserGroup: 'doctors'
             });
         }
@@ -491,27 +500,71 @@
                 }
             };
 
+            chat.client.incomingCallFromDoctor = function (msgFrom, msg, senderConnId, senderid, appId, docName) {
+                var msgJson = JSON.parse(msg);
+
+                var isPatientAcceptedCall = confirm('Doctor ' + msgJson.name + ' want to have consultation with you. Press OK to proceed.');
+
+                if (isPatientAcceptedCall) {
+                    var cCallLogUrl = '@Url.Action("PatientAcceptedCall", "UserChat")?doctorId=' + senderid;
+                    $.post(cCallLogUrl);
+                }
+                else {
+                    var cCallLogUrl = '@Url.Action("PatientDeclinedCall", "UserChat")?doctorId=' + senderid;
+                    $.post(cCallLogUrl);
+                }
+
+                if (isPatientAcceptedCall) {
+
+                    chat.server.patientAcceptedCall({
+                        SenderId: '@SessionHandler.UserInfo.Id',
+                        UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
+                        ReceiverConnectionId: senderConnId,
+                        AppId: appId
+                    });
+
+                    var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Patient&receiverId=" + senderid + "&doctorName=" + docName + "&patientName=@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)&aptId=" + appId;
+
+                    $.post(cUrlReadyForCall, function (oResp) {
+                        if (oResp) {
+                            localStorage.setItem('consultationKey', oResp);
+
+                            chat.server.patientRedirectedToCall
+                                (senderConnId, oResp, '@SessionHandler.UserInfo.Id', '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)');
+
+                            //Redirect doctor to call
+                            window.location = '@Url.Action("Index","UserChat")';
+                        }
+                    });
+
+                }
+                else {
+                    chat.server.patientRejectedCall({
+                        SenderId: '@SessionHandler.UserInfo.Id',
+                        UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
+                        ReceiverConnectionId: senderConnId,
+                        AppId: appId
+                    });
+                }
+
+            };
+
+
 
             // Declare a function on the chat hub so the server can invoke it
             chat.client.showConnected = function (message) {
-                //$('#messages').empty();
-                $('#ddlAvailableDoctors').empty();
                 availableDoctors.doctor = [];
 
                 $.each(message, function (index, value) {
-
-                    // $('#messages').append('<li onclick=getReceiverConnectionId("' + value.ConnectionId + '");> Id: ' + value.Id + ', FirstName: ' + value.FirstName + ', LastName: ' + value.LastName + ', Logged On ' + value.Connected + ', Email: ' + value.UserName + ', ConnectionId:' + value.ConnectionId + '</li>');
-                    $('#ddlAvailableDoctors').append('<option value=' + value.ConnectionId + '>' + value.FirstName + ', ' + value.LastName + '---' + value.UserName + '</option>');
-                    //availableDoctors.doctor.push()
-
-                    availableDoctors.doctor.push({
-                        connectionId: value.ConnectionId,
-                        FirstName: value.FirstName,
-                        LastName: value.LastName,
-                        UserName: value.UserName,
-                        docId: value.Id
+                    $.each(message, function (index, value1) {
+                        availableDoctors.doctor.push({
+                            connectionId: value1.Value.ConnectionId,
+                            firstName: value1.Value.FirstName,
+                            lastName: value1.Value.LastName,
+                            userName: value1.Value.UserName,
+                            docId: value1.Value.Id
+                        });
                     });
-
                 });
 
                 checkAnyDoctorAvailableNow();
@@ -522,9 +575,19 @@
             $.connection.hub.logging = true;
             $.connection.hub.start().done(function () {
                 var id = $.cookie('Id');
+
+                chat.server.join(
+                    {
+                        Id: '@SessionHandler.UserInfo.Id',
+                        UserName: '@SessionHandler.UserInfo.Email',
+                        FirstName: '@SessionHandler.UserInfo.FirstName',
+                        LastName: '@SessionHandler.UserInfo.LastName',
+                        UserType: 'Patient'
+                    });
+
                 chat.server.adminJoin().done(function () {
                     //alert("New doctor has joined... Refresh list;");
-                    chat.server.getUsers();
+                    chat.server.getUsersDoctor();
                 });
 
                 $('#sendmessage').click(function () {
@@ -532,7 +595,7 @@
                     chat.server.sendMessageToDoctor(
                     {
                         SenderId: '@SessionHandler.UserInfo.Id',
-                        UserName: '@SessionHandler.UserInfo.Email',
+                        UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
                         ReceiverConnectionId: $('#ddlAvailableDoctors').val(),
                         ReceiverId: '20',
                         SenderType: 'Patient',
@@ -541,9 +604,6 @@
                     });
                     // Clear text box and reset focus for next comment.
                 });
-
-
-
             });
         });
     </script>

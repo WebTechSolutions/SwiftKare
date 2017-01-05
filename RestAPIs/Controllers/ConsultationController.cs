@@ -588,7 +588,7 @@ namespace RestAPIs.Controllers
                     TimeSpan st = TimeSpan.Parse(cons.startTime.ToString());
                     TimeSpan et = TimeSpan.Parse(cons.endTime.ToString());
                     TimeSpan duration = et.Subtract(st);
-                    cons.duration = duration.Minutes;
+                    cons.duration = Convert.ToInt32(duration.TotalSeconds);
                     cons.endby = model.userEmail;
                     db.Entry(cons).State = EntityState.Modified;
                     await db.SaveChangesAsync();

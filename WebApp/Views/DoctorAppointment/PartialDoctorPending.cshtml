@@ -44,8 +44,11 @@ else
                         <td style="text-align:center;width:20%">@item.rov</td>
                         <td style="text-align:center;width:20%">@item.chiefComplaints</td>
                         <!-- <td><button class="btn btn-primary btn-sm m-b-0 " type="submit">View</button></td> -->
-                        <td style="text-align:center;width:10%">
+                        <td class="clsTdConsult" data-appid="@item.appID" data-patId="@item.patientID" style="text-align:center;width:10%">
                             <div class="btn-group" role="group">
+
+                                <a style="display:none" onclick="makeCallToPatient('@item.patientID','@item.appID')" class="clsCallPatient" href="javascript:">Call</a>
+
                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Action
                                     <span class="caret"></span>
@@ -70,43 +73,43 @@ else
 }
 <!-- Datatables -->
 <script>
-      $(document).ready(function() {
-       
-          $('#pendingdatatable').dataTable({
+    $(document).ready(function() {
+
+        $('#pendingdatatable').dataTable({
             'order': [[1, 'desc']],
             columnDefs: [
               { type: 'date-dd-mmm-yyyy', targets: 1 }
             ]
         });
         $('#datatable-keytable').DataTable({
-          keys: true
+            keys: true
         });
 
         $('#datatable-responsive').DataTable();
 
         $('#datatable-scroller').DataTable({
-          ajax: "js/datatables/json/scroller-demo.json",
-          deferRender: true,
-          scrollY: 380,
-          scrollCollapse: true,
-          scroller: true
+            ajax: "js/datatables/json/scroller-demo.json",
+            deferRender: true,
+            scrollY: 380,
+            scrollCollapse: true,
+            scroller: true
         });
 
         $('#datatable-fixed-header').DataTable({
-          fixedHeader: true
+            fixedHeader: true
         });
 
         var $datatable = $('#datatable-checkbox');
 
-        
+
         $datatable.on('draw.dt', function() {
-          $('input').iCheck({
-            checkboxClass: 'icheckbox_flat-green'
-          });
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_flat-green'
+            });
         });
 
         //TableManageButtons.init();
-      });
+    });
 </script>
 <!-- /Datatables -->
 
@@ -167,38 +170,38 @@ else
         objCRR["appType"] = currentTab;
         objCRR["userID"] = '@SessionHandler.UserInfo.userId';
         $.ajax({
-                url: '@Url.Action("CompleteApp", "DoctorAppointment")',
-                type: "POST",
-                data: objCRR,
-                dataType: 'json',
-                success: function (result) {
-                    //Reload container
-                    if (result.Message != undefined) {
-                        alert(result.Message.ReasonPhrase);
-                        $('#myModal5').modal('hide');
-                        //new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
-                        //stopLoader();
-                    }
-                    else {
-                        alert('Consultation is marked as completed successfully.');
-                        $('#myModal5').modal('hide');
-                        reloadContainer(function () {
-
-                            // new PNotify({ title: 'Success', text: "Reschedule request is cancelled successfully.", type: 'success', styling: 'bootstrap3' });
-                            //Stop displaying loader
-                            //stopLoader();
-                        });
-                    }
-
-                },
-                error: function (err) {
-                    alert(err.statusText);
+            url: '@Url.Action("CompleteApp", "DoctorAppointment")',
+            type: "POST",
+            data: objCRR,
+            dataType: 'json',
+            success: function (result) {
+                //Reload container
+                if (result.Message != undefined) {
+                    alert(result.Message.ReasonPhrase);
                     $('#myModal5').modal('hide');
-                    //new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
-                    //Stop displaying loader
+                    //new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
                     //stopLoader();
                 }
-            });
+                else {
+                    alert('Consultation is marked as completed successfully.');
+                    $('#myModal5').modal('hide');
+                    reloadContainer(function () {
+
+                        // new PNotify({ title: 'Success', text: "Reschedule request is cancelled successfully.", type: 'success', styling: 'bootstrap3' });
+                        //Stop displaying loader
+                        //stopLoader();
+                    });
+                }
+
+            },
+            error: function (err) {
+                alert(err.statusText);
+                $('#myModal5').modal('hide');
+                //new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                //Stop displaying loader
+                //stopLoader();
+            }
+        });
     }
     function usendVariables(doctorid, editappid, elem) {
         var objCRR = {};
@@ -239,10 +242,10 @@ else
     }
     $(function () {
         $(".preschedule").click(function () {
-           
+
             //showLoader();
             var objCRR = {};
-            
+
             var $buttonClicked = $(this);
             //var AppDetailPostBackURL = '/DoctorAppointment/CancelReschedule';
             var appID = $buttonClicked.attr('id');
@@ -250,7 +253,7 @@ else
             objCRR["userID"] = '@SessionHandler.UserInfo.userId.ToString()';
             objCRR["appID"] = appID;
             objCRR["appType"] = currentTab;
-            
+
             $.ajax({
                 url: '@Url.Action("Reschedule", "DoctorAppointment")',
                 type: "POST",
@@ -366,7 +369,7 @@ else
                     $ceditappointment = $modal.find('#ceditappointment');
                     $ceditappointment.show();
                 }
-                
+
                 $reditappointment = $modal.find('#reditappointment');
                 $ueditappointment = $modal.find('#ueditappointment');
                 $ueditappointment.show();
@@ -417,4 +420,26 @@ else
         });
 
     }
+</script>
+<script>
+
+    function handleOnlinePatientsDisplay(){
+        //.clsTdConsult
+
+        if(availablePatients.patient && availablePatients.patient.length > 0){
+
+            for (var i = 0; i < availablePatients.patient.length; i++) {
+                //find td for that particular patient
+                var $call = $(".clsTdConsult[data-patid="+ availablePatients.patient[i].patId +"] .clsCallPatient");
+                if($call){
+                    $call.show();
+                }
+
+            }
+
+        }
+
+    }
+
+
 </script>
