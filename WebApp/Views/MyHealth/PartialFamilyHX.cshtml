@@ -96,8 +96,7 @@
 
     $(document).ready(function () {
         
-        alert('dom called');
-       
+            
         $("#btnAdd").click(function () {
 
             if ($("#nametxt").val() == "" && $("#Relationship option:selected").text()!="Relationship") {
@@ -193,8 +192,7 @@
                         var objFHX = {};
                         objFHX["patientID"]=@SessionHandler.UserInfo.Id;
                         objFHX["name"]=name;
-                        //objFHX["relationship"]="";
-                        if($("#UR"+relID+" option:selected").text()=="Relationship")
+                       if($("#UR"+relID+" option:selected").text()=="Relationship")
                         {
                             objFHX["relationship"]="";
                         }
