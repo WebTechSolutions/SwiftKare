@@ -3,6 +3,8 @@
     Layout = null;
 }
 <link href="~/Content/css/style.css" rel="stylesheet">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
    
         <div class="row" id="patientFamilyHX">
             <ul class="to_do">
@@ -92,11 +94,11 @@
     
 <!-- Datatables -->
 <script>
-      
+
 
     $(document).ready(function () {
-        
-            
+
+
         $("#btnAdd").click(function () {
 
             if ($("#nametxt").val() == "" && $("#Relationship option:selected").text()!="Relationship") {
@@ -148,14 +150,14 @@
 
         });
 
-       
+        
 
-                
-            $('#patientFamilyHX input').on('ifToggled', function(event){
-           
-                if($("#"+this.id).prop('checked') == false)
-                {
-                    if (confirm("Are you sure you want to delete?")) {
+
+        $('#patientFamilyHX input').on('ifUnchecked', function(event){
+
+                //if($("#"+this.id).prop('checked') == false)
+                //{
+                    //if (confirm("Are you sure you want to delete?")) {
                         showLoader();
                         var delfhxID = this.name.replace(/[^0-9]/g, '');
                         var delrelID=this.id.replace(/[^0-9]/g, '');
@@ -165,67 +167,67 @@
                                 //reloadContainer(function () {
                                 new PNotify({ title: 'Success', text: 'Family History is deleted successfully.', type: 'success', styling: 'bootstrap3' });
                                 $("#UR"+delrelID).val($("#UR"+delrelID+ " option:first").val());
-                                stopLoader();
+                                hideLoader();
                                 //});
                             } else {
                                 new PNotify({ title: 'Error', text: oResp.message, type: 'error', styling: 'bootstrap3' });
-                                stopLoader();
+                                hideLoader();
                             }
 
                         });
                         return;
-                    }
-                    else
-                    {
+                    //}
+                    //else
+                    //{
 
-                        $('#' + this.id).iCheck('toggle');
-                    }
+                    //    $('#' + this.id).iCheck('toggle');
+                    //}
+                //}
+
+
+            });
+
+        $('#patientFamilyHX input').on('ifChecked', function(event)
+        {
+
+            var fhxID = this.name.replace(/[^0-9]/g, '');
+            var name = this.name.replace(/[0-9]/g, '');
+            var relID=this.id.replace(/[^0-9]/g, '');
+            if(fhxID!=0)
+            {
+                var objFHX = {};
+                objFHX["patientID"]=@SessionHandler.UserInfo.Id;
+                objFHX["name"]=name;
+                if($("#UR"+relID+" option:selected").text()=="Relationship")
+                {
+                    objFHX["relationship"]="";
                 }
                 else
                 {
-               
-                    var fhxID = this.name.replace(/[^0-9]/g, '');
-                    var name = this.name.replace(/[0-9]/g, '');
-                    var relID=this.id.replace(/[^0-9]/g, '');
-                    if(fhxID!=0)
-                    {
-                        var objFHX = {};
-                        objFHX["patientID"]=@SessionHandler.UserInfo.Id;
-                        objFHX["name"]=name;
-                       if($("#UR"+relID+" option:selected").text()=="Relationship")
-                        {
-                            objFHX["relationship"]="";
-                        }
-                        else
-                        {
-                            objFHX["relationship"]=$("#UR"+chkid+" option:selected").text();
-                        }
-                        $("#UR"+relID+" option").prop('disabled', false);
-                        restore(objFHX);
-                    }
-                    if(fhxID==0)
-                    {
-                        var objFHX = {};
-                        objFHX["patientID"]=@SessionHandler.UserInfo.Id;
-                        objFHX["name"]=name;
-
-                        if($("#UR"+relID+" option:selected").text()=="Relationship")
-                        {
-                            objFHX["relationship"]="";
-                        }
-                        else
-                        {
-                            objFHX["relationship"]=$("#UR"+relID+" option:selected").text();
-                        }
-                        var _objFHXX=objFHX;
-                        $("#UR"+relID+" option").prop('disabled', false);
-                        addFamilyHX(_objFHXX);
-                    }
+                    objFHX["relationship"]=$("#UR"+chkid+" option:selected").text();
                 }
+                $("#UR"+relID+" option").prop('disabled', false);
+                restore(objFHX);
+            }
+            if(fhxID==0)
+            {
+                var objFHX = {};
+                objFHX["patientID"]=@SessionHandler.UserInfo.Id;
+                objFHX["name"]=name;
 
-            });
-        
-
+                if($("#UR"+relID+" option:selected").text()=="Relationship")
+                {
+                    objFHX["relationship"]="";
+                }
+                else
+                {
+                    objFHX["relationship"]=$("#UR"+relID+" option:selected").text();
+                }
+                var _objFHXX=objFHX;
+                $("#UR"+relID+" option").prop('disabled', false);
+                addFamilyHX(_objFHXX);
+            }
+        });
     });
 </script>
 <!-- /Datatables -->

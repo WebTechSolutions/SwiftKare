@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DataAccess.CustomModels.PSurgeries>
+﻿@using WebApp.Helper;
+@model IEnumerable<DataAccess.CustomModels.PSurgeries>
 @{
     Layout = null;
 }
@@ -22,29 +23,30 @@
     
 
 }
- <link rel="stylesheet" href="@Url.Content("~/Content/css/green.css")">
-<script src="@Url.Content("~/Scripts/icheck.min.js")"></script> 
-<div class="table-responsive">
-    <table class="table" style="margin-bottom: 5px;" id="datatable-checkbox">
+ 
+<div class="table-responsive" id="divPatSurgeries">
+    <table class="table" style="margin-bottom: 5px;">
         <tbody>
             <tr>
                 <td style="border-top: none">Have you ever had any surgeries or medical procedures?</td>
                 <td style="border-top: none">
                     <div class="text-right">
-                        <label>
-                            No <input type="checkbox" class="js-switch" /> Yes
-                        </label>
+                        @*<label> No <input type="checkbox" class="js-switch" /> Yes
+                           
+                        </label>*@
                     </div>
                 </td>
             </tr>
             <tr>
                 <td>
+                    <div style="color:red; display:none;float:right" id="divsurgery">Surgery is required.</div>
                     <div class="input-group" style="width: 100%;">
-                        <input type="text" name="country" placeholder="Add Surgery" id="autocomplete-custom-append6" class="form-control" />
+                        <input type="text" name="country" placeholder="Add Surgery" id="myBodyPart" class="form-control" />
                     </div>
                 </td>
                 <td width="10%">
-                    <button class="btn btn-primary" style="max-width: 200px; float: right; margin-right: 0;" type="button">Add Surgery</button>
+                    <div style="color:red;display:none" id="btnsurgery"><label></label></div>
+                    <button class="btn btn-primary" style="max-width: 200px; float: right; margin-right: 0;" type="button" id="addsurgery">Add Surgery</button>
                 </td>
             </tr>
             <tr>
@@ -60,11 +62,15 @@
                         {
                             <div class="checkbox" style="display: inline-block; width: 160px;">
                                 <label>
-                                    <input name="@item.bodyPart" id="@item.surgeryID" type="checkbox" class="flat">&nbsp; @item.bodyPart
+                                    <input name="@item.bodyPart" id="@item.surgeryID" type="checkbox" class="flat" onclick="alert(@item.bodyPart)";>&nbsp; @item.bodyPart
                                     <script>
                                         if(@item.surgeryID!=0)
                                         {
-                                           $('#' + "@item.surgeryID").prop('checked', true);
+                                            $('#' + @item.surgeryID).prop('checked', true);
+                                        }
+                                        else
+                                        {
+                                            $('#' + @item.surgeryID).attr("id","chk"+@j);
                                         }
 
                                     </script>
@@ -89,19 +95,190 @@
 
 <!-- Datatables -->
 <script>
-    
-      $(document).ready(function() {
-        
-         
-        $('#datatable-responsive').DataTable();
-        var $datatable = $('#datatable-checkbox');
-        $datatable.on('draw.dt', function() {
-          $('input').iCheck({
-            checkboxClass: 'icheckbox_flat-green'
-          });
+    $(document).ready(function()
+    {
+        $('#divPatSurgeries input').on('ifChecked', function(event){
+            if(event.target.id.indexOf("chk") >= 0)
+            {
+                var surgeryID = 0;//.replace(/[^0-9]/g, '');
+                var bodyPart = this.name;
+                var objSurg= {};
+                objSurg["patientID"]='@SessionHandler.UserInfo.Id';
+                objSurg["bodyPart"]=bodyPart;
+                addSurgeries(objSurg,surgeryID);
+            }
+            else
+            {
+                if($("#"+this.id).prop('checked') == true)
+                {
+                
+                    var surgeryID = this.id;//.replace(/[^0-9]/g, '');
+                    var bodyPart = this.name;
+                    var objSurg= {};
+                    objSurg["patientID"]='@SessionHandler.UserInfo.Id';
+                    objSurg["bodyPart"]=bodyPart;
+                    addSurgeries(objSurg,surgeryID);
+                }
+            }
+        });
+    });
+    $(function()
+    {
+
+        $('#divPatSurgeries input').on('ifUnchecked', function(event)
+        {
+
+           // if($("#"+this.id).prop('checked') == false)
+            //{
+                //if (confirm("Are you sure you want to delete?")) {
+                    //alert($(this).attr('id'));
+                     showLoader();
+                     var surgeryID = this.id;//.replace(/[^0-9]/g, '');
+
+                    $.ajax({
+                        url: '@Url.Action("DeleteSurgery", "SeeDoctor")',
+                        type: "POST",
+                        data: {"surgeryID":surgeryID},
+                        dataType: 'json',
+                        success: function (result) {
+                            //Reload container
+                            if (result.Message != undefined)
+                            {
+                                new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                                hideLoader();
+                            }
+                            else
+                            {
+                                //reloadContainer(function () {
+                                new PNotify({ title: 'Success', text: "Surgery is deleted successfully.", type: 'success', styling: 'bootstrap3' });
+                                //Stop displaying loader
+                                hideLoader();
+                                //});
+                            }
+
+                        },
+                        error: function (err) {
+                            new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                            //Stop displaying loader
+                            hideLoader();
+                        }
+                    });
+
+                    return;
+                //}
+                //else
+                //{
+                //    $(this).closest("input").icheck('check');
+                //    return false;
+                //}
+            //}
+
+            });
+    });
+   
+        function addSurgeries(_objSurg,surgeryID)
+        {
+            
+            showLoader();
+            $.ajax({
+                url: '@Url.Action("AddUpdateSurgeries", "SeeDoctor")',
+                type: "POST",
+                data: {"surgeryID":surgeryID,"surgery":_objSurg},
+                dataType: 'json',
+                success: function (result) {
+                    //Reload container
+                    if (result.Message != undefined)
+                    {
+                        new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                        hideLoader();
+                    }
+                    else
+                    {
+                        //reloadContainer(function () {
+                        new PNotify({ title: 'Success', text: "Surgery is added successfully.", type: 'success', styling: 'bootstrap3' });
+                        reloadSurgeries(function () {
+                            //Stop displaying loader
+                          
+                        });
+                        hideLoader();
+
+
+                    }
+
+                },
+                error: function (err) {
+                    new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                    //Stop displaying loader
+                    hideLoader();
+                }
+            });
+        }
+
+        function reloadSurgeries() {
+            $("#divSurgery").load('@Url.Action("PartialViewSurgery", "SeeDoctor")', function () {
+                $('#divPatSurgeries input').iCheck({
+                    checkboxClass: 'icheckbox_flat-green'
+                });
+
+            });
+
+
+        }
+
+        $(document).ready(function () {
+            $("#myBodyPart").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/SeeDoctor/AutocompleteSurgery",
+                        type: "POST",
+                        dataType: "json",
+                        data: { "prefix": request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.surgeryName, value: item.surgeryName };
+                            }))
+
+                        }
+                    })
+                },
+                messages: {
+                    noResults: "", results: ""
+                }
+            });
+            //GetSurgeries();
+            //GetPatientSurgeries(@ViewBag.PatienID);
+
+
+            $('#addsurgery').on('click', function () {
+                if ($("#myBodyPart").val() == "") {
+                    document.getElementById("divsurgery").style.display = "block";
+                    document.getElementById("btnsurgery").style.display = "block";
+                }
+                else {
+                    document.getElementById("divsurgery").style.display = "none";
+                    document.getElementById("btnsurgery").style.display = "none";
+                    var _objSurgery={};
+                    _objSurgery["patientID"]='@SessionHandler.UserInfo.Id';
+                    _objSurgery["bodyPart"]=$("#myBodyPart").val();
+                    addSurgeries(_objSurgery,0);
+                }
+
+            });
+            $('#surgeryCheckbox').on('click', function () {
+                if ($('#surgeryCheckbox')[0].checked) {
+
+                    document.getElementById("myBodyPart").style.display = "block";
+                    document.getElementById("addsurgery").style.display = "block";
+                }
+                else {
+                    document.getElementById("myBodyPart").style.display = "none";
+                    document.getElementById("addsurgery").style.display = "none";
+                    document.getElementById("divsurgery").style.display = "none";
+                    document.getElementById("btnsurgery").style.display = "none";
+                }
+
+            });
         });
 
-       
-      });
 </script>
 <!-- /Datatables -->

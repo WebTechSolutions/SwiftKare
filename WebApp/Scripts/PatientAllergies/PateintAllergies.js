@@ -5,6 +5,27 @@ var allergyID = null;
 
 var _allergyTable = [];
 
+$(document).ready(function () {
+    $("#myAllergy").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "/SeeDoctor/GetAllergies",
+                type: "POST",
+                dataType: "json",
+                data: { "prefix": request.term },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return { label: item.allergyName, value: item.allergyName };
+                    }))
+
+                }
+            })
+        },
+        messages: {
+            noResults: "", results: ""
+        }
+    });
+});
 function GetAllergies() {
     var param = {};
 

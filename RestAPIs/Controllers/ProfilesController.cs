@@ -1320,7 +1320,7 @@ namespace RestAPIs.Controllers
 
                 if (patientID == 0)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Doctor ID is not valid." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient ID is not valid." });
                     return response;
                 }
                 patient = db.Patients.Where(m => m.patientID == patientID && m.active == true).FirstOrDefault();
@@ -1331,29 +1331,46 @@ namespace RestAPIs.Controllers
                 }
                 else
                 {
-                    var patprofile = db.SP_ViewPatientProfile(patientID).ToList();
-                    //var profile = (from l in db.Patients
-                    //               where l.active == true && l.patientID == patientID
+                    //var patprofile = db.SP_ViewPatientProfile(patientID).ToList();
+                    var patprofile = (from l in db.Patients
+                                      where l.active == true && l.patientID == patientID
+                                      select new
+                                      {
+                                          firstName = l.firstName,
+                                          lastName = l.lastName,
+                                          gender = l.gender.Trim(),
+                                          cellPhone = l.cellPhone,
+                                          dob = l.dob,
+                                          picture = l.picture,
+                                          dateofbirth = l.dob,
+                                          languages = (from pl in db.PatientLanguages
+                                                       where pl.patientID == l.patientID && pl.active == true
+                                                       select new { languageName = pl.languageName }).ToList(),
+                                          allergies = (from pl in db.PatientAllergies
+                                                       where pl.patientID == l.patientID && pl.active == true
+                                                       select new { allergyName = pl.allergyName, severity = pl.severity, reaction = pl.reaction }).ToList(),
+                                          conditions = (from pl in db.Conditions
+                                                        where pl.patientID == l.patientID && pl.active == true
+                                                        select new { conditionName = pl.conditionName }).ToList(),
+                                          familyhx = (from pl in db.PatientFamilyHXes
+                                                      where pl.patientID == l.patientID && pl.active == true
+                                                      select new { conditionName = pl.name, relationship = pl.relationship }).ToList(),
 
-                    //               select new ViewPatientProfile
-                    //               {
-                    //                   firstName = l.firstName,
-                    //                   lastName = l.lastName,
-                    //                   gender = l.gender.Trim(),
-                    //                   cellPhone = l.cellPhone,
-                    //                   dob = l.dob,
-                    //                   picture = l.picture,
-                    //                   age = 12,
-                    //                   //patallergy=db.PatientAllergies.Where(pall=>pall.active==true && pall.patientID==l.patientID).ToList(),
-                    //                   //patcond= db.Conditions.Where(cond => cond.active == true && cond.patientID == l.patientID).ToList(),
-                    //                   //patfamilyhx=db.PatientFamilyHXes.Where(f => f.active == true && f.patientID == l.patientID).ToList(),
-                    //                   //patlang=db.PatientLanguages.Where(patl => patl.active == true && patl.patientID == patientID).ToList(),
-                    //                   //patmedication = db.Medications.Where(med => med.active == true && med.patientId == patientID).ToList(),
-                    //                   //patsurgery= db.PatientSurgeries.Where(surg => surg.active == true && surg.patientID == patientID).ToList(),
-                    //                   title=l.title,
-                    //                   suffix=l.suffix,
-                    //                   zip = l.zip,
-                    //                  }).FirstOrDefault();
+
+                                          medication = (from pl in db.Medications
+                                                        where pl.patientId == l.patientID && pl.active == true
+                                                        select new { medicineName = pl.medicineName, frequency = pl.frequency }).ToList(),
+
+                                          surgery = (from pl in db.PatientSurgeries
+                                                     where pl.patientID == l.patientID && pl.active == true
+                                                     select new { surgeryeName = pl.bodyPart }).ToList(),
+
+
+                                          title = l.title,
+                                          suffix = l.suffix,
+                                          zip = l.zip
+                                      }).FirstOrDefault();
+
                     response = Request.CreateResponse(HttpStatusCode.OK, patprofile);
                     return response;
                 }
@@ -1361,10 +1378,11 @@ namespace RestAPIs.Controllers
             }
             catch (Exception ex)
             {
-                return ThrowError(ex, "GetDoctorProfile in ProfilesController.");
+                return ThrowError(ex, "GetPatientProfile in ProfilesController.");
             }
 
         }
+
 
 
         //Patient Profile Section
