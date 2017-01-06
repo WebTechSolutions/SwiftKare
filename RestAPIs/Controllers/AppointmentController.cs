@@ -195,7 +195,7 @@ namespace RestAPIs.Controllers
                 app.doctorID = model.doctorID;
                 app.patientID = model.patientID;
                 app.appTime = To24HrTime(model.appTime);
-                app.appDate =Convert.ToDateTime(model.appDate);
+                app.appDate =Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate));
                 app.rov = model.rov;
                 app.chiefComplaints = model.chiefComplaints;
                 app.cb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault(); model.patientID.ToString();
@@ -249,17 +249,17 @@ namespace RestAPIs.Controllers
                     return response;
                 }
                 Appointment result = db.Appointments.Where(rapp => rapp.appID == model.appID && rapp.active == true).FirstOrDefault();
-                string currDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                string currDateTime = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
                 DateTime cdt = Convert.ToDateTime(currDateTime);
-                DateTime ad = Convert.ToDateTime(result.appDate);
+                DateTime ad = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", result.appDate));
                 TimeSpan at = TimeSpan.Parse(result.appTime.ToString());
                 DateTime appDateTime = ad + at;
 
-                DateTime cad = Convert.ToDateTime(model.appDate);
-                TimeSpan cat = TimeSpan.Parse(To24HrTime(model.appTime.ToString()).ToString());
-                DateTime cappDateTime = cad + cat;
+                //DateTime cad = Convert.ToDateTime(model.appDate);
+                //TimeSpan cat = TimeSpan.Parse(To24HrTime(model.appTime.ToString()).ToString());
+                //DateTime cappDateTime = cad + cat;
 
-                TimeSpan ctimediff = appDateTime-cappDateTime;
+                //TimeSpan ctimediff = appDateTime-cappDateTime;
                 TimeSpan timediff = appDateTime - cdt;
                 string RescheduleLimit = ConfigurationManager.AppSettings["RescheduleLimit"].ToString();
                 if (model.appType=="U")
@@ -650,7 +650,7 @@ namespace RestAPIs.Controllers
 
         [HttpPost]
         [Route("api/CancelRescheduleRequest")]
-        public async Task<HttpResponseMessage> CancelRescheduleRequest(RescheduleRequestModel model)
+        public async Task<HttpResponseMessage> CancelRescheduleRequest(CancelRescheduleRequestModel model)
         {
             try
             {

@@ -120,7 +120,7 @@ namespace WebApp.Controllers
            
         }
         [HttpPost]
-        public JsonResult CancelReschedule(RescheduleRequestModel model)
+        public JsonResult CancelReschedule(CancelRescheduleRequestModel model)
         {
             try
             {

@@ -77,7 +77,7 @@ namespace WebApp.Repositories.DoctorRepositories
             }
 
         }
-        public ApiResultModel CancelReschedule(RescheduleRequestModel model)
+        public ApiResultModel CancelReschedule(CancelRescheduleRequestModel model)
         {
 
             try

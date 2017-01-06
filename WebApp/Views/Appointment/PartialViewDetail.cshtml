@@ -3,7 +3,7 @@
 @{
     Layout = null;
 }
-@if (Model != null && Model.appID!=0)
+@if (Model != null && Model.appID != 0)
 {
     var doctorName = "";
     var age = "N.A";
@@ -19,13 +19,13 @@
     var pharmacy = "N.A";
     var cellPhone = "N.A";
     var formattedDate = "";
-    var formattedTime= "";
+    var formattedTime = "";
     var showTimings = "";
 
     appDate = Model.appDate.ToString();
     appTime = Model.appTime.ToString();
 
-    if (Model.DoctorVM!=null)
+    if (Model.DoctorVM != null)
     {
         doctorName = Model.DoctorVM.doctorName;
         if (Model.DoctorVM.GetAge() != null) { age = Model.DoctorVM.GetAge(); }
@@ -80,12 +80,12 @@
 
 
 
-    if (appDate!="")
+    if (appDate != "")
     {
         DateTime date = DateTime.Parse(appDate);
         //DateTime temp=DateTime.ParseExact(date.Date.ToString(), "MM/dd/yyyy", null);
         formattedDate = string.Format("{0:dd MMM, yyyy}", date);
-        showTimings= string.Format(" {0:dd/MM/yyyy}", date);
+        showTimings = string.Format(" {0:dd/MM/yyyy}", date);
 
     }
     if (appTime != "")
@@ -95,7 +95,34 @@
         formattedTime = dateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
     }
 
+    <style>
+        .user-detail {
+            /*max-width: 250px;*/
+            margin: 0 auto;
+            color: #375781;
+            height: 100px;
+        }
 
+        .img-viewdetail {
+            float: left;
+            border-radius: 50%;
+            max-width: 100px;
+        }
+
+        .img-1 {
+            float: left;
+        }
+
+            .img-1 img {
+                border-radius: 50%;
+                max-width: 100px;
+            }
+
+        .name-sec {
+            float: left;
+            margin-left: 20px;
+        }
+    </style>
     <div class="modal-header text-center" style="background: #E4F1FE; border-bottom-color: #c3bebe;">
             <h2 style="margin: 0; color: #337ab7"><b>Appoinment Details</b></h2>
         </div><!--/.modal header-->

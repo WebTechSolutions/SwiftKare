@@ -120,7 +120,6 @@ else
         var objCRR = {};
         //objCRR["doctorID"] = doctorid;
         objCRR["appID"] = editappid;
-        objCRR["appType"] = currentTab;
         objCRR["userID"] = '@SessionHandler.UserInfo.userId';
         $.ajax({
             url: '@Url.Action("CancelReschedule", "DoctorAppointment")',
@@ -166,7 +165,7 @@ else
             //var AppDetailPostBackURL = '/DoctorAppointment/CancelReschedule';
             var appID = $buttonClicked.attr('id');
             var doctorID = $buttonClicked.attr('data-id');
-            objCRR["doctorID"] = doctorID;
+            objCRR["userID"] = '@SessionHandler.UserInfo.userId';
             objCRR["appID"] = appID;
             $.ajax({
                 url: '@Url.Action("CancelReschedule", "DoctorAppointment")',

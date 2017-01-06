@@ -56,7 +56,7 @@ else
                                     setInterval(function () { enableCalling('@item.appDate','@item.appTime','@j'); }, 60000);
                                 </script>
                                 <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#" data-toggle="modal" class="thumbnail-col-inner" data-id="@item.appID" id="@item.doctorID" data-target="#myModal5" onclick=$("#pvappid").val(@item.appID);>View Detail</a></li>
+                                    <li><a href="#" data-toggle="modal" class="thumbnail-upcoming" data-id="@item.appID" id="@item.doctorID" data-target="#myModal5" onclick=$("#pvappid").val(@item.appID);>View Detail</a></li>
                                   
                                     <li><a href="#" class="reschedule" data-id="@item.doctorID" id="@item.appID">Reschedule Req</a></li>
 
@@ -183,15 +183,7 @@ else
           fixedHeader: true
         });
 
-        var $datatable = $('#datatable-checkbox');
-
        
-        $datatable.on('draw.dt', function() {
-          $('input').iCheck({
-            checkboxClass: 'icheckbox_flat-green'
-          });
-        });
-
         //TableManageButtons.init();
       });
 </script>
@@ -202,11 +194,12 @@ else
         currentTab = cTab;
 
     }
-    function usendVariables(doctorid, editappid, elem) {
+    function reschedulefromViewDetail(appType, editappid, elem) {
         var objCRR = {};
+        
         //objCRR["doctorID"] = doctorid;
         objCRR["appID"] = editappid;
-        objCRR["appType"] = currentTab;
+        objCRR["appType"] = appType;
         objCRR["userID"] = '@SessionHandler.UserInfo.userId';
         $.ajax({
             url: '@Url.Action("Reschedule", "DoctorAppointment")',
@@ -224,7 +217,7 @@ else
                     alert('Appointment is rescheduled successfully.');
                     $('#myModal5').modal('hide');
                     reloadContainer(function () {
-                       
+
                         // new PNotify({ title: 'Success', text: "Reschedule request is cancelled successfully.", type: 'success', styling: 'bootstrap3' });
                         //Stop displaying loader
                         //stopLoader();
@@ -246,13 +239,14 @@ else
 
             //showLoader();
             var objCRR = {};
-
+            
             var $buttonClicked = $(this);
             //var AppDetailPostBackURL = '/DoctorAppointment/CancelReschedule';
             var appID = $buttonClicked.attr('id');
             var doctorID = $buttonClicked.attr('data-id');
-            objCRR["doctorID"] = doctorID;
+            objCRR["userID"] = '@SessionHandler.UserInfo.userId';
             objCRR["appID"] = appID;
+            objCRR["appType"] = currentTab;
             $.ajax({
                 url: '@Url.Action("Reschedule", "DoctorAppointment")',
                 type: "POST",
@@ -268,7 +262,7 @@ else
                     else {
                         alert('Appointment is rescheduled successfully.');
                         reloadContainer(function () {
-                         
+
                             // new PNotify({ title: 'Success', text: "Reschedule request is cancelled successfully.", type: 'success', styling: 'bootstrap3' });
                             //Stop displaying loader
                             //stopLoader();
@@ -294,7 +288,7 @@ else
 
 <script>
     $(function () {
-        $(".thumbnail-col-inner").click(function () {
+        $(".thumbnail-upcoming").click(function () {
             //debugger;
             var $buttonClicked = $(this);
             var AppDetailPostBackURL = '/DoctorAppointment/ViewAppDetails';
@@ -312,6 +306,8 @@ else
                 $doctorid.val(docid);
                 $reditappointment = $modal.find('#reditappointment');
                 $ueditappointment = $modal.find('#ueditappointment');
+                $appType = $modal.find('#appType');
+                $appType.val('U');
                 $ueditappointment.show();
                 $reditappointment.hide();
                 $editappointment = $modal.find('#editappointment');

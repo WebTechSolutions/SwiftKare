@@ -16,12 +16,12 @@ namespace DataAccess
     {
         public long alertID { get; set; }
         public string alertText { get; set; }
+        public Nullable<long> alertFor { get; set; }
         public string cb { get; set; }
         public Nullable<System.DateTime> cd { get; set; }
         public string mb { get; set; }
         public Nullable<System.DateTime> md { get; set; }
         public bool active { get; set; }
         public Nullable<bool> read { get; set; }
-        public Nullable<long> alertFor { get; set; }
     }
 }

@@ -3,32 +3,7 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_PatientLayout.cshtml";
 }
-<style>
-    .user-detail {
-	max-width: 250px;
-	margin: 0 auto;
-	color: #375781;
-	height: 100px;
-}
 
-.img-viewdetail
-{
-    float: left;
-    border-radius: 50%;
-	max-width: 100px;
-}
-.img-1 {
-	float: left;
-}
-.img-1 img {
-	border-radius: 50%;
-	max-width: 100px;
-}
-.name-sec {
-	float: left;
-	margin-left: 20px;
-}
-</style>
 <!-- page content -->
 <div class="right_col">
     <div class="page-title">
@@ -229,74 +204,8 @@
 
     }
 
-    $(function () {
-        $(".thumbnail-col-inner").click(function () {
-
-            //debugger;
-            var $buttonClicked = $(this);
-            var AppDetailPostBackURL = '/Appointment/ViewAppDetails';
-            var docid = $buttonClicked.attr('data-id');
-            var appID = $buttonClicked.attr('id');
-            //$('#myModalContent').html(data);
-            //$('#myModal4').modal('show');
-            //$("#myModalContent").load('@Url.Action("ViewAppDetails", "Appointment")', function () {
-                //callback();
-            //});
-            //$('#myModal4').modal('show');
-            
-            reloadModelContainer(function ()
-            {
-                var $modal = $('#myModal4');
-                $editappid = $modal.find('#editappid');
-                $doctorid = $modal.find('#doctorid');
-                $editappid.val(appID);
-                $doctorid.val(docid);
-                //Stop displaying loader
-                //stopLoader();
-
-            });
-            
-        });
-
-
-    });
-    $(function () {
-        $(".pendingviewdetail").click(function () {
-            //alert($("#pvcid").val());
-            //debugger;
-            var $buttonClicked = $(this);
-            var AppDetailPostBackURL = '/Appointment/ViewAppDetails';
-            var docid = $buttonClicked.attr('data-id');
-            var appID = $buttonClicked.attr('id');
-            //$('#myModalContent').html(data);
-            //$('#myModal4').modal('show');
-            //$("#myModalContent").load('@Url.Action("ViewAppDetails", "Appointment")', function () {
-            //callback();
-            //});
-            //$('#myModal4').modal('show');
-            
-            reloadModelContainer(function ()
-            {
-                var $modal = $('#myModal4');
-                $editappid = $modal.find('#editappid');
-                $doctorid = $modal.find('#doctorid');
-                $editappid.val(appID);
-                $doctorid.val(docid);
-                if($("#pvcid").val()!=0)
-                {
-                    $cc = $modal.find('#cc');
-                    $cc.show();
-                }
-                
-                //Stop displaying loader
-                //stopLoader();
-
-            });
-            
-        });
-
-
-    });
+   
+    
 
     //Reschedule App
 
@@ -537,6 +446,7 @@
 
     }
     function reloadModelContainer(callback) {
+        debugger;
         var appid=$("#pvappid").val();
       
         $("#myModalContent").load('@Url.Action("ViewAppDetails", "Appointment")?appID='+appid, function () {

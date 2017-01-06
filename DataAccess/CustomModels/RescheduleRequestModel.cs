@@ -12,4 +12,10 @@ namespace DataAccess.CustomModels
         public long appID { get; set; }
         public string appType { get; set; }
     }
+    public class CancelRescheduleRequestModel
+    {
+        public string userID { get; set; }
+        public long appID { get; set; }
+        
+    }
 }
