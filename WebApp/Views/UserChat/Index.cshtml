@@ -16,7 +16,8 @@
     {
         cEndCallUrl = Url.Action("Index", "Appointment");
     }
-    else {
+    else
+    {
         cEndCallUrl = Url.Action("Index", "DoctorAppointment");
     }
 
@@ -250,12 +251,12 @@
                                                                 {
                                                                     foreach (var itmRosDtl in itmRos.systemItems)
                                                                     {
-                                                                        @*<div class="checkbox" style="display: inline-block; width: 150px;">*@
+                                                                        <div class="checkbox" style="display: inline-block; width: 150px;">
                                                                             <label>
                                                                                 <input data-id="@itmRosDtl.systemItemID" data-val="@itmRosDtl.systemItemName"
-                                                                                        class="clsCheckbox" type="checkbox" />  @itmRosDtl.systemItemName
+                                                                                       class="flat clsCheckbox" type="checkbox" />  @itmRosDtl.systemItemName
                                                                                 </label>
-                                                                           @* </div>*@
+                                                                            </div>
                                                                     }
                                                                 }
                                                             </td>
@@ -340,22 +341,28 @@
             });
         }
 
-        $("#tblROS").find(".clsCheckbox").click(function () {
-            var curElem = $(this);
+        $(document).ready(function () {
 
-            var sysItemId = curElem.attr("data-id");
-            var sysName = curElem.attr("data-val");
-            var sysId = curElem.closest("td").attr("data-systemid");
+            $('#tblROS').on('ifChecked', 'input', function (event) {
+                var curElem = $(this);
 
-            if (curElem.is(":checked")) {
+                var sysItemId = curElem.attr("data-id");
+                var sysName = curElem.attr("data-val");
+                var sysId = curElem.closest("td").attr("data-systemid");
+
                 $.post('@Url.Action("AddConsultROS","UserChat")', { consultID: consultId, sysitemid: sysId, sysitemname: sysName });
-            }
-            else {
+            });
+
+            $('#tblROS').on('ifUnchecked', 'input', function (event) {
+                var curElem = $(this);
+
+                var sysItemId = curElem.attr("data-id");
+                var sysName = curElem.attr("data-val");
+                var sysId = curElem.closest("td").attr("data-systemid");
+
                 $.post('@Url.Action("RemoveConsultROS", "UserChat")', { consultID: consultId, sysitemid: sysId, sysitemname: sysName });
-            }
+            });
         });
-
-
     </script>
 
     <script src="@Url.Content("~/Scripts/custom.min.js")"></script>
