@@ -2553,10 +2553,10 @@
           <EntitySet Name="SuffixMasters" EntityType="SwiftKareDBModel.SuffixMaster" />
           <EntitySet Name="TitleMasters" EntityType="SwiftKareDBModel.TitleMaster" />
           <FunctionImport Name="SP_GetRescheduleAppforDoctor" ReturnType="Collection(SwiftKareDBModel.SP_GetRescheduleAppforDoctor_Result)">
-            <Parameter Name="doctorID" Mode="In" Type="Int64" />
+          <Parameter Name="doctorID" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="SP_GetRescheduleAppforPatient" ReturnType="Collection(SwiftKareDBModel.SP_GetRescheduleAppforPatient_Result)">
-            <Parameter Name="patientID" Mode="In" Type="Int64" />
+          <Parameter Name="patientID" Mode="In" Type="Int64" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="SP_AppointmentReport_Result">
