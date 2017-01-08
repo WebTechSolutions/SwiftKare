@@ -166,7 +166,7 @@ namespace RestAPIs.Controllers
                                                    {
                                                        appID = app.appID,
                                                        rov = app.rov,
-                                                       cheifcomplaints = app.chiefComplaints,
+                                                       chiefComplaints = app.chiefComplaints,
                                                        payment = app.paymentAmt,
                                                        appDate = app.appDate,
                                                        appTime = app.appTime

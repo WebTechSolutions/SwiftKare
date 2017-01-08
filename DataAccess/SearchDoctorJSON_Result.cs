@@ -11,19 +11,16 @@ namespace DataAccess
 {
     using System;
     
-    public partial class SP_GetDcotorConsultations_Result
+    public partial class SearchDoctorJSON_Result
     {
-        public long consultID { get; set; }
-        public string PatientName { get; set; }
-        public int duration { get; set; }
-        public string review { get; set; }
-        public int reviewStar { get; set; }
-        public Nullable<bool> reviewStatus { get; set; }
-        public string appTime { get; set; }
-        public string appDate { get; set; }
-        public string rov { get; set; }
+        public long doctorID { get; set; }
+        public string title { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+        public string city { get; set; }
         public byte[] picture { get; set; }
-        public string gender { get; set; }
+        public string state { get; set; }
         public string languageName { get; set; }
+        public string specialityName { get; set; }
     }
 }

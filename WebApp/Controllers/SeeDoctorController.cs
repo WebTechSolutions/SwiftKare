@@ -144,6 +144,7 @@ namespace WebApp.Controllers
                 if (model.language == "ALL") { model.language = null; }
                 if (model.speciality == "ALL") { model.speciality = null; }
                 if (model.appTime.ToString() == "") { model.appTime = null ; }
+                model.patientID = SessionHandler.UserInfo.Id;
                 List<DoctorDataset> doctorList = objSeeDoctorRepo.SeeDoctor(model);
                 return Json(new { Success = true, DoctorModel = doctorList });
 
@@ -578,6 +579,7 @@ namespace WebApp.Controllers
                 if (mid == 0)
                 {
                     ApiResultModel apiresult = new ApiResultModel();
+                    medication.patientId = SessionHandler.UserInfo.Id;
                     apiresult = objRepo.AddMedication(medication);
                     return Json(new { Success = true, ApiResultModel =apiresult });
 
@@ -585,6 +587,7 @@ namespace WebApp.Controllers
                 else
                 {
                     ApiResultModel apiresult = new ApiResultModel();
+                    medication.patientId = SessionHandler.UserInfo.Id;
                     apiresult = objRepo.EditMedication(mid,medication);
                     return Json(new { Success = true, ApiResultModel= apiresult });
                 }
@@ -701,12 +704,14 @@ namespace WebApp.Controllers
                 AllergiesRepository objRepo = new AllergiesRepository();
                 if (allergiesID == 0)
                 {
+                    allergy.patientID= SessionHandler.UserInfo.Id;
                     ApiResultModel apiresult = objRepo.AddPatientAllergy(allergy);
                     return Json(new { Success = true, ApiResultModel= apiresult });
 
                 }
                 else
                 {
+                    allergy.patientID = SessionHandler.UserInfo.Id;
                     ApiResultModel apiresult = objRepo.EditPatientAllergy(allergiesID,allergy);
                     return Json(new { Success = true, ApiResultModel =apiresult });
                 }
