@@ -235,7 +235,8 @@ function CreateAppointment(patientID,amount) {
                         type: 'success',
                         styling: 'bootstrap3'
                     });
-                   
+                    window.location.href = '/Appointment/Index/';
+                    
 
                 }
 
