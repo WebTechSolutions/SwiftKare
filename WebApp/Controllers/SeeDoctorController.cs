@@ -579,6 +579,7 @@ namespace WebApp.Controllers
                 if (mid == 0)
                 {
                     ApiResultModel apiresult = new ApiResultModel();
+                    medication.patientId = SessionHandler.UserInfo.Id;
                     apiresult = objRepo.AddMedication(medication);
                     return Json(new { Success = true, ApiResultModel =apiresult });
 
@@ -586,6 +587,7 @@ namespace WebApp.Controllers
                 else
                 {
                     ApiResultModel apiresult = new ApiResultModel();
+                    medication.patientId = SessionHandler.UserInfo.Id;
                     apiresult = objRepo.EditMedication(mid,medication);
                     return Json(new { Success = true, ApiResultModel= apiresult });
                 }
@@ -702,12 +704,14 @@ namespace WebApp.Controllers
                 AllergiesRepository objRepo = new AllergiesRepository();
                 if (allergiesID == 0)
                 {
+                    allergy.patientID= SessionHandler.UserInfo.Id;
                     ApiResultModel apiresult = objRepo.AddPatientAllergy(allergy);
                     return Json(new { Success = true, ApiResultModel= apiresult });
 
                 }
                 else
                 {
+                    allergy.patientID = SessionHandler.UserInfo.Id;
                     ApiResultModel apiresult = objRepo.EditPatientAllergy(allergiesID,allergy);
                     return Json(new { Success = true, ApiResultModel =apiresult });
                 }
