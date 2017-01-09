@@ -10,8 +10,6 @@
 *.user
 *.userosscache
 *.sln.docstates
-*.csproj.*
-*.csproj
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -279,11 +277,3 @@ __pycache__/
 
 ### VisualStudio Patch ###
 build/
-/RestAPIs/Web.Release.config
-/RestAPIs/Web.Debug.config
-/RestAPIs/Web.config
-/RestAPIs/packages.config
-/WebApp/Web.Release.config
-/WebApp/Web.Debug.config
-/WebApp/Web.config
-/WebApp/packages.config

@@ -1,0 +1,497 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BF995BB5-4370-48CC-B8D8-C83827C86817}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataAccess</RootNamespace>
+    <AssemblyName>DataAccess</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminUser.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Alert.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Allergy.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AppAttachment.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Appointment.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AspNetRole.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AspNetUser.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AspNetUserClaim.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AspNetUserLogin.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ChatLog.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="City.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Condition.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Consultation.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ConsultationRO.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CustomModels\AddConsultReviewodel.cs" />
+    <Compile Include="CustomModels\AddConsultTimeModel.cs" />
+    <Compile Include="CustomModels\AdminModel.cs" />
+    <Compile Include="CustomModels\AlertModel.cs" />
+    <Compile Include="CustomModels\AllergiesModel.cs" />
+    <Compile Include="CustomModels\ApiResultModel.cs" />
+    <Compile Include="CustomModels\AppointmentModel.cs" />
+    <Compile Include="CustomModels\ChatMessageModel.cs" />
+    <Compile Include="CustomModels\ConsultationModel.cs" />
+    <Compile Include="CustomModels\CreateConsultModel.cs" />
+    <Compile Include="CustomModels\DoctorInfoCustom.cs" />
+    <Compile Include="CustomModels\DoctorLanguages.cs" />
+    <Compile Include="CustomModels\DoctorLicensedState.cs" />
+    <Compile Include="CustomModels\DoctorLicStatesModel.cs" />
+    <Compile Include="CustomModels\DoctorModel.cs" />
+    <Compile Include="CustomModels\DoctorNotes.cs" />
+    <Compile Include="CustomModels\DoctorPasswordModel.cs" />
+    <Compile Include="CustomModels\DoctorProfileModel.cs" />
+    <Compile Include="CustomModels\DoctorTimingsModel.cs" />
+    <Compile Include="CustomModels\DoseSpotModel.cs" />
+    <Compile Include="CustomModels\EditFilesModel.cs" />
+    <Compile Include="CustomModels\FamilyHX.cs" />
+    <Compile Include="CustomModels\FavouriteDoctorModel.cs" />
+    <Compile Include="CustomModels\FetchDoctorTimingModel.cs" />
+    <Compile Include="CustomModels\FetchTimingsModel.cs" />
+    <Compile Include="CustomModels\FilesCustomModel.cs" />
+    <Compile Include="CustomModels\ForgotModel.cs" />
+    <Compile Include="CustomModels\GetDoctorLanguages.cs" />
+    <Compile Include="CustomModels\GetMedication.cs" />
+    <Compile Include="CustomModels\GetMessageModel.cs" />
+    <Compile Include="CustomModels\GetPatientAllergies.cs" />
+    <Compile Include="CustomModels\GetPatientConditions.cs" />
+    <Compile Include="CustomModels\GetPatientLanguages.cs" />
+    <Compile Include="CustomModels\GetPatientSurgeries.cs" />
+    <Compile Include="CustomModels\GetPatientUserFiles.cs" />
+    <Compile Include="CustomModels\GetRescheduleAppModel.cs" />
+    <Compile Include="CustomModels\Languages.cs" />
+    <Compile Include="CustomModels\LiveReqLogModel.cs" />
+    <Compile Include="CustomModels\MedicineModel.cs" />
+    <Compile Include="CustomModels\MessageCustomModel.cs" />
+    <Compile Include="CustomModels\MessageFileModel.cs" />
+    <Compile Include="CustomModels\MessageListModel.cs" />
+    <Compile Include="CustomModels\NewsViewModel.cs" />
+    <Compile Include="CustomModels\PatientAllergies_Custom.cs" />
+    <Compile Include="CustomModels\PatientFamilyHX_Custom.cs" />
+    <Compile Include="CustomModels\PatientLanguages.cs" />
+    <Compile Include="CustomModels\PatientLifeStyleModel.cs" />
+    <Compile Include="CustomModels\PatientLifeStyle_Custom.cs" />
+    <Compile Include="CustomModels\PatientMedication_Custom.cs" />
+    <Compile Include="CustomModels\PatientConditions_Custom.cs" />
+    <Compile Include="CustomModels\PatientModel.cs" />
+    <Compile Include="CustomModels\PatientPharmacy_Custom.cs" />
+    <Compile Include="CustomModels\PatientProfileModel.cs" />
+    <Compile Include="CustomModels\PatientROV.cs" />
+    <Compile Include="CustomModels\PatientROV_Custom.cs" />
+    <Compile Include="CustomModels\PatientSurgery_Custom.cs" />
+    <Compile Include="CustomModels\PatientUserFile_Custom.cs" />
+    <Compile Include="CustomModels\PharmacyModel.cs" />
+    <Compile Include="CustomModels\ProfileViewModels.cs" />
+    <Compile Include="CustomModels\ReactionModel.cs" />
+    <Compile Include="CustomModels\RescheduleAppModel.cs" />
+    <Compile Include="CustomModels\RescheduleRequestModel.cs" />
+    <Compile Include="CustomModels\ResetPasswordModel.cs" />
+    <Compile Include="CustomModels\ROV_Custom.cs" />
+    <Compile Include="CustomModels\SearchDoctorModel.cs" />
+    <Compile Include="CustomModels\SensitivityModel.cs" />
+    <Compile Include="CustomModels\Specialities.cs" />
+    <Compile Include="CustomModels\SurgeriesModel.cs" />
+    <Compile Include="CustomModels\UpdateConsultCharges.cs" />
+    <Compile Include="CustomModels\UpdateDoctorPicture.cs" />
+    <Compile Include="CustomModels\UpdateDoctorProfileModel.cs" />
+    <Compile Include="CustomModels\UpdatePatientPicture.cs" />
+    <Compile Include="CustomModels\UpdateSecretQuestions.cs" />
+    <Compile Include="CustomModels\UserModel.cs" />
+    <Compile Include="CustomModels\VCLogModel.cs" />
+    <Compile Include="CustomModels\ViewPatientProfile.cs" />
+    <Compile Include="C__MigrationHistory.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Doctor.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DoctorLanguage.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DoctorLicenseState.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DoctorSpeciality.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DoctorTiming.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentType.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FamilyHXItem.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FavouriteDoctor.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FileType.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Frequency.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Language.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LifeStyleQuestion.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LiveReqLog.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Medication.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Medicine.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Message.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MessageFile.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Module.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="News.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Patient.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PatientAllergy.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PatientFamilyHX.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PatientLanguage.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PatientLifeStyle.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PatientSurgery.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PatientSystem.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reaction.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Relationship.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Role.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RoleModule.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ROV.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SearchDoctorJSON_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SecretQuestion.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Severity.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Speciallity.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_AppointmentReport_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_CheckForDuplicatePatient_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_ConsultationReport_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_DoctorReport_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_FetchDoctorTimings_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetAppDetail_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetCancelledAppforDoctor_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetCancelledAppforPatient_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetConsultationDetails_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetDcotorConsultations_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetDoctorInfoforAppointment_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetPatientAllergies_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetPatientConditions_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetPatientConsultations_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetPatientMedication_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetPatientSurgeries_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetPendingAppforDoctor_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetPendingAppforPatient_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetRescheduleAppforDoctor_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetRescheduleAppforPatient_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetUpcomingAppforDoctor_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetUpcomingAppforPatient_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_helpdiagrams_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_PatientReport_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SearchDoctor_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectAdmin_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectAlerts_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectAllergy_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectCity_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectConsultation_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectDoctorsForApproval_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectDoctor_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectDocType_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectLanguages_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectMedicine_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectNewss_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectPatient_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectRole_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectSpeciality_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectStates_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectSystemItems_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_selectTransactionHistory_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_SelectZipCode_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_ViewPatientProfile_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="State.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SuffixMaster.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Surgery.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SwiftKareDBModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SwiftKareDBModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SwiftKareDBModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SwiftKareDBModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SwiftKareDBModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="sysdiagram.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SystemItemss.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TimeZone.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TitleMaster.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserFile.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VCLog.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Zip.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <EntityDeploy Include="SwiftKareDBModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>SwiftKareDBModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="SwiftKareDBModel.edmx.diagram">
+      <DependentUpon>SwiftKareDBModel.edmx</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="SwiftKareDBModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SwiftKareDBModel.edmx</DependentUpon>
+      <LastGenOutput>SwiftKareDBModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="SwiftKareDBModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SwiftKareDBModel.edmx</DependentUpon>
+      <LastGenOutput>SwiftKareDBModel.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

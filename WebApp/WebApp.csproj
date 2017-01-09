@@ -1,0 +1,886 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8433FF5B-19BE-4B15-A0AB-8F3CCDF7A7CA}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WebApp</RootNamespace>
+    <AssemblyName>WebApp</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.1\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTok">
+      <HintPath>..\packages\OpenTok.2.3.0\lib\net35\OpenTok.dll</HintPath>
+    </Reference>
+    <Reference Include="SendGrid">
+      <HintPath>..\packages\Sendgrid.6.3.4\lib\SendGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="SendGrid.SmtpApi">
+      <HintPath>..\packages\SendGrid.SmtpApi.1.3.1\lib\net40\SendGrid.SmtpApi.dll</HintPath>
+    </Reference>
+    <Reference Include="SendGridMail">
+      <HintPath>..\packages\Sendgrid.6.3.4\lib\SendGridMail.dll</HintPath>
+    </Reference>
+    <Reference Include="Stripe.net">
+      <HintPath>..\packages\Stripe.net.6.11.1\lib\net45\Stripe.net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\RestAPIs\bin\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=__MvcPagesVersion__, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.2\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.2\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.1.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.0.0\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.0\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter">
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.0.0\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount">
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.3.0.0\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Admin\AdminController.cs" />
+    <Compile Include="Controllers\Admin\AlertsController.cs" />
+    <Compile Include="Controllers\Admin\Allergy_AdminController.cs" />
+    <Compile Include="Controllers\Admin\City_AdminController.cs" />
+    <Compile Include="Controllers\Admin\Consultation\Consultation_AdminController.cs" />
+    <Compile Include="Controllers\Admin\Doctor_AdminController.cs" />
+    <Compile Include="Controllers\Admin\Document_AdminTypeController.cs" />
+    <Compile Include="Controllers\Admin\Languages_AdminController.cs" />
+    <Compile Include="Controllers\Admin\AdminLoginController.cs" />
+    <Compile Include="Controllers\Admin\Medicine_AdminController.cs" />
+    <Compile Include="Controllers\Admin\News_AdminController.cs" />
+    <Compile Include="Controllers\Admin\Patient_AdminController.cs" />
+    <Compile Include="Controllers\Admin\Reports\ReportController.cs" />
+    <Compile Include="Controllers\Admin\Role_AdminController.cs" />
+    <Compile Include="Controllers\Admin\Speciality_AdminController.cs" />
+    <Compile Include="Controllers\Admin\States_AdminController.cs" />
+    <Compile Include="Controllers\Admin\SystemItem_AdminController.cs" />
+    <Compile Include="Controllers\Admin\Systems_AdminController.cs" />
+    <Compile Include="Controllers\Admin\TransactionHistory\Transaction_AdminController.cs" />
+    <Compile Include="Controllers\Admin\ZipCode_AdminController.cs" />
+    <Compile Include="Controllers\AlertController.cs" />
+    <Compile Include="Controllers\AllergiesController.cs" />
+    <Compile Include="Controllers\AppointmentController.cs" />
+    <Compile Include="Controllers\ConsultationController.cs" />
+    <Compile Include="Controllers\CustomAuthorize.cs" />
+    <Compile Include="Controllers\DoctorAlertController.cs" />
+    <Compile Include="Controllers\DoctorAppointmentController.cs" />
+    <Compile Include="Controllers\DoctorConsultationController.cs" />
+    <Compile Include="Controllers\DoctorProfileController.cs" />
+    <Compile Include="Controllers\DoctorController.cs" />
+    <Compile Include="Controllers\DoseSpotDemoController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MyHealthController.cs" />
+    <Compile Include="Controllers\NewsController.cs" />
+    <Compile Include="Controllers\PatientProfileController.cs" />
+    <Compile Include="Controllers\PatientFilesController.cs" />
+    <Compile Include="Controllers\PatientController.cs" />
+    <Compile Include="Controllers\RolesSuperAdminController.cs" />
+    <Compile Include="Controllers\HealthCareTeamController.cs" />
+    <Compile Include="Controllers\SeeDoctorController.cs" />
+    <Compile Include="Controllers\SendGridDemoController.cs" />
+    <Compile Include="Controllers\StripePayController.cs" />
+    <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Controllers\UserChatController.cs" />
+    <Compile Include="Controllers\UsersAdminController.cs" />
+    <Compile Include="Controllers\UsersSuperAdminController.cs" />
+    <Compile Include="CustomAuthorizationAttribute.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helper\ApiConsumerHelper.cs" />
+    <Compile Include="Helper\EmailHelper.cs" />
+    <Compile Include="Helper\Extensions.cs" />
+    <Compile Include="Helper\OauthHelper.cs" />
+    <Compile Include="Helper\SessionHandler.cs" />
+    <Compile Include="Helper\StripePayHelper.cs" />
+    <Compile Include="Helper\UserChatHelper.cs" />
+    <Compile Include="Hub\SmartHub.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Models\Admin\ComplexModel\AdminRole.cs" />
+    <Compile Include="Models\Admin\Utilities\Utility.cs" />
+    <Compile Include="Models\ApiConsumerModels.cs" />
+    <Compile Include="Models\ApplicationGlobalVariables.cs" />
+    <Compile Include="Models\AppSettings.cs" />
+    <Compile Include="Models\BookAppointment.cs" />
+    <Compile Include="Models\DoctorTimingsViewModel.cs" />
+    <Compile Include="Models\ForgotPasswordCodeModel.cs" />
+    <Compile Include="Models\LoginRegisterViewModel.cs" />
+    <Compile Include="Models\SearchModel.cs" />
+    <Compile Include="Models\SeeDoctorDTO.cs" />
+    <Compile Include="Models\SeeDoctorViewModel.cs" />
+    <Compile Include="Models\SignalR\MessageInfo.cs" />
+    <Compile Include="Models\SignalR\UserInfo.cs" />
+    <Compile Include="Models\UserInfoModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AdminRepository\AdminRepository.cs" />
+    <Compile Include="Repositories\DoctorRepositories\DoctorAlertRepository.cs" />
+    <Compile Include="Repositories\DoctorRepositories\DoctorAppointmentRepositroy.cs" />
+    <Compile Include="Repositories\DoctorRepositories\DoctorConsultationRepository.cs" />
+    <Compile Include="Repositories\DoctorRepositories\DoctorRepository.cs" />
+    <Compile Include="Repositories\DoctorRepositories\DoctorTimingsRepository.cs" />
+    <Compile Include="Repositories\DoctorRepositories\LanguageRepository.cs" />
+    <Compile Include="Repositories\HelperRepositories\HelperRepository.cs" />
+    <Compile Include="Repositories\MessageRepositories\MessageRepository.cs" />
+    <Compile Include="Repositories\NewsRepository\NewsRepository.cs" />
+    <Compile Include="Repositories\PatientRepositories\AlertRespository.cs" />
+    <Compile Include="Repositories\PatientRepositories\AllergiesRepository.cs" />
+    <Compile Include="Repositories\PatientRepositories\AppointmentRepository.cs" />
+    <Compile Include="Repositories\PatientRepositories\ConditionRepository.cs" />
+    <Compile Include="Repositories\PatientRepositories\ConsultationRepository.cs" />
+    <Compile Include="Repositories\PatientRepositories\LifeStyleRepository.cs" />
+    <Compile Include="Repositories\PatientRepositories\MedicationRepository.cs" />
+    <Compile Include="Repositories\PatientRepositories\MyHealthRepository.cs" />
+    <Compile Include="Repositories\PatientRepositories\PatientFilesRepository.cs" />
+    <Compile Include="Repositories\PatientRepositories\SeeDoctorRepository.cs" />
+    <Compile Include="Repositories\DoctorRepositories\SpecialityRepository.cs" />
+    <Compile Include="Repositories\PatientRepositories\PatientRepository.cs" />
+    <Compile Include="Repositories\PatientRepositories\SurgeriesRepository.cs" />
+    <Compile Include="Repositories\ProfileRepository\ProfileRepository.cs" />
+    <Compile Include="Repositories\VideoCallRepository\VideoCallRepository.cs" />
+    <Compile Include="Service References\DoseSpotService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\css\animate.min.css" />
+    <Content Include="Content\css\bootstrap-progressbar-3.3.4.min.css" />
+    <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\buttons.bootstrap.min.css" />
+    <Content Include="Content\css\custom.css" />
+    <Content Include="Content\css\custom.min.css" />
+    <Content Include="Content\css\dataTables.bootstrap.min.css" />
+    <Content Include="Content\css\dropzone.min.css" />
+    <Content Include="Content\css\fixedHeader.bootstrap.min.css" />
+    <Content Include="Content\css\font-awesome.min.css" />
+    <Content Include="Content\css\green.css" />
+    <Content Include="Content\css\jqvmap.min.css" />
+    <Content Include="Content\css\maps\jquery-jvectormap-2.0.3.css" />
+    <Content Include="Content\css\nprogress.css" />
+    <Content Include="Content\css\pnotify.css" />
+    <Content Include="Content\css\prettify.min.css" />
+    <Content Include="Content\css\responsive.bootstrap.min.css" />
+    <Content Include="Content\css\scroller.bootstrap.min.css" />
+    <Content Include="Content\css\select2.min.css" />
+    <Content Include="Content\css\starrr.css" />
+    <Content Include="Content\css\style.css" />
+    <Content Include="Content\css\style1.css" />
+    <Content Include="Content\css\switchery.min.css" />
+    <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\images\american-express.png" />
+    <Content Include="Content\images\appoi.png" />
+    <Content Include="Content\images\bg.jpg" />
+    <Content Include="Content\images\calendar.png" />
+    <Content Include="Content\images\call-history.png" />
+    <Content Include="Content\images\chat.png" />
+    <Content Include="Content\images\cropper.jpg" />
+    <Content Include="Content\images\doctor.png" />
+    <Content Include="Content\images\green.png" />
+    <Content Include="Content\images\icon_appointment.png" />
+    <Content Include="Content\images\icon_appointment.svg" />
+    <Content Include="Content\images\icon_call-history.png" />
+    <Content Include="Content\images\icon_call-history.svg" />
+    <Content Include="Content\images\icon_doc_search.png" />
+    <Content Include="Content\images\icon_doc_search.svg" />
+    <Content Include="Content\images\icon_messages.png" />
+    <Content Include="Content\images\icon_messages.svg" />
+    <Content Include="Content\images\icon_patient_search.png" />
+    <Content Include="Content\images\icon_patient_search.svg" />
+    <Content Include="Content\images\icon_scheduler.png" />
+    <Content Include="Content\images\icon_scheduler.svg" />
+    <Content Include="Content\images\img.jpg" />
+    <Content Include="Content\images\inbox.png" />
+    <Content Include="Content\images\loaderImage.gif" />
+    <Content Include="Content\images\Logo-heart.png" />
+    <Content Include="Content\images\Logos.png" />
+    <Content Include="Content\images\mastercard.png" />
+    <Content Include="Content\images\media.jpg" />
+    <Content Include="Content\images\noun_516749_cc.svg" />
+    <Content Include="Content\images\patient.png" />
+    <Content Include="Content\images\patient1.png" />
+    <Content Include="Content\images\paypal.png" />
+    <Content Include="Content\images\picture.jpg" />
+    <Content Include="Content\images\placeholder.png" />
+    <Content Include="Content\images\prod-1.jpg" />
+    <Content Include="Content\images\prod-2.jpg" />
+    <Content Include="Content\images\prod-3.jpg" />
+    <Content Include="Content\images\prod-4.jpg" />
+    <Content Include="Content\images\prod-5.jpg" />
+    <Content Include="Content\images\user.png" />
+    <Content Include="Content\images\us_map.jpg" />
+    <Content Include="Content\images\visa.png" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\Appointment\Appointment.js" />
+    <Content Include="Scripts\autosize.min.js" />
+    <Content Include="Content\css\bootstrap-material-datetimepicker.css" />
+    <Content Include="Scripts\blockUI.js" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\font\Material-Design-Icons.svg" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\index.html" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker.js" />
+    <Content Include="Scripts\bootstrap-wysiwyg.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Content\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fonts\FontAwesome.otf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Scripts\date.js" />
+    <Content Include="Scripts\font-awesome\css\font-awesome.css.map" />
+    <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Scripts\font-awesome\fonts\FontAwesome.otf" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\.gitignore" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\bower.json" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\font\Material-Design-Icons.eot" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\font\Material-Design-Icons.ttf" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\font\Material-Design-Icons.woff" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\font\Material-Design-Icons.woff2" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\LICENSE.md" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\package.json" />
+    <Content Include="Scripts\bootstrap-material-datetimepicker\README.md" />
+    <None Include="Properties\PublishProfiles\SKWeb.pubxml" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\buttons.bootstrap.min.js" />
+    <Content Include="Scripts\buttons.flash.min.js" />
+    <Content Include="Scripts\buttons.html5.min.js" />
+    <Content Include="Scripts\buttons.print.min.js" />
+    <Content Include="Scripts\custom.min.js" />
+    <Content Include="Scripts\dataTables.bootstrap.min.js" />
+    <Content Include="Scripts\dataTables.buttons.min.js" />
+    <Content Include="Scripts\dataTables.fixedHeader.min.js" />
+    <Content Include="Scripts\dataTables.keyTable.min.js" />
+    <Content Include="Scripts\dataTables.responsive.min.js" />
+    <Content Include="Scripts\dataTables.scroller.min.js" />
+    <Content Include="Scripts\daterangepiker\daterangepicker.js" />
+    <Content Include="Scripts\daterangepiker\moment.min.js" />
+    <Content Include="Scripts\fastclick.js" />
+    <Content Include="Scripts\font-awesome\css\font-awesome.css" />
+    <Content Include="Scripts\font-awesome\css\font-awesome.min.css" />
+    <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="Scripts\general.js" />
+    <Content Include="Scripts\HealthConditions\HealthConditions.js" />
+    <Content Include="Scripts\icheck.min.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.autocomplete.min.js" />
+    <Content Include="Scripts\jquery.blockUI.js" />
+    <Content Include="Scripts\jquery.cookie.js" />
+    <Content Include="Scripts\jquery.cropit.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
+    <Content Include="Scripts\jquery.hotkeys.js" />
+    <Content Include="Scripts\jquery.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.1.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.1.min.js" />
+    <Content Include="Scripts\jquery.smartWizard.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jquery.vmap.sampledata.js" />
+    <Content Include="Scripts\Medicine\Medicine.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\nprogress.js" />
+    <Content Include="Scripts\PatientAllergies\PateintAllergies.js" />
+    <Content Include="Scripts\pnotify.js" />
+    <Content Include="Scripts\prettify.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\responsive.bootstrap.js" />
+    <Content Include="Scripts\SeeDoctor\SearchDoctor.js" />
+    <Content Include="Scripts\select2.full.min.js" />
+    <Content Include="Scripts\select2.min.js" />
+    <Content Include="Scripts\starrr.js" />
+    <Content Include="Scripts\StripePay.js" />
+    <Content Include="Scripts\Surgeries\Surgeries.js" />
+    <Content Include="Scripts\switchery.min.js" />
+    <Content Include="Scripts\toggle.js" />
+    <Content Include="Scripts\UserChat.js" />
+    <Content Include="Scripts\ValidationMessages.js" />
+    <Content Include="Scripts\validator.js" />
+    <Content Include="Scripts\_references.js" />
+    <None Include="Service References\DoseSpotService\configuration91.svcinfo" />
+    <None Include="Service References\DoseSpotService\configuration.svcinfo" />
+    <None Include="Service References\DoseSpotService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="TextFile1.txt" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\SendCode.cshtml" />
+    <Content Include="Views\Account\VerifyCode.cshtml" />
+    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
+    <Content Include="Views\Manage\ChangePassword.cshtml" />
+    <Content Include="Views\Manage\Index.cshtml" />
+    <Content Include="Views\Manage\ManageLogins.cshtml" />
+    <Content Include="Views\Manage\SetPassword.cshtml" />
+    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
+    <Content Include="Views\Shared\Lockout.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\RolesSuperAdmin\Create.cshtml" />
+    <Content Include="Views\RolesSuperAdmin\Delete.cshtml" />
+    <Content Include="Views\RolesSuperAdmin\Details.cshtml" />
+    <Content Include="Views\RolesSuperAdmin\Edit.cshtml" />
+    <Content Include="Views\RolesSuperAdmin\Index.cshtml" />
+    <Content Include="Views\UsersSuperAdmin\Create.cshtml" />
+    <Content Include="Views\UsersSuperAdmin\Delete.cshtml" />
+    <Content Include="Views\UsersSuperAdmin\Details.cshtml" />
+    <Content Include="Views\UsersSuperAdmin\Edit.cshtml" />
+    <Content Include="Views\UsersSuperAdmin\Index.cshtml" />
+    <Content Include="Views\Account\DisplayEmail.cshtml" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Views\Shared\_SuperAdminLayout.cshtml" />
+    <Content Include="Views\UsersAdmin\Index.cshtml" />
+    <Content Include="Views\UsersAdmin\Create.cshtml" />
+    <Content Include="Views\UsersAdmin\Edit.cshtml" />
+    <Content Include="Views\UsersAdmin\Delete.cshtml" />
+    <Content Include="Views\UsersAdmin\Details.cshtml" />
+    <Content Include="Views\Shared\_AccountsLayout.cshtml" />
+    <Content Include="Views\Admin\Create.cshtml" />
+    <Content Include="Views\Alerts_Admin\Index.cshtml" />
+    <Content Include="Views\Allergy_Admin\Create.cshtml" />
+    <Content Include="Views\City_Admin\Create.cshtml" />
+    <Content Include="Views\Consultation_Admin\AppReport.cshtml" />
+    <Content Include="Views\Consultation_Admin\ConsultationReport.cshtml" />
+    <Content Include="Views\Consultation_Admin\ReviewsApproval.cshtml" />
+    <Content Include="Views\Doctor_Admin\Create.cshtml" />
+    <Content Include="Views\Doctor_Admin\DoctorsForApproval.cshtml" />
+    <Content Include="Views\Doctor_Admin\Report.cshtml" />
+    <Content Include="Views\DocumentType_Admin\Create.cshtml" />
+    <Content Include="Views\Languages_Admin\Create.cshtml" />
+    <Content Include="Views\Medicine_Admin\Create.cshtml" />
+    <Content Include="Views\News_Admin\Create.cshtml" />
+    <Content Include="Views\Patient_Admin\Create.cshtml" />
+    <Content Include="Views\Patient_Admin\Report.cshtml" />
+    <Content Include="Views\Role_Admin\Create.cshtml" />
+    <Content Include="Views\Shared\_LayoutPage.cshtml" />
+    <Content Include="Views\Speciality_Admin\Create.cshtml" />
+    <Content Include="Views\States_Admin\Create.cshtml" />
+    <Content Include="Views\SystemItem_Admin\Create.cshtml" />
+    <Content Include="Views\Systems_Admin\Create.cshtml" />
+    <Content Include="Views\Transaction_Admin\TransactionHistory.cshtml" />
+    <Content Include="Views\ZipCode_Admin\Create.cshtml" />
+    <Content Include="Views\AdminLogin\Default.cshtml" />
+    <Content Include="Views\AdminLogin\AdminLogin.cshtml" />
+    <Content Include="Views\Account\AdminLogin.cshtml" />
+    <Content Include="Views\Doctor\DoctorTimings.cshtml" />
+    <Content Include="Views\Doctor\Index.cshtml" />
+    <Content Include="Views\Patient\Index.cshtml" />
+    <Content Include="Views\Shared\_PatientLayout.cshtml" />
+    <Content Include="Views\Shared\_DoctorLayout.cshtml" />
+    <Content Include="Views\Patient\SeeDoctor.cshtml" />
+    <Content Include="Scripts\material.min" />
+    <Content Include="Scripts\moment-with-locales.min" />
+    <Content Include="Views\SeeDoctor\SeeDoctor.cshtml" />
+    <Content Include="Views\SendGridDemo\Index.cshtml" />
+    <Content Include="Views\StripePay\Index.cshtml" />
+    <Content Include="Views\UserChat\Index.cshtml" />
+    <Content Include="Views\Admin\Default.cshtml" />
+    <Content Include="Views\AdminLogin\Index.cshtml" />
+    <Content Include="Views\Messages\Index.cshtml" />
+    <Content Include="Views\Messages\PartialMessageDetail.cshtml" />
+    <Content Include="Views\PatientFiles\Index.cshtml" />
+    <Content Include="Views\Account\DoctorLogin.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmationLink.cshtml" />
+    <Content Include="Views\Account\PatientLogin.cshtml" />
+    <Content Include="Views\PatientFiles\PartialIndex.cshtml" />
+    <Content Include="Views\DoctorProfile\Index.cshtml" />
+    <Content Include="Views\DoctorProfile\Profile.cshtml" />
+    <Content Include="Views\PatientProfile\Index.cshtml" />
+    <Content Include="Views\PatientProfile\Profile.cshtml" />
+    <Content Include="Views\News\Index.cshtml" />
+    <Content Include="Views\News\NewsDetails.cshtml" />
+    <Content Include="Views\Appointment\Index.cshtml" />
+    <Content Include="Views\Appointment\PartialReschedule.cshtml" />
+    <Content Include="Views\Appointment\PartialUpcoming.cshtml" />
+    <Content Include="Views\Appointment\PartialViewDetail.cshtml" />
+    <Content Include="Views\Consultation\Index.cshtml" />
+    <Content Include="Views\Consultation\PartialViewDetail.cshtml" />
+    <Content Include="Views\DoctorAppointment\Index.cshtml" />
+    <Content Include="Views\DoctorAppointment\PartialDoctorReschedule.cshtml" />
+    <Content Include="Views\DoctorAppointment\PartialDoctorUpcoming.cshtml" />
+    <Content Include="Views\DoctorAppointment\PartialDoctorViewAppDetail.cshtml" />
+    <Content Include="Views\MyHealth\Index.cshtml" />
+    <Content Include="Views\MyHealth\PartialFamilyHX.cshtml" />
+    <Content Include="Views\MyHealth\PartialLifeStyle.cshtml" />
+    <Content Include="Views\Appointment\PartialPending.cshtml" />
+    <Content Include="Views\Consultation\PartialViewConsultation.cshtml" />
+    <Content Include="Views\DoctorAppointment\PartialDoctorPending.cshtml" />
+    <Content Include="Views\DoctorConsultation\Index.cshtml" />
+    <Content Include="Views\DoctorConsultation\PartialViewDoctorConsultation.cshtml" />
+    <Content Include="Views\DoctorConsultation\PartialViewDoctorConsultationDetail.cshtml" />
+    <Content Include="Views\Alert\Index.cshtml" />
+    <Content Include="Views\Alert\PartialAlertView.cshtml" />
+    <Content Include="Views\DoctorAlert\Index.cshtml" />
+    <Content Include="Views\DoctorAlert\PartialDoctorAlertView.cshtml" />
+    <Content Include="Views\SeeDoctor\MyCareTeamView.cshtml" />
+    <Content Include="Views\Shared\AlertView.cshtml" />
+    <Content Include="Views\Shared\DoctorAlertView.cshtml" />
+    <Content Include="Views\HealthCareTeam\MyCareTeamView.cshtml" />
+    <Content Include="Views\HealthCareTeam\Index.cshtml" />
+    <Content Include="Views\HealthCareTeam\PartialViewSurgery.cshtml" />
+    <None Include="Service References\DoseSpotService\api.wsdl" />
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.AddAllergyResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.AddAllergyResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.AddDetailedSelfReportedMedicationsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.AddSelfReportedMedicationsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.AddSelfReportedMedicationsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.AddUpdateSelfReportedMedicationsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.AllergyListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.AllergyListResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.AllergySearchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.AllergySearchResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.CheckAllergyInteractionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.CheckAllergyInteractionsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.CheckClinicianRegistrationResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.CheckClinicianRegistrationResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.ClinicAddMessage2.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.ClinicAddResultMessage.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.ClinicianAddMessage2.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.ClinicianAddMultipleClinicsMessage2.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.ClinicianAddMultipleClinicsResultsMessage.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.ClinicianAddResultsMessage.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.EditAllergyResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.EditAllergyResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.GetMedicationListByDateRangeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.GetMedicationListByDateRangeResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.GetMedicationListMUResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.GetMedicationListMUResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.GetMedicationListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.GetMedicationListResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.GetPatientDetail1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.GetPatientDetailFull1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.GetPatientDetailMU1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.GetPrescriberNotificationCountsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.GetPrescriberNotificationCountsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.GetRefillRequestsDetailsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.GetRefillRequestsDetailsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.GetRefillRequestsTransmissionErrorsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.ImportMedicationsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.ImportMedicationsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.LogPatientMedicationHistoryConsentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.MedHistoryConsentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.MedicationQuickSearchMessage2.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.MedicationQuickSearchResultsMessage.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.MedicationSearchByRxCuiMessage2.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.MedicationSelectMessage2.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.MedicationSelectResultMessage.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.MedicationStatusUpdateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.MedicationStrengthSearchMessage2.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.MedicationStrengthSearchResultsMessage.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.MedicationStrengthSearchResultsWithNDCMessage.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.MedicationStrengthSearchWithNDCMessage2.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.PatientUpdateFullMessageResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.PatientUpdateMessage1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.PatientUpdateMessageMUResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.PatientUpdateMessageResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.PharmacySearchMessage2.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.PharmacySearchMessageDetailed2.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.PharmacySearchMessageDetailedResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.PharmacySearchMessageResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.PharmacyValidateMessage2.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.PharmacyValidateMessageResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.RefillRequestsTransmissionErrorsMessage1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.RefillRequestsTransmissionErrorsMessageResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.SelfReportedMedicationSearchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.SelfReportedMedicationSearchResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoseSpotService\WebApp.DoseSpotService.UpdatePrescriptionStatus1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Views\DoseSpotDemo\Index.cshtml" />
+    <Content Include="Views\DoseSpotDemo\RegisterPatient.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Scripts\bootstrap\" />
+    <Folder Include="Scripts\build\" />
+    <Folder Include="Scripts\charts\" />
+    <Folder Include="Scripts\jquery\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="packages.config" />
+    <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataAccess\DataAccess.csproj">
+      <Project>{bf995bb5-4370-48cc-b8d8-c83827c86817}</Project>
+      <Name>DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Identity.Membership\Identity.Membership.csproj">
+      <Project>{9fa987eb-5dee-4b3a-966e-fa3f11dab0ec}</Project>
+      <Name>Identity.Membership</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\DoseSpotService\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>11262</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:11262/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>
