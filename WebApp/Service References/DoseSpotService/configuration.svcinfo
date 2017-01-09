@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configurationSnapshot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:schemas-microsoft-com:xml-wcfconfigurationsnapshot">
+  <behaviors />
+  <bindings>
+    <binding digest="System.ServiceModel.Configuration.BasicHttpBindingElement, System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089:&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data name=&quot;APISoap&quot; /&gt;" bindingType="basicHttpBinding" name="APISoap" />
+    <binding digest="System.ServiceModel.Configuration.CustomBindingElement, System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089:&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data name=&quot;APISoap12&quot;&gt;&lt;httpTransport /&gt;&lt;textMessageEncoding messageVersion=&quot;Soap12&quot; /&gt;&lt;/Data&gt;" bindingType="customBinding" name="APISoap12" />
+  </bindings>
+  <endpoints>
+    <endpoint normalizedDigest="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data address=&quot;http://my.staging.dosespot.com/api/11/api.asmx&quot; binding=&quot;basicHttpBinding&quot; bindingConfiguration=&quot;APISoap&quot; contract=&quot;DoseSpotService.APISoap&quot; name=&quot;APISoap&quot; /&gt;" digest="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data address=&quot;http://my.staging.dosespot.com/api/11/api.asmx&quot; binding=&quot;basicHttpBinding&quot; bindingConfiguration=&quot;APISoap&quot; contract=&quot;DoseSpotService.APISoap&quot; name=&quot;APISoap&quot; /&gt;" contractName="DoseSpotService.APISoap" name="APISoap" />
+    <endpoint normalizedDigest="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data address=&quot;http://my.staging.dosespot.com/api/11/api.asmx&quot; binding=&quot;customBinding&quot; bindingConfiguration=&quot;APISoap12&quot; contract=&quot;DoseSpotService.APISoap&quot; name=&quot;APISoap12&quot; /&gt;" digest="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data address=&quot;http://my.staging.dosespot.com/api/11/api.asmx&quot; binding=&quot;customBinding&quot; bindingConfiguration=&quot;APISoap12&quot; contract=&quot;DoseSpotService.APISoap&quot; name=&quot;APISoap12&quot; /&gt;" contractName="DoseSpotService.APISoap" name="APISoap12" />
+  </endpoints>
+</configurationSnapshot>
