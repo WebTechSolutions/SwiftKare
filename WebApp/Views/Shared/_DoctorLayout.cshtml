@@ -439,17 +439,28 @@
             chat.client.showConnected = function (message) {
                 availablePatients.patient = [];
 
-                $.each(message, function (index, value) {
-                    $.each(message, function (index, value1) {
-                        availablePatients.patient.push({
-                            connectionId: value1.Value.ConnectionId,
-                            firstName: value1.Value.FirstName,
-                            lastName: value1.Value.LastName,
-                            userName: value1.Value.UserName,
-                            patId: value1.Value.Id
-                        });
+                for (var i = 0; i < message.length; i++) {
+                    availableDoctors.patient.push({
+                        connectionId: message[i].Key,
+                        firstName: message[i].Value.FirstName,
+                        lastName: message[i].Value.LastName,
+                        userName: message[i].Value.UserName,
+                        patId: message[i].Value.Id
                     });
-                });
+                }
+
+
+                //$.each(message, function (index, value) {
+                //    $.each(message, function (index, value1) {
+                //        availablePatients.patient.push({
+                //            connectionId: value1.Value.ConnectionId,
+                //            firstName: value1.Value.FirstName,
+                //            lastName: value1.Value.LastName,
+                //            userName: value1.Value.UserName,
+                //            patId: value1.Value.Id
+                //        });
+                //    });
+                //});
 
                 if (handleOnlinePatientsDisplay) {
                     handleOnlinePatientsDisplay();

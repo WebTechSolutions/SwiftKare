@@ -553,17 +553,30 @@
             chat.client.showConnected = function (message) {
                 availableDoctors.doctor = [];
 
-                $.each(message, function (index, value) {
-                    $.each(message, function (index, value1) {
-                        availableDoctors.doctor.push({
-                            connectionId: value1.Value.ConnectionId,
-                            firstName: value1.Value.FirstName,
-                            lastName: value1.Value.LastName,
-                            userName: value1.Value.UserName,
-                            docId: value1.Value.Id
-                        });
+                console.clear();
+                console.log(message);
+
+                for (var i = 0; i < message.length; i++) {
+                    availableDoctors.doctor.push({
+                        connectionId: message[i].Key,
+                        firstName: message[i].Value.FirstName,
+                        lastName: message[i].Value.LastName,
+                        userName: message[i].Value.UserName,
+                        docId: message[i].Value.Id
                     });
-                });
+                }
+
+                //$.each(message, function (index, value) {
+                //    $.each(message, function (index, value1) {
+                //        availableDoctors.doctor.push({
+                //            connectionId: value1.Value.ConnectionId,
+                //            firstName: value1.Value.FirstName,
+                //            lastName: value1.Value.LastName,
+                //            userName: value1.Value.UserName,
+                //            docId: value1.Value.Id
+                //        });
+                //    });
+                //});
 
                 checkAnyDoctorAvailableNow();
 
