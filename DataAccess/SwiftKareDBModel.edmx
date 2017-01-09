@@ -1199,7 +1199,13 @@
           </ReferentialConstraint>
         </Association>
         <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
-        
+        <Function Name="SearchDoctor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="language" Type="varchar" Mode="In" />
+          <Parameter Name="spec" Type="varchar" Mode="In" />
+          <Parameter Name="name" Type="varchar" Mode="In" />
+          <Parameter Name="appDay" Type="varchar" Mode="In" />
+          <Parameter Name="gender" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="SearchDoctorJSON" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="language" Type="varchar" Mode="In" />
           <Parameter Name="spec" Type="varchar" Mode="In" />
@@ -2573,6 +2579,13 @@
             <Parameter Name="name" Mode="In" Type="String" />
             <Parameter Name="appDay" Mode="In" Type="String" />
             <Parameter Name="appTime" Mode="In" Type="Time" />
+            <Parameter Name="gender" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SearchDoctor" ReturnType="Collection(String)">
+            <Parameter Name="language" Mode="In" Type="String" />
+            <Parameter Name="spec" Mode="In" Type="String" />
+            <Parameter Name="name" Mode="In" Type="String" />
+            <Parameter Name="appDay" Mode="In" Type="String" />
             <Parameter Name="gender" Mode="In" Type="String" />
           </FunctionImport>
           </EntityContainer>
@@ -5876,6 +5889,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SearchDoctor" FunctionName="SwiftKareDBModel.Store.SearchDoctor" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -5890,7 +5904,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />

@@ -1888,5 +1888,30 @@ namespace DataAccess
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SearchDoctorJSON_Result>("SearchDoctorJSON", languageParameter, specParameter, nameParameter, appDayParameter, appTimeParameter, genderParameter);
         }
+    
+        public virtual ObjectResult<string> SearchDoctor(string language, string spec, string name, string appDay, string gender)
+        {
+            var languageParameter = language != null ?
+                new ObjectParameter("language", language) :
+                new ObjectParameter("language", typeof(string));
+    
+            var specParameter = spec != null ?
+                new ObjectParameter("spec", spec) :
+                new ObjectParameter("spec", typeof(string));
+    
+            var nameParameter = name != null ?
+                new ObjectParameter("name", name) :
+                new ObjectParameter("name", typeof(string));
+    
+            var appDayParameter = appDay != null ?
+                new ObjectParameter("appDay", appDay) :
+                new ObjectParameter("appDay", typeof(string));
+    
+            var genderParameter = gender != null ?
+                new ObjectParameter("gender", gender) :
+                new ObjectParameter("gender", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("SearchDoctor", languageParameter, specParameter, nameParameter, appDayParameter, genderParameter);
+        }
     }
 }
