@@ -92,7 +92,8 @@ namespace RestAPIs.Controllers
                 {
                     DateTime day = new DateTime();
                     day = Convert.ToDateTime(searchModel.appDate);
-                    var result = db.SP_SearchDoctor(searchModel.language, searchModel.speciality, searchModel.name, day.DayOfWeek.ToString(),
+                    var result = 
+                        db.SP_SearchDoctor(searchModel.language, searchModel.speciality, searchModel.name, day.DayOfWeek.ToString(),
                     searchModel.appTime, searchModel.gender).ToList();
                     response = Request.CreateResponse(HttpStatusCode.OK, result);
                     //return response;
@@ -108,7 +109,49 @@ namespace RestAPIs.Controllers
          
 
         }
+        [Route("api/searchDoctorwithFav")]
+        public HttpResponseMessage SeeDoctorwithFav(SearchDoctorModel searchModel)
+        {
 
+
+            try
+            {
+                if (searchModel.appDate == null)
+                {
+                    var result = db.SearchDoctorJSON(searchModel.language, searchModel.speciality, searchModel.name, null,
+                    searchModel.appTime, searchModel.gender).ToList();
+                    var favdoc = (from l in db.FavouriteDoctors
+                                  where l.patientID == searchModel.patientID && l.active == true
+                                  select new FavouriteDoctorModel { docID = l.doctorID,patID=l.patientID }).ToList();
+                    var searchResult=( new
+                    { doctor= result, favdoctor = favdoc
+                    });
+
+                    response = Request.CreateResponse(HttpStatusCode.OK, searchResult);
+                    //return response;
+                }
+
+                if (searchModel.appDate != null)
+                {
+                    DateTime day = new DateTime();
+                    day = Convert.ToDateTime(searchModel.appDate);
+                    var result =
+                        db.SP_SearchDoctor(searchModel.language, searchModel.speciality, searchModel.name, day.DayOfWeek.ToString(),
+                    searchModel.appTime, searchModel.gender).ToList();
+                    response = Request.CreateResponse(HttpStatusCode.OK, result);
+                    //return response;
+                }
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+
+                return ThrowError(ex, "SeeDoctor in SeacrhDoctorController.");
+            }
+
+
+        }
         [Route("api/fetchDoctorTime")]
         public HttpResponseMessage FetchDoctorTime(FetchTimingsModel searchModel)
         {

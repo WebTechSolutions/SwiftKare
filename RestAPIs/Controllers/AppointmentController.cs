@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -48,7 +49,7 @@ namespace RestAPIs.Controllers
                               {
                                   appID = cn.appID,
                                   rov = cn.rov,
-                                  cheifcomplaints = cn.chiefComplaints,
+                                  chiefcomplaints = cn.chiefComplaints,
                                   paymentAmt = cn.paymentAmt,
                                   appDate = cn.appDate,
                                   appTime = cn.appTime,
@@ -195,7 +196,7 @@ namespace RestAPIs.Controllers
                 app.doctorID = model.doctorID;
                 app.patientID = model.patientID;
                 app.appTime = To24HrTime(model.appTime);
-                app.appDate =Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate));
+                app.appDate =Convert.ToDateTime(String.Format("{0:MM/dd/yyyy}", model.appDate));
                 app.rov = model.rov;
                 app.chiefComplaints = model.chiefComplaints;
                 app.cb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault(); model.patientID.ToString();
@@ -272,7 +273,10 @@ namespace RestAPIs.Controllers
                     else
                     {
                         tempappdate = result.appDate.Value.Date;
+                        var formattedDate = string.Format("{0:dd/MM/yyyy}", tempappdate);
                         tempapptime = result.appTime;
+                        var formattedTime = DateTime.Now.Date.Add(tempapptime.Value).ToString(@"hh\:mm\:tt");
+
                         result.appTime = To24HrTime(model.appTime);
                         result.appDate = Convert.ToDateTime(model.appDate);
                         result.mb = model.userID;
@@ -283,7 +287,7 @@ namespace RestAPIs.Controllers
                         await db.SaveChangesAsync();
                         Alert alert = new Alert();
                         alert.alertFor = result.doctorID;
-                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + tempappdate + " at " + tempapptime + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
+                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + formattedDate  + " at " + formattedTime + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
                         alert.cd = System.DateTime.Now;
                         alert.cb = model.userID;
                         alert.active = true;
@@ -297,7 +301,9 @@ namespace RestAPIs.Controllers
                 if (model.appType == "R")
                 {
                     tempappdate = result.appDate.Value.Date;
+                    var formattedDate = string.Format("{0:dd/MM/yyyy}", tempappdate);
                     tempapptime = result.appTime;
+                    var formattedTime = DateTime.Now.Date.Add(tempapptime.Value).ToString(@"hh\:mm\:tt");
                     result.appTime = To24HrTime(model.appTime);
                         result.appDate = Convert.ToDateTime(model.appDate);
                         result.mb = model.userID;
@@ -307,7 +313,7 @@ namespace RestAPIs.Controllers
                         await db.SaveChangesAsync();
                         Alert alert = new Alert();
                         alert.alertFor = result.doctorID;
-                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + tempappdate + " at " + tempapptime + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
+                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + formattedDate + " at " + formattedTime + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
                     alert.cd = System.DateTime.Now;
                         alert.cb = model.userID;
                         alert.active = true;
@@ -320,7 +326,9 @@ namespace RestAPIs.Controllers
                 if (model.appType == "P")
                 {
                     tempappdate = result.appDate.Value.Date;
+                    var formattedDate = string.Format("{0:dd/MM/yyyy}", tempappdate);
                     tempapptime = result.appTime;
+                    var formattedTime = DateTime.Now.Date.Add(tempapptime.Value).ToString(@"hh\:mm\:tt");
                     result.appTime = To24HrTime(model.appTime);
                     result.appDate = Convert.ToDateTime(model.appDate);
                     result.mb = model.userID;
@@ -330,7 +338,7 @@ namespace RestAPIs.Controllers
                     await db.SaveChangesAsync();
                     Alert alert = new Alert();
                     alert.alertFor = result.doctorID;
-                    alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + tempappdate + " at " + tempapptime + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
+                    alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + formattedDate + " at " + formattedDate + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
                     alert.cd = System.DateTime.Now;
                     alert.cb = model.userID;
                     alert.active = true;
@@ -423,7 +431,7 @@ namespace RestAPIs.Controllers
 
             return new TimeSpan(hour, minute,seconds);
         }
-
+        
         [Route("api/GetRescheduleAppforPatient")]
         public HttpResponseMessage GetRescheduleAppforPatient(long patientID)
         {
@@ -605,6 +613,8 @@ namespace RestAPIs.Controllers
                         result.mb = model.userID;
                         result.md = System.DateTime.Now;
                         db.Entry(result).State = EntityState.Modified;
+                        await db.SaveChangesAsync();
+                        
                         await db.SaveChangesAsync();
                     }
                     if (model.appType == "U")

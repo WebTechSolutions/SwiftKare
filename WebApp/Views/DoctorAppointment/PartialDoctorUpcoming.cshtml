@@ -196,7 +196,7 @@ else
     }
     function reschedulefromViewDetail(appType, editappid, elem) {
         var objCRR = {};
-        
+        showLoader();
         //objCRR["doctorID"] = doctorid;
         objCRR["appID"] = editappid;
         objCRR["appType"] = appType;
@@ -209,25 +209,26 @@ else
             success: function (result) {
                 //Reload container
                 if (result.Message != undefined) {
-                    alert(result.Message.ReasonPhrase);
+                    //alert(result.Message.ReasonPhrase);
                     new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
-                    //stopLoader();
+                    hideLoader();
                 }
                 else {
-                    alert('Appointment is rescheduled successfully.');
+                    //alert('Appointment is rescheduled successfully.');
+                    new PNotify({ title: 'Success', text: "Reschedule Request has been sent to patient.", type: 'success', styling: 'bootstrap3' });
                     $('#myModal5').modal('hide');
                     reloadContainer(function () {
 
                         // new PNotify({ title: 'Success', text: "Reschedule request is cancelled successfully.", type: 'success', styling: 'bootstrap3' });
                         //Stop displaying loader
-                        //stopLoader();
+                        hideLoader();
 
                     });
                 }
 
             },
             error: function (err) {
-                alert(err.statusText);
+                //alert(err.statusText);
                 new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
                 //Stop displaying loader
                 //stopLoader();
@@ -237,7 +238,7 @@ else
     $(function () {
         $(".reschedule").click(function () {
 
-            //showLoader();
+            showLoader();
             var objCRR = {};
             
             var $buttonClicked = $(this);
@@ -255,24 +256,26 @@ else
                 success: function (result) {
                     //Reload container
                     if (result.Message != undefined) {
-                        alert(result.Message.ReasonPhrase);
-                        //new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
-                        //stopLoader();
+                        //alert(result.Message.ReasonPhrase);
+                        new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                        hideLoader();
                     }
                     else {
-                        alert('Appointment is rescheduled successfully.');
+                        //alert('Appointment is rescheduled successfully.');
+                        new PNotify({ title: 'Success', text: "Reschedule Request has been sent to patient.", type: 'success', styling: 'bootstrap3' });
                         reloadContainer(function () {
 
                             // new PNotify({ title: 'Success', text: "Reschedule request is cancelled successfully.", type: 'success', styling: 'bootstrap3' });
                             //Stop displaying loader
                             //stopLoader();
                         });
+                        hideLoader();
                     }
 
                 },
                 error: function (err) {
-                    alert(err.statusText);
-                    //new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                    //alert(err.statusText);
+                    new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
                     //Stop displaying loader
                     //stopLoader();
                 }

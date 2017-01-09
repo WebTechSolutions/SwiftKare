@@ -29,6 +29,9 @@ namespace DataAccess.CustomModels
     public class DoctorDataset
     {
         public long doctorID { get; set; }
+        public string title { get; set; }
+        public string city { get; set; }
+        public string state { get; set; }
         public string lastName { get; set; }
         public string firstName { get; set; }
         public byte[] picture { get; set; }

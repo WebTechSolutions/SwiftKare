@@ -356,7 +356,8 @@ namespace WebApp.Controllers
 
 
                         if (doctor.active == null || (bool)doctor.active)
-                            return RedirectToAction("DoctorTimings", "Doctor");
+                            //return RedirectToAction("DoctorTimings", "Doctor");
+                            return RedirectToAction("Index", "DoctorAppointment");
 
                     }
                     return RedirectToLocal(returnUrl);

@@ -14,6 +14,18 @@ namespace DataAccess.CommonModels
         public string appDate{ get; set; }
         public Nullable<TimeSpan> appTime { get; set; }
         public string gender { get; set; }
+        public long patientID { get; set; }
+    }
+    public class FavDoctors
+    {
+        public long doctorID { get; set; }
+    }
+
+
+    public class SearchDoctorResult
+    {
+        List<SearchDoctorModel> _objSearchDoctorModel { get; set; }
+        List<FavDoctors> _objFavDoctors { get; set; }
     }
    
 }
