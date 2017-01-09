@@ -270,11 +270,13 @@ namespace DataAccess.CustomModels
 
     public class PatientProfileWithExtraInfoVM
     {
+
         public PatientProfileWithExtraInfoVM() {
             lstPatientMedicationVM = new List<PatientMedicationVM>();
             lstPatientAllergiesVM = new List<PatientAllergiesVM>();
             lstPatientSurgeryVM = new List<PatientSurgeryVM>();
             lstPatientFamilyHistoryVM = new List<PatientFamilyHistoryVM>();
+            lstPatientHealthConditionsVM = new List<string>();
         }
 
         //Patient Profile
@@ -288,6 +290,8 @@ namespace DataAccess.CustomModels
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Gender { get; set; }
+
+        public string Pharmacy { get; set; }
 
         public DateTime? DOB { get; set; }
         public string TimeZone { get; set; }
@@ -312,6 +316,9 @@ namespace DataAccess.CustomModels
         public List<PatientAllergiesVM> lstPatientAllergiesVM { get; set; }
         public List<PatientSurgeryVM> lstPatientSurgeryVM { get; set; }
         public List<PatientFamilyHistoryVM> lstPatientFamilyHistoryVM { get; set; }
+
+        public List<string> lstPatientHealthConditionsVM;
+        public string oPharmacy;
 
         #region Methods
 

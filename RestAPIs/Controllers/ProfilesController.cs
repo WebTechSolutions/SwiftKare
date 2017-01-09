@@ -678,6 +678,8 @@ namespace RestAPIs.Controllers
                                              LastName = l.lastName,
                                              Gender = l.gender,
 
+                                             Pharmacy = l.pharmacy,
+
                                              DOB = l.dob,
                                              TimeZone = l.timezone,
 
@@ -712,7 +714,25 @@ namespace RestAPIs.Controllers
 
                         //--My Family History
                         oPatientProfileVM.lstPatientFamilyHistoryVM = db.PatientFamilyHXes.Where(x => x.patientID == patientID).Select(x => new PatientFamilyHistoryVM { DeasesName = x.name, Relation = x.relationship }).ToList();
+
+                        //Health Conditions
+                        oPatientProfileVM.lstPatientHealthConditionsVM = db.Conditions.Where(x => x.active == true && x.patientID == patientID).Select(x => x.conditionName).ToList();
+
+                        //Pharmacy
+                        oPatientProfileVM.oPharmacy = oPatientProfileVM.Pharmacy;
                     }
+
+                    var conditions = (from l in db.Conditions
+                                      where l.active == true && l.patientID == patientID
+                                      orderby l.conditionID descending
+                                      select new GetPatientConditions
+                                      {
+                                          conditionID = l.conditionID,
+                                          patientID = l.patientID,
+                                          conditionName = l.conditionName.Trim(),
+                                          reportedDate = l.reportedDate
+                                      }).ToList();
+
 
                     response = Request.CreateResponse(HttpStatusCode.OK, oPatientProfileVM);
                     return response;
