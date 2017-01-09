@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Web;
+using WebApp.Repositories.DoctorRepositories;
 using WebApp.Repositories.VideoCallRepository;
 
 namespace WebApp.Helper
@@ -106,16 +107,12 @@ namespace WebApp.Helper
 
         public static string GenerateOpenTokSession()
         {
-            var openTok = new OpenTok(TokBoxApiKey, TokBoxSecretKey);
-            return openTok.CreateSession(mediaMode: MediaMode.RELAYED).Id;
+            return new HelperRepository().GenerateOpenTokSession();
         }
 
         public static string GenerateOpenTokToken(string sessionId)
         {
-            var openTok = new OpenTok(TokBoxApiKey, TokBoxSecretKey);
-
-            //By default token is valid for 24 hours. So does not need to modify it
-            return openTok.GenerateToken(sessionId);
+            return new HelperRepository().GenerateOpenTokToken(sessionId);
         }
 
         #endregion

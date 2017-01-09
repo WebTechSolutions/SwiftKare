@@ -120,6 +120,9 @@
                                 <li class="doctor">
                                     <a href="@Url.Action("SeeDoctor", "SeeDoctor")"><img src="~/Content/images/icon_doc_search.png" alt="">  &nbsp <span class="menu-txt">See a doctor</span> </a>
                                 </li>
+                                <li class="doctor">
+                                    <a href="@Url.Action("Index", "HealthCareTeam")"><img src="~/Content/images/icon_doc_search.png" alt="">  &nbsp <span class="menu-txt">Health Care Team</span> </a>
+                                </li>
                                 <li class="appointment">
                                     <a href="@Url.Action("Index","Consultation")"><img src="~/Content/images/history.png" alt=""> &nbsp <span class="menu-txt"> Consult History</span></a>
 
@@ -147,7 +150,7 @@
                         <a data-toggle="tooltip" data-placement="top" title="My Profile">
                             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                         </a>
-                        <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                        <a data-toggle="tooltip" data-placement="top" title="FullScreen" onclick="toggleFullScreen();">
                             <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
                         </a>
                         <a data-toggle="tooltip" data-placement="top" title="Create Help Ticket">

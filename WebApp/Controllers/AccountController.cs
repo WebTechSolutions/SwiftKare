@@ -612,7 +612,11 @@ namespace WebApp.Controllers
                 ForgotPasswordCodeModel.Token = code;
 
                 var callbackUrl = Url.Action("Questions", "Account", new { email = model.Email, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+
+                EmailHelper oHelper = new EmailHelper(user.Email, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+                oHelper.SendMessage();
+
+                //await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
                 return View("ForgotPasswordConfirmationLink");
             }
             return View(model);
@@ -697,18 +701,22 @@ namespace WebApp.Controllers
             var token = ForgotPasswordCodeModel.Token;
             if (model.SecretAnswerHidden.Trim().ToLower() == model.SecretAnswer.Trim().ToLower())
             {
-                var newPassword = System.Web.Security.Membership.GeneratePassword(10, 4);
+                var newPassword = "New@Pa_" + System.Web.Security.Membership.GeneratePassword(10, 4);
                 var user = await UserManager.FindByNameAsync(model.Email);
                 if (user == null)
                 {
                     // Don't reveal that the user does not exist
                     return RedirectToAction("ForgotPasswordConfirmation");
                 }
-                newPassword = "Admin@123";//comment when on live
+                //newPassword = "Admin@123";//comment when on live
+
                 var result = await UserManager.ResetPasswordAsync(user.Id, token, newPassword);
                 if (result.Succeeded)
                 {
                     //send email there...
+                    EmailHelper oHelper = new EmailHelper(user.Email, "Your password has been reset successfully.", "Your new temporary password is " + newPassword + ". Please change your password after login.");
+                    oHelper.SendMessage();
+
                     return RedirectToAction("ResetPasswordConfirmation", "Account");
                 }
                 AddErrors(result);

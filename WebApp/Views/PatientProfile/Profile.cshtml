@@ -61,94 +61,110 @@
                             <div class="col-md-8">
                                 <div class="border-left"></div>
 
-                                @if (Model.lstPatientMedicationVM != null && Model.lstPatientMedicationVM.Count > 0)
+                                @if (Model.lstPatientFamilyHistoryVM != null && Model.lstPatientFamilyHistoryVM.Count > 0)
                                 {
-                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>My Medications</b></h4>
-                                    <table style="margin-left: 25px;" class="table table-bordered table-striped">
-                                        <tr>
-                                            <th>Medicine Name</th>
-                                            <th>Frequency</th>
-                                        </tr>
+                                    var lastFamilyHist = Model.lstPatientFamilyHistoryVM.LastOrDefault();
+
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Family History</b></h4>
+                                    <p style="margin-left: 25px;">
+                                        @foreach (var item in Model.lstPatientFamilyHistoryVM)
+                                        {
+                                            if (item == lastFamilyHist)
+                                            {
+                                                <spam>@string.Format("{0} {1}", item.DeasesName, (!string.IsNullOrEmpty(item.Relation) ? "(" + item.Relation + ")" : ""))</spam>
+                                            }
+                                            else
+                                            {
+                                                <spam>@string.Format("{0} {1},", item.DeasesName, (!string.IsNullOrEmpty(item.Relation) ? "(" + item.Relation + ")" : ""))</spam>
+                                            }
+                                        }
+                                    </p>
+                                }
+
+
+                                @if (Model.lstPatientHealthConditionsVM != null && Model.lstPatientHealthConditionsVM.Count > 0)
+                                {
+                                    var lastHealthCondition = Model.lstPatientHealthConditionsVM.LastOrDefault();
+
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Health Conditions</b></h4>
+                                    <p style="margin-left: 25px;">
+                                        @foreach (var item in Model.lstPatientHealthConditionsVM)
+                                        {
+                                            if (item == lastHealthCondition)
+                                            {
+                                                <spam>@item </spam>
+                                            }
+                                            else
+                                            {
+                                                <spam>@item,</spam>
+                                            }
+                                        }
+                                    </p>
+                                }
+
+                                @if (Model.lstPatientMedicationVM != null && Model.lstPatientMedicationVM.Count > 0)
+                                { var lastMedication = Model.lstPatientMedicationVM.LastOrDefault();
+
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Medications</b></h4>
+                                    <p style="padding-left: 25px;">
                                         @foreach (var item in Model.lstPatientMedicationVM)
                                         {
-                                            <tr>
-                                                <td>@item.MedicineName</td>
-                                                <td>@item.Frequency</td>
-                                            </tr>
+                                            if (item == lastMedication)
+                                            {
+                                                <span>@item.MedicineName</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@item.MedicineName,</span>
+                                            }
                                         }
-                                    </table>
+                                    </p>
                                 }
 
                                 @if (Model.lstPatientAllergiesVM != null && Model.lstPatientAllergiesVM.Count > 0)
                                 {
-                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>My Allergies</b></h4>
-                                    <table style="margin-left: 25px;" class="table table-bordered table-striped">
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Reaction</th>
-                                            <th>Seviarity</th>
-                                        </tr>
+                                    var lastAllergies = Model.lstPatientAllergiesVM.LastOrDefault();
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Allergies</b></h4>
+                                    <p style="padding-left: 25px;">
                                         @foreach (var item in Model.lstPatientAllergiesVM)
                                         {
-                                            <tr>
-                                                <td>@item.AllergyName</td>
-                                                <td>@item.Reaction</td>
-                                                <td>@item.Severiaty</td>
-                                            </tr>
+                                            if (item == lastAllergies)
+                                            {
+                                                <span>@item.AllergyName</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@item.AllergyName,</span>
+                                            }
                                         }
-                                    </table>
+                                    </p>
                                 }
 
                                 @if (Model.lstPatientSurgeryVM != null && Model.lstPatientSurgeryVM.Count > 0)
                                 {
-                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>My Surgery</b></h4>
-                                    <table style="margin-left: 25px;" class="table table-bordered table-striped">
-                                        <tr>
-                                            <th>Name</th>
-                                        </tr>
+                                    var lastSurgery = Model.lstPatientSurgeryVM.LastOrDefault();
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Surgeries and Procedures</b></h4>
+                                    <p style="padding-left: 25px;">
                                         @foreach (var item in Model.lstPatientSurgeryVM)
                                         {
-                                            <tr>
-                                                <td>@item.BodyPartName</td>
-                                            </tr>
+                                            if (item == lastSurgery)
+                                            {
+                                                <span>@item.BodyPartName</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@item.BodyPartName,</span>
+                                            }
                                         }
-                                    </table>
+                                    </p>
                                 }
 
-                                @if (Model.lstPatientFamilyHistoryVM != null && Model.lstPatientFamilyHistoryVM.Count > 0)
+                                @if (!string.IsNullOrEmpty(Model.oPharmacy))
                                 {
-                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>My Family History</b></h4>
-                                    <table style="margin-left: 25px;" class="table table-bordered table-striped">
-                                        <tr>
-                                            <th>Disease Name</th>
-                                            <th>Relation In Family</th>
-                                        </tr>
-                                        @foreach (var item in Model.lstPatientFamilyHistoryVM)
-                                        {
-                                            <tr>
-                                                <td>@item.DeasesName</td>
-                                                <td>@item.Relation</td>
-                                            </tr>
-                                        }
-                                    </table>
-                                }
-
-                                @if (Model.Height > 0)
-                                {
-                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Height</b></h4>
-                                    <p style="padding-left: 25px;"> @Model.Height</p>
-                                }
-
-                                @if (Model.Weight > 0)
-                                {
-                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Weight</b></h4>
-                                    <p style="padding-left: 25px;">@Model.Weight</p>
-                                }
-
-                                @if (!string.IsNullOrEmpty(Model.TimeZone))
-                                {
-                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Time Zone</b></h4>
-                                    <p style="padding-left: 25px;">@Model.TimeZone</p>
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Pharmacy</b></h4>
+                                    <p style="margin-left: 25px;">
+                                        @Model.oPharmacy
+                                    </p>
                                 }
                             </div>
                         </div>
