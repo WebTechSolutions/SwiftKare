@@ -262,7 +262,7 @@ function addupdateAllergies(patientid) {
                     }
                     else if (response.ApiResultModel.message == "") {
                         new PNotify({
-                            title: 'Success',
+                            title: 'dark',
                             text: "Allergy is saved successfully.",
                             type: 'success',
                             styling: 'bootstrap3'
@@ -326,7 +326,7 @@ function deleteAllergies(allergyID) {
                 if (response.ApiResultModel.message == "")
                 {
                     new PNotify({
-                        title: 'Success',
+                        title: 'dark',
                         text: "Allergy is deleted successfully.",
                         type: 'success',
                         styling: 'bootstrap3'
