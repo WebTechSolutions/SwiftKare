@@ -26,8 +26,12 @@ namespace WebApp.Helper
             if (session["Token"] != null)
             {
                 token = session["Token"] as AccessTokenModel;
-                if (DateTime.Compare(DateTime.Now, token.ExpiresOn.Value) > 0)
-                    token = null;
+                if (token.ExpiresOn != null)
+                {
+                    if (DateTime.Compare(DateTime.Now, token.ExpiresOn.Value) > 0)
+                        token = null;
+                }
+                else token = null; 
             }
             if (token != null) return token.AccessToken;
 
