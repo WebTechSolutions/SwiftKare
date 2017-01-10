@@ -127,7 +127,7 @@ function addupdateCondition(_patientId) {
                         new PNotify({
                             title: 'Success',
                             text: "Condition is saved successfully.",
-                            type: 'success',
+                            type: 'info',addclass: 'dark',
                             styling: 'bootstrap3'
                         });
                         if (_objAdd != null) {
@@ -189,7 +189,7 @@ function deleteHealthConditions(conditionID) {
                     new PNotify({
                         title: 'Success',
                         text: "Condition is deleted successfully.",
-                        type: 'success',
+                        type: 'info',addclass: 'dark',
                         styling: 'bootstrap3'
                     });
                     removeCondition(response.ApiResultModel.ID);

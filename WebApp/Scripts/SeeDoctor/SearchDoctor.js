@@ -193,7 +193,7 @@ function toggle(docid, patid) {
                     new PNotify({
                         title: 'Success',
                         text: "Doctor is made favourite successfully.",
-                        type: 'success',
+                        type: 'info',addclass: 'dark',
                         styling: 'bootstrap3'
                     });
                     reloadContainer(function () {
@@ -239,7 +239,7 @@ function untoggle(docid, patid) {
                     new PNotify({
                         title: 'Success',
                         text: "Doctor is made unfavourite successfully.",
-                        type: 'success',
+                        type: 'info',addclass: 'dark',
                         styling: 'bootstrap3'
                     });
                     reloadContainer(function () {

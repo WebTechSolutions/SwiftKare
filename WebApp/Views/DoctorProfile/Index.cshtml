@@ -618,7 +618,7 @@
 
                     $.post(cUrl, $("#frmProfile").serialize(), function (oResp) {
                         if (oResp == "") {
-                            new PNotify({ title: 'Success', text: "Profile data saved successfully!", type: 'success', styling: 'bootstrap3' });
+                            new PNotify({ title: 'Success', text: "Profile data saved successfully!", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                         }
                         else {
                             new PNotify({ title: 'Error', text: oResp, type: 'error', styling: 'bootstrap3' });
@@ -655,7 +655,7 @@
 
                     $.post(cUrl, function (oResp) {
                         if (oResp == "") {
-                            new PNotify({ title: 'Success', text: "Consulting charges saved successfully!", type: 'success', styling: 'bootstrap3' });
+                            new PNotify({ title: 'Success', text: "Consulting charges saved successfully!", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                         }
                         else {
                             new PNotify({ title: 'Error', text: oResp, type: 'error', styling: 'bootstrap3' });
@@ -718,7 +718,7 @@
                     var cUrl = "@Url.Action("SaveSecretAnswers", "DoctorProfile")";
                     $.post(cUrl, $("#frmSecretAnswer").serialize(), function (oResp) {
                         if (oResp == "") {
-                            new PNotify({ title: 'Success', text: "Answers saved successfully!", type: 'success', styling: 'bootstrap3' });
+                            new PNotify({ title: 'Success', text: "Answers saved successfully!", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                         }
                         else {
                             new PNotify({ title: 'Error', text: oResp, type: 'error', styling: 'bootstrap3' });
@@ -784,7 +784,7 @@
                     var cUrl = "@Url.Action("ChangePassword", "DoctorProfile")?newPassword=" + $("#pwd").val();
                     $.post(cUrl, function (oResp) {
                         if (oResp == "") {
-                            new PNotify({ title: 'Success', text: "Password changed successfully!", type: 'success', styling: 'bootstrap3' });
+                            new PNotify({ title: 'Success', text: "Password changed successfully!", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                         }
                         else {
                             new PNotify({ title: 'Error', text: oResp, type: 'error', styling: 'bootstrap3' });

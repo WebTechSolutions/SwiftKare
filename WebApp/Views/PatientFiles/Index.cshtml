@@ -110,7 +110,7 @@
                         success: function (result) {
                             //Reload container
                             reloadContainer(function () {
-                                new PNotify({ title: 'Success', text: result, type: 'success', styling: 'bootstrap3' });
+                                new PNotify({ title: 'Success', text: result, type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                                 deSelectFile();
                                 //Stop displaying loader
                                 stopLoader();
@@ -145,7 +145,7 @@
                 $.post(cUrl, function (oResp) {
                     if (oResp.message == "") {
                         reloadContainer(function () {
-                            new PNotify({ title: 'Success', text: 'File deleted successfully.', type: 'success', styling: 'bootstrap3' });
+                            new PNotify({ title: 'Success', text: 'File deleted successfully.', type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                             stopLoader();
                         });
                     } else {
