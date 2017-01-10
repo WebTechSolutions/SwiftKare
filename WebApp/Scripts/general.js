@@ -70,3 +70,21 @@ function toggleFullScreen() {
     }
     return false;
 }
+
+function showSuccessMsgBox(msg) {
+    new PNotify({
+        title: 'Success',
+        text: msg,
+        type: 'success',
+        styling: 'bootstrap3'
+    });
+}
+
+function showErrorMsgBox(msg) {
+    new PNotify({
+        title: 'Error',
+        text: msg,
+        type: 'error',
+        styling: 'bootstrap3'
+    });
+}

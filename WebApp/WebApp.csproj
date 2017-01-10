@@ -381,9 +381,11 @@
     <Content Include="Scripts\autosize.min.js" />
     <Content Include="Content\css\bootstrap-material-datetimepicker.css" />
     <Content Include="Scripts\blockUI.js" />
+    <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap-material-datetimepicker\font\Material-Design-Icons.svg" />
     <Content Include="Scripts\bootstrap-material-datetimepicker\index.html" />
     <Content Include="Scripts\bootstrap-material-datetimepicker.js" />
+    <Content Include="Scripts\bootstrap-progressbar.min.js" />
     <Content Include="Scripts\bootstrap-wysiwyg.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -396,6 +398,7 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Scripts\date.js" />
+    <Content Include="Scripts\dropzone.min.js" />
     <Content Include="Scripts\font-awesome\css\font-awesome.css.map" />
     <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.eot" />
     <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.ttf" />
@@ -451,9 +454,12 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jquery.vmap.js" />
     <Content Include="Scripts\jquery.vmap.sampledata.js" />
+    <Content Include="Scripts\jquery.vmap.world.js" />
     <Content Include="Scripts\Medicine\Medicine.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\nprogress.js" />
     <Content Include="Scripts\PatientAllergies\PateintAllergies.js" />
@@ -818,6 +824,8 @@
     </Content>
     <Content Include="Views\DoseSpotDemo\Index.cshtml" />
     <Content Include="Views\DoseSpotDemo\RegisterPatient.cshtml" />
+    <Content Include="Views\SeeDoctor\SearchPharmacyView.cshtml" />
+    <Content Include="Views\SeeDoctor\PartialViewSurgery.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

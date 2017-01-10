@@ -1,0 +1,92 @@
+﻿@using WebApp.Helper
+@model WebApp.DoseSpotService.PharmacySearchMessageResult
+@{
+    Layout = null;
+}
+
+@if (Model != null)
+{
+    if (!string.IsNullOrEmpty(Model.Result.ResultDescription))
+    {
+        <p class="well alert alert-error">
+            @Model.Result.ResultDescription
+        </p>
+    }
+
+    if (Model.Pharmacies != null)
+    {
+        <table id="datatablepharmacy" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
+                <tr class="headings">
+                    <th class="column-title" style="text-align:center">Name </th>
+                    <th class="column-title" style="text-align:center">Address</th>
+                    <th class="column-title" style="text-align:center">City, State, Zip</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model.Pharmacies)
+                    {
+                    <tr class="even pointer">
+                        <td style="text-align:center">@item.StoreName</td>
+                        <td style="text-align:center">@string.Format("{0}, {1}", item.Address1, item.Address2)</td>
+                        <td style="text-align:center">@string.Format("{0},{1},{2}", item.City, item.State, item.ZipCode)</td>
+                        <td style="text-align:center">
+                            <button class="btn btn-default clsBtnSelectStore">Select</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+
+<!-- Datatables -->
+<script>
+    $(document).ready(function() {
+
+        $('#datatablepharmacy').dataTable({
+            'order': [[1, 'desc']] 
+        });
+        $('#datatable-keytable').DataTable({
+            keys: true
+        });
+
+        $('#datatable-responsive').DataTable();
+
+        $('#datatable-scroller').DataTable({
+            ajax: "js/datatables/json/scroller-demo.json",
+            deferRender: true,
+            scrollY: 380,
+            scrollCollapse: true,
+            scroller: true
+        });
+
+        $('#datatable-fixed-header').DataTable({
+            fixedHeader: true
+        });
+
+        $(document).on('click', ".clsBtnSelectStore", function () {
+
+            var curElem = $(this);
+            console.log(curElem);
+
+            var curTr = curElem.closest("tr");
+
+            var storeName = curTr.find("td:nth-child(1)").text();
+            var storeAddress = curTr.find("td:nth-child(2)").text();
+            var storeAddresCityStateZip = curTr.find("td:nth-child(3)").text();
+
+            $("#h2SelPharmacyName").html(storeName);
+            $("#pSelPharmacyAddress").html(storeAddress);
+            $("#pSelPharmacyCityStateZip").html(storeAddresCityStateZip);
+
+            $("#divPharmacyResultContainer").show();
+            $('#mdlPharmacy').modal('hide');
+        });
+
+    });
+</script>
+<!-- /Datatables -->

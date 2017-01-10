@@ -93,7 +93,9 @@ namespace WebApp.Controllers
             var cPatientId = GetPatientIdFromUrl(cUrl);
             //Get Patient Id - Ends
 
-            string finalUrl = "http://my.staging.dosespot.com/secure/PatientDetail.aspx?PatientID=" + cPatientId;
+            string finalUrl = cUrl + "&PatientID=" + cPatientId;
+
+            //string finalUrl = "http://my.staging.dosespot.com/secure/PatientDetail.aspx?PatientID=" + cPatientId;
             return View("RegisterPatient", model: finalUrl);
         }
 

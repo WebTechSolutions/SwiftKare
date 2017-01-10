@@ -22,7 +22,7 @@ namespace WebApp.Models
 
         private ApplicationGlobalVariables()
         {
-            ApiBaseUrl= !string.IsNullOrEmpty(WebConfigurationManager.AppSettings.Get(ConfigApiBaseUrl)) ? WebConfigurationManager.AppSettings[ConfigApiBaseUrl] : "http://localhost:13040/";
+            ApiBaseUrl = !string.IsNullOrEmpty(WebConfigurationManager.AppSettings.Get(ConfigApiBaseUrl)) ? WebConfigurationManager.AppSettings[ConfigApiBaseUrl] : "http://localhost:13040/";
             ClientId = !string.IsNullOrEmpty(WebConfigurationManager.AppSettings.Get(ConfigClientId)) ? WebConfigurationManager.AppSettings[ConfigClientId] :  "abc";
             Secret = !string.IsNullOrEmpty(WebConfigurationManager.AppSettings.Get(ConfigSecret)) ? WebConfigurationManager.AppSettings[ConfigSecret] : "ddddddddd";
         }

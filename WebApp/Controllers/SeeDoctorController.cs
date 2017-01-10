@@ -15,13 +15,14 @@ using System.IO;
 using System.Configuration;
 using WebApp.Helper;
 using System.Globalization;
+using WebApp.DoseSpotService;
 
 namespace WebApp.Controllers
 {
     [Authorize(Roles = "Patient")]
     public class SeeDoctorController : Controller
     {
-       // GET: SeeDoctor
+        // GET: SeeDoctor
         public ActionResult SeeDoctor()
         {
             if (SessionHandler.IsExpired)
@@ -65,21 +66,21 @@ namespace WebApp.Controllers
         {
             try
             {
-                SurgeriesRepository oSurgeriesRepository=new SurgeriesRepository();
+                SurgeriesRepository oSurgeriesRepository = new SurgeriesRepository();
                 var oAllSurgeries = oSurgeriesRepository.GetSurgeries();
                 var oAllPAllSurgeries = oSurgeriesRepository.LoadPatientSurgeries(SessionHandler.UserInfo.Id);
-               
+
                 List<PSurgeries> oSurgeires = new List<PSurgeries> { };
                 foreach (var item in oAllPAllSurgeries)
                 {
-                    oSurgeires.Add(new PSurgeries {surgeryID=item.surgeryID, patientID = item.patientID,bodyPart=item.bodyPart});
+                    oSurgeires.Add(new PSurgeries { surgeryID = item.surgeryID, patientID = item.patientID, bodyPart = item.bodyPart });
                 }
                 foreach (var item in oAllSurgeries)
                 {
                     var flag = oSurgeires.Where(os => os.bodyPart == item.surgeryName).FirstOrDefault();
                     if (flag == null)
                     {
-                        oSurgeires.Add(new PSurgeries { surgeryID =0,patientID = 0, bodyPart = item.surgeryName});
+                        oSurgeires.Add(new PSurgeries { surgeryID = 0, patientID = 0, bodyPart = item.surgeryName });
                     }
 
                 }
@@ -93,7 +94,7 @@ namespace WebApp.Controllers
                 ViewBag.Success = "";
                 return PartialView("PartialViewSurgery");
             }
-           
+
         }
 
         [HttpPost]
@@ -111,12 +112,12 @@ namespace WebApp.Controllers
             {
                 return Json(new { Message = ex.Message });
             }
-            
+
         }
 
         //Specialities
         [HttpPost]
-        
+
         public JsonResult GetAllSpecialities()
         {
             try
@@ -143,7 +144,7 @@ namespace WebApp.Controllers
                 if (model.name == "") { model.name = null; }
                 if (model.language == "ALL") { model.language = null; }
                 if (model.speciality == "ALL") { model.speciality = null; }
-                if (model.appTime.ToString() == "") { model.appTime = null ; }
+                if (model.appTime.ToString() == "") { model.appTime = null; }
                 model.patientID = SessionHandler.UserInfo.Id;
                 List<DoctorDataset> doctorList = objSeeDoctorRepo.SeeDoctor(model);
                 return Json(new { Success = true, DoctorModel = doctorList });
@@ -197,7 +198,7 @@ namespace WebApp.Controllers
             }
 
         }
-       
+
         private List<string> displayTimeSlots(IEnumerable<FetchDoctorTimingModel> appList)
         {
             List<string> timeSlots = new List<string> { };
@@ -208,7 +209,7 @@ namespace WebApp.Controllers
                 TimeSpan startTime = (TimeSpan)item.from;
                 if (startTime.Minutes % 15 != 0)
                 {
-                    TimeSpan tempp = TimeSpan.FromMinutes(15- (startTime.Minutes % 15));
+                    TimeSpan tempp = TimeSpan.FromMinutes(15 - (startTime.Minutes % 15));
                     startTime = startTime.Add(tempp);
                     if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
                     {
@@ -218,7 +219,7 @@ namespace WebApp.Controllers
 
                     }
                 }
-               
+
                 TimeSpan itemstartTime = (TimeSpan)item.from;
                 TimeSpan endTime = (TimeSpan)item.to;
                 if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
@@ -260,7 +261,7 @@ namespace WebApp.Controllers
                         }
                         flag = false;
                     }
-                    if(startTime.Hours == endTime.Hours)
+                    if (startTime.Hours == endTime.Hours)
                     {
                         //if (endTime.Minutes % 15 == 0)
                         //{
@@ -284,7 +285,7 @@ namespace WebApp.Controllers
                             flag = false;
                         }
                     }
-                    
+
                     //if ((timeSlots.Contains(itemstartTime.ToString(@"hh\:mm"))) && (timeSlots.Contains(endTime.ToString(@"hh\:mm"))))
                     //{
                     //    flag = false;
@@ -296,7 +297,7 @@ namespace WebApp.Controllers
 
             foreach (var app in appList)
             {
-                if(app.appTime.HasValue)
+                if (app.appTime.HasValue)
                 {
                     TimeSpan apptime = TimeSpan.Parse(app.appTime.Value.ToString());
                     if (timeSlots.Contains(apptime.ToString(@"hh\:mm")))
@@ -304,10 +305,10 @@ namespace WebApp.Controllers
                         timeSlots.Remove(apptime.ToString(@"hh\:mm"));
                     }
                 }
-               
-               
+
+
             }
-           for(var i=0;i<timeSlots.Count;i++)
+            for (var i = 0; i < timeSlots.Count; i++)
             {
                 TimeSpan doctimings = TimeSpan.Parse(timeSlots[i]);
                 var dateTime = new DateTime(doctimings.Ticks); // Date part is 01-01-0001
@@ -393,12 +394,12 @@ namespace WebApp.Controllers
         {
             try
             {
-                
+
                 SeeDoctorRepository objRepo = new SeeDoctorRepository();
-               
-                    ApiResultModel apiresult = new ApiResultModel();
-                    apiresult = objRepo.AddFavourite(model);
-                    return Json(new { Success = true, ApiResultModel = apiresult });
+
+                ApiResultModel apiresult = new ApiResultModel();
+                apiresult = objRepo.AddFavourite(model);
+                return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
             catch (Exception ex)
@@ -440,7 +441,7 @@ namespace WebApp.Controllers
             catch (Exception ex)
             {
                 return Json(new { Message = ex.Message });
-               
+
             }
         }
 
@@ -459,14 +460,14 @@ namespace WebApp.Controllers
                 if (conditionID == 0)
                 {
                     ApiResultModel apiresult = new ApiResultModel();
-                    apiresult=objRepo.AddCondition(condition);
+                    apiresult = objRepo.AddCondition(condition);
                     return Json(new { Success = true, ApiResultModel = apiresult });
 
                 }
                 else
                 {
                     ApiResultModel apiresult = objRepo.EditCondition(conditionID, condition);
-                    return Json(new { Success = true, ApiResultModel =apiresult });
+                    return Json(new { Success = true, ApiResultModel = apiresult });
                 }
 
 
@@ -485,7 +486,7 @@ namespace WebApp.Controllers
                 ConditionRepository objRepo = new ConditionRepository();
                 ApiResultModel apiresult = new ApiResultModel();
                 apiresult = objRepo.DeleteCondition(conditionID);
-                return Json(new { Success = true, ApiResultModel= apiresult });
+                return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
             catch (Exception ex)
@@ -565,7 +566,7 @@ namespace WebApp.Controllers
             }
         }
         [HttpPost]
-        public JsonResult AddUpdateMedications(long mid,PatientMedication_Custom medication)
+        public JsonResult AddUpdateMedications(long mid, PatientMedication_Custom medication)
         {
             try
             {
@@ -581,15 +582,15 @@ namespace WebApp.Controllers
                     ApiResultModel apiresult = new ApiResultModel();
                     medication.patientId = SessionHandler.UserInfo.Id;
                     apiresult = objRepo.AddMedication(medication);
-                    return Json(new { Success = true, ApiResultModel =apiresult });
+                    return Json(new { Success = true, ApiResultModel = apiresult });
 
                 }
                 else
                 {
                     ApiResultModel apiresult = new ApiResultModel();
                     medication.patientId = SessionHandler.UserInfo.Id;
-                    apiresult = objRepo.EditMedication(mid,medication);
-                    return Json(new { Success = true, ApiResultModel= apiresult });
+                    apiresult = objRepo.EditMedication(mid, medication);
+                    return Json(new { Success = true, ApiResultModel = apiresult });
                 }
 
 
@@ -608,7 +609,7 @@ namespace WebApp.Controllers
                 MedicationRepository objRepo = new MedicationRepository();
                 ApiResultModel apiresult = new ApiResultModel();
                 apiresult = objRepo.DeleteMedication(medicationID);
-                return Json(new { Success = true, ApiResultModel= apiresult });
+                return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
             catch (Exception ex)
@@ -625,8 +626,8 @@ namespace WebApp.Controllers
         {
             try
             {
-               AllergiesRepository objRepo = new AllergiesRepository();
-               var allergies = objRepo.GetAllergies(prefix);
+                AllergiesRepository objRepo = new AllergiesRepository();
+                var allergies = objRepo.GetAllergies(prefix);
 
                 return Json(allergies, JsonRequestBehavior.AllowGet);
 
@@ -679,7 +680,7 @@ namespace WebApp.Controllers
         {
             try
             {
-               
+
                 var objRepo = new AllergiesRepository();
                 List<GetPatientAllergies> pallergies = objRepo.LoadPatientAllergies(patientid);
                 return Json(new { Success = true, Allergies = pallergies });
@@ -690,7 +691,7 @@ namespace WebApp.Controllers
             }
         }
         [HttpPost]
-        public JsonResult AddUpdateAllergies(long allergiesID,PatientAllergies_Custom allergy)
+        public JsonResult AddUpdateAllergies(long allergiesID, PatientAllergies_Custom allergy)
         {
             try
             {
@@ -698,22 +699,22 @@ namespace WebApp.Controllers
                 {
                     ApiResultModel apiresult = new ApiResultModel();
                     apiresult.message = "Invalid allergy name.Only letters and numbers are allowed.";
-                   
+
                     return Json(new { Success = true, ApiResultModel = apiresult });
                 }
                 AllergiesRepository objRepo = new AllergiesRepository();
                 if (allergiesID == 0)
                 {
-                    allergy.patientID= SessionHandler.UserInfo.Id;
+                    allergy.patientID = SessionHandler.UserInfo.Id;
                     ApiResultModel apiresult = objRepo.AddPatientAllergy(allergy);
-                    return Json(new { Success = true, ApiResultModel= apiresult });
+                    return Json(new { Success = true, ApiResultModel = apiresult });
 
                 }
                 else
                 {
                     allergy.patientID = SessionHandler.UserInfo.Id;
-                    ApiResultModel apiresult = objRepo.EditPatientAllergy(allergiesID,allergy);
-                    return Json(new { Success = true, ApiResultModel =apiresult });
+                    ApiResultModel apiresult = objRepo.EditPatientAllergy(allergiesID, allergy);
+                    return Json(new { Success = true, ApiResultModel = apiresult });
                 }
 
 
@@ -731,7 +732,7 @@ namespace WebApp.Controllers
             {
                 AllergiesRepository objRepo = new AllergiesRepository();
                 ApiResultModel apiresult = objRepo.DeletePatientAllergy(allergyID);
-                return Json(new { Success = true, ApiResultModel= apiresult });
+                return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
             catch (Exception ex)
@@ -749,7 +750,7 @@ namespace WebApp.Controllers
             try
             {
                 SurgeriesRepository objRepo = new SurgeriesRepository();
-               var surgeries= objRepo.GetSurgeries();
+                var surgeries = objRepo.GetSurgeries();
 
                 return Json(surgeries, JsonRequestBehavior.AllowGet);
 
@@ -809,13 +810,13 @@ namespace WebApp.Controllers
                 if (surgeryID == 0)
                 {
                     ApiResultModel apiresult = objRepo.AddPatientSurgery(surgery);
-                    return Json(new { Success = true, ApiResultModel =apiresult });
+                    return Json(new { Success = true, ApiResultModel = apiresult });
 
                 }
                 else
                 {
                     ApiResultModel apiresult = objRepo.EditPatientSurgery(surgeryID, surgery);
-                    return Json(new { Success = true, ApiResultModel =apiresult });
+                    return Json(new { Success = true, ApiResultModel = apiresult });
                 }
 
 
@@ -835,7 +836,7 @@ namespace WebApp.Controllers
             {
                 if (pharmacy.pharmacy == null || pharmacy.pharmacy == "" || !Regex.IsMatch(pharmacy.pharmacy, "^[0-9a-zA-Z ]+$"))
                 {
-                    
+
                     apiresult.message = "Invalid pharmacy name.Only letters and numbers are allowed.";
                     return Json(new { Success = true, ApiResultModel = apiresult });
                 }
@@ -862,7 +863,7 @@ namespace WebApp.Controllers
             {
                 SurgeriesRepository objRepo = new SurgeriesRepository();
                 ApiResultModel apiresult = objRepo.DeletePatientSurgery(surgeryID);
-                return Json(new { Success = true, ApiResultModel= apiresult });
+                return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
             catch (Exception ex)
@@ -917,6 +918,36 @@ namespace WebApp.Controllers
         }
 
         #endregion
-        
+
+
+        #region Pharmacy Search
+
+        [HttpPost]
+        public PartialViewResult SearchPharmacy(DoseSpotPharmacySearch oModel)
+        {
+            APISoapClient api = new DoseSpotService.APISoapClient("APISoap12");
+            SingleSignOn sso = new DoseSpotService.SingleSignOn();
+            sso.SingleSignOnClinicId = 664;
+            sso.SingleSignOnUserId = 2844;
+            sso.SingleSignOnCode = "2yQvBvwcqztNZLglP4aRy6GRQD8zBDJnusuHnyfhEYwIJHaNdGrjwnEQRwOwNwtYh2S1OagWxg5cTIEHsyiarRJe+xlXNl1LJ9YSVtnt4PzkbRNGOE/ouA";
+            sso.SingleSignOnUserIdVerify = "4nOh+4l5FsZrUg/S4x4vs/mx5WLywbUghL07S5NZ30iWoepkaWC5C622DR5FswWOJQmP5jorLsJRLd2888UTuw";
+
+            PharmacySearchMessage oSrch = new PharmacySearchMessage
+            {
+                PharmacyNameSearch = oModel.Name,
+                PharmacyCity = oModel.City,
+                PharmacyStateTwoLetters = oModel.State,
+                PharmacyZipCode = oModel.Zip,
+                SingleSignOn = sso
+            };
+
+            PharmacySearchMessageResult oRes = api.PharmacySearch(oSrch);
+
+            return PartialView("SearchPharmacyView", oRes);
+        }
+
+
+        #endregion
+
     }
 }

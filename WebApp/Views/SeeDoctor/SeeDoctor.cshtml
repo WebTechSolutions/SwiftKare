@@ -33,7 +33,7 @@
 <script src="@Url.Content("~/Scripts/icheck.min.js")"></script>
 
 @*<script src="~/Scripts/jquery.blockUI.js"></script>*@
- 
+
 <script src="@Url.Content("~/Scripts/StripePay.js")"></script>
 <!--Added for autocomplete-->
 
@@ -159,7 +159,7 @@
                                         }
 
                                     </div>
-                                   
+
 
                                 </div>
                             </div>
@@ -264,7 +264,7 @@
                                 </div>
                             </div>
                         </div>@*step1*@
-                        
+
 
                         <div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8">
                             <div class="modal-dialog" role="document">
@@ -516,7 +516,7 @@
                                                     <td width="50%">
                                                         <div class="form-group">
                                                             <div style="color:red; display:none;float:right" id="divmedicine">Medicine is required.</div>
-                                                            <input maxlength="50" style="display:block" type="text" name="country" placeholder="Search Medicine" id="myMedicine" class="form-control"/>
+                                                            <input maxlength="50" style="display:block" type="text" name="country" placeholder="Search Medicine" id="myMedicine" class="form-control" />
                                                         </div>
                                                     </td>
                                                     <td width="25%">
@@ -662,35 +662,56 @@
                         </div>
 
                         <div id="step-4">
-                            <div class="row" style="margin-bottom: 70px;">
-                                <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <div class="col-sm-12">
                                     <div class="x_panel">
                                         <div class="x_title">
-                                            <div class="input-group res-w-input" style="width: 94%; float: left;">
-                                                <input type="text" name="country" placeholder="Search Pharmacy" id="pharmacy" class="form-control" />
-                                                <input type="number" id="pharmacyid" style="display:none" />
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label for="Name">Pharmacy Name (atleast three chars):</label>
+                                                        @Html.TextBox("txtPharmacySrchName", "", new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label for="City">City:</label>
+                                                        @Html.TextBox("txtPharmacySrchCity", "", new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label for="State">State:</label>
+                                                        @Html.TextBox("txtPharmacySrchState", "", new { @class = "form-control" })
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <ul class="nav navbar-right panel_toolbox">
-                                                <li>
-                                                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                                </li>
-                                            </ul>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                        <div class="x_content">
-                                            <h2 class="m-t-0">Current Pharmacy</h2>
-                                            <h2>Wal-Mart Pharmacy 5866</h2>
-                                            <p>8555 PRESTON RD</p>
-                                            <p>FRISCO TX,75034</p>
-                                            <p><strong>Ph:</strong> (469)237-3768</p>
-                                            <p><strong>Fax:</strong>  2144364723</p>
-                                            <p><strong>Pharmacy Hours:</strong> Open 24 hours</p>
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label for="Zip">Zip:</label>
+                                                        @Html.TextBox("txtPharmacySrchZip", "", new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    <button style="margin-top:23px" id="btnPharmacySrch" type="button" class="btn btn-primary">Search Pharmacy</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
+                            </div>
+                            <div id="divPharmacyResultContainer" class="row" style="margin-bottom: 70px; display:none;">
                                 <div class="col-md-6">
-                                    <!-- <div id="map" style="height: 330px; width: 100%;"></div>
+                                    <div class="x_content">
+                                        <h2 class="m-t-0">Current Pharmacy</h2>
+                                        <h2 id="h2SelPharmacyName">Wal-Mart Pharmacy 5866</h2>
+                                        <p id="pSelPharmacyAddress">8555 PRESTON RD</p>
+                                        <p id="pSelPharmacyCityStateZip">FRISCO TX,75034</p>
+                                    </div>
+                                </div>
+                                @*<div class="col-md-6">
+                                     <div id="map" style="height: 330px; width: 100%;"></div>
                                     <script>
                                       function initMap() {
                                         var uluru = {lat: 40.723523, lng: -73.9960463};
@@ -704,10 +725,12 @@
                                         });
                                       }
                                     </script>
-                                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&callback=initMap" async defer></script>     -->
+                                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&callback=initMap" async defer></script>     
                                     <img class="gray-bdr-1 img-responsive" src="../Content/images/us_map.jpg" style="height: 330px;" />
-                                </div>
+                                </div>*@
                             </div>
+
+
                         </div>
 
                         <div id="step-5" style="margin-bottom: 70px;">
@@ -756,15 +779,39 @@
                             <button class="btn btn-primary" id="btnProceedWithPayment" type="button">Proceed with payment</button>
 
                         </div>
-                    </div>
-                </div>
-                <!-- End SmartWizard Content -->
 
+                    </div>
+
+                </div>
             </div>
+            <!-- End SmartWizard Content -->
+
         </div>
     </div>
-    <br><br><br>
-</div> @*end class="right_col"*@
+</div>
+<br><br><br>
+
+<div id="mdlPharmacy" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Pharmacy Search Results</h4>
+            </div>
+            <div id="divPharmacySearchBody" class="modal-body" style="width:100%;">
+                <p style="font-size:12px;">Please enter the email address</p>
+                <div style="width:250px;height:100px;float:left;margin-right:50px;">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Email">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+
 
 
 
@@ -773,7 +820,7 @@
 
         $("#mycareteam").load('@Url.Action("MyCareTeam", "SeeDoctor")', function () {
             callback();
-           
+
         });
 
     }
@@ -788,7 +835,7 @@
         GetAllLanguages();
         GetAllSpecialities();
         GetROV(@ViewBag.PatienID);
-        
+
 
         //initialize autocomplete with custom appendTo
         //$('#pharmacy').autocomplete({
@@ -811,7 +858,7 @@
                 $.post(cUrlReadyForCall, function (oResp) {
                     if (oResp) {
                         localStorage.setItem('consultationKey', oResp);
-                        
+
                         //Redirect doctor to call
                         window.location = '@Url.Action("Index","UserChat")';
                     }
@@ -837,28 +884,8 @@
 
 
     }
-    $(function () {
-        var pharmacy = { 1: "pharmacy 1", 2: "pharmacy 2", 3: "pharmacy 3" };
-
-        var pharmacyArray = $.map(pharmacy, function (value, key) {
-            return {
-                value: value,
-                data: key
-            };
-        });
-        $("#pharmacy").autocomplete({
-            lookup: pharmacyArray,
-            select: function (s, e) {
-                alert(e.item.value);
-                //savePharmacy(e.item.value);
-                //$(this).val(b.item.value);
-                //$("#pharmacyid").val(a.item.value);
 
 
-            }
-        });
-    });
-   
     $('#searchdate').bootstrapMaterialDatePicker
             ({
                 time: false,
@@ -894,9 +921,9 @@
     //$('#time').bootstrapMaterialDatePicker('setTime', moment());// update check in sp for null time
     $("#myModal1").on('show.bs.modal', function (e) {
         var $modal = $(this);
-        
+
         mydocid = e.relatedTarget.id;
-       
+
         $("#doctorid").val(mydocid);
         //alert($('#' + mydocid).data('todo').id+' '+$('#' + mydocid).data('todo').doctorName);
         var todoId = $('#' + mydocid).data('todo').id;
@@ -973,11 +1000,11 @@
 @*For Medicine*@
 <script>
     //jQuery('#myMedicine').on('input', function() {
-        //alert($("#myMedicine").val());
-        //GetMedicines($("#myMedicine").val());
+    //alert($("#myMedicine").val());
+    //GetMedicines($("#myMedicine").val());
     //});
     $(document).ready(function () {
-       
+
         //GetMedicines($("#myMedicine").val());
         GetMedications(@ViewBag.PatienID);
         GetFrequency();
@@ -991,7 +1018,7 @@
             ]
         });
 
-        
+
     });
     $('#addmedicine').on('click', function () {
         if ($("#myMedicine").val() == "") {
@@ -1040,7 +1067,7 @@
 <script>
     $(document).ready(function () {
         //GetAllergies();
-        
+
         GetSensitivities();
         GetReactions();
         GetPatientAllergies(@ViewBag.PatienID);
@@ -1249,6 +1276,33 @@
 <script>
     $(document).ready(function () {
 
+        $("#btnPharmacySrch").click(function(){
+
+            //Perform Validation - Starts
+            if($("#txtPharmacySrchName").val() == "" && $("#txtPharmacySrchCity").val() == "" && $("#txtPharmacySrchState").val() == "" && $("#txtPharmacySrchZip").val() == ""){
+                showErrorMsgBox('Please select atleast one search criteria.');
+                return;
+            }
+            else if($("#txtPharmacySrchName").val() != "" && $("#txtPharmacySrchName").val().length <3){
+                showErrorMsgBox('Pharmacy search must be atleast three characters.');
+                return;
+            }
+            //Perform Validation - Ends
+
+            //Build Params, Call Search and get results
+            var oModel = {
+                Name:$("#txtPharmacySrchName").val(),
+                City:$("#txtPharmacySrchCity").val(),
+                State:$("#txtPharmacySrchState").val(),
+                Zip:$("#txtPharmacySrchZip").val()
+            };
+
+            var cUrl = '@Url.Action("SearchPharmacy","SeeDoctor")';
+            $.post(cUrl, oModel, function(oResult){
+                $("#divPharmacySearchBody").html(oResult);
+                $('#mdlPharmacy').modal('show');
+            });
+        });
 
         $('#single_cal1').daterangepicker({
             singleDatePicker: true,
@@ -1258,254 +1312,200 @@
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal2').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_2"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal3').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_3"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal4').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_4"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal5').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_5"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal6').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_6"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal7').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_7"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal8').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_8"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal9').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_9"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal10').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_10"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal11').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_11"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal12').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_12"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal13,#single_cal14,#single_cal15,#single_cal16,#single_cal17,#single_cal18,#single_cal19,#single_cal20,#single_cal21,#single_cal22,#single_cal23,#single_cal24,#single_cal25,#single_cal26,#single_cal27,#single_cal28,#single_cal29,#single_cal30,#single_cal31,#single_cal32,#single_cal33,#single_cal34,#single_cal35,#single_cal36').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_13,picker_14,picker_15,picker_16,picker_17,picker_18,picker_19,picker_20,picker_21,picker_22,picker_23,picker_24,picker_25,picker_26,picker_27,picker_28,picker_29,picker_30,picker_31,picker_32,picker_33,picker_34,picker_35,picker_36"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
-    });
-</script>
 
-<script>
+    });
     $('#toggle1').on(function () {
 
         $('#toggle_1').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_1').on(function () {
 
         $('#toggle_1').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle2').click(function () {
         $('#toggle_2').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_2').click(function () {
         $('#toggle_2').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle3').click(function () {
         $('#toggle_3').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_3').click(function () {
         $('#toggle_3').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle4').click(function () {
         $('#toggle_4').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_4').click(function () {
         $('#toggle_4').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle5').click(function () {
         $('#toggle_5').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_5').click(function () {
         $('#toggle_5').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle6').click(function () {
         $('#toggle_6').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_6').click(function () {
         $('#toggle_6').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle7').click(function () {
         $('#toggle_7').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_7').click(function () {
         $('#toggle_7').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle8').click(function () {
         $('#toggle_8').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_8').click(function () {
         $('#toggle_8').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle9').click(function () {
         $('#toggle_9').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_9').click(function () {
         $('#toggle_9').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle10').click(function () {
         $('#toggle_10').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_10').click(function () {
         $('#toggle_10').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle11').click(function () {
         $('#toggle_11').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_11').click(function () {
         $('#toggle_11').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle12').click(function () {
         $('#toggle_12').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_12').click(function () {
         $('#toggle_12').hide();
         return false;
     });
-</script>
 
-
-<script>
-    function showdiv() {
-        document.getElementById("mainpanel").style.display = "block";
-        //$("#maindiv").appendTo("#mainpanel");
-    }
-</script>
-
-
-
-<script>
     $('#next').click(function () {
         alert('next');
         $('#step-2').show();
     });
+
+    function showdiv() {
+        document.getElementById("mainpanel").style.display = "block";
+        //$("#maindiv").appendTo("#mainpanel");
+    }
 </script>
 
 
