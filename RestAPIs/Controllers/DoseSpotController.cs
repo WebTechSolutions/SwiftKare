@@ -60,13 +60,7 @@ namespace RestAPIs.Controllers
                 int? DoseSpotPatientId = null;
                 if (oPatientInfo != null)
                 {
-                    if (!string.IsNullOrEmpty(oPatientInfo.DoseSpotPatientId))
-                    {
-                        DoseSpotPatientId = Convert.ToInt32(oPatientInfo.DoseSpotPatientId);
-                    }
-
-                    //Register Patient
-                    string cFinalUrl = DoseSpotHelper.RegisterPatientToDoseSpot(new DoseSpotPatientEntry
+                    var oDoseSpotPatientEntry = new DoseSpotPatientEntry
                     {
                         PatientId = DoseSpotPatientId,
                         FirstName = oPatientInfo.firstName,
@@ -80,8 +74,30 @@ namespace RestAPIs.Controllers
                         Gender = oPatientInfo.gender,
                         Phone = oPatientInfo.cellPhone,
                         DateOfBirth = oPatientInfo.dob.Value
-                    });
+                    };
 
+                    if (string.IsNullOrEmpty(oPatientInfo.DoseSpotPatientId))
+                    {
+                        var oRet = DoseSpotHelper.RegisterPatientWithDoseSpot(oDoseSpotPatientEntry);
+
+                        int DoseSpotPatId;
+                        int.TryParse(oRet, out DoseSpotPatId);
+
+                        if (DoseSpotPatId != 0) {
+                            oPatientInfo.DoseSpotPatientId = oRet;
+
+                            db.Entry(oPatientInfo).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+
+                        oDoseSpotPatientEntry.PatientId = DoseSpotPatId;
+                    }
+                    else{
+                        oDoseSpotPatientEntry.PatientId = Convert.ToInt32(oPatientInfo.DoseSpotPatientId);
+                    }
+
+                    //Register Patient
+                    string cFinalUrl = DoseSpotHelper.GetEPrescriptionUrl(oDoseSpotPatientEntry);
                     return Request.CreateResponse(HttpStatusCode.OK, cFinalUrl);
                 }
 

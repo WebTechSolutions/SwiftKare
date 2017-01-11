@@ -1,4 +1,5 @@
-﻿using DataAccess.CustomModels;
+﻿using DataAccess;
+using DataAccess.CustomModels;
 using DoseSpot.EncryptionLibrary;
 using RestAPIs.DoseSpotApi;
 using System;
@@ -8,7 +9,9 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web;
+using System.Windows.Forms;
 
 namespace RestAPIs.Helper
 {
@@ -41,7 +44,7 @@ namespace RestAPIs.Helper
         }
 
 
-        public static string RegisterPatientToDoseSpot(DoseSpotPatientEntry oModel)
+        public static string GetEPrescriptionUrl(DoseSpotPatientEntry oModel)
         {
             DoseSpotPatient oDoseSpotPatient = new DoseSpotPatient
             {
@@ -77,8 +80,49 @@ namespace RestAPIs.Helper
 
             string cPostData = SingleSignOnUtils.GetSingleSignOnQueryStringForPatient(ClinicKey, SingleSignOnClinicId, SingleSignOnUserId, oDoseSpotPatient);
             string cPrefix = SingleSignOnUtils.GetSingleSignOnPageLocation("my.staging.dosespot.com", true);
+            string cRetUrl = cPrefix + cPostData;
 
-            return cPrefix + cPostData;
+            return cRetUrl;
+        }
+
+        public static string RegisterPatientWithDoseSpot(DoseSpotPatientEntry oModel)
+        {
+            DoseSpotPatient oDoseSpotPatient = new DoseSpotPatient
+            {
+                FirstName = oModel.FirstName,
+                MiddleName = "",
+                LastName = oModel.LastName,
+                DateOfBirth = oModel.DateOfBirth,
+                Prefix = "",
+                Suffix = "",
+
+                Gender = oModel.Gender,
+                Address1 = oModel.Address1,
+                Address2 = oModel.Address2,
+                City = oModel.City,
+                State = oModel.State,
+                ZipCode = oModel.ZipCode,
+
+                PrimaryPhone = oModel.Phone,
+                PrimaryPhoneType = "Home",
+                PhoneAdditional1 = "",
+                PhoneAdditionalType1 = "",
+                PhoneAdditional2 = "",
+                PhoneAdditionalType2 = ""
+            };
+
+            //Default Criterias - Starts
+            int SingleSignOnUserId = 2844;
+            int SingleSignOnClinicId = 664;
+            string ClinicKey = "qeF5FJef6T6FNTanQS9HuvvuNdkTvvZT";
+
+            //Default Criterias - Ends
+
+            string cPostData = SingleSignOnUtils.GetSingleSignOnQueryStringForPatient(ClinicKey, SingleSignOnClinicId, SingleSignOnUserId, oDoseSpotPatient);
+            string cPrefix = SingleSignOnUtils.GetSingleSignOnPageLocation("my.staging.dosespot.com", true);
+            string cRetUrl = cPrefix + cPostData;
+
+            return GetPatientIdFromUrl(cRetUrl);
         }
 
 
@@ -98,7 +142,7 @@ namespace RestAPIs.Helper
                 if (!string.IsNullOrEmpty(data))
                 {
                     //%3fpatientid%3d342502
-                    var startIndex = data.IndexOf("%3fpatientid%3d") + 15;
+                    var startIndex = data.IndexOf("%2fsecure%2fPatientDetail.aspx%3fPatientID%3d") + "%2fsecure%2fPatientDetail.aspx%3fPatientID%3d".Length;
                     var subString = data.Substring(startIndex);
 
                     var length = subString.IndexOf("\"");
@@ -111,6 +155,7 @@ namespace RestAPIs.Helper
 
             return "";
         }
+
 
 
         private static KeyValuePair<string, string> CreateSingleSignOnCodeAndUserIdVerify()
