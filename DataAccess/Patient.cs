@@ -66,6 +66,7 @@ namespace DataAccess
         public Nullable<double> lon { get; set; }
         public string iOSToken { get; set; }
         public string AndroidToken { get; set; }
+        public string DoseSpotPatientId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }

@@ -69,6 +69,14 @@ namespace WebApp.Controllers
             return PartialView("PartialViewDoctorConsultationDetail");
 
         }
+
+
+        public string GetDoseSpotUrl(long patientId) {
+            var cRetUrl = new DoseSpotRepository().GetPatientDoseSpotUrl(patientId);
+            return cRetUrl;
+        }
+
+
     }
 
 }

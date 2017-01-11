@@ -306,6 +306,9 @@
     <Compile Include="SP_GetConsultationDetails_Result.cs">
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="SP_GetDcotorConsultations1_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="SP_GetDcotorConsultations_Result.cs">
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>

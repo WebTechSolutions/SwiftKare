@@ -79,6 +79,8 @@ else
                                     class="btn btn-primary btn-sm m-b-0 " type="button" onclick=showConsult(@item.consultID);>
                                 View Detail
                             </button>
+
+                            <button data-id="@item.patientID" class="btn btn-default clsBtnEPriscription">ePrescription</button>
                         </td>
                     </tr>
                     j = j + 1;
@@ -91,56 +93,91 @@ else
     </table>
 
 }
+
+
+<div id="mdlIframe" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <iframe id="iframeUrl" style="width:100%; height:800px;"></iframe>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <!-- Datatables -->
 <script>
-      $(document).ready(function() {
-        var handleDataTableButtons = function() {
-          if ($("#datatable-buttons").length) {
-            $("#datatable-buttons").DataTable({
-              dom: "Bfrtip",
-              buttons: [
-                {
-                  extend: "copy",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "csv",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "excel",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "pdfHtml5",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "print",
-                  className: "btn-sm"
-                },
-              ],
-              responsive: true
+    $(document).ready(function () {
+
+        $(document).on('click', '.clsBtnEPriscription', function () {
+            var curElem = $(this);
+            var patId = curElem.attr("data-id");
+
+            var cUrl = "@Url.Action("GetDoseSpotUrl", "DoctorConsultation")?patientId=" + patId;
+            $.get(cUrl, function (resp) {
+                $("#iframeUrl").attr('src', resp);
+                $("#mdlIframe").modal('show');
             });
-          }
-        };
-
-        TableManageButtons = function() {
-          "use strict";
-          return {
-            init: function() {
-              handleDataTableButtons();
-            }
-          };
-        }();
-
-        
-
-        $('#datatable-keytable').DataTable({
-          keys: true
         });
 
-       
+
+        $("#iframeUrl").load(function () {
+            alert($("#iframeUrl").attr('src'));
+        });
+
+        var handleDataTableButtons = function () {
+            if ($("#datatable-buttons").length) {
+                $("#datatable-buttons").DataTable({
+                    dom: "Bfrtip",
+                    buttons: [
+                      {
+                          extend: "copy",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "csv",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "excel",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "pdfHtml5",
+                          className: "btn-sm"
+                      },
+                      {
+                          extend: "print",
+                          className: "btn-sm"
+                      },
+                    ],
+                    responsive: true
+                });
+            }
+        };
+
+        TableManageButtons = function () {
+            "use strict";
+            return {
+                init: function () {
+                    handleDataTableButtons();
+                }
+            };
+        }();
+
+
+
+        $('#datatable-keytable').DataTable({
+            keys: true
+        });
+
+
         $('#datatable-responsive').dataTable({
             'order': [[1, 'desc']],
             columnDefs: [
@@ -148,35 +185,36 @@ else
             ]
         });
         $('#datatable-scroller').DataTable({
-          ajax: "js/datatables/json/scroller-demo.json",
-          deferRender: true,
-          scrollY: 380,
-          scrollCollapse: true,
-          scroller: true
+            ajax: "js/datatables/json/scroller-demo.json",
+            deferRender: true,
+            scrollY: 380,
+            scrollCollapse: true,
+            scroller: true
         });
 
         $('#datatable-fixed-header').DataTable({
-          fixedHeader: true
+            fixedHeader: true
         });
 
         var $datatable = $('#datatable-checkbox');
 
         $datatable.dataTable({
-          'order': [[ 1, 'asc' ]],
-          'columnDefs': [
-            { orderable: false, targets: [0] }
-          ]
+            'order': [[1, 'asc']],
+            'columnDefs': [
+              { orderable: false, targets: [0] }
+            ]
         });
-        $datatable.on('draw.dt', function() {
-          $('input').iCheck({
-            checkboxClass: 'icheckbox_flat-green'
-          });
+        $datatable.on('draw.dt', function () {
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_flat-green'
+            });
         });
 
         TableManageButtons.init();
-      });
+
+
+
+
+    });
 </script>
 <!-- /Datatables -->
-
-
-

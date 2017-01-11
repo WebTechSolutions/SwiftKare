@@ -15,7 +15,6 @@ using System.IO;
 using System.Configuration;
 using WebApp.Helper;
 using System.Globalization;
-using WebApp.DoseSpotService;
 
 namespace WebApp.Controllers
 {
@@ -925,23 +924,8 @@ namespace WebApp.Controllers
         [HttpPost]
         public PartialViewResult SearchPharmacy(DoseSpotPharmacySearch oModel)
         {
-            APISoapClient api = new DoseSpotService.APISoapClient("APISoap12");
-            SingleSignOn sso = new DoseSpotService.SingleSignOn();
-            sso.SingleSignOnClinicId = 664;
-            sso.SingleSignOnUserId = 2844;
-            sso.SingleSignOnCode = "2yQvBvwcqztNZLglP4aRy6GRQD8zBDJnusuHnyfhEYwIJHaNdGrjwnEQRwOwNwtYh2S1OagWxg5cTIEHsyiarRJe+xlXNl1LJ9YSVtnt4PzkbRNGOE/ouA";
-            sso.SingleSignOnUserIdVerify = "4nOh+4l5FsZrUg/S4x4vs/mx5WLywbUghL07S5NZ30iWoepkaWC5C622DR5FswWOJQmP5jorLsJRLd2888UTuw";
-
-            PharmacySearchMessage oSrch = new PharmacySearchMessage
-            {
-                PharmacyNameSearch = oModel.Name,
-                PharmacyCity = oModel.City,
-                PharmacyStateTwoLetters = oModel.State,
-                PharmacyZipCode = oModel.Zip,
-                SingleSignOn = sso
-            };
-
-            PharmacySearchMessageResult oRes = api.PharmacySearch(oSrch);
+            var oDoseSpotRepo = new DoseSpotRepository();
+            var oRes = oDoseSpotRepo.GetPharmacySearchResult(oModel);
 
             return PartialView("SearchPharmacyView", oRes);
         }
