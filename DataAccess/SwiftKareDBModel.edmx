@@ -556,6 +556,7 @@
           <Property Name="lon" Type="float" />
           <Property Name="iOSToken" Type="varchar" MaxLength="1000" />
           <Property Name="AndroidToken" Type="varchar" MaxLength="1000" />
+          <Property Name="DoseSpotPatientId" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="PatientAllergies">
           <Key>
@@ -4032,6 +4033,7 @@
           <NavigationProperty Name="PatientFamilyHXes" Relationship="SwiftKareDBModel.FK_FamilyHX_Patient" FromRole="Patient" ToRole="PatientFamilyHX" />
           <NavigationProperty Name="PatientSurgeries" Relationship="SwiftKareDBModel.FK_Surgeries_Patient" FromRole="Patient" ToRole="PatientSurgery" />
           <NavigationProperty Name="UserFiles" Relationship="SwiftKareDBModel.FK_UserFiles_Patient" FromRole="Patient" ToRole="UserFile" />
+          <Property Name="DoseSpotPatientId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_Appointments_Doctor">
           <End Type="SwiftKareDBModel.Doctor" Role="Doctor" Multiplicity="0..1" />
@@ -4342,6 +4344,7 @@
           <Property Type="Binary" Name="picture" Nullable="true" />
           <Property Type="String" Name="gender" Nullable="true" MaxLength="10" />
           <Property Type="String" Name="languageName" Nullable="true" MaxLength="50" />
+          <Property Type="Int64" Name="patientID" Nullable="true" />
         </ComplexType>
         <ComplexType Name="SP_GetPatientConsultations_Result">
           <Property Type="Int64" Name="consultID" Nullable="false" />
@@ -5667,6 +5670,7 @@
           <EntitySetMapping Name="Patients">
             <EntityTypeMapping TypeName="SwiftKareDBModel.Patient">
               <MappingFragment StoreEntitySet="Patient">
+                <ScalarProperty Name="DoseSpotPatientId" ColumnName="DoseSpotPatientId" />
                 <ScalarProperty Name="AndroidToken" ColumnName="AndroidToken" />
                 <ScalarProperty Name="iOSToken" ColumnName="iOSToken" />
                 <ScalarProperty Name="lon" ColumnName="lon" />
@@ -5854,6 +5858,7 @@
                 <ScalarProperty Name="picture" ColumnName="picture" />
                 <ScalarProperty Name="gender" ColumnName="gender" />
                 <ScalarProperty Name="languageName" ColumnName="languageName" />
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
