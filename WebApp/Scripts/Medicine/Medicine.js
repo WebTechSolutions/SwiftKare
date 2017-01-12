@@ -236,7 +236,7 @@ function addupdateMedicine(patientid) {
                         new PNotify({
                             title: 'Success',
                             text: "Medicine is saved successfully.",
-                            type: 'success',
+                            type: 'info',addclass: 'dark',
                             styling: 'bootstrap3'
                         });
                         if (_objAdd != null) {
@@ -297,7 +297,7 @@ function deleteMedicine(medicationID) {
                     new PNotify({
                         title: 'Success',
                         text: "Medicine is deleted successfully.",
-                        type: 'success',
+                        type: 'info',addclass: 'dark',
                         styling: 'bootstrap3'
                     });
                 removeMedicine(response.ApiResultModel.ID);

@@ -165,7 +165,7 @@
                         $.post(cUrl, function (oResp) {
                             if (oResp.message == "") {
                                 //reloadContainer(function () {
-                                new PNotify({ title: 'Success', text: 'Family History is deleted successfully.', type: 'success', styling: 'bootstrap3' });
+                                new PNotify({ title: 'Success', text: 'Family History is deleted successfully.', type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                                 $("#UR"+delrelID).val($("#UR"+delrelID+ " option:first").val());
                                 hideLoader();
                                 //});

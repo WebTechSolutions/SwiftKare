@@ -221,7 +221,7 @@
                             //stopLoader();
                         }
                         else {
-                            new PNotify({ title: 'Success', text: "Consultation is marked as completed successfully.", type: 'success', styling: 'bootstrap3' });
+                            new PNotify({ title: 'Success', text: "Consultation is marked as completed successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                             $('#myModal4').modal('hide');
                            
                             reloadContainer(function () {
@@ -272,7 +272,7 @@
 
                         if(result.ApiResultModel.message=="")
                         {
-                            new PNotify({ title: 'Success', text: "Appointment is rescheduled successfully.", type: 'success', styling: 'bootstrap3' });
+                            new PNotify({ title: 'Success', text: "Appointment is rescheduled successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                             $('#myModal1').modal('hide');
                             $('#myModal4').modal('hide');
                             reloadContainer(function ()

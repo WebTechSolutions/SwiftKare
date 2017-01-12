@@ -56,7 +56,7 @@
 
                     if(result.ApiResultModel.message=="")
                     {
-                        new PNotify({ title: 'Success', text: "Alert is deleted successfully.", type: 'success', styling: 'bootstrap3' });
+                        new PNotify({ title: 'Success', text: "Alert is deleted successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                         reloadConsultation(function ()
                         {
                             //Stop displaying loader

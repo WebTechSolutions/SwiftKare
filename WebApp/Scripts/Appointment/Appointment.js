@@ -232,7 +232,7 @@ function CreateAppointment(patientID,amount) {
                     new PNotify({
                         title: 'Success',
                         text: "Appointment is scheduled successfully.",
-                        type: 'success',
+                        type: 'info',addclass: 'dark',
                         styling: 'bootstrap3'
                     });
                     window.location.href = '/Appointment/Index/';
@@ -276,7 +276,7 @@ function AddUpdatePharmacy(patientID,pharmacy) {
                     new PNotify({
                         title: 'Success',
                         text: "Pharmacy is saved successfully.",
-                        type: 'success',
+                        type: 'info',addclass: 'dark',
                         styling: 'bootstrap3'
                     });
                    

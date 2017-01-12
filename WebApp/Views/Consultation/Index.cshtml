@@ -291,7 +291,7 @@
 
                     if(result.ApiResultModel.message=="")
                     {
-                        new PNotify({ title: 'Success', text: "Consultation is reviewed successfully.", type: 'success', styling: 'bootstrap3' });
+                        new PNotify({ title: 'Success', text: "Consultation is reviewed successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                         $('#myModal1').modal('hide');
                         $('#myModal4').modal('hide');
                         reloadConsultation(function ()

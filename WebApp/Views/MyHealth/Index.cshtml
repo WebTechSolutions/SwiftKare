@@ -10,7 +10,7 @@
             new PNotify({
                 title: 'Success',
                 text: "@ViewBag.Success",
-                type: 'success',
+                type: 'dark',
                 styling: 'bootstrap3'
             });
         });
@@ -415,7 +415,7 @@
                 }
                 else
                 {
-                    new PNotify({ title: 'Success', text: "Family Hisytory is added successfully.", type: 'success', styling: 'bootstrap3' });
+                    new PNotify({ title: 'Success', text: "Family Hisytory is added successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                     //Stop displaying loader
                     hideLoader();
                     reloadContainer(function () {
@@ -467,10 +467,10 @@
                     }
                     else
                     {
-                        new PNotify({ title: 'Success', text: "Family History is updated successfully.", type: 'success', styling: 'bootstrap3' });
+                        new PNotify({ title: 'Success', text: "Family History is updated successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                         hideLoader();
                         //reloadContainer(function () {
-                        //    new PNotify({ title: 'Success', text: "Family Hisytory is added successfully.", type: 'success', styling: 'bootstrap3' });
+                        //    new PNotify({ title: 'Success', text: "Family Hisytory is added successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                         //    //Stop displaying loader
                         //    stopLoader();
                         //});
@@ -510,7 +510,7 @@
                 else
                 {
                     //reloadContainer(function () {
-                    new PNotify({ title: 'Success', text: "Family Hisytory is added successfully.", type: 'success', styling: 'bootstrap3' });
+                    new PNotify({ title: 'Success', text: "Family Hisytory is added successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                     //Stop displaying loader
                     hideLoader();
                     //});
@@ -590,10 +590,10 @@
 
                             addLifeStyle(id,question,newID);   // code goes here
                         });
-                        new PNotify({ title: 'Success', text: "Life style is added successfully.", type: 'success', styling: 'bootstrap3' });
+                        new PNotify({ title: 'Success', text: "Life style is added successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                         hideLoader();
                         /* reloadLifeStyle(function () {
-                             new PNotify({ title: 'Success', text: "Life style is added successfully.", type: 'success', styling: 'bootstrap3' });
+                             new PNotify({ title: 'Success', text: "Life style is added successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                              stopLoader();
                          });*/
 
@@ -642,7 +642,7 @@
                             }
                             else
                             {
-                                new PNotify({ title: 'Success', text: "Life style is updated successfully.", type: 'success', styling: 'bootstrap3' });
+                                new PNotify({ title: 'Success', text: "Life style is updated successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                                 hideLoader();
 
                             }
@@ -684,7 +684,7 @@
                         }
                         else
                         {
-                            new PNotify({ title: 'Success', text: "Life style is updated successfully.", type: 'success', styling: 'bootstrap3' });
+                            new PNotify({ title: 'Success', text: "Life style is updated successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                             hideLoader();
 
                         }

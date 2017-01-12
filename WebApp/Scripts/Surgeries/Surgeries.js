@@ -161,7 +161,7 @@ function addupdatepredefinedSurgery(chkbox,surgeryName)
                             new PNotify({
                                 title: 'Success',
                                 text: "Surgery is saved successfully.",
-                                type: 'success',
+                                type: 'info',addclass: 'dark',
                                 styling: 'bootstrap3'
                             });
                             $(chkbox).prop('checked', true);
@@ -238,7 +238,7 @@ function addupdateSurgery(patientid) {
                         new PNotify({
                             title: 'Success',
                             text: "Surgery is saved successfully.",
-                            type: 'success',
+                            type: 'info',addclass: 'dark',
                             styling: 'bootstrap3'
                         });
                         if (_objAdd != null) {
@@ -292,7 +292,7 @@ function deleteObjSurgery(surgeryID) {
                     new PNotify({
                         title: 'Success',
                         text: "Surgery is deleted successfully.",
-                        type: 'success',
+                        type: 'info',addclass: 'dark',
                         styling: 'bootstrap3'
                     });
                 removeSurgery(response.ApiResultModel.ID);
