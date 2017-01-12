@@ -1524,7 +1524,9 @@ a.user-profile {
   width: 29px;
   height: 29px;
   border-radius: 50%;
-  margin-right: 10px; }
+  margin-right: 10px; 
+      border: 2px solid rgb(249, 252, 255);
+}
 
 ul.top_profiles {
   height: 330px;
