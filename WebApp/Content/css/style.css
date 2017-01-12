@@ -1406,3 +1406,103 @@ body#video {
       .image-size-label {
         margin-top: 10px;
       }
+
+
+
+
+
+
+
+
+
+
+
+      
+.nav.side-menu > li {
+	border-bottom: 1px solid !important;
+}
+.nav.side-menu > li.doctor.menu-hover,
+.nav.side-menu > li.doctor.active {
+	border-color: #BC5245;
+}
+.nav-md li.doctor ul.nav.child_menu li:after {
+	border-color: #BC5245; 
+}
+.nav-md li.doctor ul.nav.child_menu li:before {
+	background: #BC5245;
+}
+
+.nav.side-menu > li.whats_news.menu-hover,
+.nav.side-menu > li.whats_news.active {
+	border-color: #29e6fc;
+}
+.nav-md li.whats_news ul.nav.child_menu li:after {
+	border-color: #29e6fc; 
+}
+.nav-md li.whats_news ul.nav.child_menu li:before {
+	background: #29e6fc;
+}
+
+
+
+
+
+
+
+
+
+
+.nav.side-menu > li.patient.menu-hover,
+.nav.side-menu > li.patient.active {
+	border-color: #E5A649;
+}
+.nav-md li.patient ul.nav.child_menu li:after {
+	border-color: #E5A649; 
+}
+.nav-md li.patient ul.nav.child_menu li:before {
+	background: #E5A649;
+}
+
+.nav.side-menu > li.scheduler.menu-hover,
+.nav.side-menu > li.scheduler.active {
+	border-color: #FB8A84;
+}
+.nav-md li.scheduler ul.nav.child_menu li:after {
+	border-color: #FB8A84; 
+}
+.nav-md li.scheduler ul.nav.child_menu li:before {
+	background: #FB8A84;
+}
+
+.nav.side-menu > li.appointment.menu-hover,
+.nav.side-menu > li.appointment.active {
+	border-color: #208CD7;
+}
+.nav-md li.appointment ul.nav.child_menu li:after {
+	border-color: #208CD7; 
+}
+.nav-md li.appointment ul.nav.child_menu li:before {
+	background: #208CD7;
+}
+
+.nav.side-menu > li.message.menu-hover,
+.nav.side-menu > li.message.active {
+	border-color: #80B438;
+}
+.nav-md li.message ul.nav.child_menu li:after {
+	border-color: #80B438; 
+}
+.nav-md li.message ul.nav.child_menu li:before {
+	background: #80B438;
+}
+
+.nav.side-menu > li.call_history.menu-hover,
+.nav.side-menu > li.call_history.active {
+	border-color: #cb76fb;
+}
+.nav-md li.call_history ul.nav.child_menu li:after {
+	border-color: #cb76fb; 
+}
+.nav-md li.call_history ul.nav.child_menu li:before {
+	background: #cb76fb;
+}
