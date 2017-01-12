@@ -561,8 +561,8 @@
         });
         $('#menu_toggle').click(function () { if (document.body.className == "nav-md footer_fixed") { ($("body").attr("class", "nav-sm footer_fixed")); $('.fa-angle-down').show(); } else { $("body").attr("class", "nav-md footer_fixed"); } });
         $('.menu_section li').hover(
-           function () { $(this).addClass('menu-hover') },
-           function () { $(this).removeClass('menu-hover') }
+           function () { $(this).addClass('current-page') },
+           function () { $(this).removeClass('current-page') }
     )
     </script>
 
