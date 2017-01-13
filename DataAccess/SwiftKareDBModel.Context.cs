@@ -1788,6 +1788,31 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConditions_Result>("SP_GetPatientConditions", patientIDParameter);
         }
     
+        public virtual ObjectResult<string> SearchDoctor(string language, string spec, string name, string appDay, string gender)
+        {
+            var languageParameter = language != null ?
+                new ObjectParameter("language", language) :
+                new ObjectParameter("language", typeof(string));
+    
+            var specParameter = spec != null ?
+                new ObjectParameter("spec", spec) :
+                new ObjectParameter("spec", typeof(string));
+    
+            var nameParameter = name != null ?
+                new ObjectParameter("name", name) :
+                new ObjectParameter("name", typeof(string));
+    
+            var appDayParameter = appDay != null ?
+                new ObjectParameter("appDay", appDay) :
+                new ObjectParameter("appDay", typeof(string));
+    
+            var genderParameter = gender != null ?
+                new ObjectParameter("gender", gender) :
+                new ObjectParameter("gender", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("SearchDoctor", languageParameter, specParameter, nameParameter, appDayParameter, genderParameter);
+        }
+    
         public virtual ObjectResult<SearchDoctorJSON_Result> SearchDoctorJSON(string language, string spec, string name, string appDay, Nullable<System.TimeSpan> appTime, string gender)
         {
             var languageParameter = language != null ?
@@ -1817,40 +1842,6 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SearchDoctorJSON_Result>("SearchDoctorJSON", languageParameter, specParameter, nameParameter, appDayParameter, appTimeParameter, genderParameter);
         }
     
-        public virtual ObjectResult<string> SearchDoctor(string language, string spec, string name, string appDay, string gender)
-        {
-            var languageParameter = language != null ?
-                new ObjectParameter("language", language) :
-                new ObjectParameter("language", typeof(string));
-    
-            var specParameter = spec != null ?
-                new ObjectParameter("spec", spec) :
-                new ObjectParameter("spec", typeof(string));
-    
-            var nameParameter = name != null ?
-                new ObjectParameter("name", name) :
-                new ObjectParameter("name", typeof(string));
-    
-            var appDayParameter = appDay != null ?
-                new ObjectParameter("appDay", appDay) :
-                new ObjectParameter("appDay", typeof(string));
-    
-            var genderParameter = gender != null ?
-                new ObjectParameter("gender", gender) :
-                new ObjectParameter("gender", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("SearchDoctor", languageParameter, specParameter, nameParameter, appDayParameter, genderParameter);
-        }
-    
-        public virtual ObjectResult<SP_GetDcotorConsultations_Result> SP_GetDcotorConsultations(Nullable<long> doctorID)
-        {
-            var doctorIDParameter = doctorID.HasValue ?
-                new ObjectParameter("doctorID", doctorID) :
-                new ObjectParameter("doctorID", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetDcotorConsultations_Result>("SP_GetDcotorConsultations", doctorIDParameter);
-        }
-    
         public virtual ObjectResult<SP_GetPatientConsultations_Result> SP_GetPatientConsultations(Nullable<long> patientID)
         {
             var patientIDParameter = patientID.HasValue ?
@@ -1858,6 +1849,15 @@ namespace DataAccess
                 new ObjectParameter("patientID", typeof(long));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConsultations_Result>("SP_GetPatientConsultations", patientIDParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetUpcomingAppforPatient_Result> SP_GetUpcomingAppforPatient(Nullable<long> patientID)
+        {
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetUpcomingAppforPatient_Result>("SP_GetUpcomingAppforPatient", patientIDParameter);
         }
     
         public virtual ObjectResult<SP_GetPendingAppforDoctor_Result> SP_GetPendingAppforDoctor(Nullable<long> doctorID)
@@ -1896,6 +1896,15 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetRescheduleAppforPatient_Result>("SP_GetRescheduleAppforPatient", patientIDParameter);
         }
     
+        public virtual ObjectResult<SP_GetDcotorConsultations_Result> SP_GetDcotorConsultations(Nullable<long> doctorID)
+        {
+            var doctorIDParameter = doctorID.HasValue ?
+                new ObjectParameter("doctorID", doctorID) :
+                new ObjectParameter("doctorID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetDcotorConsultations_Result>("SP_GetDcotorConsultations", doctorIDParameter);
+        }
+    
         public virtual ObjectResult<SP_GetUpcomingAppforDoctor_Result> SP_GetUpcomingAppforDoctor(Nullable<long> doctorID)
         {
             var doctorIDParameter = doctorID.HasValue ?
@@ -1903,15 +1912,6 @@ namespace DataAccess
                 new ObjectParameter("doctorID", typeof(long));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetUpcomingAppforDoctor_Result>("SP_GetUpcomingAppforDoctor", doctorIDParameter);
-        }
-    
-        public virtual ObjectResult<SP_GetUpcomingAppforPatient_Result> SP_GetUpcomingAppforPatient(Nullable<long> patientID)
-        {
-            var patientIDParameter = patientID.HasValue ?
-                new ObjectParameter("patientID", patientID) :
-                new ObjectParameter("patientID", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetUpcomingAppforPatient_Result>("SP_GetUpcomingAppforPatient", patientIDParameter);
         }
     }
 }

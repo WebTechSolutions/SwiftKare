@@ -245,10 +245,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\AdminSessionExpireAttribute.cs" />
     <Compile Include="Helper\ApiConsumerHelper.cs" />
+    <Compile Include="Helper\DoctorSessionExpireAttribute.cs" />
     <Compile Include="Helper\EmailHelper.cs" />
     <Compile Include="Helper\Extensions.cs" />
     <Compile Include="Helper\OauthHelper.cs" />
+    <Compile Include="Helper\PatientSessionExpireAttribute.cs" />
     <Compile Include="Helper\SessionHandler.cs" />
     <Compile Include="Helper\StripePayHelper.cs" />
     <Compile Include="Helper\UserChatHelper.cs" />
@@ -479,6 +482,7 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Scripts\date.js" />
+    <Content Include="Scripts\dateformatter.js" />
     <Content Include="Scripts\dropzone.min.js" />
     <Content Include="Scripts\font-awesome\css\font-awesome.css.map" />
     <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.eot" />
@@ -515,6 +519,7 @@
     <Content Include="Scripts\font-awesome\css\font-awesome.css" />
     <Content Include="Scripts\font-awesome\css\font-awesome.min.css" />
     <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="Scripts\Formatdate.js" />
     <Content Include="Scripts\general.js" />
     <Content Include="Scripts\HealthConditions\HealthConditions.js" />
     <Content Include="Scripts\icheck.min.js" />

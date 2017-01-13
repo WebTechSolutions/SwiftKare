@@ -26,5 +26,6 @@ namespace DataAccess
         public string gender { get; set; }
         public string languageName { get; set; }
         public string utcappDate { get; set; }
+        public long patientID { get; set; }
     }
 }
