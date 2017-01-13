@@ -1946,5 +1946,38 @@ namespace DataAccess
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SearchDoctorWithShift_Result>("SearchDoctorWithShift", languageParameter, specParameter, nameParameter, appDayParameter, fromTimeParameter, toTimeParameter, genderParameter);
         }
+    
+        public virtual ObjectResult<SearchDoctorWithShift_Result> SearchDoctorWithShift(string language, string spec, string name, string appDay, Nullable<System.TimeSpan> fromTime, Nullable<System.TimeSpan> toTime, string gender)
+        {
+            var languageParameter = language != null ?
+                new ObjectParameter("language", language) :
+                new ObjectParameter("language", typeof(string));
+    
+            var specParameter = spec != null ?
+                new ObjectParameter("spec", spec) :
+                new ObjectParameter("spec", typeof(string));
+    
+            var nameParameter = name != null ?
+                new ObjectParameter("name", name) :
+                new ObjectParameter("name", typeof(string));
+    
+            var appDayParameter = appDay != null ?
+                new ObjectParameter("appDay", appDay) :
+                new ObjectParameter("appDay", typeof(string));
+    
+            var fromTimeParameter = fromTime.HasValue ?
+                new ObjectParameter("fromTime", fromTime) :
+                new ObjectParameter("fromTime", typeof(System.TimeSpan));
+    
+            var toTimeParameter = toTime.HasValue ?
+                new ObjectParameter("toTime", toTime) :
+                new ObjectParameter("toTime", typeof(System.TimeSpan));
+    
+            var genderParameter = gender != null ?
+                new ObjectParameter("gender", gender) :
+                new ObjectParameter("gender", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SearchDoctorWithShift_Result>("SearchDoctorWithShift", languageParameter, specParameter, nameParameter, appDayParameter, fromTimeParameter, toTimeParameter, genderParameter);
+        }
     }
 }
