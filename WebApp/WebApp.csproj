@@ -495,6 +495,7 @@
     <Content Include="Scripts\bootstrap-material-datetimepicker\LICENSE.md" />
     <Content Include="Scripts\bootstrap-material-datetimepicker\package.json" />
     <Content Include="Scripts\bootstrap-material-datetimepicker\README.md" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff2" />
     <None Include="Properties\PublishProfiles\SKWeb.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\buttons.bootstrap.min.js" />

@@ -56,8 +56,8 @@ namespace WebApp
                      "~/Scripts/bootstrap.min.js",
                      "~/Scripts/fastclick.js",
                      "~/Scripts/nprogress.js",
-                     "~/Scripts/Chart.min.js",
-                     "~/Scripts/gauge.min.js",
+                    // "~/Scripts/Chart.min.js",
+                   //  "~/Scripts/gauge.min.js",
                      "~/Scripts/bootstrap-progressbar.min.js",
                      "~/Scripts/icheck.min.js",
                     "~/Scripts/jquery.dataTables.min.js",
@@ -67,14 +67,14 @@ namespace WebApp
                       "~/Scripts/responsive.bootstrap.js",
                     "~/Scripts/dataTables.fixedHeader.min.js",
                       "~/Scripts/dataTables.keyTable.min.js",
-                    "~/Scripts/jquery.flot.js",
+               /*     "~/Scripts/jquery.flot.js",
                      "~/Scripts/jquery.flot.pie.js",
                      "~/Scripts/jquery.flot.time.js",
                      "~/Scripts/jquery.flot.stack.js",
                      "~/Scripts/jquery.flot.resize.js",
                      "~/Scripts/jquery.flot.orderBars.js",
                     "~/Scripts/jquery.flot.spline.js",
-                    "~/Scripts/curvedLines.js",
+                    "~/Scripts/curvedLines.js",*/
                     "~/Scripts/date.js",
                     "~/Scripts/moment.min.js",
                      "~/Scripts/select2.full.min.js",
@@ -94,7 +94,7 @@ namespace WebApp
             
 
                              //-----------------------
-                             bundles.Add(new ScriptBundle("~/bundles/content/js").Include(
+                          /*   bundles.Add(new ScriptBundle("~/bundles/content/js").Include(
                     "~/Content/js/jquery.min.js",
 
                     "~/Content/js/bootstrap.min.js",
@@ -131,7 +131,7 @@ namespace WebApp
 
 
 
-
+*/
         }
     }
 }

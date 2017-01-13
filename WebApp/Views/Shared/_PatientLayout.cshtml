@@ -17,19 +17,19 @@
 
     <!-- Custom Theme Style -->
     @*<link href="@Url.Content("~/Content/css/green.css")" rel="stylesheet">*@
-    <link href="@Url.Content("~/Content/css/custom.min.css")" rel="stylesheet">
-    <link href="@Url.Content("~/Content/css/style.css")" rel="stylesheet">
+    @*<link href="@Url.Content("~/Content/css/custom.min.css")" rel="stylesheet">
+    <link href="@Url.Content("~/Content/css/style.css")" rel="stylesheet">*@
     @Styles.Render("~/Content/NewCss")
 
 
-    @Scripts.Render("~/bundles/modernizr")
+    @*@Scripts.Render("~/bundles/modernizr")*@
 
     @*@Scripts.Render("~/bundles/jquery")*@
     @Scripts.Render("~/bundles/js")
     <script src="@Url.Content("~/Scripts/blockUI.js")"></script>
     <script src="@Url.Content("~/Scripts/general.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.cropit.js")"></script>
-    <script src="@Url.Content("~/Scripts/daterangepiker/daterangepicker.js")"></script>
+    @*<script src="@Url.Content("~/Scripts/daterangepiker/daterangepicker.js")"></script>*@
 
     <style type="text/css">
         .redBorder, .redBorder:focus, .redBorder:active {
@@ -114,7 +114,7 @@
                     <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                         <div class="menu_section">
                             <ul class="nav side-menu" style="margin-top: 10px;">
-                                <li class="scheduler">
+                                <li class="scheduler" style="border-top: 1px solid !important;">
                                     <a href="@Url.Action("Index","Appointment")"><img src="~/Content/images/appointments.png" alt=""> &nbsp <span class="menu-txt"> Appointment</span></a>
 
                                 </li>
@@ -263,77 +263,7 @@
                                     }
                                 </div>
                             </li>
-                            @*<li role="presentation" class="dropdown">
-                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa fa-bell"></i>
-                                        <span class="badge bg-green">6</span>
-                                    </a>
-
-                                </li>*@
-                            @*<li role="presentation" class="dropdown">
-                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa fa-envelope-o"></i>
-                                        <span class="badge bg-green">6</span>
-                                    </a>
-                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                        <li>
-                                            <a>
-                                                <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                                <span>
-                                                    <span>John Smith</span>
-                                                    <span class="time">3 mins ago</span>
-                                                </span>
-                                                <span class="message">
-                                                    Film festivals used to be do-or-die moments for movie makers. They were where...
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a>
-                                                <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                                <span>
-                                                    <span>John Smith</span>
-                                                    <span class="time">3 mins ago</span>
-                                                </span>
-                                                <span class="message">
-                                                    Film festivals used to be do-or-die moments for movie makers. They were where...
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a>
-                                                <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                                <span>
-                                                    <span>John Smith</span>
-                                                    <span class="time">3 mins ago</span>
-                                                </span>
-                                                <span class="message">
-                                                    Film festivals used to be do-or-die moments for movie makers. They were where...
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a>
-                                                <span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>
-                                                <span>
-                                                    <span>John Smith</span>
-                                                    <span class="time">3 mins ago</span>
-                                                </span>
-                                                <span class="message">
-                                                    Film festivals used to be do-or-die moments for movie makers. They were where...
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div class="text-center">
-                                                <a href="messages.html">
-                                                    <strong>See All Messages</strong>
-                                                    <i class="fa fa-angle-right"></i>
-                                                </a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>*@
+                            
                         </ul>
                     </nav>
                 </div>
