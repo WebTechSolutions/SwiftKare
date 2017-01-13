@@ -40,7 +40,13 @@ else
                     }
                     <tr class="even pointer">
                         <td style="text-align:center;width:20%">@item.PatientName</td>
-                        <td style="text-align:center;width:15%">@item.appDate @item.appTime</td>
+                        <td style="text-align:center;width:15%">
+                            <span class="replacer" id="@("replacep" + j)"></span>
+                            <script type="text/javascript">
+                        var fdate = showLocal('@item.utcappDate');
+                            $("#replacep"+@j).html(fdate);
+                            </script>
+                        </td>
                         <td style="text-align:center;width:20%">@item.rov</td>
                         <td style="text-align:center;width:20%">@item.chiefComplaints</td>
                         <!-- <td><button class="btn btn-primary btn-sm m-b-0 " type="submit">View</button></td> -->

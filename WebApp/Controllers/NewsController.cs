@@ -15,6 +15,7 @@ using WebApp.Repositories.ProfileRepositories;
 
 namespace WebApp.Controllers
 {
+    [PatientSessionExpire]
     [Authorize]
     public class NewsController : Controller
     {

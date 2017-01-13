@@ -2548,32 +2548,8 @@
             <End Role="UserFile" EntitySet="UserFiles" />
           </AssociationSet>
           <EntitySet Name="Alerts" EntityType="SwiftKareDBModel.Alert" />
-          <FunctionImport Name="SP_GetPendingAppforDoctor" ReturnType="Collection(SwiftKareDBModel.SP_GetPendingAppforDoctor_Result)">
-          <Parameter Name="doctorID" Mode="In" Type="Int64" />
-          </FunctionImport>
-          <FunctionImport Name="SP_GetPendingAppforPatient" ReturnType="Collection(SwiftKareDBModel.SP_GetPendingAppforPatient_Result)">
-          <Parameter Name="patientID" Mode="In" Type="Int64" />
-          </FunctionImport>
-          <FunctionImport Name="SP_GetUpcomingAppforDoctor" ReturnType="Collection(SwiftKareDBModel.SP_GetUpcomingAppforDoctor_Result)">
-          <Parameter Name="doctorID" Mode="In" Type="Int64" />
-          </FunctionImport>
-          <FunctionImport Name="SP_GetUpcomingAppforPatient" ReturnType="Collection(SwiftKareDBModel.SP_GetUpcomingAppforPatient_Result)">
-          <Parameter Name="patientID" Mode="In" Type="Int64" />
-          </FunctionImport>
           <EntitySet Name="SuffixMasters" EntityType="SwiftKareDBModel.SuffixMaster" />
           <EntitySet Name="TitleMasters" EntityType="SwiftKareDBModel.TitleMaster" />
-          <FunctionImport Name="SP_GetRescheduleAppforDoctor" ReturnType="Collection(SwiftKareDBModel.SP_GetRescheduleAppforDoctor_Result)">
-          <Parameter Name="doctorID" Mode="In" Type="Int64" />
-          </FunctionImport>
-          <FunctionImport Name="SP_GetRescheduleAppforPatient" ReturnType="Collection(SwiftKareDBModel.SP_GetRescheduleAppforPatient_Result)">
-          <Parameter Name="patientID" Mode="In" Type="Int64" />
-          </FunctionImport>
-          <FunctionImport Name="SP_GetDcotorConsultations" ReturnType="Collection(SwiftKareDBModel.SP_GetDcotorConsultations_Result)">
-          <Parameter Name="doctorID" Mode="In" Type="Int64" />
-          </FunctionImport>
-          <FunctionImport Name="SP_GetPatientConsultations" ReturnType="Collection(SwiftKareDBModel.SP_GetPatientConsultations_Result)">
-          <Parameter Name="patientID" Mode="In" Type="Int64" />
-          </FunctionImport>
           <FunctionImport Name="SearchDoctorJSON" ReturnType="Collection(SwiftKareDBModel.SearchDoctorJSON_Result)">
             <Parameter Name="language" Mode="In" Type="String" />
             <Parameter Name="spec" Mode="In" Type="String" />
@@ -2588,6 +2564,30 @@
             <Parameter Name="name" Mode="In" Type="String" />
             <Parameter Name="appDay" Mode="In" Type="String" />
             <Parameter Name="gender" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetDcotorConsultations" ReturnType="Collection(SwiftKareDBModel.SP_GetDcotorConsultations_Result)">
+            <Parameter Name="doctorID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetPatientConsultations" ReturnType="Collection(SwiftKareDBModel.SP_GetPatientConsultations_Result)">
+            <Parameter Name="patientID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetPendingAppforDoctor" ReturnType="Collection(SwiftKareDBModel.SP_GetPendingAppforDoctor_Result)">
+            <Parameter Name="doctorID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetPendingAppforPatient" ReturnType="Collection(SwiftKareDBModel.SP_GetPendingAppforPatient_Result)">
+            <Parameter Name="patientID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetRescheduleAppforDoctor" ReturnType="Collection(SwiftKareDBModel.SP_GetRescheduleAppforDoctor_Result)">
+            <Parameter Name="doctorID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetRescheduleAppforPatient" ReturnType="Collection(SwiftKareDBModel.SP_GetRescheduleAppforPatient_Result)">
+            <Parameter Name="patientID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetUpcomingAppforDoctor" ReturnType="Collection(SwiftKareDBModel.SP_GetUpcomingAppforDoctor_Result)">
+            <Parameter Name="doctorID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetUpcomingAppforPatient" ReturnType="Collection(SwiftKareDBModel.SP_GetUpcomingAppforPatient_Result)">
+            <Parameter Name="patientID" Mode="In" Type="Int64" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="SP_AppointmentReport_Result">
@@ -4241,56 +4241,6 @@
           <Property Name="active" Type="Boolean" Nullable="false" />
           <Property Name="read" Type="Boolean" />
         </EntityType>
-        <ComplexType Name="SP_GetPendingAppforDoctor_Result">
-          <Property Type="Int64" Name="consultID" Nullable="true" />
-          <Property Type="String" Name="status" Nullable="true" MaxLength="50" />
-          <Property Type="Int64" Name="appID" Nullable="false" />
-          <Property Type="Int64" Name="doctorID" Nullable="false" />
-          <Property Type="String" Name="DoctorName" Nullable="true" MaxLength="201" />
-          <Property Type="Int64" Name="patientID" Nullable="false" />
-          <Property Type="String" Name="PatientName" Nullable="true" MaxLength="201" />
-          <Property Type="String" Name="appDate" Nullable="true" MaxLength="30" />
-          <Property Type="String" Name="appTime" Nullable="true" MaxLength="15" />
-          <Property Type="String" Name="rov" Nullable="false" MaxLength="500" />
-          <Property Type="String" Name="chiefComplaints" Nullable="false" MaxLength="500" />
-        </ComplexType>
-        <ComplexType Name="SP_GetPendingAppforPatient_Result">
-          <Property Type="Int64" Name="consultID" Nullable="true" />
-          <Property Type="String" Name="status" Nullable="true" MaxLength="50" />
-          <Property Type="Int64" Name="appID" Nullable="false" />
-          <Property Type="Int64" Name="doctorID" Nullable="false" />
-          <Property Type="String" Name="DoctorName" Nullable="true" MaxLength="201" />
-          <Property Type="Int64" Name="patientID" Nullable="false" />
-          <Property Type="String" Name="PatientName" Nullable="true" MaxLength="201" />
-          <Property Type="String" Name="appDate" Nullable="true" MaxLength="30" />
-          <Property Type="String" Name="appTime" Nullable="true" MaxLength="15" />
-          <Property Type="String" Name="rov" Nullable="false" MaxLength="500" />
-          <Property Type="String" Name="chiefComplaints" Nullable="false" MaxLength="500" />
-        </ComplexType>
-        <ComplexType Name="SP_GetUpcomingAppforDoctor_Result">
-          <Property Type="String" Name="status" Nullable="true" MaxLength="50" />
-          <Property Type="Int64" Name="appID" Nullable="false" />
-          <Property Type="Int64" Name="doctorID" Nullable="false" />
-          <Property Type="String" Name="DoctorName" Nullable="true" MaxLength="201" />
-          <Property Type="Int64" Name="patientID" Nullable="false" />
-          <Property Type="String" Name="PatientName" Nullable="true" MaxLength="201" />
-          <Property Type="String" Name="appDate" Nullable="true" MaxLength="30" />
-          <Property Type="String" Name="appTime" Nullable="true" MaxLength="15" />
-          <Property Type="String" Name="rov" Nullable="false" MaxLength="500" />
-          <Property Type="String" Name="chiefComplaints" Nullable="false" MaxLength="500" />
-        </ComplexType>
-        <ComplexType Name="SP_GetUpcomingAppforPatient_Result">
-          <Property Type="String" Name="status" Nullable="true" MaxLength="50" />
-          <Property Type="Int64" Name="appID" Nullable="false" />
-          <Property Type="Int64" Name="doctorID" Nullable="false" />
-          <Property Type="String" Name="DoctorName" Nullable="true" MaxLength="201" />
-          <Property Type="Int64" Name="patientID" Nullable="false" />
-          <Property Type="String" Name="PatientName" Nullable="true" MaxLength="201" />
-          <Property Type="String" Name="appDate" Nullable="true" MaxLength="30" />
-          <Property Type="String" Name="appTime" Nullable="true" MaxLength="15" />
-          <Property Type="String" Name="rov" Nullable="false" MaxLength="500" />
-          <Property Type="String" Name="chiefComplaints" Nullable="false" MaxLength="500" />
-        </ComplexType>
         <EntityType Name="SuffixMaster">
           <Key>
             <PropertyRef Name="SuffixID" />
@@ -4307,6 +4257,74 @@
           <Property Name="titleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="active" Type="Boolean" />
         </EntityType>
+        <ComplexType Name="SearchDoctorJSON_Result">
+          <Property Type="Int64" Name="doctorID" Nullable="false" />
+          <Property Type="String" Name="title" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="lastName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="city" Nullable="true" MaxLength="50" />
+          <Property Type="Binary" Name="picture" Nullable="true" />
+          <Property Type="String" Name="state" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="languageName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="specialityName" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="SP_GetDcotorConsultations_Result">
+          <Property Type="Int64" Name="consultID" Nullable="false" />
+          <Property Type="String" Name="PatientName" Nullable="true" MaxLength="212" />
+          <Property Type="Int32" Name="duration" Nullable="false" />
+          <Property Type="String" Name="review" Nullable="false" MaxLength="1000" />
+          <Property Type="Int32" Name="reviewStar" Nullable="false" />
+          <Property Type="Boolean" Name="reviewStatus" Nullable="true" />
+          <Property Type="String" Name="appTime" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="appDate" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="rov" Nullable="false" MaxLength="500" />
+          <Property Type="Binary" Name="picture" Nullable="true" />
+          <Property Type="String" Name="gender" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="languageName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="utcappDate" Nullable="true" MaxLength="30" />
+        </ComplexType>
+        <ComplexType Name="SP_GetPatientConsultations_Result">
+          <Property Type="Int64" Name="consultID" Nullable="false" />
+          <Property Type="String" Name="DoctorName" Nullable="true" MaxLength="212" />
+          <Property Type="Int32" Name="duration" Nullable="false" />
+          <Property Type="String" Name="review" Nullable="false" MaxLength="1000" />
+          <Property Type="Int32" Name="reviewStar" Nullable="false" />
+          <Property Type="Boolean" Name="reviewStatus" Nullable="true" />
+          <Property Type="String" Name="appTime" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="appDate" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="rov" Nullable="false" MaxLength="500" />
+          <Property Type="Binary" Name="picture" Nullable="true" />
+          <Property Type="String" Name="specialityName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="utcappDate" Nullable="true" MaxLength="30" />
+        </ComplexType>
+        <ComplexType Name="SP_GetPendingAppforDoctor_Result">
+          <Property Type="Int64" Name="consultID" Nullable="true" />
+          <Property Type="String" Name="status" Nullable="true" MaxLength="10" />
+          <Property Type="Int64" Name="appID" Nullable="false" />
+          <Property Type="Int64" Name="doctorID" Nullable="false" />
+          <Property Type="String" Name="DoctorName" Nullable="true" MaxLength="201" />
+          <Property Type="Int64" Name="patientID" Nullable="false" />
+          <Property Type="String" Name="PatientName" Nullable="true" MaxLength="201" />
+          <Property Type="String" Name="appDate" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="appTime" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="rov" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="chiefComplaints" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="utcappDate" Nullable="true" MaxLength="30" />
+        </ComplexType>
+        <ComplexType Name="SP_GetPendingAppforPatient_Result">
+          <Property Type="Int64" Name="consultID" Nullable="true" />
+          <Property Type="String" Name="status" Nullable="true" MaxLength="10" />
+          <Property Type="Int64" Name="appID" Nullable="false" />
+          <Property Type="Int64" Name="doctorID" Nullable="false" />
+          <Property Type="String" Name="DoctorName" Nullable="true" MaxLength="201" />
+          <Property Type="Int64" Name="patientID" Nullable="false" />
+          <Property Type="String" Name="PatientName" Nullable="true" MaxLength="201" />
+          <Property Type="String" Name="appDate" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="appTime" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="rov" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="chiefComplaints" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="utcappDate" Nullable="true" MaxLength="30" />
+        </ComplexType>
         <ComplexType Name="SP_GetRescheduleAppforDoctor_Result">
           <Property Type="String" Name="status" Nullable="true" MaxLength="10" />
           <Property Type="Int64" Name="appID" Nullable="false" />
@@ -4318,8 +4336,35 @@
           <Property Type="String" Name="appTime" Nullable="true" MaxLength="15" />
           <Property Type="String" Name="rov" Nullable="false" MaxLength="500" />
           <Property Type="String" Name="chiefComplaints" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="utcappDate" Nullable="true" MaxLength="30" />
         </ComplexType>
         <ComplexType Name="SP_GetRescheduleAppforPatient_Result">
+          <Property Type="String" Name="status" Nullable="true" MaxLength="10" />
+          <Property Type="Int64" Name="appID" Nullable="false" />
+          <Property Type="Int64" Name="doctorID" Nullable="false" />
+          <Property Type="String" Name="DoctorName" Nullable="true" MaxLength="201" />
+          <Property Type="Int64" Name="patientID" Nullable="false" />
+          <Property Type="String" Name="PatientName" Nullable="true" MaxLength="201" />
+          <Property Type="String" Name="appDate" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="appTime" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="rov" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="chiefComplaints" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="utcappDate" Nullable="true" MaxLength="30" />
+        </ComplexType>
+        <ComplexType Name="SP_GetUpcomingAppforDoctor_Result">
+          <Property Type="String" Name="status" Nullable="true" MaxLength="10" />
+          <Property Type="Int64" Name="appID" Nullable="false" />
+          <Property Type="Int64" Name="doctorID" Nullable="false" />
+          <Property Type="String" Name="DoctorName" Nullable="true" MaxLength="201" />
+          <Property Type="Int64" Name="patientID" Nullable="false" />
+          <Property Type="String" Name="PatientName" Nullable="true" MaxLength="201" />
+          <Property Type="String" Name="appDate" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="appTime" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="rov" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="chiefComplaints" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="utcappDate" Nullable="true" MaxLength="30" />
+        </ComplexType>
+        <ComplexType Name="SP_GetUpcomingAppforPatient_Result">
           <Property Type="String" Name="status" Nullable="true" MaxLength="10" />
           <Property Type="Int64" Name="appID" Nullable="false" />
           <Property Type="Int64" Name="doctorID" Nullable="false" />
@@ -4344,7 +4389,6 @@
           <Property Type="Binary" Name="picture" Nullable="true" />
           <Property Type="String" Name="gender" Nullable="true" MaxLength="10" />
           <Property Type="String" Name="languageName" Nullable="true" MaxLength="50" />
-          <Property Type="Int64" Name="patientID" Nullable="true" />
         </ComplexType>
         <ComplexType Name="SP_GetPatientConsultations_Result">
           <Property Type="Int64" Name="consultID" Nullable="false" />
@@ -5727,72 +5771,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SP_GetPendingAppforDoctor" FunctionName="SwiftKareDBModel.Store.SP_GetPendingAppforDoctor">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetPendingAppforDoctor_Result">
-                <ScalarProperty Name="consultID" ColumnName="consultID" />
-                <ScalarProperty Name="status" ColumnName="status" />
-                <ScalarProperty Name="appID" ColumnName="appID" />
-                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
-                <ScalarProperty Name="DoctorName" ColumnName="DoctorName" />
-                <ScalarProperty Name="patientID" ColumnName="patientID" />
-                <ScalarProperty Name="PatientName" ColumnName="PatientName" />
-                <ScalarProperty Name="appDate" ColumnName="appDate" />
-                <ScalarProperty Name="appTime" ColumnName="appTime" />
-                <ScalarProperty Name="rov" ColumnName="rov" />
-                <ScalarProperty Name="chiefComplaints" ColumnName="chiefComplaints" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_GetPendingAppforPatient" FunctionName="SwiftKareDBModel.Store.SP_GetPendingAppforPatient">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetPendingAppforPatient_Result">
-                <ScalarProperty Name="consultID" ColumnName="consultID" />
-                <ScalarProperty Name="status" ColumnName="status" />
-                <ScalarProperty Name="appID" ColumnName="appID" />
-                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
-                <ScalarProperty Name="DoctorName" ColumnName="DoctorName" />
-                <ScalarProperty Name="patientID" ColumnName="patientID" />
-                <ScalarProperty Name="PatientName" ColumnName="PatientName" />
-                <ScalarProperty Name="appDate" ColumnName="appDate" />
-                <ScalarProperty Name="appTime" ColumnName="appTime" />
-                <ScalarProperty Name="rov" ColumnName="rov" />
-                <ScalarProperty Name="chiefComplaints" ColumnName="chiefComplaints" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_GetUpcomingAppforDoctor" FunctionName="SwiftKareDBModel.Store.SP_GetUpcomingAppforDoctor">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetUpcomingAppforDoctor_Result">
-                <ScalarProperty Name="status" ColumnName="status" />
-                <ScalarProperty Name="appID" ColumnName="appID" />
-                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
-                <ScalarProperty Name="DoctorName" ColumnName="DoctorName" />
-                <ScalarProperty Name="patientID" ColumnName="patientID" />
-                <ScalarProperty Name="PatientName" ColumnName="PatientName" />
-                <ScalarProperty Name="appDate" ColumnName="appDate" />
-                <ScalarProperty Name="appTime" ColumnName="appTime" />
-                <ScalarProperty Name="rov" ColumnName="rov" />
-                <ScalarProperty Name="chiefComplaints" ColumnName="chiefComplaints" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_GetUpcomingAppforPatient" FunctionName="SwiftKareDBModel.Store.SP_GetUpcomingAppforPatient">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetUpcomingAppforPatient_Result">
-                <ScalarProperty Name="status" ColumnName="status" />
-                <ScalarProperty Name="appID" ColumnName="appID" />
-                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
-                <ScalarProperty Name="DoctorName" ColumnName="DoctorName" />
-                <ScalarProperty Name="patientID" ColumnName="patientID" />
-                <ScalarProperty Name="PatientName" ColumnName="PatientName" />
-                <ScalarProperty Name="appDate" ColumnName="appDate" />
-                <ScalarProperty Name="appTime" ColumnName="appTime" />
-                <ScalarProperty Name="rov" ColumnName="rov" />
-                <ScalarProperty Name="chiefComplaints" ColumnName="chiefComplaints" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="SuffixMasters">
             <EntityTypeMapping TypeName="SwiftKareDBModel.SuffixMaster">
               <MappingFragment StoreEntitySet="SuffixMaster">
@@ -5811,6 +5789,95 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SearchDoctorJSON" FunctionName="SwiftKareDBModel.Store.SearchDoctorJSON">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SearchDoctorJSON_Result">
+                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="picture" ColumnName="picture" />
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="languageName" ColumnName="languageName" />
+                <ScalarProperty Name="specialityName" ColumnName="specialityName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SearchDoctor" FunctionName="SwiftKareDBModel.Store.SearchDoctor" />
+          <FunctionImportMapping FunctionImportName="SP_GetDcotorConsultations" FunctionName="SwiftKareDBModel.Store.SP_GetDcotorConsultations">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetDcotorConsultations_Result">
+                <ScalarProperty Name="consultID" ColumnName="consultID" />
+                <ScalarProperty Name="PatientName" ColumnName="PatientName" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="review" ColumnName="review" />
+                <ScalarProperty Name="reviewStar" ColumnName="reviewStar" />
+                <ScalarProperty Name="reviewStatus" ColumnName="reviewStatus" />
+                <ScalarProperty Name="appTime" ColumnName="appTime" />
+                <ScalarProperty Name="appDate" ColumnName="appDate" />
+                <ScalarProperty Name="rov" ColumnName="rov" />
+                <ScalarProperty Name="picture" ColumnName="picture" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="languageName" ColumnName="languageName" />
+                <ScalarProperty Name="utcappDate" ColumnName="utcappDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_GetPatientConsultations" FunctionName="SwiftKareDBModel.Store.SP_GetPatientConsultations">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetPatientConsultations_Result">
+                <ScalarProperty Name="consultID" ColumnName="consultID" />
+                <ScalarProperty Name="DoctorName" ColumnName="DoctorName" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="review" ColumnName="review" />
+                <ScalarProperty Name="reviewStar" ColumnName="reviewStar" />
+                <ScalarProperty Name="reviewStatus" ColumnName="reviewStatus" />
+                <ScalarProperty Name="appTime" ColumnName="appTime" />
+                <ScalarProperty Name="appDate" ColumnName="appDate" />
+                <ScalarProperty Name="rov" ColumnName="rov" />
+                <ScalarProperty Name="picture" ColumnName="picture" />
+                <ScalarProperty Name="specialityName" ColumnName="specialityName" />
+                <ScalarProperty Name="utcappDate" ColumnName="utcappDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_GetPendingAppforDoctor" FunctionName="SwiftKareDBModel.Store.SP_GetPendingAppforDoctor">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetPendingAppforDoctor_Result">
+                <ScalarProperty Name="consultID" ColumnName="consultID" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="appID" ColumnName="appID" />
+                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+                <ScalarProperty Name="DoctorName" ColumnName="DoctorName" />
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
+                <ScalarProperty Name="PatientName" ColumnName="PatientName" />
+                <ScalarProperty Name="appDate" ColumnName="appDate" />
+                <ScalarProperty Name="appTime" ColumnName="appTime" />
+                <ScalarProperty Name="rov" ColumnName="rov" />
+                <ScalarProperty Name="chiefComplaints" ColumnName="chiefComplaints" />
+                <ScalarProperty Name="utcappDate" ColumnName="utcappDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_GetPendingAppforPatient" FunctionName="SwiftKareDBModel.Store.SP_GetPendingAppforPatient">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetPendingAppforPatient_Result">
+                <ScalarProperty Name="consultID" ColumnName="consultID" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="appID" ColumnName="appID" />
+                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+                <ScalarProperty Name="DoctorName" ColumnName="DoctorName" />
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
+                <ScalarProperty Name="PatientName" ColumnName="PatientName" />
+                <ScalarProperty Name="appDate" ColumnName="appDate" />
+                <ScalarProperty Name="appTime" ColumnName="appTime" />
+                <ScalarProperty Name="rov" ColumnName="rov" />
+                <ScalarProperty Name="chiefComplaints" ColumnName="chiefComplaints" />
+                <ScalarProperty Name="utcappDate" ColumnName="utcappDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_GetRescheduleAppforDoctor" FunctionName="SwiftKareDBModel.Store.SP_GetRescheduleAppforDoctor">
             <ResultMapping>
               <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetRescheduleAppforDoctor_Result">
@@ -5824,12 +5891,47 @@
                 <ScalarProperty Name="appTime" ColumnName="appTime" />
                 <ScalarProperty Name="rov" ColumnName="rov" />
                 <ScalarProperty Name="chiefComplaints" ColumnName="chiefComplaints" />
+                <ScalarProperty Name="utcappDate" ColumnName="utcappDate" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_GetRescheduleAppforPatient" FunctionName="SwiftKareDBModel.Store.SP_GetRescheduleAppforPatient">
             <ResultMapping>
               <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetRescheduleAppforPatient_Result">
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="appID" ColumnName="appID" />
+                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+                <ScalarProperty Name="DoctorName" ColumnName="DoctorName" />
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
+                <ScalarProperty Name="PatientName" ColumnName="PatientName" />
+                <ScalarProperty Name="appDate" ColumnName="appDate" />
+                <ScalarProperty Name="appTime" ColumnName="appTime" />
+                <ScalarProperty Name="rov" ColumnName="rov" />
+                <ScalarProperty Name="chiefComplaints" ColumnName="chiefComplaints" />
+                <ScalarProperty Name="utcappDate" ColumnName="utcappDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_GetUpcomingAppforDoctor" FunctionName="SwiftKareDBModel.Store.SP_GetUpcomingAppforDoctor">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetUpcomingAppforDoctor_Result">
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="appID" ColumnName="appID" />
+                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+                <ScalarProperty Name="DoctorName" ColumnName="DoctorName" />
+                <ScalarProperty Name="patientID" ColumnName="patientID" />
+                <ScalarProperty Name="PatientName" ColumnName="PatientName" />
+                <ScalarProperty Name="appDate" ColumnName="appDate" />
+                <ScalarProperty Name="appTime" ColumnName="appTime" />
+                <ScalarProperty Name="rov" ColumnName="rov" />
+                <ScalarProperty Name="chiefComplaints" ColumnName="chiefComplaints" />
+                <ScalarProperty Name="utcappDate" ColumnName="utcappDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_GetUpcomingAppforPatient" FunctionName="SwiftKareDBModel.Store.SP_GetUpcomingAppforPatient">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetUpcomingAppforPatient_Result">
                 <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="appID" ColumnName="appID" />
                 <ScalarProperty Name="doctorID" ColumnName="doctorID" />
@@ -5858,7 +5960,6 @@
                 <ScalarProperty Name="picture" ColumnName="picture" />
                 <ScalarProperty Name="gender" ColumnName="gender" />
                 <ScalarProperty Name="languageName" ColumnName="languageName" />
-                <ScalarProperty Name="patientID" ColumnName="patientID" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -5894,7 +5995,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SearchDoctor" FunctionName="SwiftKareDBModel.Store.SearchDoctor" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -5909,7 +6009,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />

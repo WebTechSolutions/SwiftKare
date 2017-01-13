@@ -18,29 +18,21 @@ using System.Globalization;
 
 namespace WebApp.Controllers
 {
+    [PatientSessionExpire]
     [Authorize(Roles = "Patient")]
     public class SeeDoctorController : Controller
     {
         // GET: SeeDoctor
         public ActionResult SeeDoctor()
         {
-            if (SessionHandler.IsExpired)
-            {
-                return Json(new
-                {
-                    redirectUrl = Url.Action("PatientLogin", "Account"),
-                    isRedirect = true
-                });
-            }
-            else
-            {
+           
                 ViewBag.PatienID = SessionHandler.UserInfo.Id;
 
                 ViewBag.PublisherKey = ConfigurationManager.AppSettings["StripePayPublisherKey"].ToString();
                 ViewBag.Amount = 2000;
 
                 return View();
-            }
+           
         }
         public PartialViewResult MyCareTeam()
         {
@@ -116,7 +108,7 @@ namespace WebApp.Controllers
 
         //Specialities
         [HttpPost]
-
+        
         public JsonResult GetAllSpecialities()
         {
             try
@@ -131,7 +123,7 @@ namespace WebApp.Controllers
                 return Json(new { Message = ex.Message });
             }
         }
-
+       
         [HttpPost]
         public JsonResult SearchDoctor(SearchDoctorModel model)
         {
@@ -208,7 +200,7 @@ namespace WebApp.Controllers
                 TimeSpan startTime = (TimeSpan)item.from;
                 if (startTime.Minutes % 15 != 0)
                 {
-                    TimeSpan tempp = TimeSpan.FromMinutes(15 - (startTime.Minutes % 15));
+                    TimeSpan tempp = TimeSpan.FromMinutes(15- (startTime.Minutes % 15));
                     startTime = startTime.Add(tempp);
                     if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
                     {
@@ -260,7 +252,7 @@ namespace WebApp.Controllers
                         }
                         flag = false;
                     }
-                    if (startTime.Hours == endTime.Hours)
+                    if(startTime.Hours == endTime.Hours)
                     {
                         //if (endTime.Minutes % 15 == 0)
                         //{
@@ -284,7 +276,7 @@ namespace WebApp.Controllers
                             flag = false;
                         }
                     }
-
+                    
                     //if ((timeSlots.Contains(itemstartTime.ToString(@"hh\:mm"))) && (timeSlots.Contains(endTime.ToString(@"hh\:mm"))))
                     //{
                     //    flag = false;
@@ -296,7 +288,7 @@ namespace WebApp.Controllers
 
             foreach (var app in appList)
             {
-                if (app.appTime.HasValue)
+                if(app.appTime.HasValue)
                 {
                     TimeSpan apptime = TimeSpan.Parse(app.appTime.Value.ToString());
                     if (timeSlots.Contains(apptime.ToString(@"hh\:mm")))
@@ -304,10 +296,10 @@ namespace WebApp.Controllers
                         timeSlots.Remove(apptime.ToString(@"hh\:mm"));
                     }
                 }
-
-
+               
+               
             }
-            for (var i = 0; i < timeSlots.Count; i++)
+           for(var i=0;i<timeSlots.Count;i++)
             {
                 TimeSpan doctimings = TimeSpan.Parse(timeSlots[i]);
                 var dateTime = new DateTime(doctimings.Ticks); // Date part is 01-01-0001
@@ -395,10 +387,10 @@ namespace WebApp.Controllers
             {
 
                 SeeDoctorRepository objRepo = new SeeDoctorRepository();
-
-                ApiResultModel apiresult = new ApiResultModel();
-                apiresult = objRepo.AddFavourite(model);
-                return Json(new { Success = true, ApiResultModel = apiresult });
+               
+                    ApiResultModel apiresult = new ApiResultModel();
+                    apiresult = objRepo.AddFavourite(model);
+                    return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
             catch (Exception ex)
@@ -440,7 +432,7 @@ namespace WebApp.Controllers
             catch (Exception ex)
             {
                 return Json(new { Message = ex.Message });
-
+               
             }
         }
 
@@ -459,14 +451,14 @@ namespace WebApp.Controllers
                 if (conditionID == 0)
                 {
                     ApiResultModel apiresult = new ApiResultModel();
-                    apiresult = objRepo.AddCondition(condition);
+                    apiresult=objRepo.AddCondition(condition);
                     return Json(new { Success = true, ApiResultModel = apiresult });
 
                 }
                 else
                 {
                     ApiResultModel apiresult = objRepo.EditCondition(conditionID, condition);
-                    return Json(new { Success = true, ApiResultModel = apiresult });
+                    return Json(new { Success = true, ApiResultModel =apiresult });
                 }
 
 
@@ -588,8 +580,8 @@ namespace WebApp.Controllers
                 {
                     ApiResultModel apiresult = new ApiResultModel();
                     medication.patientId = SessionHandler.UserInfo.Id;
-                    apiresult = objRepo.EditMedication(mid, medication);
-                    return Json(new { Success = true, ApiResultModel = apiresult });
+                    apiresult = objRepo.EditMedication(mid,medication);
+                    return Json(new { Success = true, ApiResultModel= apiresult });
                 }
 
 
@@ -793,7 +785,7 @@ namespace WebApp.Controllers
         //        return Json(ex.Message, JsonRequestBehavior.AllowGet);
         //    }
         //}
-
+        [PatientSessionExpire]
         [HttpPost]
         public JsonResult AddUpdateSurgeries(long surgeryID, PatientSurgery_Custom surgery)
         {

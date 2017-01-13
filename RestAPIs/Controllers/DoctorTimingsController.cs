@@ -11,6 +11,7 @@ using System.Web.Http.Description;
 using DataAccess;
 using DataAccess.CustomModels;
 using System.Globalization;
+using RestAPIs.Helper;
 
 namespace RestAPIs.Controllers
 {
@@ -18,7 +19,7 @@ namespace RestAPIs.Controllers
     public class DoctorTimingsController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
-
+       
 
         // GET: api/DoctorTimings/5
         [ResponseType(typeof(DoctorTimingsModel))]
@@ -130,8 +131,8 @@ namespace RestAPIs.Controllers
             DateTime dateTimeTo = DateTime.ParseExact(doctorTimingModel.to,
                                 "hh:mm tt", CultureInfo.InvariantCulture);
 
-            doctorTiming.from = dateTimeFrom.TimeOfDay;
-            doctorTiming.to = dateTimeTo.TimeOfDay;
+            doctorTiming.from = dateTimeFrom.ToUniversalTime().TimeOfDay;
+            doctorTiming.to = dateTimeTo.ToUniversalTime().TimeOfDay;
             doctorTiming.active = true;
             doctorTiming.cd = DateTime.Now;
             doctorTiming.md = DateTime.Now;

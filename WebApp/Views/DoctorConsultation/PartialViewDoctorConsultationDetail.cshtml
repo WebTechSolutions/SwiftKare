@@ -26,6 +26,7 @@
     var objective = "N.A";
     var assessment = "N.A";
     var plans = "N.A";
+    var utcdate = "";
 
     if (Model.subjective!=null) { subjective = Model.subjective; }
     if (Model.objective != null) { objective = Model.objective; }
@@ -92,7 +93,17 @@
         formattedTime = dateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
     }
 
+    if (appDate != "" && appTime != "")
+    {
+        DateTime utcappdate = DateTime.Parse(appDate);
 
+        TimeSpan utcapptimings = TimeSpan.Parse(appTime);
+        DateTime result = Convert.ToDateTime(utcappdate.ToString("yyyy-MM-dd")) + utcapptimings;
+        utcdate = string.Format("{0:yyyy-MM-dd HH:mm:ss}", result);
+
+
+
+    }
     <div class="modal-header text-center" style="background: #E4F1FE; border-bottom-color: #c3bebe;">
         <h2 style="margin: 0; color: #337ab7"><b>Consultation Details</b></h2>
     </div><!--/.modal header-->
@@ -119,7 +130,11 @@
             <p style="color: #375781;"><span style="width: 150px; float: left;">Pharmacy</span><b>@pharmacy</b></p>
         </div>
         <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 36px -15px 20px; padding: 10px 21px 0; ">
-            <p style="color: #375781;"><span style="width: 150px; float: left;">Appointment Date/Time</span><b>@formattedDate-@formattedTime</b></p>
+            <p style="color: #375781;"><span style="width: 150px; float: left;">App. Date/Time</span><b><span id="replaceme"></span>
+            <script type="text/javascript">
+                                var fdate = showLocal('@utcdate');
+                                $("#replaceme").html(fdate);
+            </script></b></p>
         </div>
         <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Reason of Visit:</b><br> @rov</p>
         <p id="p_chiefComplaints" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Chief Complaint:</b><br> @chiefComplaints</p>

@@ -16,6 +16,7 @@ using WebApp;
 
 namespace SwiftKare.Controllers
 {
+    [AdminSessionExpire]
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {

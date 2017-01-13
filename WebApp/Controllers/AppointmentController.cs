@@ -12,6 +12,8 @@ using WebApp.Repositories.PatientRepositories;
 //
 namespace WebApp.Controllers
 {
+    [PatientSessionExpire]
+    [Authorize(Roles = "Patient")]
     public class AppointmentController : Controller
     {
         AppointmentRepository oAppointmentRepository;
@@ -25,20 +27,9 @@ namespace WebApp.Controllers
         // GET: Appointment
         public ActionResult Index()
         {
-            if (SessionHandler.IsExpired)
-            {
-                return Json(new
-                {
-                    redirectUrl = Url.Action("PatientLogin", "Account"),
-                    isRedirect = true
-                });
-            }
-            else
-            {
-                ViewBag.errorMessage = "";
-                ViewBag.successMessage = "";
+           
                 return View();
-            }
+           
         }
 
         public PartialViewResult PartialReschedule()

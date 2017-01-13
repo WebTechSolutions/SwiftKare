@@ -349,7 +349,7 @@
     });
     $('#fetchdate').data('daterangepicker').setStartDate();
     function fetchTimings(fetchdate) {
-
+        debugger;
         var _objSearch = {};
         _objSearch["appDate"] = fetchdate;//$("#fetchdate").val();
         //alert( _objSearch["appDate"]);
@@ -407,10 +407,12 @@
         }
 
         today = dd + '/' + mm + '/' + yyyy;
+        
         $('#fetchdate').val(today);
         var _objSearch = {};
-
+        //appdate = formatDate(new Date(appDate), "dd/MM/yyyy");
         _objSearch["appDate"] = appDate;
+        
         $('#fetchdate').val(appDate);
         debugger;
         //var d1 = new Date(appDate.ToString());

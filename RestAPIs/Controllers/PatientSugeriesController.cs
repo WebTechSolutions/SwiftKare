@@ -92,7 +92,7 @@ namespace RestAPIs.Controllers
                     return response;
                 }
                 
-                psurgery = db.PatientSurgeries.Where(p => p.bodyPart.Trim() == model.bodyPart.Trim()).FirstOrDefault();
+                psurgery = db.PatientSurgeries.Where(p => p.bodyPart.Trim() == model.bodyPart.Trim() && p.patientID==model.patientID).FirstOrDefault();
                 if (psurgery!=null)
                 {
                    // response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Surgery already exists." });

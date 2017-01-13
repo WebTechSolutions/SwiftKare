@@ -5,9 +5,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApp;
+using WebApp.Helper;
 
 namespace SwiftKare.Controllers.TransactionHistory
 {
+    [AdminSessionExpire]
     [Authorize(Roles = "Admin")]
     public class Transaction_AdminController : Controller
     {

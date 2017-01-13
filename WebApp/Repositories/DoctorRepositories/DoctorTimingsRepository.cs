@@ -23,10 +23,10 @@ namespace WebApp.Repositories.DoctorRepositories
 
         public void Delete(long id)
         {
-            var response = ApiConsumerHelper.PostData("api/deleteDoctorTiming/" + id,"");
+            var response = ApiConsumerHelper.PostData("api/deleteDoctorTiming/?id=" + id,"");
             var result = JsonConvert.DeserializeObject<DoctorTimingsModel>(response);
         }
-
+       
         public bool Exists(object id)
         {
             throw new NotImplementedException();

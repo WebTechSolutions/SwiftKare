@@ -19,7 +19,7 @@ namespace DataAccess.CustomModels
         public string appTime { get; set; }
         public string rov { get; set; }
         public string chiefComplaints { get; set; }
-            
+        public string utcappDate { get; set; }    
     }
     public class ReschedulePendingAppModel
     {
@@ -34,7 +34,7 @@ namespace DataAccess.CustomModels
         public string appTime { get; set; }
         public string rov { get; set; }
         public string chiefComplaints { get; set; }
-
+        public string utcappDate { get; set; }
     }
 
     public class GetAppDetail
@@ -48,7 +48,7 @@ namespace DataAccess.CustomModels
         public int? paymentAmt { get; set; }
         public DoctorVM DoctorVM { get; set; }
         public PatientVM PatientVM { get; set; }
-
+        public string utcappDate { get; set; }
     }
 
 

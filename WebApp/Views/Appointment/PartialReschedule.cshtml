@@ -19,17 +19,26 @@ else
                 <th class="column-title" style="text-align:center">Doctor Name </th>
                 <th class="column-title" style="text-align:center">Appointment Time</th>
                 <th class="column-title" style="text-align:center">Reason of Visit </th>
-                <th class="column-title" style="text-align:center">ChiefComplaint</th>
+                <th class="column-title" style="text-align:center">Chief Complaint</th>
                 <th class="column-title" style="text-align:center">Action</th>
             </tr>
         </thead>
 
         <tbody>
-            @foreach (var item in Model)
-            {
+@if (Model != null)
+{
+    var j = 1;
+    foreach (var item in Model)
+    {
                 <tr class="even pointer">
                     <td style="text-align:center">@item.DoctorName</td>
-                    <td style="text-align:center">@item.appDate @item.appTime</td>
+                    <td style="text-align:center">
+                        <span class="replacer" id="@("replacer" + j)"></span>
+                        <script type="text/javascript">
+                            var fdate = showLocal('@item.utcappDate');
+                            $("#replacer"+@j).html(fdate);
+                        </script>
+                    </td>
                     <td style="text-align:center">@item.rov</td>
                     <td style="text-align:center">@item.chiefComplaints</td>
                     <!-- <td><button class="btn btn-primary btn-sm m-b-0 " type="submit">View</button></td> -->
@@ -52,11 +61,13 @@ else
                         </div>
                     </td>
                 </tr>
-            }
-
+        j = j + 1;
+    }
+}
 
         </tbody>
     </table>
+
 }
 
 <!-- Datatables -->

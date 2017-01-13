@@ -35,7 +35,13 @@ else
 
                     <tr class="even pointer">
                         <td style="text-align:center;width:20%">@item.PatientName</td>
-                        <td style="text-align:center;width:15%">@item.appDate @item.appTime</td>
+                        <td style="text-align:center;width:15%">
+                            <span class="replaceme" id="@("replaceme"+j)"></span>
+                            <script type="text/javascript">
+                        var fdate = showLocal('@item.utcappDate');
+                            $("#replaceme"+@j).html(fdate);
+                            </script>
+                        </td>
                         <td style="text-align:center;width:20%">@item.rov</td>
                         <td style="text-align:center;width:20%">@item.chiefComplaints</td>
                         <!-- <td><button class="btn btn-primary btn-sm m-b-0 " type="submit">View</button></td> -->
@@ -46,15 +52,14 @@ else
                                     <span class="caret"></span>
                                     
                                 </button>
-                                <a id="@("div"+j)" class="clsMakeCall" title="Call" onclick="alert('Calling...');" data-doctorid="@item.patientID" 
-                                   style="display:none;" href="javascript:">
-                                    <i class="fa fa-phone" aria-hidden="true" style="margin-right: -23px;margin-top: 9px;width: 20px;"></i>
+                                <a id="@("div"+j)" class="clsMakeCall" title="Call" onclick="checkCallTime('@item.utcappDate','@j');" data-doctorid="@item.patientID" 
+                                   style="display:block;" href="javascript:">
+                                    @*<i class="fa fa-phone" aria-hidden="true" style="margin-right: -23px;margin-top: 9px;width: 20px;"></i>*@
+                                    <img src="~/Content/images/icon_call-history.png" alt="call" style="margin-right: -23px;margin-top: 9px;width: 20px;">
                                   
                                 </a>
                                 
-                                <script>
-                                    setInterval(function () { enableCalling('@item.appDate','@item.appTime','@j'); }, 60000);
-                                </script>
+                               
                                 <ul class="dropdown-menu dropdown-menu-right">
                                     <li><a href="#" data-toggle="modal" class="thumbnail-upcoming" data-id="@item.appID" id="@item.doctorID" data-target="#myModal5" onclick=$("#pvappid").val(@item.appID);>View Detail</a></li>
                                   
@@ -75,87 +80,53 @@ else
 <script>
     var flag = 0;
     var _objCT = {};
-    function enableCalling(appDate, appTime, j) {
-        //alert(j);
-        var dateString = appDate; // Oct 23
-        var dateParts = dateString.split("/");
-        var dateObject = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]); // month is 0-based
-        //var today = new Date();
-        var dd = dateObject.getDate();
-        var mm = dateObject.getMonth() + 1; //January is 0!
-        var yyyy = dateObject.getFullYear();
+    function checkCallTime(utcdate)//"2012-11-29 22:30:00"
+    {
+        var now  = new Date();
+        //var then = localdate;//"2017/01/16 10:44:00";
 
-        if (dd < 10) {
-            dd = '0' + dd
-        }
-
-        if (mm < 10) {
-            mm = '0' + mm
-        }
-
-        dateObject = mm + '/' + dd + '/' + yyyy;
-
-        var appdatetime = dateObject + ' ' + appTime;
-        var appdatetime = appdatetime.split('')
-        appdatetime.splice(appdatetime.length - 2, 0, " ");
-        var result = appdatetime.join('');
-
-        var cc = new Date(result);
-        var c = new Date();
-        function timeDifference(d, dd) {
-            var minute = 60 * 1000,
-                hour = minute * 60,
-                day = hour * 24,
-                month = day * 30,
-                ms = Math.abs(dd - d);
-
-            var months = parseInt(ms / month, 10);
-
-            ms -= months * month;
-
-            var days = parseInt(ms / day, 10);
-
-            ms -= days * day;
-
-            var hours = parseInt(ms / hour, 10);
-
-            ms -= hours * hour;
-            var minutes = parseInt(ms / minute, 10);
-            _objCT["months"] = months;
-            _objCT["days"] = days;
-            _objCT["hours"] = hours;
-            _objCT["minutes"] = minutes;
-            //return [
-            //    months + " months",
-            //    days + " days",
-            //    hours + " hours",
-            //    minutes + " minutes"
-            //].join(", ");
-            return _objCT;
+        var myDate = new Date(new Date(utcdate));
+        var timeString = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-'
+        + myDate.getDate() + ' ' + myDate.getHours() + ':' + myDate.getMinutes();
+        //console.log(timeString);
+        var dbDate = new Date(Date.UTC(myDate.getFullYear(), myDate.getMonth(), myDate.getDate(), myDate.getHours(), myDate.getMinutes(), 0));
+        var options = {
+            weekday: "long", year: "numeric", month: "short",
+            day: "numeric", hour: "2-digit", minute: "2-digit"
         };
-        var remTime = timeDifference(cc, c);
-        //alert(remTime["days"] + ' ' + remTime["hours"] + ' ' + _objCT["minutes"]);
-        if (remTime["hours"] == 0 && remTime["days"] == 0)
-        {
-            if (remTime["minutes"] <= 5 && remTime["minutes"] <= 15) {
-                //alert(remTime["days"] + ' ' + remTime["hours"] + ' ' + _objCT["minutes"]);
-                $('#div' + j).css("display", "block");
-            }
-            else {
-                $('#div' + j).css("display", "none");
-            }
-            if(remTime["minutes"] > 15)
-            {
-               reloadUpcomingandPendingApp(function () {
 
-                });
+        var then = (dbDate.toLocaleTimeString("en-us", options));
+        then = formatDate(new Date(then), "yyyy/MM/dd HH:mm:ss");
+       
+        now = formatDate(new Date(now), "yyyy/MM/dd HH:mm:ss");
+        
+        console.log('then '+then);
+        console.log('now '+now);
+
+        console.log(moment(now,"YYYY/MM/DD HH:mm:ss"));
+        console.log(moment(then,"YYYY/MM/DD HH:mm:ss"));
+        var duration = moment.duration(moment(then,"YYYY/MM/DD HH:mm:ss").diff(moment(now,"YYYY/MM/DD HH:mm:ss")));
+
+        if((288000>duration._milliseconds)&&(duration._milliseconds>-842000))
+        {
+            alert("Call...");
+        } 
+        else
+        {
+            if(duration._milliseconds>-842000)
+            {
+                alert('Apointment time has not been arrived yet.');
+               
+            }
+            if(duration._milliseconds<288000)
+            {
+                alert('Apointment time has been passed.');
             }
             
         }
-        
-
-
+        console.log(duration._milliseconds);
     }
+   
       $(document).ready(function() {
         
        

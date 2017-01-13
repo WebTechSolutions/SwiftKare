@@ -5,9 +5,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApp;
+using WebApp.Helper;
 
 namespace SwiftKare.Controllers.Consultation
 {
+    [AdminSessionExpire]
     [Authorize(Roles = "Admin")]
     public class Consultation_AdminController : Controller
     {

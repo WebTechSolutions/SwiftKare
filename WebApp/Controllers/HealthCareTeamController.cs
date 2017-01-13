@@ -18,29 +18,21 @@ using System.Globalization;
 
 namespace WebApp.Controllers
 {
+    [PatientSessionExpire]
     [Authorize(Roles = "Patient")]
     public class HealthCareTeamController : Controller
     {
        // GET: SeeDoctor
         public ActionResult Index()
         {
-            if (SessionHandler.IsExpired)
-            {
-                return Json(new
-                {
-                    redirectUrl = Url.Action("PatientLogin", "Account"),
-                    isRedirect = true
-                });
-            }
-            else
-            {
+            
                 ViewBag.PatienID = SessionHandler.UserInfo.Id;
 
                 ViewBag.PublisherKey = ConfigurationManager.AppSettings["StripePayPublisherKey"].ToString();
                 ViewBag.Amount = 2000;
 
                 return View();
-            }
+            
         }
         public PartialViewResult MyCareTeam()
         {

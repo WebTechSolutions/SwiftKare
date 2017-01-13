@@ -17,6 +17,7 @@ using WebApp.Helper;
 
 namespace SwiftKare.Controllers
 {
+    [AdminSessionExpire]
     [Authorize(Roles = "Admin")]
     public class Patient_AdminController : Controller
     {

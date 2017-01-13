@@ -11,6 +11,7 @@ using System.Globalization;
 
 namespace WebApp.Controllers
 {
+    [DoctorSessionExpire]
     [Authorize(Roles = "Doctor")]
     public class DoctorController : Controller
     {
