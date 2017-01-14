@@ -73,110 +73,115 @@ namespace RestAPIs.Controllers
         }
 
         // POST: api/searchDoctor/SeeDoctorViewModel
-        [Route("api/searchDoctor")]
-        public HttpResponseMessage SeeDoctor(SearchDoctorModel searchModel)
-        {
+        //[Route("api/searchDoctor")]
+        //public HttpResponseMessage SeeDoctor(SearchDoctorModel searchModel)
+        //{
           
 
-            try
-            {
-                if(searchModel.appDate==null)
-                {
-                    var result = db.SP_SearchDoctor(searchModel.language, searchModel.speciality, searchModel.name, null,
-                    searchModel.appTime, searchModel.gender).ToList();
-                    response = Request.CreateResponse(HttpStatusCode.OK, result);
-                    //return response;
-                }
+        //    try
+        //    {
+        //        if(searchModel.appDate==null)
+        //        {
+        //            var result = db.SP_SearchDoctor(searchModel.language, searchModel.speciality, searchModel.name, null,
+        //            searchModel.appTime, searchModel.gender).ToList();
+        //            response = Request.CreateResponse(HttpStatusCode.OK, result);
+        //            //return response;
+        //        }
 
-                if (searchModel.appDate != null)
-                {
-                    DateTime day = new DateTime();
-                    day = Convert.ToDateTime(searchModel.appDate);
-                    var result = 
-                        db.SP_SearchDoctor(searchModel.language, searchModel.speciality, searchModel.name, day.DayOfWeek.ToString(),
-                    searchModel.appTime, searchModel.gender).ToList();
-                    response = Request.CreateResponse(HttpStatusCode.OK, result);
-                    //return response;
-                }
-                return response;
+        //        if (searchModel.appDate != null)
+        //        {
+        //            DateTime day = new DateTime();
+        //            day = Convert.ToDateTime(searchModel.appDate);
+        //            var result = 
+        //                db.SP_SearchDoctor(searchModel.language, searchModel.speciality, searchModel.name, day.DayOfWeek.ToString(),
+        //            searchModel.appTime, searchModel.gender).ToList();
+        //            response = Request.CreateResponse(HttpStatusCode.OK, result);
+        //            //return response;
+        //        }
+        //        return response;
 
-            }
-            catch (Exception ex)
-            {
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-               return ThrowError(ex, "SeeDoctor in SeacrhDoctorController.");
-            }
+        //       return ThrowError(ex, "SeeDoctor in SeacrhDoctorController.");
+        //    }
          
 
-        }
+        //}
 
        
-        [Route("api/searchDoctorWithShift")]
-        public HttpResponseMessage SeeDoctorWithShift(SearchDoctorWithShift searchModel)
+        [Route("api/searchDoctorwithFav")]
+        public HttpResponseMessage searchDoctorwithFav(SearchDoctorModel searchModel)
         {
-            TimeSpan? timingsFrom = null;
-            TimeSpan? timingsTo = null;
+            string timingsFrom = null;
+            string timingsTo = null;
+            TimeSpan? appFromtimings = null;
+            TimeSpan? appTotimings = null;
             if (searchModel.language == "") { searchModel.language = null; }
             if (searchModel.speciality == "") { searchModel.speciality = null; }
             if (searchModel.name == "") { searchModel.name = null; }
             if (searchModel.appDate == "") { searchModel.appDate = null; }
-            if (searchModel.shift == "") { searchModel.shift = null; }
+            if (searchModel.appTime == "") { searchModel.appTime = null; }
             if (searchModel.gender == "") { searchModel.gender = null; }
 
-           if (searchModel.shift!=null)
-            {
-               
-                
-                var _offset = TimeSpan.FromHours(searchModel.offset);
-                
-                if (searchModel.shift=="Morning")
-                {
-                    DateTime utcdateTimeFrom = DateTime.ParseExact("08:00",
-                                       "HH:mm", CultureInfo.InvariantCulture);
-                    DateTime utcdateTimeTo = DateTime.ParseExact("16:00",
-                                        "HH:mm", CultureInfo.InvariantCulture);
-                    DateTime localfrom = utcdateTimeFrom + _offset;
-                    DateTime localto = utcdateTimeTo + _offset;
-                    timingsFrom = localfrom.TimeOfDay;
-                    timingsTo = localto.TimeOfDay;
-                                        
-                }
-                if (searchModel.shift == "Evening")
-                {
-                    DateTime utcdateTimeFrom = DateTime.ParseExact("16:00",
-                                         "HH:mm", CultureInfo.InvariantCulture);
-                    DateTime utcdateTimeTo = DateTime.ParseExact("23:59",
-                                        "HH:mm", CultureInfo.InvariantCulture);
-                    DateTime localfrom = utcdateTimeFrom + _offset;
-                    DateTime localto = utcdateTimeTo + _offset;
-                    timingsFrom = localfrom.TimeOfDay;
-                    timingsTo = localto.TimeOfDay;
-                }
-                if (searchModel.shift == "Night")
-                {
-                    DateTime utcdateTimeFrom = DateTime.ParseExact("23:59",
-                                        "HH:mm", CultureInfo.InvariantCulture);
-                    DateTime utcdateTimeTo = DateTime.ParseExact("08:00",
-                                        "HH:mm", CultureInfo.InvariantCulture);
-                    DateTime localfrom = utcdateTimeFrom + _offset;
-                    DateTime localto = utcdateTimeTo + _offset;
-                    timingsFrom = localfrom.TimeOfDay;
-                    timingsTo = localto.TimeOfDay;
-                }
-            }
+           
+                            
             try
             {
+                if (searchModel.appTime != null)
+                {
+                    List<string> timeframe = searchModel.appTime.Split(':').ToList<string>();
+                    var j = 0;
+                    foreach (var item in timeframe)
+                    {
+                        if (j == 0)
+                        {
+                            //timingsFrom = item;
+                            if (item.Length == 1)
+                            {
+                                timingsFrom = "0" + item;
+                            }
+                            else
+                            {
+                                timingsFrom = item;
+                            }
+                            j++;
+                            continue;
+                        }
+                        if (j == 1)
+                        {
+                            if (item.Length == 1)
+                            {
+                                timingsTo = "0" + item;
+                            }
+                            else
+                            {
+                                timingsTo = item;
+                            }
+                        }
+
+                    }
+                    DateTime dateTimeFrom = DateTime.ParseExact(timingsFrom + ":00",
+                                       "HH:mm", CultureInfo.InvariantCulture);
+                    DateTime dateTimeTo = DateTime.ParseExact(timingsTo + ":00",
+                                        "HH:mm", CultureInfo.InvariantCulture);
+
+                    appFromtimings = dateTimeFrom.TimeOfDay;
+                    appTotimings = dateTimeTo.TimeOfDay;
+
+                }
                 if (searchModel.appDate == null)
                 {
 
                     var result = db.SearchDoctorWithShift(searchModel.language, searchModel.speciality, searchModel.name, null,
-                    timingsFrom, timingsTo,searchModel.gender).ToList();
+                    appFromtimings, appTotimings, searchModel.gender).ToList();
                     var favdoc = (from l in db.FavouriteDoctors
                                   where l.patientID == searchModel.patientID && l.active == true
                                   select new FavouriteDoctorModel { docID = l.doctorID, patID = l.patientID }).ToList();
                     SearchDoctorResult searchResult = new SearchDoctorResult();
-                    searchResult._objSearchDoctorModel =  result;
-                    searchResult._objFavDoctors = favdoc;
+                    searchResult.doctor =  result;
+                    searchResult.favdoctor = favdoc;
 
                     response = Request.CreateResponse(HttpStatusCode.OK, searchResult);
                    
@@ -187,13 +192,13 @@ namespace RestAPIs.Controllers
                     DateTime day = new DateTime();
                     day = Convert.ToDateTime(searchModel.appDate);
                     var result = db.SearchDoctorWithShift(searchModel.language, searchModel.speciality, searchModel.name, day.DayOfWeek.ToString(),
-                   timingsFrom, timingsTo, searchModel.gender).ToList();
+                   appFromtimings, appTotimings, searchModel.gender).ToList();
                     var favdoc = (from l in db.FavouriteDoctors
                                   where l.patientID == searchModel.patientID && l.active == true
                                   select new FavouriteDoctorModel { docID = l.doctorID, patID = l.patientID }).ToList();
                     SearchDoctorResult searchResult = new SearchDoctorResult();
-                    searchResult._objSearchDoctorModel = result;
-                    searchResult._objFavDoctors = favdoc;
+                    searchResult.doctor = result;
+                    searchResult.favdoctor = favdoc;
 
                     response = Request.CreateResponse(HttpStatusCode.OK, searchResult);
 
@@ -204,62 +209,63 @@ namespace RestAPIs.Controllers
             catch (Exception ex)
             {
 
-                return ThrowError(ex, "SeeDoctorWithShift in SeacrhDoctorController.");
+                return ThrowError(ex, "searchDoctorwithFav in SeacrhDoctorController.");
             }
 
 
         }
 
-        [Route("api/searchDoctorwithFav")]
-        public HttpResponseMessage SeeDoctorwithFav(SearchDoctorModel searchModel)
-        {
+        //[Route("api/searchDoctorwithFav")]
+        //public HttpResponseMessage SeeDoctorwithFav(SearchDoctorModel searchModel)
+        //{
 
 
-            try
-            {
-                if (searchModel.appDate == null)
-                {
-                    var result = db.SearchDoctorJSON(searchModel.language, searchModel.speciality, searchModel.name, null,
-                    searchModel.appTime, searchModel.gender).ToList();
-                    var favdoc = (from l in db.FavouriteDoctors
-                                  where l.patientID == searchModel.patientID && l.active == true
-                                  select new FavouriteDoctorModel { docID = l.doctorID,patID=l.patientID }).ToList();
-                    var searchResult=( new
-                    { doctor= result, favdoctor = favdoc
-                    });
+        //    try
+        //    {
+        //        if (searchModel.appDate == null)
+        //        {
+        //            var result = db.SearchDoctorJSON(searchModel.language, searchModel.speciality, searchModel.name, null,
+        //            searchModel.appTime, searchModel.gender).ToList();
+        //            var favdoc = (from l in db.FavouriteDoctors
+        //                          where l.patientID == searchModel.patientID && l.active == true
+        //                          select new FavouriteDoctorModel { docID = l.doctorID,patID=l.patientID }).ToList();
+        //            var searchResult=( new
+        //            { doctor= result, favdoctor = favdoc
+        //            });
 
-                    response = Request.CreateResponse(HttpStatusCode.OK, searchResult);
-                    
-                }
+        //            response = Request.CreateResponse(HttpStatusCode.OK, searchResult);
 
-                if (searchModel.appDate != null)
-                {
-                    DateTime day = new DateTime();
-                    day = Convert.ToDateTime(searchModel.appDate);
-                    var result = db.SearchDoctorJSON(searchModel.language, searchModel.speciality, searchModel.name, day.DayOfWeek.ToString(),
-                    searchModel.appTime, searchModel.gender).ToList();
-                    var favdoc = (from l in db.FavouriteDoctors
-                                  where l.patientID == searchModel.patientID && l.active == true
-                                  select new FavouriteDoctorModel { docID = l.doctorID, patID = l.patientID }).ToList();
-                    var searchResult = (new
-                    {
-                        doctor = result,
-                        favdoctor = favdoc
-                    });
+        //        }
 
-                    response = Request.CreateResponse(HttpStatusCode.OK, searchResult);
-                }
-                return response;
+        //        if (searchModel.appDate != null)
+        //        {
+        //            DateTime day = new DateTime();
+        //            day = Convert.ToDateTime(searchModel.appDate);
+        //            var result = db.SearchDoctorJSON(searchModel.language, searchModel.speciality, searchModel.name, day.DayOfWeek.ToString(),
+        //            searchModel.appTime, searchModel.gender).ToList();
+        //            var favdoc = (from l in db.FavouriteDoctors
+        //                          where l.patientID == searchModel.patientID && l.active == true
+        //                          select new FavouriteDoctorModel { docID = l.doctorID, patID = l.patientID }).ToList();
+        //            var searchResult = (new
+        //            {
+        //                doctor = result,
+        //                favdoctor = favdoc
+        //            });
 
-            }
-            catch (Exception ex)
-            {
+        //            response = Request.CreateResponse(HttpStatusCode.OK, searchResult);
+        //        }
+        //        return response;
 
-                return ThrowError(ex, "SeeDoctor in SeacrhDoctorController.");
-            }
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return ThrowError(ex, "SeeDoctor in SeacrhDoctorController.");
+        //    }
 
 
-        }
+        //}
+
         [Route("api/fetchDoctorTime")]
         public HttpResponseMessage FetchDoctorTime(FetchTimingsModel searchModel)
         {

@@ -193,11 +193,11 @@
                                                 <div class="form-group">
 
                                                     <input style:display:"none" type="text" id="time" class="form-control floating-label" placeholder="Time">
-                                                    <select class="form-control" id="Shift">
-                                                        <option value="">ALL</option>
-                                                        <option value="">Morning</option>
-                                                        <option value="">Evening</option>
-                                                        <option value="">Night</option>
+                                                    <select class="form-control" name="Shift">
+                                                        <option value="A">ALL</option>
+                                                        <option value="M">Morning</option>
+                                                        <option value="E">Evening</option>
+                                                        <option value="N">Night</option>
                                                     </select>
                                                 </div>
                                             </form>
@@ -246,7 +246,7 @@
 
                                     </div>
                                     <div class="ln_solid"></div>
-                                    <button type="button" class="btn btn-primary pull-right" id="search-click" onclick="SearchDoctorWithShift();">Search</button>
+                                    <button type="button" class="btn btn-primary pull-right" id="search-click" onclick="SearchDoctor(@SessionHandler.UserInfo.Id);">Search</button>
 
                                 </div>
 

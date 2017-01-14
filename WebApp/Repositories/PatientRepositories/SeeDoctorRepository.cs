@@ -52,14 +52,14 @@ namespace WebApp.Repositories.DoctorRepositories
                  }
 
             }
-        public SearchDoctorResult SeeDoctorWithShift(SearchDoctorWithShift searchModel)
+        public SearchDoctorResult SeeDoctorWithShift(SearchDoctorModel searchModel)
         {
 
 
             try
             {
                 var strContent = JsonConvert.SerializeObject(searchModel);
-                var response = ApiConsumerHelper.PostData("api/searchDoctorWithShift/?searchModel", strContent);
+                var response = ApiConsumerHelper.PostData("api/searchDoctorwithFav/?searchModel", strContent);
                 var result = JsonConvert.DeserializeObject<SearchDoctorResult>(response);
                 return result;
             }
