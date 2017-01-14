@@ -149,6 +149,30 @@ namespace WebApp.Controllers
 
         }
         [HttpPost]
+        public JsonResult SearchDoctorWithShift(SearchDoctorWithShift model)
+        {
+            SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
+            //IEnumerable<SeeDoctorDTO> docList= objDoctorRepo.SeeDoctor(model.Doctor.firstName, model.Gender, model.Language, model.Speciallity, model.AppDate.DayOfWeek.ToString(), model.Timing.seacrhTime);
+            try
+            {
+                if (model.gender == "ALL") { model.gender = null; }
+                if (model.name == "") { model.name = null; }
+                if (model.language == "ALL") { model.language = null; }
+                if (model.speciality == "ALL") { model.speciality = null; }
+                if (model.shift.ToString() == "ALL") { model.shift = null; }
+                model.patientID = SessionHandler.UserInfo.Id;
+                SearchDoctorResult doctorList = objSeeDoctorRepo.SeeDoctorWithShift(model);
+                return Json(new { Success = true, DoctorModel = doctorList });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Message = ex.Message });
+            }
+
+
+        }
+        [HttpPost]
         public JsonResult FetchDoctorTimings(FetchTimingsModel model)
         {
             try

@@ -82,10 +82,10 @@ namespace DataAccess
         public virtual DbSet<Consultation> Consultations { get; set; }
         public virtual DbSet<Appointment> Appointments { get; set; }
         public virtual DbSet<Doctor> Doctors { get; set; }
-        public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<Alert> Alerts { get; set; }
         public virtual DbSet<SuffixMaster> SuffixMasters { get; set; }
         public virtual DbSet<TitleMaster> TitleMasters { get; set; }
+        public virtual DbSet<Patient> Patients { get; set; }
     
         public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
         {
@@ -1912,39 +1912,6 @@ namespace DataAccess
                 new ObjectParameter("doctorID", typeof(long));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetUpcomingAppforDoctor_Result>("SP_GetUpcomingAppforDoctor", doctorIDParameter);
-        }
-    
-        public virtual ObjectResult<SearchDoctorWithShift_Result> SearchDoctorWithShift(string language, string spec, string name, string appDay, Nullable<System.TimeSpan> fromTime, Nullable<System.TimeSpan> toTime, string gender)
-        {
-            var languageParameter = language != null ?
-                new ObjectParameter("language", language) :
-                new ObjectParameter("language", typeof(string));
-    
-            var specParameter = spec != null ?
-                new ObjectParameter("spec", spec) :
-                new ObjectParameter("spec", typeof(string));
-    
-            var nameParameter = name != null ?
-                new ObjectParameter("name", name) :
-                new ObjectParameter("name", typeof(string));
-    
-            var appDayParameter = appDay != null ?
-                new ObjectParameter("appDay", appDay) :
-                new ObjectParameter("appDay", typeof(string));
-    
-            var fromTimeParameter = fromTime.HasValue ?
-                new ObjectParameter("fromTime", fromTime) :
-                new ObjectParameter("fromTime", typeof(System.TimeSpan));
-    
-            var toTimeParameter = toTime.HasValue ?
-                new ObjectParameter("toTime", toTime) :
-                new ObjectParameter("toTime", typeof(System.TimeSpan));
-    
-            var genderParameter = gender != null ?
-                new ObjectParameter("gender", gender) :
-                new ObjectParameter("gender", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SearchDoctorWithShift_Result>("SearchDoctorWithShift", languageParameter, specParameter, nameParameter, appDayParameter, fromTimeParameter, toTimeParameter, genderParameter);
         }
     
         public virtual ObjectResult<SearchDoctorWithShift_Result> SearchDoctorWithShift(string language, string spec, string name, string appDay, Nullable<System.TimeSpan> fromTime, Nullable<System.TimeSpan> toTime, string gender)

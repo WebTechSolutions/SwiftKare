@@ -31,6 +31,8 @@
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <script src="@Url.Content("~/Scripts/SeeDoctor/SearchDoctor.js")"></script>
 <script src="@Url.Content("~/Scripts/icheck.min.js")"></script>
+<script src="@Url.Content("~/Scripts/general.js")"></script>
+
 
 @*<script src="~/Scripts/jquery.blockUI.js"></script>*@
 
@@ -190,8 +192,13 @@
                                                 <label class="control-label">Perferred Time:</label>
                                                 <div class="form-group">
 
-                                                    <input type="text" id="time" class="form-control floating-label" placeholder="Time">
-
+                                                    <input style:display:"none" type="text" id="time" class="form-control floating-label" placeholder="Time">
+                                                    <select class="form-control" id="Shift">
+                                                        <option value="">ALL</option>
+                                                        <option value="">Morning</option>
+                                                        <option value="">Evening</option>
+                                                        <option value="">Night</option>
+                                                    </select>
                                                 </div>
                                             </form>
 
@@ -239,7 +246,7 @@
 
                                     </div>
                                     <div class="ln_solid"></div>
-                                    <button type="button" class="btn btn-primary pull-right" id="search-click" onclick="searchDoctor();">Search</button>
+                                    <button type="button" class="btn btn-primary pull-right" id="search-click" onclick="SearchDoctorWithShift();">Search</button>
 
                                 </div>
 

@@ -1,4 +1,4 @@
-﻿ 
+﻿var favDoctorsList=[];
 function GetROV() {
     var param = "{}";
     var listitems;
@@ -148,25 +148,34 @@ function GetAllLanguages() {
     });
 
 }
-function favDoctors(patientID) {
-    
-    $.ajax({
-        type: 'POST',
-        //url: '@Url.Action("GetAllLanguages", "SeeDoctor")',
-        url: '/SeeDoctor/GetFavDoctors',
-        data: { 'patientID': patientID },
-        dataType: 'json',
-        success: function (response) {
-            $.each(response.Object, function (item) {
-                document.getElementById("" + response.Object[item].docID + "nofav").style.display = "none";
-                document.getElementById("" + response.Object[item].docID + "fav").style.display = "block";
+function favDoctors(doctorID) {
+    if (document.getElementById("" + doctorID + "nofav") != undefined)
+    {
+        document.getElementById("" + doctorID + "nofav").style.display = "none";
+    }
+    if (document.getElementById("" + doctorID + "fav") != undefined) {
+        document.getElementById("" + doctorID + "fav").style.display = "block";
+    }
+   
+   
+   
+    //$.ajax({
+    //    type: 'POST',
+    //    //url: '@Url.Action("GetAllLanguages", "SeeDoctor")',
+    //    url: '/SeeDoctor/GetFavDoctors',
+    //    data: { 'patientID': patientID },
+    //    dataType: 'json',
+    //    success: function (response) {
+    //        $.each(response.Object, function (item) {
+    //            document.getElementById("" + doctorID + "nofav").style.display = "none";
+    //            document.getElementById("" + doctorID + "fav").style.display = "block";
 
-            });
+    //        });
 
-        },
-        error: errorRes
+    //    },
+    //    error: errorRes
 
-    });
+    //});
    // $.unblockUI();
 }
 function toggle(docid, patid) {
@@ -270,7 +279,7 @@ function SearchDoctor(patientID) {
     _objSearch["language"] = $("#Language").find(":selected").text();
     _objSearch["speciality"] = $("#Speciality").find(":selected").text();
     _objSearch["appDate"] = $("#searchdate").val();
-    _objSearch["appTime"] = $("#time").val();
+    _objSearch["appTime"] = $("#Shift").val();
     _objSearch["name"] = $("#providerName").val();
     _objSearch["gender"] = $("#Gender").find(":selected").text();
 
@@ -373,6 +382,111 @@ function SearchDoctor(patientID) {
 
     
 }
+
+function SearchDoctorWithShift(patientID) {
+
+
+    var _objSearch = {};
+    _objSearch["language"] = $("#Language").find(":selected").text();
+    _objSearch["speciality"] = $("#Speciality").find(":selected").text();
+    _objSearch["appDate"] = $("#searchdate").val();
+    _objSearch["shift"] = $("#Shift").find(":selected").text();
+    _objSearch["offset"] = getTimeZoneOffset();
+    _objSearch["name"] = $("#providerName").val();
+    _objSearch["gender"] = $("#Gender").find(":selected").text();
+
+    $.ajax({
+        type: 'POST',
+        //url: '@Url.Action("GetAllLanguages", "SeeDoctor")',
+        url: '/SeeDoctor/SearchDoctorWithShift',
+        data: _objSearch,
+        dataType: 'json',
+        success: function (response) {
+
+            var tableHtml = "";// "<div class='row'>";
+            if (response.Success == true) {
+                if (response.Message != null) {
+
+                    new PNotify({
+                        title: 'Error',
+                        text: response.Message,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                }
+                else {
+                    if (response.DoctorModel != undefined && response.DoctorModel != null) {
+
+                        $.each(response.DoctorModel._objSearchDoctorModel, function (item) {
+
+                            
+                            tableHtml = tableHtml + "<li><div class='well profile_view clsDivDocList' style='position:relative;'>" +
+                                   " <a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel._objSearchDoctorModel[item].doctorID + "nofav' class='fa fa-heart-o'  onclick='toggle(" + response.DoctorModel._objSearchDoctorModel[item].doctorID + "," + patientID + ");return false;' style='display:block'></span></a>" +
+                                   "<a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel._objSearchDoctorModel[item].doctorID + "fav' class='fa fa-heart'  onclick='untoggle(" + response.DoctorModel._objSearchDoctorModel[item].doctorID + "," + patientID + ");return false;' style='display:none'></span></a>" +
+                                    "<i class='crl fa fa-circle clsAvailableSpot' aria-hidden='true' style='color: red; cursor: pointer;font-size: 12px; position:absolute; right:2%;'></i>" +
+                                    "<img src='../Content/images/img.jpg' alt='' class='img-circle img-responsive m-b-10 m-t-0' style='margin: 0 auto;display: inline-block;'>" +
+                                    "<h2 class='m-0'>" +
+                                     " <a href='#' class='thumbnail-col-inner m-b-15' data-toggle='modal' data-target='#myModal2' style='word-wrap: break-word;font-size: 12px'>Dr." +
+                                      response.DoctorModel._objSearchDoctorModel[item].firstName + "&nbsp;" + response.DoctorModel._objSearchDoctorModel[item].lastName + "</a>" +
+                                      
+                                     "</h2>" +
+                                    "<h4 class='brief m-0 clsAvailbleForCall' style='color: green; display:none;' style='font-size: 14px'>Available</h4><h4 class='brief m-0 clsNotAvailbleForCall' style='color: red;font-size: 14px'>Not Available</h4>" +
+                                    "<p class='ratings m-t-5 m-b-0' style='text-align: center;'>" +
+                                    "<a style='word-wrap:word-break;' href='' class='thumbnail-col-inner' data-toggle='modal' data-target='#myModal1' data-todo='{\"id\":" + response.DoctorModel._objSearchDoctorModel[item].doctorID + ",\"doctorName\":\"" + response.DoctorModel._objSearchDoctorModel[item].firstName +
+                                    "&nbsp;" + response.DoctorModel._objSearchDoctorModel[item].lastName + "\"}'  onclick='showDoctorTimings(" + response.DoctorModel._objSearchDoctorModel[item].doctorID + ")' id='" + response.DoctorModel._objSearchDoctorModel[item].doctorID + "'>" +
+                                      "  <i class='fa fa-calendar' aria-hidden='true'></i>" +
+                                      "</a>" +
+                                      "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
+                                      "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
+                                      "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
+                                      "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
+                                      "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
+                                      "&nbsp;<i class='fa fa-phone clsNotMakePhone' aria-hidden='true'></i><a  class='clsMakeCall' title='Call doctor " + response.DoctorModel._objSearchDoctorModel[item].firstName + "&nbsp;" + response.DoctorModel._objSearchDoctorModel[item].lastName + "' onclick='makeCallToDoctor(this)' data-doctorid='" + response.DoctorModel._objSearchDoctorModel[item].doctorID + "' style='display:none;' href='javascript:'>" +
+                                      " <i class='fa fa-phone' aria-hidden='true'></i>" +
+                            "</a>" +
+                            "</p>" +
+                                  "</div>" +
+                                "</li>";
+                            
+                           
+                        });
+                        if (response.DoctorModel._objFavDoctors.length > 0) {
+                            
+                            $.each(response.DoctorModel._objFavDoctors, function (item) {
+                                //favDoctors(response.DoctorModel._objFavDoctors[item].docID);
+                                favDoctorsList.push(response.DoctorModel._objFavDoctors[item].docID);
+                                
+                            });
+                        }
+                        
+                    }
+                }
+
+                if (response.DoctorModel._objSearchDoctorModel.length > 0)
+                {
+                    document.getElementById("docList").innerHTML = tableHtml; checkAnyDoctorAvailableNow();
+                    
+                    for(var i=0;i<favDoctorsList.length;i++)
+                    {
+                        
+                        favDoctors(favDoctorsList[i]);
+                    }
+                }
+                else { document.getElementById("docList").innerHTML = "No record found";; }
+
+                document.getElementById("mainpanel").style.display = "block";
+
+            }
+
+        },
+        error: errorRes
+
+    });
+    
+    
+    
+
+}
 function fetchTimings(fetchdate) {
 
     var _objSearch = {};
@@ -462,15 +576,27 @@ function showDoctorTimings(doctorID) {
 }
 
 
-function errorRes(data) {
-    var err = eval("(" + data.responseText + ")");
-    //alert(err.Message);
-    new PNotify({
-        title: 'Error',
-        text: err.Message,
-        type: 'error',
-        styling: 'bootstrap3'
-    });
+function errorRes(httpObj) {
+    //function (httpObj, textStatus) {
+    var messages = $.parseJSON(httpObj.getResponseHeader('X-Responded-JSON'));
+    if (messages != undefined && messages != null)
+    {
+        if (messages.status == 401) {
+            window.location.href = "/Account/PatientLogin";;
+        }
+    }
+    else
+    {
+        
+        new PNotify({
+            title: 'Error',
+            text: httpObj.statusText ,
+            type: 'error',
+            styling: 'bootstrap3'
+        });
+    }
+    
+        
 }
 
 

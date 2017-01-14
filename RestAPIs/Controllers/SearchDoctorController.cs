@@ -109,6 +109,107 @@ namespace RestAPIs.Controllers
          
 
         }
+
+       
+        [Route("api/searchDoctorWithShift")]
+        public HttpResponseMessage SeeDoctorWithShift(SearchDoctorWithShift searchModel)
+        {
+            TimeSpan? timingsFrom = null;
+            TimeSpan? timingsTo = null;
+            if (searchModel.language == "") { searchModel.language = null; }
+            if (searchModel.speciality == "") { searchModel.speciality = null; }
+            if (searchModel.name == "") { searchModel.name = null; }
+            if (searchModel.appDate == "") { searchModel.appDate = null; }
+            if (searchModel.shift == "") { searchModel.shift = null; }
+            if (searchModel.gender == "") { searchModel.gender = null; }
+
+           if (searchModel.shift!=null)
+            {
+               
+                
+                var _offset = TimeSpan.FromHours(searchModel.offset);
+                
+                if (searchModel.shift=="Morning")
+                {
+                    DateTime utcdateTimeFrom = DateTime.ParseExact("08:00",
+                                       "HH:mm", CultureInfo.InvariantCulture);
+                    DateTime utcdateTimeTo = DateTime.ParseExact("16:00",
+                                        "HH:mm", CultureInfo.InvariantCulture);
+                    DateTime localfrom = utcdateTimeFrom + _offset;
+                    DateTime localto = utcdateTimeTo + _offset;
+                    timingsFrom = localfrom.TimeOfDay;
+                    timingsTo = localto.TimeOfDay;
+                                        
+                }
+                if (searchModel.shift == "Evening")
+                {
+                    DateTime utcdateTimeFrom = DateTime.ParseExact("16:00",
+                                         "HH:mm", CultureInfo.InvariantCulture);
+                    DateTime utcdateTimeTo = DateTime.ParseExact("23:59",
+                                        "HH:mm", CultureInfo.InvariantCulture);
+                    DateTime localfrom = utcdateTimeFrom + _offset;
+                    DateTime localto = utcdateTimeTo + _offset;
+                    timingsFrom = localfrom.TimeOfDay;
+                    timingsTo = localto.TimeOfDay;
+                }
+                if (searchModel.shift == "Night")
+                {
+                    DateTime utcdateTimeFrom = DateTime.ParseExact("23:59",
+                                        "HH:mm", CultureInfo.InvariantCulture);
+                    DateTime utcdateTimeTo = DateTime.ParseExact("08:00",
+                                        "HH:mm", CultureInfo.InvariantCulture);
+                    DateTime localfrom = utcdateTimeFrom + _offset;
+                    DateTime localto = utcdateTimeTo + _offset;
+                    timingsFrom = localfrom.TimeOfDay;
+                    timingsTo = localto.TimeOfDay;
+                }
+            }
+            try
+            {
+                if (searchModel.appDate == null)
+                {
+
+                    var result = db.SearchDoctorWithShift(searchModel.language, searchModel.speciality, searchModel.name, null,
+                    timingsFrom, timingsTo,searchModel.gender).ToList();
+                    var favdoc = (from l in db.FavouriteDoctors
+                                  where l.patientID == searchModel.patientID && l.active == true
+                                  select new FavouriteDoctorModel { docID = l.doctorID, patID = l.patientID }).ToList();
+                    SearchDoctorResult searchResult = new SearchDoctorResult();
+                    searchResult._objSearchDoctorModel =  result;
+                    searchResult._objFavDoctors = favdoc;
+
+                    response = Request.CreateResponse(HttpStatusCode.OK, searchResult);
+                   
+                }
+
+                if (searchModel.appDate != null)
+                {
+                    DateTime day = new DateTime();
+                    day = Convert.ToDateTime(searchModel.appDate);
+                    var result = db.SearchDoctorWithShift(searchModel.language, searchModel.speciality, searchModel.name, day.DayOfWeek.ToString(),
+                   timingsFrom, timingsTo, searchModel.gender).ToList();
+                    var favdoc = (from l in db.FavouriteDoctors
+                                  where l.patientID == searchModel.patientID && l.active == true
+                                  select new FavouriteDoctorModel { docID = l.doctorID, patID = l.patientID }).ToList();
+                    SearchDoctorResult searchResult = new SearchDoctorResult();
+                    searchResult._objSearchDoctorModel = result;
+                    searchResult._objFavDoctors = favdoc;
+
+                    response = Request.CreateResponse(HttpStatusCode.OK, searchResult);
+
+                }
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+
+                return ThrowError(ex, "SeeDoctorWithShift in SeacrhDoctorController.");
+            }
+
+
+        }
+
         [Route("api/searchDoctorwithFav")]
         public HttpResponseMessage SeeDoctorwithFav(SearchDoctorModel searchModel)
         {
@@ -128,18 +229,25 @@ namespace RestAPIs.Controllers
                     });
 
                     response = Request.CreateResponse(HttpStatusCode.OK, searchResult);
-                    //return response;
+                    
                 }
 
                 if (searchModel.appDate != null)
                 {
                     DateTime day = new DateTime();
                     day = Convert.ToDateTime(searchModel.appDate);
-                    var result =
-                        db.SP_SearchDoctor(searchModel.language, searchModel.speciality, searchModel.name, day.DayOfWeek.ToString(),
+                    var result = db.SearchDoctorJSON(searchModel.language, searchModel.speciality, searchModel.name, day.DayOfWeek.ToString(),
                     searchModel.appTime, searchModel.gender).ToList();
-                    response = Request.CreateResponse(HttpStatusCode.OK, result);
-                    //return response;
+                    var favdoc = (from l in db.FavouriteDoctors
+                                  where l.patientID == searchModel.patientID && l.active == true
+                                  select new FavouriteDoctorModel { docID = l.doctorID, patID = l.patientID }).ToList();
+                    var searchResult = (new
+                    {
+                        doctor = result,
+                        favdoctor = favdoc
+                    });
+
+                    response = Request.CreateResponse(HttpStatusCode.OK, searchResult);
                 }
                 return response;
 

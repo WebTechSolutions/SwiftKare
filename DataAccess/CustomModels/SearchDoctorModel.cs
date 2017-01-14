@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccess.CustomModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,16 +17,22 @@ namespace DataAccess.CommonModels
         public string gender { get; set; }
         public long patientID { get; set; }
     }
-    public class FavDoctors
+    public class SearchDoctorWithShift
     {
-        public long doctorID { get; set; }
+        public string language { get; set; }
+        public string speciality { get; set; }
+        public string name { get; set; }
+        public string appDate { get; set; }
+        public string shift { get; set; }
+        public int offset { get; set; }
+        public string gender { get; set; }
+        public long patientID { get; set; }
     }
-
-
+    
     public class SearchDoctorResult
     {
-        List<SearchDoctorModel> _objSearchDoctorModel { get; set; }
-        List<FavDoctors> _objFavDoctors { get; set; }
+        public List<SearchDoctorWithShift_Result> _objSearchDoctorModel { get; set; }
+        public List<FavouriteDoctorModel> _objFavDoctors { get; set; }
     }
    
 }

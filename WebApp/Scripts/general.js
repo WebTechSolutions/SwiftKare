@@ -135,10 +135,14 @@ d.setUTCMinutes(minutes);
 d.setUTCSeconds(0);
 var addAMPM = formatAMPM(d);
 var myDate = new Date(new Date('29/11/2011 12:30PM'+ 'UTC'));
-//var myDate = new Date(new Date(appDate + ' ' + newRegtext + ' UTC'));
-//var timeString = myDate.getDate() + '/' + (myDate.getMonth() + 1) + '/'
-//+ myDate.getFullYear() + ' ' + myDate.getHours() + ':' + myDate.getMinutes();
-//return new Date(timeString);
+
 return appDate + ' ' + addAMPM;
+}
+
+function getTimeZoneOffset()
+{
+    var now = new Date()
+    var offset = now.getTimezoneOffset() / 60;
+    return offset;
 }
 
