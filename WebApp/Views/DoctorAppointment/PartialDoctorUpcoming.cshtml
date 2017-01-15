@@ -81,8 +81,22 @@ else
     var flag = 0;
     var _objConsult = {};
 
-    function createConsult(doctorID,patientID,appID)
+    function createConsultFromDoctor(doctorID,patientID,appID)
     {
+        
+        var oPatInfo = null;
+        for (var i = 0; i < availablePatients.patient.length; i++) {
+            if (availablePatients.patient[i].patId == patId) {
+                oPatInfo = availablePatients.patient[i];
+                break;
+            }
+        }
+
+        if (oPatInfo == null) {
+            alert('Patient is not online now');
+            return;
+        }
+
         _objConsult["doctorId"] = doctorID;
         _objConsult["patientId"] = patientID;
         _objConsult["appID"] = appID;
@@ -114,7 +128,8 @@ else
                             type: 'info',addclass: 'dark',
                             styling: 'bootstrap3'
                         });
-                        makeCallToPatient(patientID, appID,response.ApiResultModel.ID);
+                        var _consultID=response.ApiResultModel.ID;
+                        makeCallToPatient(patientID, appID,_consultID);
                                           
                     }
                 }
@@ -159,10 +174,10 @@ else
         console.log(moment(then,"YYYY/MM/DD HH:mm:ss"));
         var duration = moment.duration(moment(then,"YYYY/MM/DD HH:mm:ss").diff(moment(now,"YYYY/MM/DD HH:mm:ss")));
 
-        if((288000>duration._milliseconds)&&(duration._milliseconds>-842000))
+        if((288000>duration._milliseconds)&&(duration._milliseconds>-842000)) //Check for 5 min before and 15 min after
         {
-            //alert("Call...");
-            createConsult(doctorID,patientID,appID);
+            alert("Call...");
+            createConsultFromDoctor(doctorID,patientID,appID);
         } 
         else
         {

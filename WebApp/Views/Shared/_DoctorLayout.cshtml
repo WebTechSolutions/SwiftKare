@@ -95,7 +95,7 @@
 </head>
 <body class="nav-md">
 
-    <ul id="messages"></ul>
+    <ul id="messages" style="display:none"></ul>
     <div class="container body">
         <div class="main_container" style="background-color: #2a3f54;">
             <div class="col-md-3 left_col menu_fixed">
@@ -315,7 +315,7 @@
         };
 
         function makeCallToPatient(patId, appId,consultID) {
-
+            debugger;
             var oPatInfo = null;
             for (var i = 0; i < availablePatients.patient.length; i++) {
                 if (availablePatients.patient[i].patId == patId) {
@@ -345,7 +345,7 @@
                 PatientName: oPatInfo.firstName + ' ' + oPatInfo.lastName,
                 DoctorName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
                 SenderType: 'Doctor',
-                AppId: appId,
+                consultID: consultID,
                 Message: JSON.stringify({ status: 'call', name: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)' }),
                 UserGroup: 'doctors'
             });
@@ -408,14 +408,15 @@
             };
 
             chat.client.patientAcceptedCall = function (patUserName, patId, appId) {
-                alert('Patient ' + patUserName + ' accepted call.');
+                alert('Patient ' + patUserName + ' accepted call. this alert is in _DoctorLayout. NEed to redirect to page');
             }
 
             chat.client.patientRejectedCall = function (patUserName, patId, appId) {
-                alert('Patient ' + patUserName + ' rejected call.');
+                alert('Patient ' + patUserName + ' rejected call.this alert is in _DoctorLayout');
             }
 
             chat.client.patientRedirectedToCallHandle = function (consultId, patId, patName) {
+                debugger;
                 var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Doctor&receiverId=" + patId + "&doctorName=@(SessionHandler.UserInfo.FirstName + " "+ SessionHandler.UserInfo.LastName)&patientName=" + patName;
 
                 $.post(cUrlReadyForCall, function (oResp) {
@@ -428,7 +429,7 @@
 
             chat.client.receiveMessage = function (msgFrom, msg, receiverId, senderid) {
                 $('#messages').empty();
-
+                debugger;
                 if (msgFrom != 'ChatHub') {
                     var txt = "";
                     //alert(msg);
@@ -476,7 +477,8 @@
                         var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=" + signalRInfo.SenderId + "&userType=Doctor&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + fromJson.name;
 
                         $.post(cUrlReadyForCall, function (oResp) {
-                            if (oResp) {
+                           // if (oResp)
+                            {
                                 localStorage.setItem('consultationKey', oResp);
 
                                 //Redirect doctor to call
