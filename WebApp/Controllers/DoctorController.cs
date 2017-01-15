@@ -8,6 +8,7 @@ using DataAccess.CustomModels;
 using WebApp.Helper;
 using System;
 using System.Globalization;
+using WebApp.Repositories.PatientRepositories;
 
 namespace WebApp.Controllers
 {
@@ -192,6 +193,24 @@ namespace WebApp.Controllers
             return Json(id, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult CreateConsult(CreateConsultModel model)
+        {
+            try
+            {
+                ConsultationRepository objConsultationRepo = new ConsultationRepository();
+               
+                ApiResultModel apiresult = new ApiResultModel();
+                apiresult = objConsultationRepo.CreateConsult(model);
+                return Json(new { Success = true, ApiResultModel = apiresult });
+
+            }
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                return Json(new { Message = ex.Response });
+            }
+
+        }
     }
 
 }

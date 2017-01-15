@@ -841,7 +841,49 @@
         //$('#pharmacy').autocomplete({
         //    lookup: pharmacyArray
         //});
+        function createConsult(doctorID,patientID,appID)
+        {
+            _objConsult["doctorId"] = doctorID;
+            _objConsult["patientId"] = patientID;
+            _objConsult["appID"] = appID;
+            _objConsult["sessionID"] = "0";
+            _objConsult["token"] = "0";
+            _objConsult["userID"] = '0'
+        
+            $.ajax({
+                type: 'POST',
+                url: '/Doctor/CreateConsult',
+                data: JSON.stringify(_objConsult),
+                contentType: "application/json",
+                dataType: 'json',
+                success: function (response) {
 
+                    if (response.Success == true) {
+                        if (response.ApiResultModel.message != "") {
+                            new PNotify({
+                                title: 'Error',
+                                text: response.ApiResultModel.message,
+                                type: 'error',
+                                styling: 'bootstrap3'
+                            });
+                        }
+                        else if (response.ApiResultModel.message == "") {
+                            new PNotify({
+                                title: 'Success',
+                                text: "Consultation is created successfully.",
+                                type: 'info',addclass: 'dark',
+                                styling: 'bootstrap3'
+                            });
+                            makeCallToPatient(patientID, appID,response.ApiResultModel.ID);
+                                          
+                        }
+                    }
+
+                },
+                error: errorRes
+
+            });
+        }
 
         var oStripePayCheckout = new StripePayCheckout({
             publisherKey: '@publisherKey',
@@ -851,6 +893,10 @@
             handleSuccess: function () {
 
                 CreateAppointment(@ViewBag.PatienID,@amount);
+
+
+
+
                 var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
 
                 var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;

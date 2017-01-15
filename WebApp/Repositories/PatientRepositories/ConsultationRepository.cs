@@ -81,5 +81,22 @@ namespace WebApp.Repositories.PatientRepositories
 
         }
 
+        public ApiResultModel CreateConsult(CreateConsultModel model)
+        {
+
+            try
+            {
+
+                var strContent = JsonConvert.SerializeObject(model);
+                var response = ApiConsumerHelper.PostData("api/createConsult", strContent);
+                var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+
+        }
     }
 }

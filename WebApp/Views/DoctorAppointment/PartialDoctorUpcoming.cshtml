@@ -52,7 +52,7 @@ else
                                     <span class="caret"></span>
                                     
                                 </button>
-                                <a id="@("div"+j)" class="clsMakeCall" title="Call" onclick="checkCallTime('@item.utcappDate','@j');" data-doctorid="@item.patientID" 
+                                <a id="@("div"+j)" class="clsMakeCall" title="Call" onclick="checkCallTime('@item.utcappDate','@item.doctorID','@item.patientID','@item.appID');" data-doctorid="@item.patientID" 
                                    style="display:block;" href="javascript:">
                                     @*<i class="fa fa-phone" aria-hidden="true" style="margin-right: -23px;margin-top: 9px;width: 20px;"></i>*@
                                     <img src="~/Content/images/icon_call-history.png" alt="call" style="margin-right: -23px;margin-top: 9px;width: 20px;">
@@ -79,8 +79,60 @@ else
 <!-- Datatables -->
 <script>
     var flag = 0;
-    var _objCT = {};
-    function checkCallTime(utcdate)//"2012-11-29 22:30:00"
+    var _objConsult = {};
+
+    function createConsult(doctorID,patientID,appID)
+    {
+        _objConsult["doctorId"] = doctorID;
+        _objConsult["patientId"] = patientID;
+        _objConsult["appID"] = appID;
+        _objConsult["sessionID"] = "0";
+        _objConsult["token"] = "0";
+        _objConsult["userID"] = '0'
+        
+        $.ajax({
+            type: 'POST',
+            url: '/Doctor/CreateConsult',
+            data: JSON.stringify(_objConsult),
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (response) {
+
+                if (response.Success == true) {
+                    if (response.ApiResultModel.message != "") {
+                        new PNotify({
+                            title: 'Error',
+                            text: response.ApiResultModel.message,
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                    }
+                    else if (response.ApiResultModel.message == "") {
+                        new PNotify({
+                            title: 'Success',
+                            text: "Consultation is created successfully.",
+                            type: 'info',addclass: 'dark',
+                            styling: 'bootstrap3'
+                        });
+                        makeCallToPatient(patientID, appID,response.ApiResultModel.ID);
+                                          
+                    }
+                }
+
+            },
+            error: errorRes
+
+        });
+    }
+    function errorRes(data) {
+        new PNotify({
+            title: 'Error',
+            text: data.Message,
+            type: 'error',
+            styling: 'bootstrap3'
+        });
+    }
+    function checkCallTime(utcdate,doctorID,patientID,appID)//"2012-11-29 22:30:00"
     {
         var now  = new Date();
         //var then = localdate;//"2017/01/16 10:44:00";
@@ -109,7 +161,8 @@ else
 
         if((288000>duration._milliseconds)&&(duration._milliseconds>-842000))
         {
-            alert("Call...");
+            //alert("Call...");
+            createConsult(doctorID,patientID,appID);
         } 
         else
         {
