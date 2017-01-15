@@ -504,7 +504,13 @@ function errorRes(httpObj) {
     if (messages != undefined && messages != null)
     {
         if (messages.status == 401) {
-            window.location.href = "/Account/PatientLogin";;
+            //window.location.href = "/Account/PatientLogin";
+            new PNotify({
+                title: 'Error',
+                text: httpObj.statusText,
+                type: 'error',
+                styling: 'bootstrap3'
+            });
         }
     }
     else

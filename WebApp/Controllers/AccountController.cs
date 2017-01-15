@@ -21,7 +21,7 @@ using WebApp.Repositories.AdminRepository;
 //Jam
 namespace WebApp.Controllers
 {
-   // [Authorize]
+    [Authorize]
     public class AccountController : Controller
     {
         string error = "";

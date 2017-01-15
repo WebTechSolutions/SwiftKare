@@ -859,13 +859,14 @@
 
                 CreateAppointment(@ViewBag.PatienID,@amount);
                 var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
-
+                //check for apptype if l then go here
+                //create consult here
                 var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
 
                 $.post(cUrlReadyForCall, function (oResp) {
                     if (oResp) {
                         localStorage.setItem('consultationKey', oResp);
-
+                        
                         //Redirect doctor to call
                         window.location = '@Url.Action("Index","UserChat")';
                     }
@@ -885,12 +886,12 @@
 
     });
 
-    function searchDoctor() {
+    @*function searchDoctor() {
 
         SearchDoctor(@ViewBag.PatienID)
 
 
-    }
+    }*@
 
 
     $('#searchdate').bootstrapMaterialDatePicker
