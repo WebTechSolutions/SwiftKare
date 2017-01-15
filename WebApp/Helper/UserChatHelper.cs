@@ -68,7 +68,7 @@ namespace WebApp.Helper
 
                 //Create consult ID
 
-                if (appId == "")
+              /*  if (appId == "")
                 {
                     var oRetConsultInfo = new VideoCallRepository().CreateConsultWithoutAppointment(
                         new CreateConsultModel
@@ -96,7 +96,7 @@ namespace WebApp.Helper
                         });
 
                     oRet.ConsultId = oRetConsultInfo.ID.ToString();
-                }
+                }*/
 
                 lstAllOpenTokSessions.Add(oRet);
             }
