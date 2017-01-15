@@ -124,6 +124,30 @@ namespace WebApp.Controllers
             }
         }
        
+        //[HttpPost]
+        //public JsonResult SearchDoctor(SearchDoctorModel model)
+        //{
+        //    SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
+        //    //IEnumerable<SeeDoctorDTO> docList= objDoctorRepo.SeeDoctor(model.Doctor.firstName, model.Gender, model.Language, model.Speciallity, model.AppDate.DayOfWeek.ToString(), model.Timing.seacrhTime);
+        //    try
+        //    {
+        //        if (model.gender == "ALL") { model.gender = null; }
+        //        if (model.name == "") { model.name = null; }
+        //        if (model.language == "ALL") { model.language = null; }
+        //        if (model.speciality == "ALL") { model.speciality = null; }
+        //        if (model.appTime.ToString() == "") { model.appTime = null; }
+        //        model.patientID = SessionHandler.UserInfo.Id;
+        //        List<DoctorDataset> doctorList = objSeeDoctorRepo.SeeDoctor(model);
+        //        return Json(new { Success = true, DoctorModel = doctorList });
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { Message = ex.Message });
+        //    }
+
+
+        //}
         [HttpPost]
         public JsonResult SearchDoctor(SearchDoctorModel model)
         {
@@ -135,9 +159,9 @@ namespace WebApp.Controllers
                 if (model.name == "") { model.name = null; }
                 if (model.language == "ALL") { model.language = null; }
                 if (model.speciality == "ALL") { model.speciality = null; }
-                if (model.appTime.ToString() == "") { model.appTime = null; }
+                if (model.appTime == "ALL") { model.appTime = null; }
                 model.patientID = SessionHandler.UserInfo.Id;
-                List<DoctorDataset> doctorList = objSeeDoctorRepo.SeeDoctor(model);
+                SearchDoctorResult doctorList = objSeeDoctorRepo.SeeDoctorWithShift(model);
                 return Json(new { Success = true, DoctorModel = doctorList });
 
             }

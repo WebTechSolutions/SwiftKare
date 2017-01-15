@@ -308,9 +308,12 @@
         function getReceiverConnectionId(receiverConnectionId) {
             $("input[id$='receiverConnectionId']").val(receiverConnectionId);
         }
-
+        var appType = "";
+        function setAppType(type) {
+            appType = type;
+        }
         function makeCallToDoctor(e) {
-
+            setAppType("L");
             var docId = $(e).attr("data-doctorid");
 
             var oDocInfo = null;
@@ -322,6 +325,7 @@
             }
 
             setDoctorID($(e).attr("data-doctorid"));
+           
             var curElem = $(e);
 
             //Log Call Info - Starts

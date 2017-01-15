@@ -56,9 +56,9 @@ namespace DataAccess
         public string pharmacy { get; set; }
         public Nullable<long> pharmacyid { get; set; }
         public string title { get; set; }
-        public string suffix { get; set; }
         public Nullable<int> height { get; set; }
         public Nullable<int> weight { get; set; }
+        public string suffix { get; set; }
         public string timezone { get; set; }
         public string city { get; set; }
         public string state { get; set; }

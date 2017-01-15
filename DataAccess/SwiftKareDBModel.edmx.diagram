@@ -71,26 +71,26 @@
         <AssociationConnector Association="SwiftKareDBModel.FK_AppAttachment_Appointments" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Appointments" />
         <EntityTypeShape EntityType="SwiftKareDBModel.Doctor" Width="1.5" PointX="3.75" PointY="17.125" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Patient" Width="1.5" PointX="0.75" PointY="22.625" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Appointments_Doctor" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_Appointments_Patient" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_Conditions_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Doctor" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Patient" />
-        <AssociationConnector Association="SwiftKareDBModel.FK_ConsultationROS_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_DoctorLanguages_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_DoctorLicenseStates_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_DoctorSpeciality_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_DoctorTimings_Doctor" />
         <AssociationConnector Association="SwiftKareDBModel.FK_UserFiles_Doctor" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Alert" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.SuffixMaster" Width="1.5" PointX="22.375" PointY="7.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.TitleMaster" Width="1.5" PointX="22.375" PointY="10.75" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Patient" Width="1.5" PointX="0.75" PointY="23.625" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_Appointments_Patient" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_Conditions_Patient" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Patient" />
+        <AssociationConnector Association="SwiftKareDBModel.FK_ConsultationROS_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Medications_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Allergies_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_FamilyHX_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Surgeries_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_UserFiles_Patient" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Alert" Width="1.5" PointX="0.75" PointY="3.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.SuffixMaster" Width="1.5" PointX="22.375" PointY="7.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.TitleMaster" Width="1.5" PointX="22.375" PointY="10.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

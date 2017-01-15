@@ -52,6 +52,23 @@ namespace WebApp.Repositories.DoctorRepositories
                  }
 
             }
+        public SearchDoctorResult SeeDoctorWithShift(SearchDoctorModel searchModel)
+        {
+
+
+            try
+            {
+                var strContent = JsonConvert.SerializeObject(searchModel);
+                var response = ApiConsumerHelper.PostData("api/searchDoctorwithFav/?searchModel", strContent);
+                var result = JsonConvert.DeserializeObject<SearchDoctorResult>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+
+        }
         public List<FetchDoctorTimingModel> FetchDoctorTimes(FetchTimingsModel searchModel)
         {
 

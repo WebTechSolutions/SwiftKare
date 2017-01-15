@@ -31,6 +31,8 @@
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <script src="@Url.Content("~/Scripts/SeeDoctor/SearchDoctor.js")"></script>
 <script src="@Url.Content("~/Scripts/icheck.min.js")"></script>
+<script src="@Url.Content("~/Scripts/general.js")"></script>
+
 
 @*<script src="~/Scripts/jquery.blockUI.js"></script>*@
 
@@ -190,8 +192,13 @@
                                                 <label class="control-label">Perferred Time:</label>
                                                 <div class="form-group">
 
-                                                    <input type="text" id="time" class="form-control floating-label" placeholder="Time">
-
+                                                    @*<input style:display:"none" type="text" id="time" class="form-control floating-label" placeholder="Time">*@
+                                                    <select class="form-control" name="Shift">
+                                                        <option value="A">ALL</option>
+                                                        <option value="M">Morning</option>
+                                                        <option value="E">Evening</option>
+                                                        <option value="N">Night</option>
+                                                    </select>
                                                 </div>
                                             </form>
 
@@ -239,7 +246,7 @@
 
                                     </div>
                                     <div class="ln_solid"></div>
-                                    <button type="button" class="btn btn-primary pull-right" id="search-click" onclick="searchDoctor();">Search</button>
+                                    <button type="button" class="btn btn-primary pull-right" id="search-click" onclick="SearchDoctor(@SessionHandler.UserInfo.Id);">Search</button>
 
                                 </div>
 
@@ -841,49 +848,7 @@
         //$('#pharmacy').autocomplete({
         //    lookup: pharmacyArray
         //});
-        function createConsult(doctorID,patientID,appID)
-        {
-            _objConsult["doctorId"] = doctorID;
-            _objConsult["patientId"] = patientID;
-            _objConsult["appID"] = appID;
-            _objConsult["sessionID"] = "0";
-            _objConsult["token"] = "0";
-            _objConsult["userID"] = '0'
-        
-            $.ajax({
-                type: 'POST',
-                url: '/Doctor/CreateConsult',
-                data: JSON.stringify(_objConsult),
-                contentType: "application/json",
-                dataType: 'json',
-                success: function (response) {
 
-                    if (response.Success == true) {
-                        if (response.ApiResultModel.message != "") {
-                            new PNotify({
-                                title: 'Error',
-                                text: response.ApiResultModel.message,
-                                type: 'error',
-                                styling: 'bootstrap3'
-                            });
-                        }
-                        else if (response.ApiResultModel.message == "") {
-                            new PNotify({
-                                title: 'Success',
-                                text: "Consultation is created successfully.",
-                                type: 'info',addclass: 'dark',
-                                styling: 'bootstrap3'
-                            });
-                            makeCallToPatient(patientID, appID,response.ApiResultModel.ID);
-                                          
-                        }
-                    }
-
-                },
-                error: errorRes
-
-            });
-        }
 
         var oStripePayCheckout = new StripePayCheckout({
             publisherKey: '@publisherKey',
@@ -893,26 +858,28 @@
             handleSuccess: function () {
 
                 CreateAppointment(@ViewBag.PatienID,@amount);
+                if(appType="L")
+                {
 
+               
+                    var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
+                    //check for apptype if l then go here
+                    //create consult here
+                    var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
 
+                    $.post(cUrlReadyForCall, function (oResp) {
+                        if (oResp) {
+                            localStorage.setItem('consultationKey', oResp);
+                        
+                            //Redirect doctor to call
+                            window.location = '@Url.Action("Index","UserChat")';
+                        }
+                    });
 
-
-                var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
-
-                var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
-
-                $.post(cUrlReadyForCall, function (oResp) {
-                    if (oResp) {
-                        localStorage.setItem('consultationKey', oResp);
-
-                        //Redirect doctor to call
-                        window.location = '@Url.Action("Index","UserChat")';
-                    }
-                });
-
-                //Redirect User for video chat
-                alert("Payment successful! Now user can be redirected to video chat page with doctor.");
-                //location.reload();
+                    //Redirect User for video chat
+                    alert("Payment successful! Now user can be redirected to video chat page with doctor.");
+                    //location.reload();
+                }
             },
             handleFailure: function () {
                 alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
@@ -924,12 +891,12 @@
 
     });
 
-    function searchDoctor() {
+    @*function searchDoctor() {
 
         SearchDoctor(@ViewBag.PatienID)
 
 
-    }
+    }*@
 
 
     $('#searchdate').bootstrapMaterialDatePicker
@@ -1045,13 +1012,9 @@
 
 @*For Medicine*@
 <script>
-    //jQuery('#myMedicine').on('input', function() {
-    //alert($("#myMedicine").val());
-    //GetMedicines($("#myMedicine").val());
-    //});
+   
     $(document).ready(function () {
 
-        //GetMedicines($("#myMedicine").val());
         GetMedications(@ViewBag.PatienID);
         GetFrequency();
         $('#medicinestable').DataTable({

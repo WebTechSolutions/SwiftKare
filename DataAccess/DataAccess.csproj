@@ -270,6 +270,9 @@
     <Compile Include="SearchDoctorJSON_Result.cs">
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="SearchDoctorWithShift_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="SecretQuestion.cs">
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>
