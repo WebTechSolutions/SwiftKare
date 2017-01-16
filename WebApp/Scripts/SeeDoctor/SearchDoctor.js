@@ -436,8 +436,16 @@ function fetchTimings(fetchdate) {
             {
                 var tablehtml = "";
                 $.each(response.Object, function (item) {
-
-                    tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + fetchdate + "\")' style='width:85px'>" + response.Object[item] + "</button></li>";
+                   
+                    var tolocalTime = converttoLocal(response.Object[item]);
+                    console.log('dbTime ' + response.Object[item] + ' local-time ' + tolocalTime);
+                    var flag = compareTime(tolocalTime);
+                    if (flag)
+                    {
+                        console.log(response.Object[item] + ' is later than ' + tolocalTime);
+                        tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + fetchdate + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
+                    }
+                        
 
                 });
 
@@ -484,9 +492,14 @@ function showDoctorTimings(doctorID) {
 
             var tablehtml = "";
             $.each(response.Object, function (item) {
-
-                tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + response.Object[item] + "</button></li>";
-
+                var tolocalTime = converttoLocal(response.Object[item]);
+                console.log('dbTime ' + response.Object[item] + ' local-time ' + tolocalTime);
+                var flag = compareTime(tolocalTime);
+                if (flag)
+                {
+                    console.log(response.Object[item] + ' is later than ' + tolocalTime);
+                    tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
+                 }
             });
 
             if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
@@ -525,6 +538,25 @@ function errorRes(httpObj) {
     }
     
         
+}
+function compareTime(time) {
+    var localDate = new Date();
+    var dbDate = localDate.getFullYear() + '/' + localDate.getMonth() + '/' + localDate.getDate() + ' ' + time;
+    var compareDate = new Date(dbDate);
+    var dbtime = compareDate.getHours + ':' + compareDate.getMinutes();
+
+    var localtime = localDate.getHours + ':' + localDate.getMinutes();
+
+    if (dbtime > localtime) {
+        //alert(dbtime + ' ' + localtime + ' true');
+        return true;
+    }
+
+    else {
+        //alert(dbtime + ' ' + localtime + 'flase');
+        return false;
+    }
+
 }
 
 

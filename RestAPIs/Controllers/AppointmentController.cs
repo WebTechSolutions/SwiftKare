@@ -190,13 +190,16 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
                     return response;
                 }
-
+                DateTime myDateTime = DateTime.ParseExact(model.appTime,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
                 app.appointmentStatus = "C";
                 app.active = true;
                 app.doctorID = model.doctorID;
                 app.patientID = model.patientID;
-                app.appTime = To24HrTime(model.appTime);
-                app.appDate =Convert.ToDateTime(String.Format("{0:MM/dd/yyyy}", model.appDate));
+                //app.appTime = To24HrTime(model.appTime);
+                          
+                app.appTime= myDateTime.ToUniversalTime().TimeOfDay;
+                app.appDate = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate));
                 app.rov = model.rov;
                 app.chiefComplaints = model.chiefComplaints;
                 app.cb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault(); model.patientID.ToString();
