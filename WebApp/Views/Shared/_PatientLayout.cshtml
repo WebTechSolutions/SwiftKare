@@ -308,9 +308,12 @@
         function getReceiverConnectionId(receiverConnectionId) {
             $("input[id$='receiverConnectionId']").val(receiverConnectionId);
         }
-
+        var appType = "";
+        function setAppType(type) {
+            appType = type;
+        }
         function makeCallToDoctor(e) {
-
+            setAppType("L");
             var docId = $(e).attr("data-doctorid");
 
             var oDocInfo = null;
@@ -322,6 +325,7 @@
             }
 
             setDoctorID($(e).attr("data-doctorid"));
+           
             var curElem = $(e);
 
             //Log Call Info - Starts
@@ -342,23 +346,7 @@
                 UserGroup: 'doctors'
             });
         }
-        @*function makeCallToPatient(e) {
-            //setDoctorID($(e).attr("data-doctorid"));
-            var curElem = $(e);
-            var DoctorName = 'Dr. ' + '@SessionHandler.UserInfo.FirstName' + ' ' + '@SessionHandler.UserInfo.LastName';
-            //alert("calling");
-
-            chat.server.SendMessageToPatient(
-            {
-                SenderId: '@SessionHandler.UserInfo.Id',
-                UserName: '@SessionHandler.UserInfo.Email',
-                ReceiverConnectionId: curElem.data("connId"),
-                ReceiverId: '20',
-                SenderType: 'Doctor',
-                Message: JSON.stringify({ status: 'call', name: DoctorName }),
-                UserGroup: 'doctors'
-            });
-        }*@
+       
 
         $(function () {
 

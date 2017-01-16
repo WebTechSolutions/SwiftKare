@@ -3,6 +3,13 @@ var _objAppointment = {}; //appointment data to hold and save at the end
 var _objPharmacy = {}; //pharmacy data to hold and save at the end
 var _selecteddoctorID;
 var myappTime;
+
+
+function setAppType(type)
+{
+    appType = type;
+}
+
 function uploadFiles() {
     var form = $('#mydropzone')[0];
     var dataString = new FormData(form);
@@ -235,7 +242,11 @@ function CreateAppointment(patientID,amount) {
                         type: 'info',addclass: 'dark',
                         styling: 'bootstrap3'
                     });
-                    window.location.href = '/Appointment/Index/';
+                    if (appType == "S")
+                    {
+                        window.location.href = '/Appointment/Index/';
+                    }
+                   
                     
 
                 }

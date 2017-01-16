@@ -275,7 +275,7 @@ function untoggle(docid, patid) {
 
 function SearchDoctor(patientID) {
 
-
+    showLoader();
     var _objSearch = {};
     var offset=getTimeZoneOffset();
     _objSearch["language"] = $("#Language").find(":selected").text();
@@ -405,7 +405,7 @@ function SearchDoctor(patientID) {
 
     });
     
-    
+    hideLoader();
     
 
 }
@@ -452,7 +452,7 @@ function fetchTimings(fetchdate) {
 }
 
 function showDoctorTimings(doctorID) {
-   
+    setAppType("S");
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1; //January is 0!
