@@ -207,60 +207,7 @@ function getClockTime()
 } // function getClockTime()
 
 //-->
-function CreateAppointment(patientID,amount) {
-   
-    _objAppointment["appDate"] = $("#fetchdate").val();
-    _objAppointment["doctorID"] = $("#doctorid").val();
-    _objAppointment["patientID"] = patientID;
-    _objAppointment["paymentAmt"] = amount;
-    _objAppointment["rov"] = $("#ROV option:selected").text();
-    _objAppointment["chiefComplaints"] = $("#chiefcomplaints").val();
-    
 
-
-    $.ajax({
-        type: 'POST',
-        url: '/SeeDoctor/SaveAppointment',
-        data: JSON.stringify(_objAppointment),
-        contentType: "application/json",
-        dataType: 'json',
-        success: function (response) {
-
-            if (response.Success == true) {
-                if (response.ApiResultModel.message != "") {
-                    new PNotify({
-                        title: 'Error',
-                        text: response.ApiResultModel.message,
-                        type: 'error',
-                        styling: 'bootstrap3'
-                    });
-                }
-                else if (response.ApiResultModel.message == "") {
-                    new PNotify({
-                        title: 'Success',
-                        text: "Appointment is scheduled successfully.",
-                        type: 'info',addclass: 'dark',
-                        styling: 'bootstrap3'
-                    });
-                    if (appType == "S")
-                    {
-                        window.location.href = '/Appointment/Index/';
-                    }
-                   
-                    
-
-                }
-
-
-
-            }
-
-        },
-        error: errorRes
-
-    });
-
-}
 function AddUpdatePharmacy(patientID,pharmacy) {
 
     _objPharmacy["patientID"] = patientID;

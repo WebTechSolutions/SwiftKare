@@ -13,7 +13,8 @@ using WebApp.Repositories.PatientRepositories;
 namespace WebApp.Controllers
 {
     [DoctorSessionExpire]
-    [Authorize(Roles = "Doctor")]
+    // [Authorize(Roles = "Doctor")]
+    [Authorize]
     public class DoctorController : Controller
     {
         DoctorTimingsRepository objTimingRepo = new DoctorTimingsRepository();

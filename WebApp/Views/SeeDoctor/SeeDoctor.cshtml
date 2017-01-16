@@ -858,28 +858,7 @@
             handleSuccess: function () {
 
                 CreateAppointment(@ViewBag.PatienID,@amount);
-                if(appType="L")
-                {
-
-               
-                    var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
-                    //check for apptype if l then go here
-                    //create consult here
-                    var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
-
-                    $.post(cUrlReadyForCall, function (oResp) {
-                        if (oResp) {
-                            localStorage.setItem('consultationKey', oResp);
-                        
-                            //Redirect doctor to call
-                            window.location = '@Url.Action("Index","UserChat")';
-                        }
-                    });
-
-                    //Redirect User for video chat
-                    alert("Payment successful! Now user can be redirected to video chat page with doctor.");
-                    //location.reload();
-                }
+                
             },
             handleFailure: function () {
                 alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
@@ -897,7 +876,127 @@
 
 
     }*@
+    function CreateAppointment(patientID,amount) {
+   
+        _objAppointment["appDate"] = $("#fetchdate").val();
+        _objAppointment["doctorID"] = $("#doctorid").val();
+        _objAppointment["patientID"] = patientID;
+        _objAppointment["paymentAmt"] = amount;
+        _objAppointment["rov"] = $("#ROV option:selected").text();
+        _objAppointment["chiefComplaints"] = $("#chiefcomplaints").val();
+    
 
+
+        $.ajax({
+            type: 'POST',
+            url: '/SeeDoctor/SaveAppointment',
+            data: JSON.stringify(_objAppointment),
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (response) {
+
+                if (response.Success == true) {
+                    if (response.ApiResultModel.message != "") {
+                        new PNotify({
+                            title: 'Error',
+                            text: response.ApiResultModel.message,
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                    }
+                    else if (response.ApiResultModel.message == "") {
+                        new PNotify({
+                            title: 'Success',
+                            text: "Appointment is scheduled successfully.",
+                            type: 'info',addclass: 'dark',
+                            styling: 'bootstrap3'
+                        });
+                        if (appType == "S")
+                        {
+                            window.location.href = '/Appointment/Index/';
+                        }
+                        if (appType == "L")
+                        { createConsult($("#doctorid").val(), patientID, response.ApiResultModel.ID);}
+
+                   
+                    
+
+                    }
+
+
+
+                }
+
+            },
+            error: errorRes
+
+        });
+
+    }
+    function createConsult(doctorID, patientID, appID) {
+        _objConsult["doctorId"] = doctorID;
+        _objConsult["patientId"] = patientID;
+        _objConsult["appID"] = appID;
+        _objConsult["sessionID"] = "0";
+        _objConsult["token"] = "0";
+        _objConsult["userID"] = '0'
+
+        $.ajax({
+            type: 'POST',
+            url: '/Doctor/CreateConsult',
+            data: JSON.stringify(_objConsult),
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (response) {
+
+                if (response.Success == true) {
+                    if (response.ApiResultModel.message != "") {
+                        new PNotify({
+                            title: 'Error',
+                            text: response.ApiResultModel.message,
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                    }
+                    else if (response.ApiResultModel.message == "") {
+                        new PNotify({
+                            title: 'Success',
+                            text: "Consultation is created successfully.",
+                            type: 'info', addclass: 'dark',
+                            styling: 'bootstrap3'
+                        });
+                   
+                        if(appType="L")
+                        {
+
+               
+                            var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
+                            //check for apptype if l then go here
+                            //create consult here
+                            var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
+
+                            $.post(cUrlReadyForCall, function (oResp) {
+                                if (oResp) {
+                                    localStorage.setItem('consultationKey', oResp);
+                        
+                                    //Redirect doctor to call
+                                    window.location = '@Url.Action("Index","UserChat")';
+                                }
+                            });
+
+                            //Redirect User for video chat
+                            alert("Payment successful! Now user can be redirected to video chat page with doctor.");
+                            //location.reload();
+                        }
+
+                    }
+                }
+
+            },
+            error: errorRes
+
+        });
+    }
 
     $('#searchdate').bootstrapMaterialDatePicker
             ({
