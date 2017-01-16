@@ -23,5 +23,6 @@ namespace DataAccess
         public string appTime { get; set; }
         public string rov { get; set; }
         public string chiefComplaints { get; set; }
+        public string utcappDate { get; set; }
     }
 }

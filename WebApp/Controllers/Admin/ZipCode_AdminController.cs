@@ -5,9 +5,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApp;
+using WebApp.Helper;
 
 namespace SwiftKare.Controllers
 {
+    [AdminSessionExpire]
     [Authorize(Roles = "Admin")]
     public class ZipCode_AdminController : Controller
     {

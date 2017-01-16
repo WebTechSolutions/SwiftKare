@@ -25,5 +25,6 @@ namespace DataAccess
         public byte[] picture { get; set; }
         public string gender { get; set; }
         public string languageName { get; set; }
+        public string utcappDate { get; set; }
     }
 }

@@ -9,6 +9,8 @@ using WebApp.Repositories.PatientRepositories;
 
 namespace WebApp.Controllers
 {
+    [PatientSessionExpire]
+    [Authorize(Roles = "Patient")]
     public class AlertController : Controller
     {
         AlertRespository oAlertRepository;
@@ -20,20 +22,9 @@ namespace WebApp.Controllers
         // GET: Alert
         public ActionResult Index()
         {
-            if (SessionHandler.IsExpired)
-            {
-                return Json(new
-                {
-                    redirectUrl = Url.Action("PatientLogin", "Account"),
-                    isRedirect = true
-                });
-            }
-            else
-            {
-                ViewBag.errorMessage = "";
-                ViewBag.successMessage = "";
+           
                 return View();
-            }
+           
         }
         public PartialViewResult PartialAlertView()
         {

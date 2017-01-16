@@ -9,6 +9,8 @@ using WebApp.Repositories.DoctorRepositories;
 
 namespace WebApp.Controllers
 {
+    [DoctorSessionExpire]
+    [Authorize(Roles = "Doctor")]
     public class DoctorConsultationController : Controller
     {
 
@@ -23,16 +25,9 @@ namespace WebApp.Controllers
         // GET: DoctorConsultation
         public ActionResult Index()
         {
-            if (SessionHandler.IsExpired)
-            {
-                return RedirectToAction("DoctorLogin", "Account");
-            }
-            else
-            {
-                ViewBag.errorMessage = "";
-                ViewBag.successMessage = "";
+           
                 return View();
-            }
+          
         }
 
         public PartialViewResult PartialViewDoctorConsultation()

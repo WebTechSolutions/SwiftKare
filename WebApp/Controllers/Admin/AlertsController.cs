@@ -2,9 +2,12 @@
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using WebApp.Helper;
 
 namespace SwiftKare.Controllers
 {
+    [AdminSessionExpire]
+    [Authorize(Roles = "Admin")]
     public class AlertsController : Controller
     {
 

@@ -15,6 +15,7 @@ using System.Data.Entity;
 
 namespace SwiftKare.Controllers
 {
+    [AdminSessionExpire]
     [Authorize(Roles = "Admin")]
     public class Doctor_AdminController : Controller
     {

@@ -28,7 +28,13 @@
                 {
                     <tr class="even pointer">
                         <td style="text-align:center">@item.DoctorName</td>
-                        <td style="text-align:center">@item.appDate @item.appTime</td>
+                        <td style="text-align:center">
+                            <span class="replacer" id="@("replacepc" + j)"></span>
+                            <script type="text/javascript">
+                                var fdate = showLocal('@item.utcappDate');
+                                $("#replacepc"+@j).html(fdate);
+                            </script>
+                        </td>
                         <td style="text-align:center">
                             @if (item.reviewStar == 0)
                             {

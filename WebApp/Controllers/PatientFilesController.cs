@@ -13,6 +13,7 @@ using WebApp.Repositories.PatientRepositories;
 
 namespace WebApp.Controllers
 {
+    [PatientSessionExpire]
     [Authorize(Roles = "Patient")]
     public class PatientFilesController : Controller
     {

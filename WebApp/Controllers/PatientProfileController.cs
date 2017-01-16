@@ -12,6 +12,7 @@ using WebApp.Repositories.ProfileRepositories;
 
 namespace WebApp.Controllers
 {
+    [PatientSessionExpire]
     [Authorize(Roles = "Patient")]
     public class PatientProfileController : Controller
     {

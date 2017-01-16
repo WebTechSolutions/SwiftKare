@@ -35,7 +35,7 @@
 <script>
     function deleteAlert(alertID)
     {
-       
+        showLoader();
         var objDelete = {};
         objDelete["alertID"] = alertID;
         objDelete["userID"] = '@SessionHandler.UserId';
@@ -48,16 +48,15 @@
                 //Reload container
                 if (result.Message != undefined) {
                     new PNotify({ title: 'Error', text: result.Message, type: 'error', styling: 'bootstrap3' });
-                    $('#myModal1').modal('hide');
-                    $('#myModal4').modal('hide');
-                    //stopLoader();
+                    hideLoader();
                 }
                 else {
 
                     if(result.ApiResultModel.message=="")
                     {
                         new PNotify({ title: 'Success', text: "Alert is deleted successfully.", type: 'success', styling: 'bootstrap3' });
-                        reloadConsultation(function ()
+                        hideLoader();
+                        reloadPatientAlerts(function ()
                         {
                             //Stop displaying loader
                             //stopLoader();
@@ -67,6 +66,7 @@
                     else
                     {
                         new PNotify({ title: 'Error', text: result.ApiResultModel.message, type: 'error', styling: 'bootstrap3' });
+                        hideLoader();
                     }
 
 
@@ -77,12 +77,12 @@
                 //alert(err.statusText);
                 new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
                 //Stop displaying loader
-                //stopLoader();
+                hideLoader();
             }
         });
     }
 
-    function reloadConsultation(callback) {
+    function reloadPatientAlerts(callback) {
 
         $("#divAlert").load('@Url.Action("PartialAlertView", "Alert")', function () {
             callback();

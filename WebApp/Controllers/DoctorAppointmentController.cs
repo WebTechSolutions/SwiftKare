@@ -10,6 +10,8 @@ using WebApp.Repositories.DoctorRepositories;
 
 namespace WebApp.Controllers
 {
+    [DoctorSessionExpire]
+    [Authorize(Roles = "Doctor")]
     public class DoctorAppointmentController : Controller
     {
         // GET: DoctorAppointment
@@ -25,20 +27,9 @@ namespace WebApp.Controllers
         // GET: Appointment
         public ActionResult Index()
         {
-            if (SessionHandler.IsExpired)
-            {
-                return Json(new
-                {
-                    redirectUrl = Url.Action("DoctorLogin", "Account"),
-                    isRedirect = true
-                });
-            }
-            else
-            {
-                ViewBag.errorMessage = "";
-                ViewBag.successMessage = "";
+            
                 return View();
-            }
+           
         }
 
         public PartialViewResult PartialDoctorReschedule()

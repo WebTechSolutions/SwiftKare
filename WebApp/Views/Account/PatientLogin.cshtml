@@ -1,15 +1,13 @@
 ﻿@model WebApp.Models.LoginRegisterViewModel
-
+<link href="~/Content/css/pnotify.css" rel="stylesheet" />
+<script src="~/Scripts/pnotify.js"></script>
 @{
     ViewBag.Title = "Log in";
     Layout = "~/Views/Shared/_AccountsLayout.cshtml";
     ViewBag.IsPatient = false;
 }
 
-
-
-
-<a class="hiddenanchor" id="signup"></a>
+ <a class="hiddenanchor" id="signup"></a>
 <a class="hiddenanchor" id="signin"></a>
 <div class="login_wrapper">
 
@@ -65,12 +63,14 @@
     <div id="register" class="animate form registration_form">
         <section class="login_content">
             <img src="~/Content/images/Logos.png" />
-            @using (Html.BeginForm("RegisterPatient", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            @using (Html.BeginForm("Signup", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 <h1>Create Account</h1>
                 @Html.ValidationSummary("", new { @class = "text-danger" })
-
+                <div>
+                   <span class = "text-danger">@ViewBag.error</span>
+                </div>
                 <div>
                     @Html.TextBoxFor(m => m.RegisterViewModel.FirstName, new { @class = "form-control", @placeholder = "First Name" })
                 </div>
@@ -87,21 +87,21 @@
                 <div>
                     @Html.PasswordFor(m => m.RegisterViewModel.ConfirmPassword, new { @class = "form-control", @placeholder = "Confirm Password" })
                 </div>
-                    <div>
-                        <input type="submit" class="btn btn-primary submit" value="Submit" />
-                    </div>
-                    @*<div>
-                        @Html.CheckBoxFor(m => m.IsPatient, new { @onChange = "chkChange()", @id = "chkIsPatient" })
-                        <label for="chkIsPatient" id="lblIsPatient">Register as a Patient</label>
-                    </div>*@
+                <div>
+                    <input type="submit" class="btn btn-primary submit" value="Submit" />
+                </div>
+                @*<div>
+                    @Html.CheckBoxFor(m => m.IsPatient, new { @onChange = "chkChange()", @id = "chkIsPatient" })
+                    <label for="chkIsPatient" id="lblIsPatient">Register as a Patient</label>
+                </div>*@
 
+                <div class="clearfix"></div>
+                <div class="separator">
+                    <p class="change_link">
+                        <a href="#signin" class="to_register"> Log in </a>
+                    </p>
                     <div class="clearfix"></div>
-                    <div class="separator">
-                        <p class="change_link">
-                            <a href="#signin" class="to_register"> Log in </a>
-                        </p>
-                        <div class="clearfix"></div>
-                    </div>
+                </div>
             }
 
 

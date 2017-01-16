@@ -2,7 +2,7 @@
 
 @if (Model == null || Model.Count() == 0)
 {
-    if (ViewBag.Error != "")
+    if (ViewBag.Error != null)
     {
         <script>
             $(function () {

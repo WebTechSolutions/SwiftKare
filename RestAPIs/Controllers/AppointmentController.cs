@@ -632,6 +632,7 @@ namespace RestAPIs.Controllers
                         {
 
                             response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Reschedule not allowed when appointment is about to start within 24 hours." });
+                            response.ReasonPhrase = "Reschedule not allowed when appointment is about to start within 24 hours.";
                             return response;
                         }
                         else

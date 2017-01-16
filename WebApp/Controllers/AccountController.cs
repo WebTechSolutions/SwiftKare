@@ -21,9 +21,10 @@ using WebApp.Repositories.AdminRepository;
 //Jam
 namespace WebApp.Controllers
 {
-    [Authorize]
+   // [Authorize]
     public class AccountController : Controller
     {
+        string error = "";
         public AccountController()
         {
         }
@@ -73,6 +74,12 @@ namespace WebApp.Controllers
         public ActionResult PatientLogin(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
+            ViewBag.error = TempData["error"];
+            return View();
+        }
+        public ActionResult PatientSignup()
+        {
+           
             return View();
         }
         // GET: /Account/DoctorLogin
@@ -451,8 +458,9 @@ namespace WebApp.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RegisterPatient(LoginRegisterViewModel model)
+        public async Task<ActionResult> Signup(LoginRegisterViewModel model, string returnUrl)
         {
+            
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser
@@ -493,12 +501,18 @@ namespace WebApp.Controllers
                     }
                 }
                 AddErrors(result);
+                foreach (var item in result.Errors)
+                {
+                    error += item;
+                    break;
+                }
+                
             }
 
             // If we got this far, something failed, redisplay form
-
-            //return View("Login", model);
-            return View("PatientLogin", model);
+            //return View("PatientLogin", model);
+            TempData["error"] = error;
+            return Redirect(Url.Action("PatientLogin", "Account") + "#signup");
         }
 
 

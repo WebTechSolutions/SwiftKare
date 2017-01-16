@@ -18,29 +18,21 @@ using System.Globalization;
 
 namespace WebApp.Controllers
 {
+    [PatientSessionExpire]
     [Authorize(Roles = "Patient")]
     public class SeeDoctorController : Controller
     {
        // GET: SeeDoctor
         public ActionResult SeeDoctor()
         {
-            if (SessionHandler.IsExpired)
-            {
-                return Json(new
-                {
-                    redirectUrl = Url.Action("PatientLogin", "Account"),
-                    isRedirect = true
-                });
-            }
-            else
-            {
+           
                 ViewBag.PatienID = SessionHandler.UserInfo.Id;
 
                 ViewBag.PublisherKey = ConfigurationManager.AppSettings["StripePayPublisherKey"].ToString();
                 ViewBag.Amount = 2000;
 
                 return View();
-            }
+           
         }
         public PartialViewResult MyCareTeam()
         {
@@ -116,7 +108,7 @@ namespace WebApp.Controllers
 
         //Specialities
         [HttpPost]
-        
+      
         public JsonResult GetAllSpecialities()
         {
             try
@@ -131,7 +123,7 @@ namespace WebApp.Controllers
                 return Json(new { Message = ex.Message });
             }
         }
-
+       
         [HttpPost]
         public JsonResult SearchDoctor(SearchDoctorModel model)
         {
@@ -793,7 +785,7 @@ namespace WebApp.Controllers
         //        return Json(ex.Message, JsonRequestBehavior.AllowGet);
         //    }
         //}
-
+        [PatientSessionExpire]
         [HttpPost]
         public JsonResult AddUpdateSurgeries(long surgeryID, PatientSurgery_Custom surgery)
         {
