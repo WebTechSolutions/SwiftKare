@@ -307,6 +307,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\css\animate.min.css" />
+    <Content Include="Content\css\bootstrap-datetimepicker.css" />
     <Content Include="Content\css\bootstrap-progressbar-3.3.4.min.css" />
     <Content Include="Content\css\bootstrap.min.css" />
     <Content Include="Content\css\buttons.bootstrap.min.css" />
@@ -381,6 +382,7 @@
     <Content Include="Content\css\images\visa.png" />
     <Content Include="Content\css\images\whats-new.png" />
     <Content Include="Content\css\jqvmap.min.css" />
+    <Content Include="Content\css\Loader.css" />
     <Content Include="Content\css\main.css" />
     <Content Include="Content\css\maps\jquery-jvectormap-2.0.3.css" />
     <Content Include="Content\css\nprogress.css" />
@@ -434,6 +436,7 @@
     <Content Include="Content\images\mic.png" />
     <Content Include="Content\images\mic_h.png" />
     <Content Include="Content\images\my-doctors1.png" />
+    <Content Include="Content\images\my-doctors2.png" />
     <Content Include="Content\images\my-files.png" />
     <Content Include="Content\images\my-health.png" />
     <Content Include="Content\images\my_video.jpg" />
@@ -460,6 +463,7 @@
     <Content Include="Content\images\visa.png" />
     <Content Include="Content\images\whats-new.png" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -502,6 +506,12 @@
     <Content Include="Scripts\bootstrap-material-datetimepicker\package.json" />
     <Content Include="Scripts\bootstrap-material-datetimepicker\README.md" />
     <Content Include="Content\fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
     <None Include="Properties\PublishProfiles\SKWeb.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\buttons.bootstrap.min.js" />
@@ -659,7 +669,7 @@
     <Content Include="Views\Shared\_PatientLayout.cshtml" />
     <Content Include="Views\Shared\_DoctorLayout.cshtml" />
     <Content Include="Views\Patient\SeeDoctor.cshtml" />
-    <Content Include="Scripts\material.min" />
+    <Content Include="Scripts\material.min.js" />
     <Content Include="Scripts\moment-with-locales.min" />
     <Content Include="Views\SeeDoctor\SeeDoctor.cshtml" />
     <Content Include="Views\SendGridDemo\Index.cshtml" />
