@@ -221,10 +221,17 @@ namespace WebApp.Repositories.DoctorRepositories
         }
         public ApiResultModel AddAppointment(AppointmentModel model)
         {
+            try
+            { 
             var strContent = JsonConvert.SerializeObject(model);
             var response = ApiConsumerHelper.PostData("api/addAppointment", strContent);
             var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
             return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
         }
 
         public ApiResultModel AddFavourite(FavouriteDoctorModel model)

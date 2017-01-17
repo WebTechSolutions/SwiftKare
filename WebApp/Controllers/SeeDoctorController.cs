@@ -207,9 +207,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response });
             }
 
         }

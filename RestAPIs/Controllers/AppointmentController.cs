@@ -190,15 +190,20 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
                     return response;
                 }
-                DateTime myDateTime = DateTime.ParseExact(model.appTime,
-                                   "hh:mm tt", CultureInfo.InvariantCulture);
+                if (model.appTime.Length < 8)
+                {
+                    model.appTime = "0" + model.appTime;
+                }
+                DateTime mydateTime = DateTime.ParseExact(model.appTime,
+                                     "hh:mm tt", CultureInfo.InvariantCulture);
+
                 app.appointmentStatus = "C";
                 app.active = true;
                 app.doctorID = model.doctorID;
                 app.patientID = model.patientID;
                 //app.appTime = To24HrTime(model.appTime);
                           
-                app.appTime= myDateTime.ToUniversalTime().TimeOfDay;
+                app.appTime= mydateTime.ToUniversalTime().TimeOfDay;
                 app.appDate = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate));
                 app.rov = model.rov;
                 app.chiefComplaints = model.chiefComplaints;
@@ -266,6 +271,10 @@ namespace RestAPIs.Controllers
                 //TimeSpan ctimediff = appDateTime-cappDateTime;
                 TimeSpan timediff = appDateTime - cdt;
                 string RescheduleLimit = ConfigurationManager.AppSettings["RescheduleLimit"].ToString();
+                if (model.appTime.Length < 8)
+                {
+                    model.appTime = "0" + model.appTime;
+                }
                 if (model.appType=="U")
                 {
                     if (timediff.TotalHours < Convert.ToInt32(RescheduleLimit))
@@ -279,8 +288,10 @@ namespace RestAPIs.Controllers
                         var formattedDate = string.Format("{0:dd/MM/yyyy}", tempappdate);
                         tempapptime = result.appTime;
                         var formattedTime = DateTime.Now.Date.Add(tempapptime.Value).ToString(@"hh\:mm\:tt");
-
-                        result.appTime = To24HrTime(model.appTime);
+                        
+                        DateTime mydateTime = DateTime.ParseExact(model.appTime,
+                                             "hh:mm tt", CultureInfo.InvariantCulture);
+                        result.appTime = mydateTime.ToUniversalTime().TimeOfDay;//To24HrTime(model.appTime);
                         result.appDate = Convert.ToDateTime(model.appDate);
                         result.mb = model.userID;
                         result.md = System.DateTime.Now;
@@ -307,8 +318,11 @@ namespace RestAPIs.Controllers
                     var formattedDate = string.Format("{0:dd/MM/yyyy}", tempappdate);
                     tempapptime = result.appTime;
                     var formattedTime = DateTime.Now.Date.Add(tempapptime.Value).ToString(@"hh\:mm\:tt");
-                    result.appTime = To24HrTime(model.appTime);
-                        result.appDate = Convert.ToDateTime(model.appDate);
+                  
+                    DateTime mydateTime = DateTime.ParseExact(model.appTime,
+                                             "hh:mm tt", CultureInfo.InvariantCulture);
+                    result.appTime = mydateTime.ToUniversalTime().TimeOfDay;
+                     result.appDate = Convert.ToDateTime(model.appDate);
                         result.mb = model.userID;
                         result.md = System.DateTime.Now;
                         result.appointmentStatus = "C";
@@ -316,7 +330,7 @@ namespace RestAPIs.Controllers
                         await db.SaveChangesAsync();
                         Alert alert = new Alert();
                         alert.alertFor = result.doctorID;
-                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + formattedDate + " at " + formattedTime + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
+                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + formattedDate +  ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
                     alert.cd = System.DateTime.Now;
                         alert.cb = model.userID;
                         alert.active = true;
@@ -332,7 +346,10 @@ namespace RestAPIs.Controllers
                     var formattedDate = string.Format("{0:dd/MM/yyyy}", tempappdate);
                     tempapptime = result.appTime;
                     var formattedTime = DateTime.Now.Date.Add(tempapptime.Value).ToString(@"hh\:mm\:tt");
-                    result.appTime = To24HrTime(model.appTime);
+                    DateTime mydateTime = DateTime.ParseExact(model.appTime,
+                                             "hh:mm tt", CultureInfo.InvariantCulture);
+                    result.appTime = mydateTime.ToUniversalTime().TimeOfDay;
+                   
                     result.appDate = Convert.ToDateTime(model.appDate);
                     result.mb = model.userID;
                     result.md = System.DateTime.Now;
