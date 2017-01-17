@@ -147,20 +147,52 @@ function getTimeZoneOffset()
 }
 function compareTime(time) {
     var localDate = new Date();
-    var dbDate = localDate.getFullYear() + '/' + localDate.getMonth() + '/' + localDate.getDate() + ' ' + time;
-    var compareDate = new Date(dbDate);
-    var dbtime = compareDate.getHours + ':' + compareDate.getMinutes();
+   
+    var dbDate = localDate.getFullYear() + '/' + localDate.getMonth()+1 + '/' + localDate.getDate() +' ' + time;
+    var dbDateTime = new Date(dbDate);
+    //var dbtime = dbDate+compareDate.getHours() + ':' + compareDate.getMinutes() + ' ' + time.slice(-2);
 
-    var localtime = localDate.getHours + ':' + localDate.getMinutes();
-
-    if (dbtime > localtime) {
-        //alert(dbtime + ' ' + localtime + ' true');
+    var hours = (localDate.getHours() + 24 - 2) % 24;
+    var mid = 'am';
+    if (hours == 0) { //At 00 hours we need to show 12 am
+        hours = 12;
+    }
+    else if (hours > 12) {
+        hours = hours % 12;
+        mid = 'pm';
+    }
+    var localtime = localDate.getFullYear() + '/' + localDate.getMonth() +1+ '/' + localDate.getDate() + ' ' + localDate.getHours() + ':' + localDate.getMinutes();
+    var localDateTime = new Date(localtime);
+    if (dbDateTime > localDateTime) {
+        console.log(dbDateTime + ' is later than ' + localDateTime);
         return true;
     }
 
     else {
-        //alert(dbtime + ' ' + localtime + 'flase');
+        console.log(localDateTime + ' is later than ' + dbDateTime);
         return false;
     }
 
+}
+
+function compareDateTime(date,time)
+{
+    debugger;
+    var dateString = date;// in format "17/01/2017"
+    var dateParts = dateString.split("/");
+    var dateObject = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+    var dbDate = dateObject.getFullYear() + '/' + dateObject.getMonth() + 1 + '/' + dateObject.getDate() + ' ' + time ;
+    var dbDateTime = new Date(dbDate);
+    var localDate = new Date();
+    var localtime = localDate.getFullYear() + '/' + localDate.getMonth() + 1 + '/' + localDate.getDate() + ' ' + localDate.getHours() + ':' + localDate.getMinutes();
+    var localDateTime = new Date(localtime);
+    if (dbDateTime > localDateTime) {
+        console.log(dbDateTime + ' is later than ' + localDateTime);
+        return true;
+    }
+
+    else {
+        console.log(localDateTime + ' is later than ' + dbDateTime);
+        return false;
+    }
 }
