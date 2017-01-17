@@ -76,13 +76,13 @@ namespace WebApp.Hub
         public void PatientAcceptedCall(MessageInfo message)
         {
             var ConnectionId = Context.ConnectionId;
-            Clients.Client(message.ReceiverConnectionId).patientAcceptedCall(message.UserName, message.SenderId, message.AppId);
+            Clients.Client(message.ReceiverConnectionId).patientAcceptedCall(message.UserName, message.SenderId, message.consultID);
         }
 
         public void PatientRejectedCall(MessageInfo message)
         {
             var ConnectionId = Context.ConnectionId;
-            Clients.Client(message.ReceiverConnectionId).patientRejectedCall(message.UserName, message.SenderId, message.AppId);
+            Clients.Client(message.ReceiverConnectionId).patientRejectedCall(message.UserName, message.SenderId, message.consultID);
         }
 
         public void PatientRedirectedToCall(string connId, string consultId, string patId, string patientName) {

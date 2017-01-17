@@ -83,7 +83,20 @@ else
 
     function createConsultFromDoctor(doctorID,patientID,appID)
     {
-        debugger;
+        
+        var oPatInfo = null;
+        for (var i = 0; i < availablePatients.patient.length; i++) {
+            if (availablePatients.patient[i].patId == patId) {
+                oPatInfo = availablePatients.patient[i];
+                break;
+            }
+        }
+
+        if (oPatInfo == null) {
+            alert('Patient is not online now');
+            return;
+        }
+
         _objConsult["doctorId"] = doctorID;
         _objConsult["patientId"] = patientID;
         _objConsult["appID"] = appID;
