@@ -911,12 +911,13 @@
                             type: 'info',addclass: 'dark',
                             styling: 'bootstrap3'
                         });
+                        debugger;
                         if (appType == "S")
                         {
                             window.location.href = '/Appointment/Index/';
                         }
                         if (appType == "L")
-                        { createConsult($("#doctorid").val(), patientID, response.ApiResultModel.ID);}
+                        { createConsultFromPatient($("#doctorid").val(), patientID, response.ApiResultModel.ID);}
 
                    
                     
@@ -933,7 +934,9 @@
         });
 
     }
-    function createConsult(doctorID, patientID, appID) {
+    var _objConsult = {};
+    function createConsultFromPatient(doctorID, patientID, appID) {
+        debugger;
         _objConsult["doctorId"] = doctorID;
         _objConsult["patientId"] = patientID;
         _objConsult["appID"] = appID;
@@ -976,8 +979,9 @@
                             var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
 
                             $.post(cUrlReadyForCall, function (oResp) {
-                                if (oResp) {
-                                    localStorage.setItem('consultationKey', oResp);
+                                // if (oResp) 
+                                {
+                                    localStorage.setItem('consultationKey', response.ApiResultModel.ID);
                         
                                     //Redirect doctor to call
                                     window.location = '@Url.Action("Index","UserChat")';
@@ -985,7 +989,7 @@
                             });
 
                             //Redirect User for video chat
-                            alert("Payment successful! Now user can be redirected to video chat page with doctor.");
+                            alert("Payment successful. Your consultation will be started soon.");
                             //location.reload();
                         }
 

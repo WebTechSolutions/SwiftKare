@@ -70,7 +70,7 @@ namespace WebApp.Hub
             message.SenderType = "Doctor";
             message.MsgDate = DateTime.Now.ToString();
             //Clients.Caller.receiveMessage(message.UserName, message.Message, ConnectionId);
-            Clients.Client(message.ReceiverConnectionId).incomingCallFromDoctor(message.UserName, message.Message, message.SenderConnectionId, message.SenderId, message.AppId, message.DoctorName);
+            Clients.Client(message.ReceiverConnectionId).incomingCallFromDoctor(message.UserName, message.Message, message.SenderConnectionId, message.SenderId, message.consultID, message.DoctorName);
         }
 
         public void PatientAcceptedCall(MessageInfo message)
