@@ -556,7 +556,7 @@
           <Property Name="lon" Type="float" />
           <Property Name="iOSToken" Type="varchar" MaxLength="1000" />
           <Property Name="AndroidToken" Type="varchar" MaxLength="1000" />
-          <Property Name="DoseSpotPatientId" Type="varchar" MaxLength="50" />
+          <Property Name="DoseSpotPatientId" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="PatientAllergies">
           <Key>
@@ -830,6 +830,7 @@
           <Property Name="fileContent" Type="varbinary(max)" />
           <Property Name="patientID" Type="bigint" />
           <Property Name="doctorID" Type="bigint" />
+          <Property Name="AppID" Type="bigint" />
         </EntityType>
         <EntityType Name="VCLog">
           <Key>
@@ -3698,6 +3699,7 @@
           <Property Name="doctorID" Type="Int64" />
           <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_UserFiles_Doctor" FromRole="UserFile" ToRole="Doctor" />
           <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_UserFiles_Patient" FromRole="UserFile" ToRole="Patient" />
+          <Property Name="AppID" Type="Int64" />
         </EntityType>
         <ComplexType Name="SP_ViewPatientProfile_Result">
           <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
@@ -4281,7 +4283,7 @@
           <Property Name="lon" Type="Double" />
           <Property Name="iOSToken" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="AndroidToken" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="DoseSpotPatientId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DoseSpotPatientId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Appointments" Relationship="SwiftKareDBModel.FK_Appointments_Patient" FromRole="Patient" ToRole="Appointment" />
           <NavigationProperty Name="Conditions" Relationship="SwiftKareDBModel.FK_Conditions_Patient" FromRole="Patient" ToRole="Condition" />
           <NavigationProperty Name="Consultations" Relationship="SwiftKareDBModel.FK_Consultation_Patient" FromRole="Patient" ToRole="Consultation" />
@@ -5413,6 +5415,7 @@
           <EntitySetMapping Name="UserFiles">
             <EntityTypeMapping TypeName="SwiftKareDBModel.UserFile">
               <MappingFragment StoreEntitySet="UserFiles">
+                <ScalarProperty Name="AppID" ColumnName="AppID" />
                 <ScalarProperty Name="doctorID" ColumnName="doctorID" />
                 <ScalarProperty Name="patientID" ColumnName="patientID" />
                 <ScalarProperty Name="fileContent" ColumnName="fileContent" />

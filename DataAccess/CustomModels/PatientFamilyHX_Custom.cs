@@ -18,5 +18,6 @@ namespace DataAccess.CustomModels
         public Nullable<long> patientID { get; set; }
         public string name { get; set; }
         public string relationship { get; set; }
+        public long familyHXItemID { get; set; }
     }
 }

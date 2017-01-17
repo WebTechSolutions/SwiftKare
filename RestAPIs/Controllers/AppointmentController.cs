@@ -173,38 +173,57 @@ namespace RestAPIs.Controllers
                 if (model.appDate == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment date." });
+                    response.ReasonPhrase = "Invalid appointment date.";
                     return response;
                 }
                 if (model.appTime == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment time." });
+                    response.ReasonPhrase = "Invalid appointment time.";
                     return response;
                 }
                 if (model.doctorID == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
+                    response.ReasonPhrase = "Invalid doctorID.";
                     return response;
                 }
                 if (model.patientID == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
+                    response.ReasonPhrase = "Invalid patientID.";
                     return response;
                 }
-                if (model.appTime.Length < 8)
+                if (model.appTime.Trim().Length < 8)
                 {
-                    model.appTime = "0" + model.appTime;
+                    model.appTime = "0" + model.appTime.Trim();
                 }
-                DateTime mydateTime = DateTime.ParseExact(model.appTime,
-                                     "hh:mm tt", CultureInfo.InvariantCulture);
 
+                DateTime myDateTime = DateTime.ParseExact(model.appTime,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
                 app.appointmentStatus = "C";
                 app.active = true;
                 app.doctorID = model.doctorID;
                 app.patientID = model.patientID;
                 //app.appTime = To24HrTime(model.appTime);
                           
-                app.appTime= mydateTime.ToUniversalTime().TimeOfDay;
-                app.appDate = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate));
+                app.appTime= myDateTime.ToUniversalTime().TimeOfDay;
+               // app.appDate = DateTime.ParseExact(model.appDate.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+              //  app.appDate = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate.Trim()));
+                string dateString = model.appDate.Trim();
+                string format = "dd/MM/yyyy";
+                CultureInfo provider = CultureInfo.InvariantCulture;
+                try
+                {
+                    DateTime result = DateTime.ParseExact(dateString, format, provider);
+                    Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
+                    app.appDate = result;
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("{0} is not in the correct format.", dateString);
+                }
+                
                 app.rov = model.rov;
                 app.chiefComplaints = model.chiefComplaints;
                 app.cb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault(); model.patientID.ToString();
@@ -214,8 +233,52 @@ namespace RestAPIs.Controllers
                 app.cd = System.DateTime.Now;
 
                 db.Appointments.Add(app);
-
                 await db.SaveChangesAsync();
+
+                //Save Appointment files in database - Starts
+                List<KeyValuePair<byte[],string>> lstFiles = new List<KeyValuePair<byte[], string>>();
+
+                if (!string.IsNullOrEmpty(model.rovFile1Base64))
+                {
+                    var retBase64 = model.rovFile1Base64.Substring(model.rovFile1Base64.IndexOf("base64,") + 7);
+                    retBase64 = MakeBase64Valid(retBase64);
+                    var retByteArray = System.Convert.FromBase64String(retBase64);
+                    lstFiles.Add(new KeyValuePair<byte[], string>(retByteArray, model.rovFile1Name));
+                }
+
+                if (!string.IsNullOrEmpty(model.rovFile2Base64))
+                {
+                    var retBase64 = model.rovFile2Base64.Substring(model.rovFile2Base64.IndexOf("base64,") + 7);
+                    retBase64 = MakeBase64Valid(retBase64);
+                    var retByteArray = System.Convert.FromBase64String(retBase64);
+                    lstFiles.Add(new KeyValuePair<byte[], string>(retByteArray, model.rovFile2Name));
+                }
+
+                if (!string.IsNullOrEmpty(model.rovFile3Base64))
+                {
+                    var retBase64 = model.rovFile3Base64.Substring(model.rovFile3Base64.IndexOf("base64,") + 7);
+                    retBase64 = MakeBase64Valid(retBase64);
+                    var retByteArray = System.Convert.FromBase64String(retBase64);
+                    lstFiles.Add(new KeyValuePair<byte[], string>(retByteArray, model.rovFile3Name));
+                }
+
+                foreach (var itmFile in lstFiles)
+                {
+                    var patfile = new UserFile();
+                    patfile.active = true;
+                    patfile.FileName = itmFile.Value;
+                    patfile.patientID = model.patientID;
+                    patfile.cd = System.DateTime.Now;
+                    patfile.doctorID = model.doctorID == -1 ? null : model.doctorID;
+                    patfile.fileContent = itmFile.Key;
+                    patfile.documentType = "Appointment";
+                    patfile.AppID = app.appID;
+                    patfile.cb = model.patientID.ToString();
+
+                    db.UserFiles.Add(patfile);
+                    await db.SaveChangesAsync();
+                }
+                //Save Appointment files in database - Ends
             }
             catch (Exception ex)
             {
@@ -224,6 +287,20 @@ namespace RestAPIs.Controllers
 
             response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
             return response;
+        }
+
+        private static string MakeBase64Valid(string data)
+        {
+            data = data.Replace(" ", "+");
+
+            int mod4 = data.Length % 4;
+            if (mod4 > 0)
+            {
+                data += new string('=', 4 - mod4);
+            }
+
+            
+            return data;
         }
 
         [HttpPost]

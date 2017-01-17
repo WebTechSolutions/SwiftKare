@@ -42,8 +42,11 @@ namespace RestAPIs.Controllers
             try
             {
                 var ptlifetstyle = (from l in db.PatientLifeStyles
-                                  where l.active == true && l.patientID == patientID
-                                  select new { patientlifestyleID = l.patientlifestyleID, patientID = l.patientID, question = l.question.Trim(),answer=l.answer }).ToList();
+                                    where l.active == true && l.patientID == patientID
+                                    select new { patientlifestyleID = l.patientlifestyleID, patientID = l.patientID, question = l.question.Trim(), answer = l.answer,
+                                        questionID = (from lifestyle in db.LifeStyleQuestions
+                                                      where lifestyle.question == l.question select lifestyle.questionID).FirstOrDefault()
+                                  }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, ptlifetstyle);
                 return response;
             }

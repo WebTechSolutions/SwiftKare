@@ -505,6 +505,14 @@
            function () { $(this).addClass('current-page') },
            function () { $(this).removeClass('current-page') }
     )
+        function errorRes(data) {
+            new PNotify({
+                title: 'Error',
+                text: data.Message,
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        }
     </script>
 
     @RenderSection("scripts", required: false)

@@ -23,6 +23,8 @@
     <link href="@Url.Content("~/Content/css/pnotify.css")" rel="stylesheet">
     <link href="@Url.Content("/Content/css/green.css")" rel="stylesheet" />
     <link href="@Url.Content("/Content/css/switchery.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("/Content/css/dataTables.bootstrap.min.css")" rel="stylesheet" />
+    
     <link href="@Url.Content("/Content/css/bootstrap-material-datetimepicker.css")" rel="stylesheet" />
     
     
@@ -581,12 +583,19 @@
                     window.location.href = request.response.redirectUrl;
             }
         });
+        function errorRes(data) {
+            new PNotify({
+                title: 'Error',
+                text: data.Message,
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        }
 
         $('#menu_toggle').click(function () { if (document.body.className == "nav-md footer_fixed") { ($("body").attr("class", "nav-sm footer_fixed")); $('.fa-angle-down').show(); } else { $("body").attr("class", "nav-md footer_fixed"); } });
         $('.menu_section li').hover(
        function () { $(this).addClass('current-page') },
-       function () { $(this).removeClass('current-page') }
-)
+       function () { $(this).removeClass('current-page') })
     </script>
 
 

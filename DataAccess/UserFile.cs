@@ -25,6 +25,7 @@ namespace DataAccess
         public byte[] fileContent { get; set; }
         public Nullable<long> patientID { get; set; }
         public Nullable<long> doctorID { get; set; }
+        public Nullable<long> AppID { get; set; }
     
         public virtual Doctor Doctor { get; set; }
         public virtual Patient Patient { get; set; }
