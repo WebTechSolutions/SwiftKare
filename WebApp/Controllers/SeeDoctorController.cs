@@ -16,6 +16,7 @@ using System.Configuration;
 using WebApp.Helper;
 using System.Globalization;
 
+
 namespace WebApp.Controllers
 {
     [PatientSessionExpire]
@@ -99,9 +100,9 @@ namespace WebApp.Controllers
                 languages = objLanguageRepo.Get().ToList();
                 return Json(new { Success = true, Object = languages });
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }
@@ -118,9 +119,9 @@ namespace WebApp.Controllers
                 specialities = objSpecialityRepo.Get().ToList();
                 return Json(new { Success = true, Object = specialities });
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
         }
        
@@ -165,9 +166,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, DoctorModel = doctorList });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
 
@@ -207,9 +208,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response });
             }
 
         }
@@ -354,9 +355,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, Object = rov });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
         }
         [HttpPost]
@@ -369,9 +370,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, Object = chiefComplaints });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
         }
         [HttpPost]
@@ -384,9 +385,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, Object = favdoc });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
         }
         [HttpPost]
@@ -436,9 +437,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }
@@ -453,10 +454,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, Conditions = model });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
-               
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
         }
 
@@ -487,9 +487,9 @@ namespace WebApp.Controllers
 
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }
@@ -504,9 +504,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }
@@ -523,10 +523,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, Medicines = model });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
-
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
         }
         [HttpPost]
@@ -540,10 +539,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, Frequency = model });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
-
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
         }
         [HttpPost]
@@ -557,10 +555,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, Object = model });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
-
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
         }
         [HttpPost]
@@ -574,10 +571,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, Medications = model });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
-
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
         }
         [HttpPost]
@@ -610,11 +606,10 @@ namespace WebApp.Controllers
 
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
-
         }
         [HttpPost]
         public JsonResult DeleteMedications(long medicationID)
@@ -627,9 +622,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }
@@ -647,10 +642,9 @@ namespace WebApp.Controllers
                 return Json(allergies, JsonRequestBehavior.AllowGet);
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
-
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
         }
         //GetSensitivities
@@ -665,10 +659,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, Object = model });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
-
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
         }
 
@@ -684,10 +677,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, Object = model });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
-
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
         }
         [HttpPost]
@@ -700,9 +692,9 @@ namespace WebApp.Controllers
                 List<GetPatientAllergies> pallergies = objRepo.LoadPatientAllergies(patientid);
                 return Json(new { Success = true, Allergies = pallergies });
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
         }
         [HttpPost]
@@ -750,11 +742,10 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
-
         }
 
 
@@ -770,10 +761,9 @@ namespace WebApp.Controllers
                 return Json(surgeries, JsonRequestBehavior.AllowGet);
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
-
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
         }
         [HttpPost]
@@ -787,10 +777,9 @@ namespace WebApp.Controllers
                 return Json(surgeries, JsonRequestBehavior.AllowGet);
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
-
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
         }
 
@@ -836,9 +825,9 @@ namespace WebApp.Controllers
 
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }
@@ -901,7 +890,7 @@ namespace WebApp.Controllers
             }
             catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Response });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
             //return Json(customers);
         }
