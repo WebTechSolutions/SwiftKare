@@ -233,8 +233,52 @@ namespace RestAPIs.Controllers
                 app.cd = System.DateTime.Now;
 
                 db.Appointments.Add(app);
-
                 await db.SaveChangesAsync();
+
+                //Save Appointment files in database - Starts
+                List<KeyValuePair<byte[],string>> lstFiles = new List<KeyValuePair<byte[], string>>();
+
+                if (!string.IsNullOrEmpty(model.rovFile1Base64))
+                {
+                    var retBase64 = model.rovFile1Base64.Substring(model.rovFile1Base64.IndexOf("base64,") + 7);
+                    retBase64 = MakeBase64Valid(retBase64);
+                    var retByteArray = System.Convert.FromBase64String(retBase64);
+                    lstFiles.Add(new KeyValuePair<byte[], string>(retByteArray, model.rovFile1Name));
+                }
+
+                if (!string.IsNullOrEmpty(model.rovFile2Base64))
+                {
+                    var retBase64 = model.rovFile2Base64.Substring(model.rovFile2Base64.IndexOf("base64,") + 7);
+                    retBase64 = MakeBase64Valid(retBase64);
+                    var retByteArray = System.Convert.FromBase64String(retBase64);
+                    lstFiles.Add(new KeyValuePair<byte[], string>(retByteArray, model.rovFile2Name));
+                }
+
+                if (!string.IsNullOrEmpty(model.rovFile3Base64))
+                {
+                    var retBase64 = model.rovFile3Base64.Substring(model.rovFile3Base64.IndexOf("base64,") + 7);
+                    retBase64 = MakeBase64Valid(retBase64);
+                    var retByteArray = System.Convert.FromBase64String(retBase64);
+                    lstFiles.Add(new KeyValuePair<byte[], string>(retByteArray, model.rovFile3Name));
+                }
+
+                foreach (var itmFile in lstFiles)
+                {
+                    var patfile = new UserFile();
+                    patfile.active = true;
+                    patfile.FileName = itmFile.Value;
+                    patfile.patientID = model.patientID;
+                    patfile.cd = System.DateTime.Now;
+                    patfile.doctorID = model.doctorID == -1 ? null : model.doctorID;
+                    patfile.fileContent = itmFile.Key;
+                    patfile.documentType = "Appointment";
+                    patfile.AppID = app.appID;
+                    patfile.cb = model.patientID.ToString();
+
+                    db.UserFiles.Add(patfile);
+                    await db.SaveChangesAsync();
+                }
+                //Save Appointment files in database - Ends
             }
             catch (Exception ex)
             {
@@ -243,6 +287,20 @@ namespace RestAPIs.Controllers
 
             response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
             return response;
+        }
+
+        private static string MakeBase64Valid(string data)
+        {
+            data = data.Replace(" ", "+");
+
+            int mod4 = data.Length % 4;
+            if (mod4 > 0)
+            {
+                data += new string('=', 4 - mod4);
+            }
+
+            
+            return data;
         }
 
         [HttpPost]
