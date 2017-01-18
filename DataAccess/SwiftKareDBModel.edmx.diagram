@@ -81,7 +81,7 @@
         <EntityTypeShape EntityType="SwiftKareDBModel.Alert" Width="1.5" PointX="0.75" PointY="3.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.SuffixMaster" Width="1.5" PointX="22.375" PointY="7.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.TitleMaster" Width="1.5" PointX="22.375" PointY="10.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.Patient" Width="1.5" PointX="0.75" PointY="23.625" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.Patient" Width="1.5" PointX="0.75" PointY="23.375" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Appointments_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Conditions_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_Patient" />

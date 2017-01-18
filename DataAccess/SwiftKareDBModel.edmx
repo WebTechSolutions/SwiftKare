@@ -543,8 +543,6 @@
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
           <Property Name="userId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="pharmacy" Type="varchar" MaxLength="1000" />
-          <Property Name="pharmacyid" Type="bigint" />
           <Property Name="title" Type="varchar" MaxLength="10" />
           <Property Name="height" Type="int" />
           <Property Name="weight" Type="int" />
@@ -557,6 +555,10 @@
           <Property Name="iOSToken" Type="varchar" MaxLength="1000" />
           <Property Name="AndroidToken" Type="varchar" MaxLength="1000" />
           <Property Name="DoseSpotPatientId" Type="varchar" MaxLength="10" />
+          <Property Name="pharmacyid" Type="bigint" />
+          <Property Name="pharmacy" Type="varchar" MaxLength="1000" />
+          <Property Name="pharmacyaddress" Type="varchar" MaxLength="100" />
+          <Property Name="pharmacycitystatezip" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="PatientAllergies">
           <Key>
@@ -3698,8 +3700,8 @@
           <Property Name="patientID" Type="Int64" />
           <Property Name="doctorID" Type="Int64" />
           <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_UserFiles_Doctor" FromRole="UserFile" ToRole="Doctor" />
-          <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_UserFiles_Patient" FromRole="UserFile" ToRole="Patient" />
           <Property Name="AppID" Type="Int64" />
+          <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_UserFiles_Patient" FromRole="UserFile" ToRole="Patient" />
         </EntityType>
         <ComplexType Name="SP_ViewPatientProfile_Result">
           <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
@@ -4270,8 +4272,6 @@
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
           <Property Name="userId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="pharmacy" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="pharmacyid" Type="Int64" />
           <Property Name="title" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="height" Type="Int32" />
           <Property Name="weight" Type="Int32" />
@@ -4284,6 +4284,10 @@
           <Property Name="iOSToken" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="AndroidToken" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="DoseSpotPatientId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="pharmacyid" Type="Int64" />
+          <Property Name="pharmacy" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="pharmacyaddress" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="pharmacycitystatezip" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Appointments" Relationship="SwiftKareDBModel.FK_Appointments_Patient" FromRole="Patient" ToRole="Appointment" />
           <NavigationProperty Name="Conditions" Relationship="SwiftKareDBModel.FK_Conditions_Patient" FromRole="Patient" ToRole="Condition" />
           <NavigationProperty Name="Consultations" Relationship="SwiftKareDBModel.FK_Consultation_Patient" FromRole="Patient" ToRole="Consultation" />
@@ -5908,6 +5912,10 @@
           <EntitySetMapping Name="Patients">
             <EntityTypeMapping TypeName="SwiftKareDBModel.Patient">
               <MappingFragment StoreEntitySet="Patient">
+                <ScalarProperty Name="pharmacycitystatezip" ColumnName="pharmacycitystatezip" />
+                <ScalarProperty Name="pharmacyaddress" ColumnName="pharmacyaddress" />
+                <ScalarProperty Name="pharmacy" ColumnName="pharmacy" />
+                <ScalarProperty Name="pharmacyid" ColumnName="pharmacyid" />
                 <ScalarProperty Name="DoseSpotPatientId" ColumnName="DoseSpotPatientId" />
                 <ScalarProperty Name="AndroidToken" ColumnName="AndroidToken" />
                 <ScalarProperty Name="iOSToken" ColumnName="iOSToken" />
@@ -5920,8 +5928,6 @@
                 <ScalarProperty Name="weight" ColumnName="weight" />
                 <ScalarProperty Name="height" ColumnName="height" />
                 <ScalarProperty Name="title" ColumnName="title" />
-                <ScalarProperty Name="pharmacyid" ColumnName="pharmacyid" />
-                <ScalarProperty Name="pharmacy" ColumnName="pharmacy" />
                 <ScalarProperty Name="userId" ColumnName="userId" />
                 <ScalarProperty Name="active" ColumnName="active" />
                 <ScalarProperty Name="md" ColumnName="md" />

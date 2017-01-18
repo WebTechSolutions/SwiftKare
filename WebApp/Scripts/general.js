@@ -177,7 +177,7 @@ function compareTime(time) {
 
 function compareDateTime(fdate,time)
 {
-    alert(fdate);
+   
     var dateString = fdate;// in format "17/01/2017"
     var dateParts = dateString.split("/");
     var dateObject = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);

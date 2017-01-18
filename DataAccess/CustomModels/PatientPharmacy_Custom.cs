@@ -9,8 +9,10 @@ namespace DataAccess.CustomModels
   public  class PatientPharmacy_Custom
     {
         public long patientID { get; set; }
-        public string pharmacy { get; set; }
         public Nullable<long> pharmacyid { get; set; }
-       
+        public string pharmacy { get; set; }
+        public string pharmacyaddress { get; set; }
+        public string pharmacycitystatezip { get; set; }
+
     }
 }

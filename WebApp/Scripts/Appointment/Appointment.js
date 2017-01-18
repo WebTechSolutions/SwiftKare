@@ -10,33 +10,7 @@ function setAppType(type)
     appType = type;
 }
 
-function uploadFiles() {
-    var form = $('#mydropzone')[0];
-    var dataString = new FormData(form);
-    $.ajax({
-        url: '/SeeDoctor/UploadFiles',  //Server script to process data
-        type: 'POST',
-        xhr: function () {  // Custom XMLHttpRequest
-            var myXhr = $.ajaxSettings.xhr();
-            if (myXhr.upload) { // Check if upload property exists
-                //myXhr.upload.onprogress = progressHandlingFunction
-                myXhr.upload.addEventListener('progress', progressHandlingFunction,
-				false); // For handling the progress of the upload
-            }
-            return myXhr;
-        },
-        //Ajax events
-        success: successHandler,
-        error: errorHandler,
-        complete: completeHandler,
-        // Form data
-        data: dataString,
-        //Options to tell jQuery not to process data or worry about content-type.
-        cache: false,
-        contentType: false,
-        processData: false
-    });
-}
+
 function setDoctorID(doctorID)
 {
    
@@ -133,17 +107,22 @@ function showApppointmentSummary() {
         //alert(_objAppointment["appTime"]);
     }
    // _objAppointment["appDate"] = myappDate;
-   // _objAppointment["appTime"] = myappTime;
+    // _objAppointment["appTime"] = myappTime;
+    var pharmacy = 'N.A';
+    if ($('#h2SelPharmacyName').html() != '')
+    {
+        pharmacy = $('#h2SelPharmacyName').html();
+    }
     customDateFormat(_objAppointment["appDate"]);
     var tableHtml = "<address>" +
                      "<strong>Date: </strong>&nbsp;" + customDateFormat(_objAppointment["appDate"]) +
                      "<br><strong>Time:</strong>&nbsp;" + _objAppointment["appTime"] +
                      "<br><strong>Reason for Visit: </strong>&nbsp;" + ROV +
                      "<br><strong>Chief Complaints: </strong>&nbsp;" + $("#chiefcomplaints").val() +
-                     "<br><strong>Pharmacy: </strong>&nbsp;" + $("#pharmacy").val() +
+                     "<br><strong>Pharmacy: </strong>&nbsp;" + pharmacy +
                     "</address>";
                     document.getElementById("appsummary").innerHTML = tableHtml;
-       
+                 
 
 }
 function customDateFormat(s) {
@@ -209,7 +188,7 @@ function getClockTime()
 //-->
 
 function AddUpdatePharmacy(patientID,pharmacy) {
-
+    
     _objPharmacy["patientID"] = patientID;
     _objPharmacy["pharmacy"] = pharmacy;//$("#pharmacy").val();
     _objAppointment["pharmacyid"] = 1;//$("#pharmacyid").val();

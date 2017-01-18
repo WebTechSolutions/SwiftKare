@@ -195,9 +195,9 @@
                                                     @*<input style:display:"none" type="text" id="time" class="form-control floating-label" placeholder="Time">*@
                                                     <select class="form-control" name="Shift">
                                                         <option value="A">ALL</option>
-                                                        <option value="M">Morning</option>
-                                                        <option value="E">Evening</option>
-                                                        <option value="N">Night</option>
+                                                        <option value="M">Morning (8:00am-4:00pm)</option>
+                                                        <option value="E">Evening (4:00pm-12:00am)</option>
+                                                        <option value="N">Night(12:00am-8:00am)</option>
                                                     </select>
                                                 </div>
                                             </form>
@@ -767,10 +767,11 @@
                             <div id="divPharmacyResultContainer" class="row" style="margin-bottom: 70px; display:none;">
                                 <div class="col-md-6">
                                     <div class="x_content">
+                                        <input type="number" id="PharmacyID" style="display:none">
                                         <h2 class="m-t-0">Current Pharmacy</h2>
-                                        <h2 id="h2SelPharmacyName">Wal-Mart Pharmacy 5866</h2>
-                                        <p id="pSelPharmacyAddress">8555 PRESTON RD</p>
-                                        <p id="pSelPharmacyCityStateZip">FRISCO TX,75034</p>
+                                        <h2 id="h2SelPharmacyName"></h2>
+                                        <p id="pSelPharmacyAddress"></p>
+                                        <p id="pSelPharmacyCityStateZip"></p>
                                     </div>
                                 </div>
                                 @*<div class="col-md-6">
@@ -885,29 +886,132 @@
             callback();
         });
     }
+    function loadPatientPharmacy(patientID)
+    {
+        $.ajax({
+        type: 'POST',
+        url: '/SeeDoctor/GetPatientPharmacy',
+        data: { 'patientID': patientID },
+        dataType: 'json',
+        success: function (response) {
+            if (response.Message != undefined) {
+                console.log(response.Message);
+            }
+            else
+            {
+                if (response.Success == true) {
 
+                    if (response.Object != null) {
+                        
+                        $("#PharmacyID").val(response.Object.pharmacyid);
+                        $("#h2SelPharmacyName").html(response.Object.pharmacy);
+                        $("#pSelPharmacyAddress").html(response.Object.pharmacyaddress);
+                        $("#pSelPharmacyCityStateZip").html(response.Object.pharmacycitystatezip);
+
+                        $("#divPharmacyResultContainer").show();
+                    }
+                }
+            }
+
+            //else {response.Message;}
+
+            return false;
+        },
+        error: errorRes
+
+    });
+
+
+
+    }
+
+    function savePatientPharmacy()
+    {
+       
+        var objPharmacy={};
+        objPharmacy["patientID"]='@SessionHandler.UserInfo.Id';
+        objPharmacy["pharmacyid"]= $("#PharmacyID").val();
+        objPharmacy["pharmacy"]= $("#h2SelPharmacyName").html();
+        objPharmacy["pharmacyaddress"]=  $("#pSelPharmacyAddress").html();
+        objPharmacy["pharmacycitystatezip"]=  $("#pSelPharmacyCityStateZip").html();
+
+        $.ajax({
+            type: 'POST',
+            url: '/SeeDoctor/SavePatientPharmacy',
+            data: objPharmacy,
+            dataType: 'json',
+            success: function (response) {
+                if (response.Message != undefined) {
+                    new PNotify({
+                        title: 'Error',
+                        text: response.Message,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                }
+                else
+                {
+                    if (response.Success == true) {
+                        if (response.ApiResultModel.message != "") {
+                            new PNotify({
+                                title: 'Error',
+                                text: response.ApiResultModel.message,
+                                type: 'error',
+                                styling: 'bootstrap3'
+                            });
+                        }
+                        else if (response.ApiResultModel.message == "") {
+                            new PNotify({
+                                title: 'Success',
+                                text: "Pharmacy is saved successfully.",
+                                type: 'info',addclass: 'dark',
+                                styling: 'bootstrap3'
+                            });
+                        }
+                        
+                    }
+                }
+
+                //else {response.Message;}
+
+                return false;
+            },
+            error: function(httpObj)
+            {
+                new PNotify({
+                    title: 'Error',
+                    text: httpObj.statusText ,
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+            }
+
+        });
+
+
+
+    }
     var reader1  = new FileReader();
     var reader2  = new FileReader();
     var reader3  = new FileReader();
 
     $(document).ready(function () {
-
+        GetAllLanguages();
+        GetAllSpecialities();
+        GetROV('@SessionHandler.UserInfo.Id');
         if($("#wizard").smartWizard('currentStep','1'))
         {
+
             $('.buttonNext').hide();
             $('.buttonPrevious').hide();
         }
 
-        GetAllLanguages();
-        GetAllSpecialities();
-        GetROV(@ViewBag.PatienID);
+        if($("#wizard").smartWizard('currentStep','2'))
+        {
 
-
-        //initialize autocomplete with custom appendTo
-        //$('#pharmacy').autocomplete({
-        //    lookup: pharmacyArray
-        //});
-
+            $('.buttonNext').hide();
+            $('.buttonPrevious').hide();
+        }
 
         var oStripePayCheckout = new StripePayCheckout({
             publisherKey: '@publisherKey',
@@ -939,14 +1043,7 @@
 
     });
 
-    @*function searchDoctor() {
-
-        SearchDoctor(@ViewBag.PatienID)
-
-
-    }*@
-
-    function CreateAppointment(patientID,amount) 
+   function CreateAppointment(patientID,amount)
     {
         _objAppointment["appDate"] = $("#fetchdate").val();
         _objAppointment["doctorID"] = $("#doctorid").val();
@@ -971,7 +1068,7 @@
             dataType: 'text',
             data: 'inputModel='+ JSON.stringify(_objAppointment),
             success: function (response) {
-                
+
                 if(response.Message!=undefined)
                 {
                     new PNotify({
@@ -981,24 +1078,27 @@
                         styling: 'bootstrap3'
                     });
                 }
-                if (response.Success == true) {
-                    
-                    if (response.ApiResultModel.message != "") {
+                var result=JSON.parse(response);
+                if (result.Success == true) {
+
+                    if (result.ApiResultModel.message != "") {
                         new PNotify({
                             title: 'Error',
-                            text: response.ApiResultModel.message,
+                            text: result.ApiResultModel.message,
                             type: 'error',
                             styling: 'bootstrap3'
                         });
                     }
-                    else if (response.ApiResultModel.message == "") {
+                    else if (result.ApiResultModel.message == "") {
+                       
                         new PNotify({
                             title: 'Success',
                             text: "Appointment is scheduled successfully.",
                             type: 'info',addclass: 'dark',
                             styling: 'bootstrap3'
                         });
-                        debugger;
+                        
+                       
                         if (appType == "S")
                         {
                             window.location.href = '/Appointment/Index/';
@@ -1006,8 +1106,8 @@
                         if (appType == "L")
                         { createConsultFromPatient($("#doctorid").val(), patientID, response.ApiResultModel.ID);}
 
-                   
-                    
+
+
 
                     }
                 }
@@ -1063,10 +1163,10 @@
                             var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
 
                             $.post(cUrlReadyForCall, function (oResp) {
-                                // if (oResp) 
+                                // if (oResp)
                                 {
                                     localStorage.setItem('consultationKey', response.ApiResultModel.ID);
-                        
+
                                     //Redirect doctor to call
                                     window.location = '@Url.Action("Index","UserChat")';
                                 }
@@ -1369,7 +1469,11 @@
             // set isStepValid = false if has errors
             showDoctorInfo();
             showApppointmentSummary();
+            savePatientPharmacy();
 
+        }
+        if( stepnumber== 4){
+            loadPatientPharmacy('@SessionHandler.UserInfo.Id');
         }
         return true;
         // ...

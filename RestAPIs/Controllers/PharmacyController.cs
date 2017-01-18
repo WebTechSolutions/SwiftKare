@@ -20,23 +20,32 @@ namespace RestAPIs.Controllers
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
         HttpResponseMessage response;
 
-        [Route("api/getPharmacy")]
-        public HttpResponseMessage GetPharmacy(long patientID)
+        [Route("api/GetPatientPharmacy")]
+        public HttpResponseMessage GetPatientPharmacy(long patientID)
         {
             try
             {
                 var pharmacy = (from l in db.Patients
-                                  where l.patientID== patientID &&  l.active == true
-                                  select new PatientPharmacy_Custom { patientID = l.patientID, pharmacyid=l.pharmacyid, pharmacy = l.pharmacy.Trim() }).ToList();
+                              where l.patientID == patientID && l.active == true
+                              select new
+                              {
+                                  pharmacyid = l.pharmacyid,
+                                  pharmacy = l.pharmacy,
+                                  pharmacyaddress = l.pharmacyaddress,
+                                  pharmacycitystatezip = l.pharmacycitystatezip
+                              }).FirstOrDefault();
                 response = Request.CreateResponse(HttpStatusCode.OK, pharmacy);
                 return response;
             }
             catch (Exception ex)
             {
-                return ThrowError(ex, "GetAllergies in PatientAllergiesController");
+                return ThrowError(ex, "GetPatientPharmacy in PharmacyController");
             }
 
+
         }
+       
+       
 
         [Route("api/addPatientPharmacy")]
         [ResponseType(typeof(HttpResponseMessage))]
@@ -45,7 +54,7 @@ namespace RestAPIs.Controllers
             Patient patient = new Patient();
             try
             {
-                if (model.pharmacy == "" || model.pharmacy == null || !Regex.IsMatch(model.pharmacy.Trim(), "^[0-9a-zA-Z ]+$"))
+                if (model.pharmacy == "" || model.pharmacy == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid pharmacy name. Only letters and numbers are allowed." });
                     return response;
@@ -63,6 +72,8 @@ namespace RestAPIs.Controllers
                 }
               
                 patient.pharmacy = model.pharmacy;
+                patient.pharmacyaddress = model.pharmacyaddress;
+                patient.pharmacycitystatezip = model.pharmacycitystatezip;
                 patient.pharmacyid = model.pharmacyid;
                 patient.md = System.DateTime.Now;
                 patient.mb = model.patientID.ToString();
@@ -76,16 +87,10 @@ namespace RestAPIs.Controllers
                 return ThrowError(ex, "AddPharmacy in PharmacyController.");
             }
 
-            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = Convert.ToInt64(model.pharmacyid), message = "Pharmacy is added successfully." });
+            response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = Convert.ToInt64(model.pharmacyid), message = "" });
             return response;
         }
 
-        private HttpResponseMessage ThrowError(Exception ex, string Action)
-        {
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
-            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.Message, Encoding.Unicode);
-            return response;
-        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -93,6 +98,13 @@ namespace RestAPIs.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+        private HttpResponseMessage ThrowError(Exception ex, string Action)
+        {
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
+            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.Message, Encoding.Unicode);
+            response.ReasonPhrase = ex.Message;
+            return response;
         }
     }
 }

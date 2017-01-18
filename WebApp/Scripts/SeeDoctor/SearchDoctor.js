@@ -394,7 +394,7 @@ function SearchDoctor(patientID) {
                         favDoctors(favDoctorsList[i]);
                     }
                 }
-                else { document.getElementById("docList").innerHTML = "No record found";; }
+                else { document.getElementById("docList").innerHTML = "No record found"; }
 
                 document.getElementById("mainpanel").style.display = "block";
 
@@ -520,7 +520,7 @@ function errorRes(httpObj) {
             //window.location.href = "/Account/PatientLogin";
             new PNotify({
                 title: 'Error',
-                text: httpObj.statusText,
+                text: messages.statusText,
                 type: 'error',
                 styling: 'bootstrap3'
             });

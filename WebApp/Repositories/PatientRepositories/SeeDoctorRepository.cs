@@ -248,5 +248,36 @@ namespace WebApp.Repositories.DoctorRepositories
             var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
             return result;
         }
+        public PatientPharmacy_Custom GetPatientPharmacy(long patientid)
+        {
+
+            try
+            {
+                var response = ApiConsumerHelper.GetResponseString("api/GetPatientPharmacy/?patientID=" + patientid);
+                var result = JsonConvert.DeserializeObject<PatientPharmacy_Custom>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+
+                throw ex;
+            }
+
+        }
+        public ApiResultModel SavePatientPharmacy(PatientPharmacy_Custom model)
+        {
+            try
+            {
+                var strContent = JsonConvert.SerializeObject(model);
+                var response = ApiConsumerHelper.PostData("api/addPatientPharmacy", strContent);
+                var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+        }
+        
     }
     }

@@ -852,29 +852,36 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public JsonResult AddUpdatePharmacy(PatientPharmacy_Custom pharmacy)
+        public JsonResult GetPatientPharmacy(long patientID)
         {
-            ApiResultModel apiresult = new ApiResultModel();
             try
             {
-                if (pharmacy.pharmacy == null || pharmacy.pharmacy == "" || !Regex.IsMatch(pharmacy.pharmacy, "^[0-9a-zA-Z ]+$"))
-                {
-
-                    apiresult.message = "Invalid pharmacy name.Only letters and numbers are allowed.";
-                    return Json(new { Success = true, ApiResultModel = apiresult });
-                }
-                else
-                {
-                    PatientRepository objRepo = new PatientRepository();
-                    apiresult = objRepo.AddPharmacy(pharmacy);
-                    return Json(new { Success = true, ApiResultModel = apiresult });
-
-                }
+                SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
+               var pharmacy = objSeeDoctorRepo.GetPatientPharmacy(patientID);
+               return Json(new { Success = true, Object = pharmacy });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
+            }
+
+        }
+        [HttpPost]
+        public JsonResult SavePatientPharmacy(PatientPharmacy_Custom model)
+        {
+            try
+            {
+                ApiResultModel apiresult = new ApiResultModel();
+                SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
+                 apiresult = objSeeDoctorRepo.SavePatientPharmacy(model);
+               
+                return Json(new { Success = true, ApiResultModel = apiresult });
+
+            }
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }

@@ -9,6 +9,7 @@
     <table id="datatablepharmacy" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr class="headings">
+                <th class="column-title" style="text-align:center;display:none">ID </th>
                 <th class="column-title" style="text-align:center">Name </th>
                 <th class="column-title" style="text-align:center">Address</th>
                 <th class="column-title" style="text-align:center">City, State, Zip</th>
@@ -20,6 +21,7 @@
             @foreach (var item in Model)
             {
             <tr class="even pointer">
+                <td style="text-align:center;display:none">@item.PharmacyId</td>
                 <td style="text-align:center">@item.StoreName</td>
                 <td style="text-align:center">@string.Format("{0}, {1}", item.Address1, item.Address2)</td>
                 <td style="text-align:center">@string.Format("{0},{1},{2}", item.City, item.State, item.ZipCode)</td>
@@ -71,10 +73,12 @@ else
 
             var curTr = curElem.closest("tr");
 
-            var storeName = curTr.find("td:nth-child(1)").text();
-            var storeAddress = curTr.find("td:nth-child(2)").text();
-            var storeAddresCityStateZip = curTr.find("td:nth-child(3)").text();
+            var pharmacyID = curTr.find("td:nth-child(1)").text();
+            var storeName = curTr.find("td:nth-child(2)").text();
+            var storeAddress = curTr.find("td:nth-child(3)").text();
+            var storeAddresCityStateZip = curTr.find("td:nth-child(4)").text();
 
+            $("#PharmacyID").val(pharmacyID);
             $("#h2SelPharmacyName").html(storeName);
             $("#pSelPharmacyAddress").html(storeAddress);
             $("#pSelPharmacyCityStateZip").html(storeAddresCityStateZip);
