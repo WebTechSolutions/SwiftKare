@@ -19,6 +19,17 @@ namespace DataAccess.CommonModels
         public string appTypeAV { get; set; }
         public string chiefComplaints { get; set; }
         public string rov { get; set; }
+
+
+        public string rovFile1Base64 { get; set; }
+        public string rovFile1Name { get; set; }
+
+        public string rovFile2Base64 { get; set; }
+        public string rovFile2Name { get; set; }
+
+        public string rovFile3Base64 { get; set; }
+        public string rovFile3Name { get; set; }
+
         //public string consultationType { get; set; }
         //public string consultationStatus { get; set; }
     }

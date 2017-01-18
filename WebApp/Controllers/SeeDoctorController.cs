@@ -15,6 +15,7 @@ using System.IO;
 using System.Configuration;
 using WebApp.Helper;
 using System.Globalization;
+using Newtonsoft.Json;
 
 namespace WebApp.Controllers
 {
@@ -196,22 +197,23 @@ namespace WebApp.Controllers
             }
 
         }
+
         [HttpPost]
-        public JsonResult SaveAppointment(AppointmentModel _objAppointment)
+        public JsonResult SaveAppointment(string inputModel)
         {
             try
             {
+                AppointmentModel _objAppointment =  JsonConvert.DeserializeObject<AppointmentModel>(inputModel);
+
                 ApiResultModel apiresult = new ApiResultModel();
                 SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
                 apiresult = objSeeDoctorRepo.AddAppointment(_objAppointment);
                 return Json(new { Success = true, ApiResultModel = apiresult });
-
             }
             catch (Exception ex)
             {
                 return Json(new { Message = ex.Message });
             }
-
         }
 
         private List<string> displayTimeSlots(IEnumerable<FetchDoctorTimingModel> appList)
@@ -220,7 +222,6 @@ namespace WebApp.Controllers
 
             foreach (var item in appList)
             {
-
                 TimeSpan startTime = (TimeSpan)item.from;
                 if (startTime.Minutes % 15 != 0)
                 {

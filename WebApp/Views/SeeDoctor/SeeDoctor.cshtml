@@ -420,10 +420,66 @@
                                 </div>
                             </form>
                             <p>Add a photo(helpful for rashes, cut, etc)</p>
-                            <form action="test.html" class="dropzone" id="mydropzone">
-                                <div class="dz-default dz-message"></div>
+                            <form id="frmUpload" class="form-inline">
+
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td style="width:15%">
+                                            <strong>Add File 1:</strong>
+                                        </td>
+                                        <td>
+                                            <div class="form-group m-b-10">
+                                                <button type="button" class="btn btn-primary" onclick="document.getElementById('fileID1').click(); return false;">
+                                                    Browse
+                                                </button>
+                                                <input type="file" id="fileID1" style="visibility: hidden;display:none;" />
+                                                <input type="hidden" id="hdnFileID1" />
+                                                <input type="hidden" id="hdnFileID1Name" />
+                                                <button id="btnSelectedFile1" type="button" class="btn btn-default" style="display:none;">
+                                                    <span id="spnSelFileName1"></span> <i class="fa fa-times" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Add File 2:</strong>
+                                        </td>
+                                        <td>
+                                            <div class="form-group m-b-10">
+                                                <button type="button" class="btn btn-primary" onclick="document.getElementById('fileID2').click(); return false;">
+                                                    Browse
+                                                </button>
+                                                <input type="file" id="fileID2" style="visibility: hidden;display:none;" />
+                                                <input type="hidden" id="hdnFileID2" />
+                                                <input type="hidden" id="hdnFileID2Name" />
+                                                <button id="btnSelectedFile2" type="button" class="btn btn-default" style="display:none;">
+                                                    <span id="spnSelFileName2"></span> <i class="fa fa-times" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Add File 3:</strong>
+                                        </td>
+                                        <td>
+                                            <div class="form-group m-b-10">
+                                                <button type="button" class="btn btn-primary" onclick="document.getElementById('fileID3').click(); return false;">
+                                                    Browse
+                                                </button>
+                                                <input type="file" id="fileID3" style="visibility: hidden;display:none;" />
+                                                <input type="hidden" id="hdnFileID3" />
+                                                <input type="hidden" id="hdnFileID3Name" />
+                                                <button id="btnSelectedFile3" type="button" class="btn btn-default" style="display:none;">
+                                                    <span id="spnSelFileName3"></span> <i class="fa fa-times" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
                             </form>
-                            <p>Only .pdf, .gif, .png, .jpeg formats are allowed</p>
+                            <p>Only .pdf, .txt, .png, .jpg and .csv formats are allowed</p>
                         </div>
                         <br>
 
@@ -718,23 +774,23 @@
                                     </div>
                                 </div>
                                 @*<div class="col-md-6">
-                                     <div id="map" style="height: 330px; width: 100%;"></div>
-                                    <script>
-                                      function initMap() {
-                                        var uluru = {lat: 40.723523, lng: -73.9960463};
-                                        var map = new google.maps.Map(document.getElementById('map'), {
-                                          zoom: 16,
-                                          center: uluru
-                                        });
-                                        var marker = new google.maps.Marker({
-                                          position: uluru,
-                                          map: map
-                                        });
-                                      }
-                                    </script>
-                                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&callback=initMap" async defer></script>     
-                                    <img class="gray-bdr-1 img-responsive" src="../Content/images/us_map.jpg" style="height: 330px;" />
-                                </div>*@
+                                         <div id="map" style="height: 330px; width: 100%;"></div>
+                                        <script>
+                                          function initMap() {
+                                            var uluru = {lat: 40.723523, lng: -73.9960463};
+                                            var map = new google.maps.Map(document.getElementById('map'), {
+                                              zoom: 16,
+                                              center: uluru
+                                            });
+                                            var marker = new google.maps.Marker({
+                                              position: uluru,
+                                              map: map
+                                            });
+                                          }
+                                        </script>
+                                        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&callback=initMap" async defer></script>
+                                        <img class="gray-bdr-1 img-responsive" src="../Content/images/us_map.jpg" style="height: 330px;" />
+                                    </div>*@
                             </div>
 
 
@@ -823,20 +879,23 @@
 
 
 <script>
-    function reloadContainer(callback) {
 
+    function reloadContainer(callback) {
         $("#mycareteam").load('@Url.Action("MyCareTeam", "SeeDoctor")', function () {
             callback();
-
         });
-
     }
+
+    var reader1  = new FileReader();
+    var reader2  = new FileReader();
+    var reader3  = new FileReader();
+
     $(document).ready(function () {
+
         if($("#wizard").smartWizard('currentStep','1'))
         {
             $('.buttonNext').hide();
             $('.buttonPrevious').hide();
-
         }
 
         GetAllLanguages();
@@ -856,9 +915,7 @@
             targetButton: "#btnProceedWithPayment",
             actionUrl: '@Url.Action("ProceedWithPay", "seedoctor")',
             handleSuccess: function () {
-
                 CreateAppointment(@ViewBag.PatienID,@amount);
-                
             },
             handleFailure: function () {
                 alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
@@ -867,6 +924,18 @@
 
         oStripePayCheckout.initialize();
 
+        //Get Files in ROV - Starts
+        reader1.addEventListener("load", function () {
+            $("#hdnFileID1").val(reader1.result);
+        }, false);
+
+        reader2.addEventListener("load", function () {
+            $("#hdnFileID2").val(reader2.result);
+        }, false);
+
+        reader3.addEventListener("load", function () {
+            $("#hdnFileID3").val(reader3.result);
+        }, false);
 
     });
 
@@ -876,23 +945,31 @@
 
 
     }*@
-    function CreateAppointment(patientID,amount) {
-   
+
+    function CreateAppointment(patientID,amount) 
+    {
         _objAppointment["appDate"] = $("#fetchdate").val();
         _objAppointment["doctorID"] = $("#doctorid").val();
         _objAppointment["patientID"] = patientID;
         _objAppointment["paymentAmt"] = amount;
         _objAppointment["rov"] = $("#ROV option:selected").text();
         _objAppointment["chiefComplaints"] = $("#chiefcomplaints").val();
-    
+
+        _objAppointment["rovFile1Base64"] = $("#hdnFileID1").val();
+        _objAppointment["rovFile1Name"] = $("#hdnFileID1Name").val();
+
+        _objAppointment["rovFile2Base64"] = $("#hdnFileID2").val();
+        _objAppointment["rovFile2Name"] = $("#hdnFileID2Name").val();
+
+        _objAppointment["rovFile3Base64"] = $("#hdnFileID3").val();
+        _objAppointment["rovFile3Name"] = $("#hdnFileID3Name").val();
 
 
         $.ajax({
             type: 'POST',
             url: '/SeeDoctor/SaveAppointment',
-            data: JSON.stringify(_objAppointment),
-            contentType: "application/json",
-            dataType: 'json',
+            dataType: 'text',
+            data: 'inputModel='+ JSON.stringify(_objAppointment),
             success: function (response) {
 
                 if (response.Success == true) {
@@ -917,14 +994,7 @@
                         }
                         if (appType == "L")
                         { createConsult($("#doctorid").val(), patientID, response.ApiResultModel.ID);}
-
-                   
-                    
-
                     }
-
-
-
                 }
 
             },
@@ -965,11 +1035,11 @@
                             type: 'info', addclass: 'dark',
                             styling: 'bootstrap3'
                         });
-                   
+
                         if(appType="L")
                         {
 
-               
+
                             var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
                             //check for apptype if l then go here
                             //create consult here
@@ -978,7 +1048,7 @@
                             $.post(cUrlReadyForCall, function (oResp) {
                                 if (oResp) {
                                     localStorage.setItem('consultationKey', oResp);
-                        
+
                                     //Redirect doctor to call
                                     window.location = '@Url.Action("Index","UserChat")';
                                 }
@@ -1111,7 +1181,7 @@
 
 @*For Medicine*@
 <script>
-   
+
     $(document).ready(function () {
 
         GetMedications(@ViewBag.PatienID);
@@ -1412,6 +1482,126 @@
             });
         });
 
+
+        //Upload files binding - Starts
+
+        $("#fileID1").change(function () {
+            var filepath = $("#fileID1").val();
+            var filename = filepath.substring(filepath.lastIndexOf('\\') + 1);
+
+            //Validate file
+            var fileExt = filepath.substring(filepath.lastIndexOf('.') + 1).toLowerCase();
+
+            if (fileExt != "txt" && fileExt != "pdf" && fileExt != "docx" && fileExt != "csv" && fileExt != "jpg" && fileExt != "png") {
+                new PNotify({ title: 'Error', text: 'File format is not supported. Please choose appropriate file format.', type: 'error', styling: 'bootstrap3' });
+                deSelectFile1();
+                return;
+            }
+
+            var fileID1 = document.querySelector('#fileID1').files[0];
+
+            if(fileID1.size >= (1048576*2)){
+                new PNotify({ title: 'Error', text: 'File 1 size must be less than 2 MB.', type: 'error', styling: 'bootstrap3' });
+                deSelectFile1();
+                return;
+            }
+
+            reader1.readAsDataURL(fileID1);
+            $("#hdnFileID1Name").val(filename);
+            $("#spnSelFileName1").html(filename);
+            $("#btnSelectedFile1").show();
+        });
+
+        $("#btnSelectedFile1").click(deSelectFile1);
+
+        function deSelectFile1() {
+            $("#fileID1").val('');
+            $("#hdnFileID1").val('');
+            $("#hdnFileID1Name").val('');
+            $("#btnSelectedFile1").hide();
+            $("#spnSelFileName1").html('');
+        }
+
+        //--------------------------//
+
+        $("#fileID2").change(function () {
+            var filepath = $("#fileID2").val();
+            var filename = filepath.substring(filepath.lastIndexOf('\\') + 1);
+
+            //Validate file
+            var fileExt = filepath.substring(filepath.lastIndexOf('.') + 1).toLowerCase();
+
+            if (fileExt != "txt" && fileExt != "pdf" && fileExt != "docx" && fileExt != "csv" && fileExt != "jpg" && fileExt != "png") {
+                new PNotify({ title: 'Error', text: 'File format is not supported. Please choose appropriate file format.', type: 'error', styling: 'bootstrap3' });
+                deSelectFile2();
+                return;
+            }
+
+            var fileID2 = document.querySelector('#fileID2').files[0];
+
+            if(fileID2.size >= (1048576*2)){
+                new PNotify({ title: 'Error', text: 'File 2 size must be less than 2 MB.', type: 'error', styling: 'bootstrap3' });
+                deSelectFile2();
+                return;
+            }
+
+            reader2.readAsDataURL(fileID2);
+            $("#hdnFileID2Name").val(filename);
+            $("#spnSelFileName2").html(filename);
+            $("#btnSelectedFile2").show();
+        });
+
+        $("#btnSelectedFile2").click(deSelectFile2);
+
+        function deSelectFile2() {
+            $("#fileID2").val('');
+            $("#hdnFileID2").val('');
+            $("#hdnFileID2Name").val('');
+            $("#btnSelectedFile2").hide();
+            $("#spnSelFileName2").html('');
+        }
+
+        //--------------------------//
+
+        $("#fileID3").change(function () {
+            var filepath = $("#fileID3").val();
+            var filename = filepath.substring(filepath.lastIndexOf('\\') + 1);
+
+            //Validate file
+            var fileExt = filepath.substring(filepath.lastIndexOf('.') + 1).toLowerCase();
+
+            if (fileExt != "txt" && fileExt != "pdf" && fileExt != "docx" && fileExt != "csv" && fileExt != "jpg" && fileExt != "png") {
+                new PNotify({ title: 'Error', text: 'File format is not supported. Please choose appropriate file format.', type: 'error', styling: 'bootstrap3' });
+                deSelectFile3();
+                return;
+            }
+
+            var fileID3 = document.querySelector('#fileID3').files[0];
+
+            if(fileID3.size >= (1048576*2)){
+                new PNotify({ title: 'Error', text: 'File 3 size must be less than 2 MB.', type: 'error', styling: 'bootstrap3' });
+                deSelectFile3();
+                return;
+            }
+
+            reader3.readAsDataURL(fileID3);
+            $("#hdnFileID3Name").val(filename);
+            $("#spnSelFileName3").html(filename);
+            $("#btnSelectedFile3").show();
+        });
+
+        $("#btnSelectedFile3").click(deSelectFile3);
+
+        function deSelectFile3() {
+            $("#fileID3").val('');
+            $("#hdnFileID3").val('');
+            $("#hdnFileID3Name").val('');
+            $("#btnSelectedFile3").hide();
+            $("#spnSelFileName3").html('');
+        }
+        //Upload files binding - Ends
+
+
         $('#single_cal1').daterangepicker({
             singleDatePicker: true,
             showDropdowns: true,
@@ -1506,6 +1696,7 @@
         });
 
     });
+
     $('#toggle1').on(function () {
 
         $('#toggle_1').show();
