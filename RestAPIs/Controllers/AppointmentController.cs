@@ -217,7 +217,10 @@ namespace RestAPIs.Controllers
                 {
                     DateTime result = DateTime.ParseExact(dateString, format, provider);
                     Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
-                    app.appDate = result;
+                    //app.appDate = result;
+                    DateTime utcappDateTime = result + myDateTime.TimeOfDay;
+                  
+                    app.appDate = utcappDateTime.ToUniversalTime().Date;
                 }
                 catch (FormatException)
                 {
