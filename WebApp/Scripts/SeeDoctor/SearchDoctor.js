@@ -539,25 +539,7 @@ function errorRes(httpObj) {
     
         
 }
-function compareTime(time) {
-    var localDate = new Date();
-    var dbDate = localDate.getFullYear() + '/' + localDate.getMonth() + '/' + localDate.getDate() + ' ' + time;
-    var compareDate = new Date(dbDate);
-    var dbtime = compareDate.getHours + ':' + compareDate.getMinutes();
 
-    var localtime = localDate.getHours + ':' + localDate.getMinutes();
-
-    if (dbtime > localtime) {
-        //alert(dbtime + ' ' + localtime + ' true');
-        return true;
-    }
-
-    else {
-        //alert(dbtime + ' ' + localtime + 'flase');
-        return false;
-    }
-
-}
 
 
 

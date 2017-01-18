@@ -375,7 +375,7 @@
                     var tablehtml = "";
                     $.each(response.Object, function (item) {
 
-                        tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + fetchdate + "\")' style='width:85px'>" + response.Object[item] + "</button></li>";
+                        tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + fetchdate + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
 
                     });
 
@@ -439,7 +439,7 @@
                     var tablehtml = "";
                     $.each(response.Object, function (item) {
 
-                        tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + response.Object[item] + "</button></li>";
+                        tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
 
                     });
 
