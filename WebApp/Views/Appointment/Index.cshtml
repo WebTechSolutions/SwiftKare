@@ -216,7 +216,7 @@
                         //Reload container
                         if (result.Message != undefined) {
                            
-                            new PNotify({ title: 'Error', text: "Consultation "+" "+result.Message, type: 'error', styling: 'bootstrap3' });
+                            new PNotify({ title: 'Error', text: "Consultation "+" "+result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
                             $('#myModal4').modal('hide');
                             //stopLoader();
                         }
@@ -433,7 +433,12 @@
             dataType: 'json',
             success: function (response) {
                 if (response.Message != undefined) {
-
+                    new PNotify({
+                        title: 'Error',
+                        text: response.Message.ReasonPhrase,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
                 }
                 else {
                     var tablehtml = "";

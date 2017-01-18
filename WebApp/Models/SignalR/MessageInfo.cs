@@ -21,6 +21,7 @@ namespace WebApp.Models.SignalR
         public string Message { get; set; }
         public string MsgDate { get; set; }
 
-        public string AppId { get; set; }
+        public string consultID { get; set; }
+       
     }
 }

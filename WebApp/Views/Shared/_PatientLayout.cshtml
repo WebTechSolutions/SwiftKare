@@ -23,6 +23,8 @@
     <link href="@Url.Content("~/Content/css/pnotify.css")" rel="stylesheet">
     <link href="@Url.Content("/Content/css/green.css")" rel="stylesheet" />
     <link href="@Url.Content("/Content/css/switchery.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("/Content/css/dataTables.bootstrap.min.css")" rel="stylesheet" />
+    
     <link href="@Url.Content("/Content/css/bootstrap-material-datetimepicker.css")" rel="stylesheet" />
     
     
@@ -363,48 +365,7 @@
                 UserGroup: 'doctors'
             });
         }*@
-        function createConsult(doctorID, patientID, appID) {
-            _objConsult["doctorId"] = doctorID;
-            _objConsult["patientId"] = patientID;
-            _objConsult["appID"] = appID;
-            _objConsult["sessionID"] = "0";
-            _objConsult["token"] = "0";
-            _objConsult["userID"] = '0'
-
-            $.ajax({
-                type: 'POST',
-                url: '/Doctor/CreateConsult',
-                data: JSON.stringify(_objConsult),
-                contentType: "application/json",
-                dataType: 'json',
-                success: function (response) {
-
-                    if (response.Success == true) {
-                        if (response.ApiResultModel.message != "") {
-                            new PNotify({
-                                title: 'Error',
-                                text: response.ApiResultModel.message,
-                                type: 'error',
-                                styling: 'bootstrap3'
-                            });
-                        }
-                        else if (response.ApiResultModel.message == "") {
-                            new PNotify({
-                                title: 'Success',
-                                text: "Consultation is created successfully.",
-                                type: 'info', addclass: 'dark',
-                                styling: 'bootstrap3'
-                            });
-                            makeCallToPatient(patientID, appID, response.ApiResultModel.ID);
-
-                        }
-                    }
-
-                },
-                error: errorRes
-
-            });
-        }
+       
         $(function () {
 
             chat.client.receiveMessage = function (msgFrom, msg, senderConnId, senderid) {
@@ -429,12 +390,13 @@
                         var strSignalRInfo = window.JSON.stringify(signalRInfo);
                         localStorage.setItem('signalRInfo', strSignalRInfo);
                     } else {
-                        alert("Sorry! Doctor " + msgJson.name + " is not available now to consultation call.");
+                        alert("Sorry! Doctor " + msgJson.name + " is not available now for consultation call.");
                     }
                 }
             };
 
             chat.client.incomingCallFromDoctor = function (msgFrom, msg, senderConnId, senderid, appId, docName) {
+                debugger;
                 var msgJson = JSON.parse(msg);
 
                 var isPatientAcceptedCall = confirm('Doctor ' + msgJson.name + ' want to have consultation with you. Press OK to proceed.');
@@ -456,10 +418,25 @@
                         ReceiverConnectionId: senderConnId,
                         AppId: appId
                     });
+                    var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Patient&receiverId=" + senderid + "&doctorName=" + docName + "&patientName=@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)&aptId=" + appId;
+
+                    $.post(cUrlReadyForCall, function (oResp) {
+                        debugger;
+                       // if (oResp)
+                        {
+                            localStorage.setItem('consultationKey', appId);
+
+                            chat.server.patientRedirectedToCall
+                                (senderConnId, appId, '@SessionHandler.UserInfo.Id', '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)');
+
+                            //Redirect doctor to call
+                            window.location = '@Url.Action("Index","UserChat")';
+                        }
+                    });
 
 
                     //Create Consult , in succcess cal below
-                    debugger;
+                    @*debugger;
                     var _objConsult = {};
                     _objConsult["doctorId"] = senderid;
                     _objConsult["patientId"] = '@SessionHandler.UserInfo.Id';
@@ -511,10 +488,10 @@
                         },
                         error: errorRes
 
-                    });
+                    });*@
 
 
-                    
+
 
                 }
                 else {
@@ -606,12 +583,19 @@
                     window.location.href = request.response.redirectUrl;
             }
         });
+        function errorRes(data) {
+            new PNotify({
+                title: 'Error',
+                text: data.Message,
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        }
 
         $('#menu_toggle').click(function () { if (document.body.className == "nav-md footer_fixed") { ($("body").attr("class", "nav-sm footer_fixed")); $('.fa-angle-down').show(); } else { $("body").attr("class", "nav-md footer_fixed"); } });
         $('.menu_section li').hover(
        function () { $(this).addClass('current-page') },
-       function () { $(this).removeClass('current-page') }
-)
+       function () { $(this).removeClass('current-page') })
     </script>
 
 
