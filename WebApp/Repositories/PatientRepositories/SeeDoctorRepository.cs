@@ -160,12 +160,12 @@ namespace WebApp.Repositories.DoctorRepositories
                 var result = JsonConvert.DeserializeObject<List<FavouriteDoctorModel>>(response);
                 return result;
             }
-            catch (HttpResponseException ex)
+            catch (Exception ex)
             {
-
-                throw ex;
+                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                httpResponseMessage.Content = new StringContent(ex.Message);
+                throw new HttpResponseException(httpResponseMessage);
             }
-
 
         }
         public string LoadMedications(long patientid)
@@ -177,12 +177,12 @@ namespace WebApp.Repositories.DoctorRepositories
                 var result = JsonConvert.DeserializeObject<string>(response);
                 return result;
             }
-            catch (HttpResponseException ex)
+            catch (Exception ex)
             {
-
-                throw ex;
+                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                httpResponseMessage.Content = new StringContent(ex.Message);
+                throw new HttpResponseException(httpResponseMessage);
             }
-
 
         }
         public string LoadAllergies(long patientid)
@@ -194,12 +194,12 @@ namespace WebApp.Repositories.DoctorRepositories
                 var result = JsonConvert.DeserializeObject<string>(response);
                 return result;
             }
-            catch (HttpResponseException ex)
+            catch (Exception ex)
             {
-
-                throw ex;
+                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                httpResponseMessage.Content = new StringContent(ex.Message);
+                throw new HttpResponseException(httpResponseMessage);
             }
-
 
         }
         public string LoadSurgeries(long patientid)
@@ -211,62 +211,35 @@ namespace WebApp.Repositories.DoctorRepositories
                 var result = JsonConvert.DeserializeObject<string>(response);
                 return result;
             }
-            catch (HttpResponseException ex)
+            catch (Exception ex)
             {
-
-                throw ex;
+                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                httpResponseMessage.Content = new StringContent(ex.Message);
+                throw new HttpResponseException(httpResponseMessage);
             }
-
 
         }
         public ApiResultModel AddAppointment(AppointmentModel model)
         {
-            try
-            {
-                var strContent = JsonConvert.SerializeObject(model);
-                var response = ApiConsumerHelper.PostData("api/addAppointment", strContent);
-                var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
-                return result;
-            }
-            
-            catch (HttpResponseException ex)
-            {
-
-                throw ex;
-            }
-
+            var strContent = JsonConvert.SerializeObject(model);
+            var response = ApiConsumerHelper.PostData("api/addAppointment", strContent);
+            var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
+            return result;
         }
 
         public ApiResultModel AddFavourite(FavouriteDoctorModel model)
         {
-            try { 
             var strContent = JsonConvert.SerializeObject(model);
             var response = ApiConsumerHelper.PostData("api/favouriteDoctor", strContent);
             var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
             return result;
         }
-            catch (HttpResponseException ex)
-            {
-
-                throw ex;
-            }
-
-        }
         public ApiResultModel UpdateFavourite(FavouriteDoctorModel model)
         {
-            try
-            {
-                var strContent = JsonConvert.SerializeObject(model);
-                var response = ApiConsumerHelper.PostData("api/unfavouriteDoctor", strContent);
-                var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
-                return result;
-            }
-            catch (HttpResponseException ex)
-            {
-
-                throw ex;
-            }
-
+            var strContent = JsonConvert.SerializeObject(model);
+            var response = ApiConsumerHelper.PostData("api/unfavouriteDoctor", strContent);
+            var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
+            return result;
         }
     }
     }

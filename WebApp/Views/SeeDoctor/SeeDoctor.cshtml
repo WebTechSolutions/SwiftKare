@@ -894,18 +894,8 @@
             contentType: "application/json",
             dataType: 'json',
             success: function (response) {
-                
-                if(response.Message!=undefined)
-                {
-                    new PNotify({
-                        title: 'Error',
-                        text: response.Message.ReasonPhrase,
-                        type: 'error',
-                        styling: 'bootstrap3'
-                    });
-                }
+
                 if (response.Success == true) {
-                    
                     if (response.ApiResultModel.message != "") {
                         new PNotify({
                             title: 'Error',

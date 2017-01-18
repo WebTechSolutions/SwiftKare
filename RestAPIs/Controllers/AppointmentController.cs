@@ -173,32 +173,23 @@ namespace RestAPIs.Controllers
                 if (model.appDate == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment date." });
-                    response.ReasonPhrase = "Invalid appointment date.";
                     return response;
                 }
                 if (model.appTime == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment time." });
-                    response.ReasonPhrase = "Invalid appointment time.";
                     return response;
                 }
                 if (model.doctorID == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
-                    response.ReasonPhrase = "Invalid doctorID.";
                     return response;
                 }
                 if (model.patientID == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
-                    response.ReasonPhrase = "Invalid patientID.";
                     return response;
                 }
-                if (model.appTime.Length < 8)
-                {
-                    model.appTime = "0" + model.appTime;
-                }
-                   
                 DateTime myDateTime = DateTime.ParseExact(model.appTime,
                                    "hh:mm tt", CultureInfo.InvariantCulture);
                 app.appointmentStatus = "C";
