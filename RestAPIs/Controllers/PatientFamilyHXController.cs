@@ -64,7 +64,11 @@ namespace RestAPIs.Controllers
             {
                 var ptFamilyHX = (from l in db.PatientFamilyHXes
                                  where l.active == true && l.patientID == patientID orderby l.fhxid descending
-                                 select new { fhxid = l.fhxid, patientID = l.patientID, name = l.name.Trim(),relationship=l.relationship.Trim() }).ToList();
+                                 select new { fhxid = l.fhxid, patientID = l.patientID, name = l.name.Trim(),relationship=l.relationship.Trim(),
+                                     familyHXItemID = (from familyhx in db.FamilyHXItems
+                                                   where familyhx.name == l.name
+                                                   select familyhx.familyHXItemsID).FirstOrDefault()
+                                 }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, ptFamilyHX);
                 return response;
             }

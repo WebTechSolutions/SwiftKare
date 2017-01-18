@@ -20,6 +20,7 @@ namespace DataAccess.CustomModels
         public long patientID { get; set; }
         public string question { get; set; }
         public string answer { get; set; }
+        public long questionID { get; set; }
     }
 
     public class GetLifeStyleQuestions

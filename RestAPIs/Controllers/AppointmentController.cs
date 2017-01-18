@@ -173,23 +173,32 @@ namespace RestAPIs.Controllers
                 if (model.appDate == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment date." });
+                    response.ReasonPhrase = "Invalid appointment date.";
                     return response;
                 }
                 if (model.appTime == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid appointment time." });
+                    response.ReasonPhrase = "Invalid appointment time.";
                     return response;
                 }
                 if (model.doctorID == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
+                    response.ReasonPhrase = "Invalid doctorID.";
                     return response;
                 }
                 if (model.patientID == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
+                    response.ReasonPhrase = "Invalid patientID.";
                     return response;
                 }
+                if (model.appTime.Trim().Length < 8)
+                {
+                    model.appTime = "0" + model.appTime.Trim();
+                }
+
                 DateTime myDateTime = DateTime.ParseExact(model.appTime,
                                    "hh:mm tt", CultureInfo.InvariantCulture);
                 app.appointmentStatus = "C";
@@ -199,7 +208,22 @@ namespace RestAPIs.Controllers
                 //app.appTime = To24HrTime(model.appTime);
                           
                 app.appTime= myDateTime.ToUniversalTime().TimeOfDay;
-                app.appDate = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate));
+               // app.appDate = DateTime.ParseExact(model.appDate.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+              //  app.appDate = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate.Trim()));
+                string dateString = model.appDate.Trim();
+                string format = "dd/MM/yyyy";
+                CultureInfo provider = CultureInfo.InvariantCulture;
+                try
+                {
+                    DateTime result = DateTime.ParseExact(dateString, format, provider);
+                    Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
+                    app.appDate = result;
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("{0} is not in the correct format.", dateString);
+                }
+                
                 app.rov = model.rov;
                 app.chiefComplaints = model.chiefComplaints;
                 app.cb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault(); model.patientID.ToString();
