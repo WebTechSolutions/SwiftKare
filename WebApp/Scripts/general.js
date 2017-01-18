@@ -175,10 +175,10 @@ function compareTime(time) {
 
 }
 
-function compareDateTime(date,time)
+function compareDateTime(fdate,time)
 {
-    debugger;
-    var dateString = date;// in format "17/01/2017"
+    alert(fdate);
+    var dateString = fdate;// in format "17/01/2017"
     var dateParts = dateString.split("/");
     var dateObject = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
     var dbDate = dateObject.getFullYear() + '/' + dateObject.getMonth() + 1 + '/' + dateObject.getDate() + ' ' + time ;

@@ -412,9 +412,9 @@ function SearchDoctor(patientID) {
 function fetchTimings(fetchdate) {
 
     var _objSearch = {};
-    _objSearch["appDate"] = fetchdate;//$("#fetchdate").val();
+    _objSearch["appDate"] = fetchdate.trim();//$("#fetchdate").val();
     _objSearch["doctorID"] = $("#doctorid").val();
-
+    
     var div = "";
     $.ajax({
         type: 'POST',
@@ -438,11 +438,11 @@ function fetchTimings(fetchdate) {
                 $.each(response.Object, function (item) {
                    
                     var tolocalTime = converttoLocal(response.Object[item]);
-                    console.log('dbTime ' + response.Object[item] + ' local-time ' + tolocalTime);
-                    var flag = compareTime(tolocalTime);
+                   
+                    var flag = compareDateTime(fetchdate.trim(), tolocalTime);
                     if (flag)
                     {
-                        console.log(response.Object[item] + ' is later than ' + tolocalTime);
+                        
                         tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + fetchdate + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
                     }
                         
@@ -493,11 +493,11 @@ function showDoctorTimings(doctorID) {
             var tablehtml = "";
             $.each(response.Object, function (item) {
                 var tolocalTime = converttoLocal(response.Object[item]);
-                console.log('dbTime ' + response.Object[item] + ' local-time ' + tolocalTime);
+                
                 var flag = compareTime(tolocalTime);
                 if (flag)
                 {
-                    console.log(response.Object[item] + ' is later than ' + tolocalTime);
+                    
                     tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
                  }
             });

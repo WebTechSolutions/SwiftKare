@@ -235,9 +235,16 @@ namespace WebApp.Controllers
 
                     }
                 }
-
-                TimeSpan itemstartTime = (TimeSpan)item.from;
                 TimeSpan endTime = (TimeSpan)item.to;
+                if (endTime.Minutes % 15 != 0)
+                {
+                    TimeSpan tempp = TimeSpan.FromMinutes(15 - (endTime.Minutes % 15));
+                    endTime = endTime.Add(tempp);
+                    
+                }
+
+                TimeSpan itemstartTime = startTime;//(TimeSpan)item.from;
+                
                 if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
                 {
                     timeSlots.Add(startTime.ToString(@"hh\:mm"));
