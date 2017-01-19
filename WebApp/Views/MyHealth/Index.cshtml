@@ -35,6 +35,7 @@
 <script src="~/Scripts/Medicine/Medicine.js"></script>
 <script src="~/Scripts/PatientAllergies/PateintAllergies.js"></script>
 <script src="~/Scripts/Surgeries/Surgeries.js"></script>
+<script src="~/Scripts/Appointment/Appointment.js"></script>
 <!-- page content -->
 <div class="right_col" role="main">
     <div class="clearfix"></div>
@@ -333,51 +334,78 @@
 
                                 <div role="tabpanel" class="tab-pane fade" id="whats_new" aria-labelledby="whats_new">
 
-                                    <div class="row" style="margin-bottom: 70px;">
-                                        <div class="col-md-6 col-sm-12 col-xs-12">
-                                            <div class="x_panel">
-                                                <div class="x_title">
-                                                    <div class="input-group res-w-input" style="width: 94%; float: left;">
-                                                        <input type="text" name="country" placeholder="Search Pharmacy" id="pharmacy" class="form-control" />
-                                                        <input type="number" id="pharmacyid" style="display:none" />
+                                    <div id="step-4">
+                                        
+                                            <div class="col-sm-12">
+                                                <div class="x_panel">
+                                                    <div class="x_title">
+                                                        <div class="row">
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label for="Name">Pharmacy Name (atleast three chars):</label>
+                                                                    @Html.TextBox("txtPharmacySrchName", "", new { @class = "form-control" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label for="City">City:</label>
+                                                                    @Html.TextBox("txtPharmacySrchCity", "", new { @class = "form-control" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label for="State">State:</label>
+                                                                    @Html.TextBox("txtPharmacySrchState", "", new { @class = "form-control" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label for="Zip">Zip:</label>
+                                                                    @Html.TextBox("txtPharmacySrchZip", "", new { @class = "form-control" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-8">
+                                                                <button style="margin-top:23px" id="btnPharmacySrch" type="button" class="btn btn-primary">Search Pharmacy</button>
+                                                                <button style="margin-top:23px" id="btnPharmacySave" type="button" class="btn btn-primary">Save Pharmacy</button>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <ul class="nav navbar-right panel_toolbox">
-                                                        <li>
-                                                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                                <div class="x_content">
-                                                    <h2 class="m-t-0">Current Pharmacy</h2>
-                                                    <h2>Wal-Mart Pharmacy 5866</h2>
-                                                    <p>8555 PRESTON RD</p>
-                                                    <p>FRISCO TX,75034</p>
-                                                    <p><strong>Ph:</strong> (469)237-3768</p>
-                                                    <p><strong>Fax:</strong>  2144364723</p>
-                                                    <p><strong>Pharmacy Hours:</strong> Open 24 hours</p>
                                                 </div>
                                             </div>
+                                      
+                                        <div id="divPharmacyResultContainer" class="row" style="margin-bottom: 70px; display:block;">
+                                            <div class="col-md-6">
+                                                <div class="x_content">
+                                                    <input type="number" id="PharmacyID" style="display:none">
+                                                    <h2 class="m-t-0">Current Pharmacy</h2>
+                                                    <h2 id="h2SelPharmacyName"></h2>
+                                                    <p id="pSelPharmacyAddress"></p>
+                                                    <p id="pSelPharmacyCityStateZip"></p>
+                                                </div>
+                                            </div>
+                                            @*<div class="col-md-6">
+                     <div id="map" style="height: 330px; width: 100%;"></div>
+                    <script>
+                      function initMap() {
+                        var uluru = {lat: 40.723523, lng: -73.9960463};
+                        var map = new google.maps.Map(document.getElementById('map'), {
+                          zoom: 16,
+                          center: uluru
+                        });
+                        var marker = new google.maps.Marker({
+                          position: uluru,
+                          map: map
+                        });
+                      }
+                    </script>
+                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&callback=initMap" async defer></script>
+                    <img class="gray-bdr-1 img-responsive" src="../Content/images/us_map.jpg" style="height: 330px;" />
+                </div>*@
                                         </div>
 
-                                        <div class="col-md-6">
-                                            <!-- <div id="map" style="height: 330px; width: 100%;"></div>
-                                            <script>
-                                              function initMap() {
-                                                var uluru = {lat: 40.723523, lng: -73.9960463};
-                                                var map = new google.maps.Map(document.getElementById('map'), {
-                                                  zoom: 16,
-                                                  center: uluru
-                                                });
-                                                var marker = new google.maps.Marker({
-                                                  position: uluru,
-                                                  map: map
-                                                });
-                                              }
-                                            </script>
-                                            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&callback=initMap" async defer></script>     -->
-                                            <img class="gray-bdr-1 img-responsive" src="../Content/images/us_map.jpg" style="height: 330px;" />
-                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -386,6 +414,27 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<br><br><br>
+
+<div id="mdlPharmacy" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Pharmacy Search Results</h4>
+            </div>
+            <div id="divPharmacySearchBody" class="modal-body" style="width:100%;">
+                <p style="font-size:12px;">Please enter the email address</p>
+                <div style="width:250px;height:100px;float:left;margin-right:50px;">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Email">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
     </div>
 </div>
 <iframe id="iframeDownload" style="display:none;"></iframe>
@@ -893,25 +942,37 @@
 
 <script>
     $(document).ready(function () {
-        $(function () {
-            var pharmacy = { 1: "pharmacy 1", 2: "pharmacy 2", 3: "pharmacy 3" };
+        loadPatientPharmacy('@SessionHandler.UserInfo.Id');
 
-            var pharmacyArray = $.map(pharmacy, function (value, key) {
-                return {
-                    value: value,
-                    data: key
-                };
-            });
-            $("#pharmacy").autocomplete({
-                lookup: pharmacyArray,
-                select: function (s, e) {
-                    alert(e.item.value);
-                    //savePharmacy(e.item.value);
-                    //$(this).val(b.item.value);
-                    //$("#pharmacyid").val(a.item.value);
+        $("#btnPharmacySave").click(function(){
+            savePatientPharmacy('@SessionHandler.UserInfo.Id');
+        });
 
+        $("#btnPharmacySrch").click(function(){
 
-                }
+            //Perform Validation - Starts
+            if($("#txtPharmacySrchName").val() == "" && $("#txtPharmacySrchCity").val() == "" && $("#txtPharmacySrchState").val() == "" && $("#txtPharmacySrchZip").val() == ""){
+                showErrorMsgBox('Please select atleast one search criteria.');
+                return;
+            }
+            else if($("#txtPharmacySrchName").val() != "" && $("#txtPharmacySrchName").val().length <3){
+                showErrorMsgBox('Pharmacy search must be atleast three characters.');
+                return;
+            }
+            //Perform Validation - Ends
+
+            //Build Params, Call Search and get results
+            var oModel = {
+                Name:$("#txtPharmacySrchName").val(),
+                City:$("#txtPharmacySrchCity").val(),
+                State:$("#txtPharmacySrchState").val(),
+                Zip:$("#txtPharmacySrchZip").val()
+            };
+
+            var cUrl = '@Url.Action("SearchPharmacy","SeeDoctor")';
+            $.post(cUrl, oModel, function(oResult){
+                $("#divPharmacySearchBody").html(oResult);
+                $('#mdlPharmacy').modal('show');
             });
         });
     });

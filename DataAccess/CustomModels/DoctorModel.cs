@@ -28,6 +28,7 @@ namespace DataAccess.CustomModels
     }
     public class DoctorDataset
     {
+        public string ProfilePhotoBase64 { get; set; }
         public long doctorID { get; set; }
         public string title { get; set; }
         public string city { get; set; }

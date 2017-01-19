@@ -187,46 +187,104 @@ function getClockTime()
 
 //-->
 
-function AddUpdatePharmacy(patientID,pharmacy) {
-    
-    _objPharmacy["patientID"] = patientID;
-    _objPharmacy["pharmacy"] = pharmacy;//$("#pharmacy").val();
-    _objAppointment["pharmacyid"] = 1;//$("#pharmacyid").val();
-
-
+function loadPatientPharmacy(patientID) {
     $.ajax({
         type: 'POST',
-        url: '/SeeDoctor/AddUpdatePharmacy',
-        data: _objPharmacy,
+        url: '/SeeDoctor/GetPatientPharmacy',
+        data: { 'patientID': patientID },
         dataType: 'json',
         success: function (response) {
-            if (response.Success == true) {
-                if (response.ApiResultModel.message != "") {
-                    new PNotify({
-                        title: 'Error',
-                        text: response.ApiResultModel.message,
-                        type: 'error',
-                        styling: 'bootstrap3'
-                    });
-                }
-                else if (response.ApiResultModel.message == "") {
-                    new PNotify({
-                        title: 'Success',
-                        text: "Pharmacy is saved successfully.",
-                        type: 'info',addclass: 'dark',
-                        styling: 'bootstrap3'
-                    });
-                   
-                }
-
-
-
+            if (response.Message != undefined) {
+                console.log(response.Message);
             }
-           
+            else {
+                if (response.Success == true) {
+
+                    if (response.Object != null) {
+
+                        $("#PharmacyID").val(response.Object.pharmacyid);
+                        $("#h2SelPharmacyName").html(response.Object.pharmacy);
+                        $("#pSelPharmacyAddress").html(response.Object.pharmacyaddress);
+                        $("#pSelPharmacyCityStateZip").html(response.Object.pharmacycitystatezip);
+
+                        $("#divPharmacyResultContainer").show();
+                    }
+                }
+            }
+
+            //else {response.Message;}
+
+            return false;
         },
         error: errorRes
 
     });
+
+
+
+}
+
+function savePatientPharmacy(patientID) {
+
+    var objPharmacy = {};
+    objPharmacy["patientID"] = patientID;
+    objPharmacy["pharmacyid"] = $("#PharmacyID").val();
+    objPharmacy["pharmacy"] = $("#h2SelPharmacyName").html();
+    objPharmacy["pharmacyaddress"] = $("#pSelPharmacyAddress").html();
+    objPharmacy["pharmacycitystatezip"] = $("#pSelPharmacyCityStateZip").html();
+
+    $.ajax({
+        type: 'POST',
+        url: '/SeeDoctor/SavePatientPharmacy',
+        data: objPharmacy,
+        dataType: 'json',
+        success: function (response) {
+            if (response.Message != undefined) {
+                new PNotify({
+                    title: 'Error',
+                    text: response.Message,
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+            }
+            else {
+                if (response.Success == true) {
+                    if (response.ApiResultModel.message != "") {
+                        new PNotify({
+                            title: 'Error',
+                            text: response.ApiResultModel.message,
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                    }
+                    else if (response.ApiResultModel.message == "") {
+                        new PNotify({
+                            title: 'Success',
+                            text: "Pharmacy is saved successfully.",
+                            type: 'info', addclass: 'dark',
+                            styling: 'bootstrap3'
+                        });
+                    }
+
+                }
+            }
+
+            //else {response.Message;}
+
+            return false;
+        },
+        error: function (httpObj) {
+            new PNotify({
+                title: 'Error',
+                text: httpObj.statusText,
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        }
+
+    });
+
+
 
 }
 

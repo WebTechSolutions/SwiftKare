@@ -174,8 +174,19 @@ namespace RestAPIs.Controllers
                 if (searchModel.appDate == null)
                 {
 
-                    var result = db.SearchDoctorWithShift(searchModel.language, searchModel.speciality, searchModel.name, null,
-                    appFromtimings, appTotimings, searchModel.gender).ToList();
+                    var result = (from l in db.SearchDoctorWithShift(searchModel.language, searchModel.speciality, searchModel.name, null,
+                    appFromtimings, appTotimings, searchModel.gender)
+                                  select new SearchDoctorWithShift_Model {
+                                      doctorID =l.doctorID, title=l.title,
+                                      firstName=l.firstName,
+                                      lastName=l.lastName,
+                                      city=l.city,
+                                      picture=l.picture,
+                                      state=l.state,
+                                      languageName=l.languageName,
+                                      specialityName=l.specialityName
+                                  }
+                    ).ToList();
                     var favdoc = (from l in db.FavouriteDoctors
                                   where l.patientID == searchModel.patientID && l.active == true
                                   select new FavouriteDoctorModel { docID = l.doctorID, patID = l.patientID }).ToList();
@@ -191,8 +202,21 @@ namespace RestAPIs.Controllers
                 {
                     DateTime day = new DateTime();
                     day = Convert.ToDateTime(searchModel.appDate);
-                    var result = db.SearchDoctorWithShift(searchModel.language, searchModel.speciality, searchModel.name, day.DayOfWeek.ToString(),
-                   appFromtimings, appTotimings, searchModel.gender).ToList();
+                    var result = (from l in db.SearchDoctorWithShift(searchModel.language, searchModel.speciality, searchModel.name, null,
+                    appFromtimings, appTotimings, searchModel.gender)
+                                  select new SearchDoctorWithShift_Model
+                                  {
+                                      doctorID = l.doctorID,
+                                      title = l.title,
+                                      firstName = l.firstName,
+                                      lastName = l.lastName,
+                                      city = l.city,
+                                      picture = l.picture,
+                                      state = l.state,
+                                      languageName = l.languageName,
+                                      specialityName = l.specialityName
+                                  }
+                    ).ToList();
                     var favdoc = (from l in db.FavouriteDoctors
                                   where l.patientID == searchModel.patientID && l.active == true
                                   select new FavouriteDoctorModel { docID = l.doctorID, patID = l.patientID }).ToList();

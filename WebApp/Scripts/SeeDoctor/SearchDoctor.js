@@ -347,7 +347,7 @@ function SearchDoctor(patientID) {
                                    " <a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel.doctor[item].doctorID + "nofav' class='fa fa-heart-o'  onclick='toggle(" + response.DoctorModel.doctor[item].doctorID + "," + patientID + ");return false;' style='display:block'></span></a>" +
                                    "<a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel.doctor[item].doctorID + "fav' class='fa fa-heart'  onclick='untoggle(" + response.DoctorModel.doctor[item].doctorID + "," + patientID + ");return false;' style='display:none'></span></a>" +
                                     "<i class='crl fa fa-circle clsAvailableSpot' aria-hidden='true' style='color: red; cursor: pointer;font-size: 12px; position:absolute; right:2%;'></i>" +
-                                    "<img src='../Content/images/img.jpg' alt='' class='img-circle img-responsive m-b-10 m-t-0' style='margin: 0 auto;display: inline-block;'>" +
+                                    "<img src='"+ response.DoctorModel.doctor[item].ProfilePhotoBase64 + "' alt='' class='img-circle img-responsive m-b-10 m-t-0' style='margin: 0 auto;display: inline-block;'>" +
                                     "<h2 class='m-0'>" +
                                      " <a href='#' class='thumbnail-col-inner m-b-15' data-toggle='modal' data-target='#myModal2' style='word-wrap: break-word;font-size: 12px'>Dr." +
                                       response.DoctorModel.doctor[item].firstName + "&nbsp;" + response.DoctorModel.doctor[item].lastName + "</a>" +

@@ -18,10 +18,22 @@ namespace DataAccess.CommonModels
         public string gender { get; set; }
         public long patientID { get; set; }
     }
-    
+    public class SearchDoctorWithShift_Model
+    {
+        public string ProfilePhotoBase64 { get; set; }
+        public long doctorID { get; set; }
+        public string title { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+        public string city { get; set; }
+        public byte[] picture { get; set; }
+        public string state { get; set; }
+        public string languageName { get; set; }
+        public string specialityName { get; set; }
+    }
     public class SearchDoctorResult
     {
-        public List<SearchDoctorWithShift_Result> doctor { get; set; }
+        public List<SearchDoctorWithShift_Model> doctor { get; set; }
         public List<FavouriteDoctorModel> favdoctor { get; set; }
     }
    
