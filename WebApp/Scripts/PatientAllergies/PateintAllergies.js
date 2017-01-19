@@ -221,6 +221,7 @@ function resetAllergies() {
 
 //
 function addupdateAllergies(patientid) {
+    showLoader();
     var msg = ValidateFormAllergies();
     if (msg == "" || msg == undefined) {
         fillObjAllergies(patientid);
@@ -251,6 +252,14 @@ function addupdateAllergies(patientid) {
             data: { 'allergiesID': parseInt(allergyID), 'allergy': allergy },
             dataType: 'json',
             success: function (response) {
+                if (response.Message != undefined) {
+                    new PNotify({
+                        title: 'Error',
+                        text: response.Message,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                }
                 if (response.Success == true) {
                     if (response.ApiResultModel.message != "") {
                         new PNotify({
@@ -299,7 +308,7 @@ function addupdateAllergies(patientid) {
             error: errorRes
 
         });
-
+        hideLoader();
     }
     else {
         alert(msg);
@@ -313,16 +322,23 @@ function deleteAllergies(allergyID) {
     if (confirmMessage == false)
         return false;
 
-
+    showLoader();
     $.ajax({
         type: 'POST',
         url: '/SeeDoctor/DeleteAllergy',
         data: { 'allergyID': parseInt(allergyID) },
         dataType: 'json',
         success: function (response) {
+            if (response.Message != undefined) {
+                new PNotify({
+                    title: 'Error',
+                    text: response.Message,
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+            }
             if (response.Success == true) {
-                if (response.Message != undefined)
-                    PageTransitionEvent
+                
                 if (response.ApiResultModel.message == "")
                 {
                     new PNotify({
@@ -355,6 +371,7 @@ function deleteAllergies(allergyID) {
         error: errorRes
 
     });
+    hideLoader();
 }
 
 
@@ -427,11 +444,10 @@ function removeAllergy(value) {
 }
 
 function errorRes(data) {
-    var err = eval("(" + data.responseText + ")");
-    //alert(err.Message);
+    
     new PNotify({
         title: 'Error',
-        text: err.Message,
+        text: data.responseText,
         type: 'error',
         styling: 'bootstrap3'
     });

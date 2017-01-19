@@ -81,9 +81,9 @@ namespace RestAPIs.Controllers
             PatientSurgery psurgery = new PatientSurgery();
             try
             {
-                if (model.bodyPart == null || model.bodyPart == "" || !Regex.IsMatch(model.bodyPart.Trim(), "^[0-9a-zA-Z ]+$"))
+                if (model.bodyPart == null || model.bodyPart == "" )
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid surgery.Only letters and numbers are allowed." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid surgery name." });
                     return response;
                 }
                 if (model.patientID == null || model.patientID == 0)
@@ -92,17 +92,12 @@ namespace RestAPIs.Controllers
                     return response;
                 }
                 
-                psurgery = db.PatientSurgeries.Where(p => p.bodyPart.Trim() == model.bodyPart.Trim() && p.patientID==model.patientID).FirstOrDefault();
+                psurgery = db.PatientSurgeries.Where(p => p.bodyPart.Trim() == model.bodyPart.Trim() && p.patientID==model.patientID && p.active==true).FirstOrDefault();
                 if (psurgery!=null)
                 {
-                   // response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Surgery already exists." });
-                    //return response;
-                    psurgery.md = System.DateTime.Now;
-                    psurgery.mb = psurgery.patientID.ToString();
-                    psurgery.active = true;
-                    db.Entry(psurgery).State = EntityState.Modified;
-                    await db.SaveChangesAsync();
-                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = psurgery.surgeryID, message = "" });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Surgery already exists." });
+                    response.ReasonPhrase = "Surgery already exists.";
+
                     return response;
                 }
                 if (psurgery==null)
@@ -150,12 +145,13 @@ namespace RestAPIs.Controllers
                 if (psurgery != null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Surgery already exists." });
+                    response.ReasonPhrase = "Surgery already exists.";
                     return response;
                 }
                 psurgery = db.PatientSurgeries.Where(m => m.surgeryID == surgeryID).FirstOrDefault();
                 if (psurgery == null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Surgery found." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Surgery not found." });
                     return response;
                 }
                

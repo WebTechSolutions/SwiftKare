@@ -44,24 +44,47 @@ namespace WebApp.Repositories.PatientRepositories
         }
         public ApiResultModel AddMedication(PatientMedication_Custom condition)
         {
-            var strContent = JsonConvert.SerializeObject(condition);
-            var response = ApiConsumerHelper.PostData("api/addPatientMedication", strContent);
-            var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
-            return result;
+            try
+            {
+                var strContent = JsonConvert.SerializeObject(condition);
+                var response = ApiConsumerHelper.PostData("api/addPatientMedication", strContent);
+                var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
+                return result;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            
         }
         public ApiResultModel EditMedication(long id,PatientMedication_Custom medication)
         {
-            var strContent = JsonConvert.SerializeObject(medication);
-            var response = ApiConsumerHelper.PostData("api/editPatientMedication?medicationID=" + id, strContent);
-            var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
-            return result;
+            try
+            {
+                var strContent = JsonConvert.SerializeObject(medication);
+                var response = ApiConsumerHelper.PostData("api/editPatientMedication?medicationID=" + id, strContent);
+                var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
+                return result;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+           
         }
         public ApiResultModel DeleteMedication(long id)
         {
-
-            var response = ApiConsumerHelper.PostData("api/deletePatientMedication/?medicationID=" + id,"");
-            var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
-            return result;
+            try
+            {
+                var response = ApiConsumerHelper.PostData("api/deletePatientMedication/?medicationID=" + id, "");
+                var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
+                return result;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+           
         }
     }
 }

@@ -516,9 +516,9 @@ namespace WebApp.Controllers
 
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }
@@ -533,9 +533,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }
@@ -614,10 +614,10 @@ namespace WebApp.Controllers
         {
             try
             {
-                if (medication.medicineName == null || medication.medicineName == "" || !Regex.IsMatch(medication.medicineName, "^[0-9a-zA-Z ]+$"))
+                if (medication.medicineName == null || medication.medicineName == "")
                 {
                     ApiResultModel apiresult = new ApiResultModel();
-                    apiresult.message = "Invalid medicine name.Only letters and numbers are allowed.";
+                    apiresult.message = "Invalid medicine name.";
                     return Json(new { Success = true, ApiResultModel = apiresult });
                 }
                 MedicationRepository objRepo = new MedicationRepository();
@@ -639,9 +639,9 @@ namespace WebApp.Controllers
 
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }
@@ -656,9 +656,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }
@@ -763,9 +763,9 @@ namespace WebApp.Controllers
 
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }
@@ -779,9 +779,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }
@@ -865,9 +865,9 @@ namespace WebApp.Controllers
 
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }
@@ -917,9 +917,9 @@ namespace WebApp.Controllers
                 return Json(new { Success = true, ApiResultModel = apiresult });
 
             }
-            catch (Exception ex)
+            catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Message });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }

@@ -198,6 +198,7 @@ function resetMedicine() {
 }
 
 function addupdateMedicine(patientid) {
+    showLoader();
     var msg = ValidateFormMedicine();
     if (msg == "" || msg == undefined) {
         fillObjMedicine(patientid);
@@ -223,6 +224,14 @@ function addupdateMedicine(patientid) {
             data: { 'mid': parseInt(_medicationID), 'medication': medication },
             dataType: 'json',
             success: function (response) {
+                if (response.Message != undefined) {
+                    new PNotify({
+                        title: 'Error',
+                        text: response.Message,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                }
                 if (response.Success == true) {
                     if (response.ApiResultModel.message != "") {
                         new PNotify({
@@ -271,13 +280,13 @@ function addupdateMedicine(patientid) {
             //error: errorRes
 
         });
-
+        hideLoader();
     }
     else {
         alert(msg);
     }
 
-
+    
 }
 
 function deleteMedicine(medicationID) {
@@ -285,13 +294,21 @@ function deleteMedicine(medicationID) {
     if (confirmMessage == false)
         return false;
 
-
+    showLoader();
     $.ajax({
         type: 'POST',
         url: '/SeeDoctor/DeleteMedications',
         data: { 'medicationID': parseInt(medicationID) },
         dataType: 'json',
         success: function (response) {
+            if (response.Message != undefined) {
+                new PNotify({
+                    title: 'Error',
+                    text: response.Message,
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+            }
             if (response.Success == true) {
                 if(response.ApiResultModel.message=="")
                     new PNotify({
@@ -302,7 +319,7 @@ function deleteMedicine(medicationID) {
                     });
                 removeMedicine(response.ApiResultModel.ID);
                 bindMedicinesTable(_medicationTable);
-                   
+                hideLoader();
             }
             else if(response.ApiResultModel.message!="")
             {
@@ -312,6 +329,7 @@ function deleteMedicine(medicationID) {
                     type: 'error',
                     styling: 'bootstrap3'
                 });
+                hideLoader();
             }
 
             
@@ -371,13 +389,13 @@ function fillObjMedicine(patientid) {
 }
 
 function ValidateFormMedicine() {
-    var success = "";
+    var msg = "";
 
     if ($("#myMedicine").val() == "") {
-        success = "Please enter medicine name";
+        msg = "Please enter medicine name";
 
     }
-    return success;
+    return msg;
 
 }
 

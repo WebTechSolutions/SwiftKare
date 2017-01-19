@@ -76,6 +76,7 @@ namespace RestAPIs.Controllers
                 else
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Condition name already exists." });
+                    response.ReasonPhrase = "Condition name already exists.";
                     return response;
                 }
               
@@ -119,6 +120,7 @@ namespace RestAPIs.Controllers
                 {
                     //conditionID = -1;
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Condition name already exists." });
+                    response.ReasonPhrase = "Condition name already exists.";
                     return response;
                 }
                

@@ -131,6 +131,7 @@ namespace RestAPIs.Controllers
                 else
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Allergy already exists." });
+                    response.ReasonPhrase = "Allergy already exists";
                     return response;
                 }
                
@@ -172,6 +173,7 @@ namespace RestAPIs.Controllers
                 if (pallergy != null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Allergy already exists." });
+                    response.ReasonPhrase = "Allergy already exists";
                     return response;
                 }
                     pallergy = db.PatientAllergies.Where(m => m.allergiesID == allergyID).FirstOrDefault();

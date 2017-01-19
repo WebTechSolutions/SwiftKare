@@ -87,7 +87,7 @@ namespace RestAPIs.Controllers
             {
                 if (model.name == null || model.name == "")
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid familyHX. Only letters and numbers are allowed." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid familyHX." });
                     return response;
                 }
                 if (model.patientID == null || model.patientID == 0)

@@ -100,18 +100,17 @@ namespace RestAPIs.Controllers
             try
             {
                 
-                if (model.medicineName == null || model.medicineName == ""|| !Regex.IsMatch(model.medicineName, "^[0-9a-zA-Z ]+$"))
+                if (model.medicineName == null || model.medicineName == "")
                     {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel {ID=0, message="Medicine name is not valid. Only letter and numbers are allowed." } );
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel {ID=0, message="Medicine name is not valid." } );
                     return response;
                 }
-                if (model.frequency != null || model.frequency != "")
+                if (model.frequency == null || model.frequency == "")
                 {
-                    if (!Regex.IsMatch(model.frequency, "^[0-9a-zA-Z ]+$"))
-                    {
+                    
                         response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Frequency is not valid." });
                         return response;
-                    }
+                   
                 }
                 if ( model.patientId == 0 || model.patientId==null)
                 {
@@ -136,6 +135,7 @@ namespace RestAPIs.Controllers
                 else
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medicine already exists." });
+                    response.ReasonPhrase = "Medicine already exists.";
                     return response;
                 }
                
@@ -162,19 +162,19 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medicine ID is not valid." });
                     return response;
                 }
-                if(model.frequency != null && model.frequency != "")
+                if(model.frequency == null && model.frequency == "")
                 {
-                    if(!Regex.IsMatch(model.frequency, "^[0-9a-zA-Z ]+$"))
-                    {
+                    
                         response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Frequency is not valid." });
                         return response;
-                    }
+                  
                 }
-                if (model.medicineName == null || model.medicineName == ""||!Regex.IsMatch(model.medicineName.Trim(), "^[0-9a-zA-Z ]+$"))
+                if (model.medicineName == null || model.medicineName == "")
                 {
                   
                 response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medicine name is not valid. Only letters and numbers are allowed." });
-                return response;
+                    response.ReasonPhrase = "Medicine name is not valid.";
+                    return response;
                 }
                 if (model.patientId == 0 || model.patientId == null)
                 {
@@ -185,7 +185,8 @@ namespace RestAPIs.Controllers
                 if (medication != null)
                 {
                     //conditionID = -1;
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medication already exists." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Medicine already exists." });
+                    response.ReasonPhrase = "Medicine already exists.";
                     return response;
                 }
 

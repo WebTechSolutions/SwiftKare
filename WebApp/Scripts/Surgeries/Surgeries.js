@@ -84,12 +84,7 @@ function bindingSurgeriesTable(PSurgeries, GSurgeries) {
                                                                 "<label style='word-wrap:break-word'>" +
                                                                 "<input onclick='deleteObjSurgery(" + PSurgeries[i].surgeryID + ")' style='margin-left:-15px' id='" + PSurgeries[i].surgeryID + "' type='checkbox' class='icheck' checked='checked'>&nbsp" + PSurgeries[i].bodyPart +
                                                                 "</label></div>";
-//        tableHtml = tableHtml + "<div class='icheckbox_flat-green checked' style='position: relative;'>" +
-//            "<input id='" + PSurgeries[i].surgeryID + "' onclick='deleteObjSurgery(" + PSurgeries[i].surgeryID + ")' type='checkbox' class='flat' checked='checked' style='position: absolute;" +
-//"opacity: 0;'><ins class='iCheck-helper' style='position: absolute;top: 0%;left: 0%;display: block;width: 100%;height: 100%;margin: 0px;padding: 0px;background: rgb(255, 255, 255);border: 0px;opacity: 0;'></ins>" +
-//        "</div>&nbsp;" + PSurgeries[i].bodyPart;
-
-                                                                                      
+                                                                               
        
     }
     for (var i = 0; i < GSurgeries.length; i++) {
@@ -98,17 +93,12 @@ function bindingSurgeriesTable(PSurgeries, GSurgeries) {
                                 "<input  onclick='addupdatepredefinedSurgery(this,\"" + existingSurgery + "\")' style='margin-left:-15px' id='" + GSurgeries[i].surgeryName + "' type='checkbox' class='icheck'>&nbsp " + GSurgeries[i].surgeryName +
                                 "</label></div>";
 
-//        tableHtml = tableHtml + "<div class='icheckbox_flat-green' style='position: relative;'>" +
-//           "<input id='" + GSurgeries[i].surgeryName + "' onclick='addupdatepredefinedSurgery(this,\"" + existingSurgery + "\")' type='checkbox' class='flat' style='position: absolute;" +
-//"opacity: 0;'><ins class='iCheck-helper' style='position: absolute;top: 0%;left: 0%;display: block;width: 100%;height: 100%;margin: 0px;padding: 0px;background: rgb(255, 255, 255);border: 0px;opacity: 0;'></ins>" +
-//       "</div>&nbsp;" + GSurgeries[i].surgeryName;
-                                
+                              
     }
 
     tableHtml = tableHtml + "</td> <td></td></tr>";
     $('#surgeriestable tr:last').after(tableHtml);
-    //$("tbody[id$='surgeriestable']").append(tableHtml);
-    //$("#surgeriestable").append(tableHtml);
+   
     
 }
 
@@ -134,7 +124,7 @@ function reset() {
 
 function addupdatepredefinedSurgery(chkbox,surgeryName)
 {
-    
+    showLoader();
     var ischecked = $(chkbox).is(':checked');
     if (ischecked) {
         _objAdd = {};
@@ -148,6 +138,14 @@ function addupdatepredefinedSurgery(chkbox,surgeryName)
                 data: { 'surgeryID': parseInt(surgeryID), 'surgery': surgery },
                 dataType: 'json',
                 success: function (response) {
+                    if (response.Message != undefined) {
+                        new PNotify({
+                            title: 'Error',
+                            text: response.Message,
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                    }
                     if (response.Success == true) {
                         if (response.ApiResultModel.message != "") {
                             new PNotify({
@@ -193,21 +191,15 @@ function addupdatepredefinedSurgery(chkbox,surgeryName)
 
             });
            
-       
+        hideLoader();
 
         //alert(returnVal);
     }
-    //else
-    //{
-    //    var returnVal = confirm("Are you sure?");
-    //    if (returnVal == true) {
-    //        $(this).attr("checked", false);
-    //        deleteObjSurgery(this.id);
-    //    }
-    //}
+    
 }
 
 function addupdateSurgery(patientid) {
+    showLoader();
     var msg = ValidateFormSurgery();
     if (msg == "" || msg == undefined) {
         fillObjSurgery(patientid);
@@ -225,6 +217,14 @@ function addupdateSurgery(patientid) {
             data: { 'surgeryID': parseInt(surgeryID), 'surgery': surgery },
             dataType: 'json',
             success: function (response) {
+                if (response.Message != undefined) {
+                    new PNotify({
+                        title: 'Error',
+                        text: response.Message,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                }
                 if (response.Success == true) {
                     if (response.ApiResultModel.message != "") {
                         new PNotify({
@@ -238,7 +238,7 @@ function addupdateSurgery(patientid) {
                         new PNotify({
                             title: 'Success',
                             text: "Surgery is saved successfully.",
-                            type: 'info',addclass: 'dark',
+                            type: 'info', addclass: 'dark',
                             styling: 'bootstrap3'
                         });
                         if (_objAdd != null) {
@@ -268,7 +268,7 @@ function addupdateSurgery(patientid) {
             error: errorRes
 
         });
-
+        hideLoader();
     }
     else {
         alert(msg);
@@ -281,12 +281,22 @@ function deleteObjSurgery(surgeryID) {
     var confirmMessage = confirm("Are you sure you want to delete?");
     if (confirmMessage == false)
         return false;
+
+    showLoader();
      $.ajax({
         type: 'POST',
         url: '/SeeDoctor/DeleteSurgery',
         data: { 'surgeryID': parseInt(surgeryID) },
         dataType: 'json',
         success: function (response) {
+            if (response.Message != undefined) {
+                new PNotify({
+                    title: 'Error',
+                    text: response.Message,
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+            }
             if (response.Success == true) {
                 if(response.ApiResultModel.message=="")
                     new PNotify({
@@ -313,7 +323,8 @@ function deleteObjSurgery(surgeryID) {
        },
         error: errorRes
 
-    });
+     });
+     hideLoader();
 }
 
     function fillObjSurgery(patientid) {
@@ -352,11 +363,9 @@ function removeSurgery(value) {
 }
 
 function errorRes(data) {
-    var err = eval("(" + data.responseText + ")");
-    //alert(err.Message);
-    new PNotify({
+     new PNotify({
         title: 'Error',
-        text: err.Message,
+        text: data.responseText,
         type: 'error',
         styling: 'bootstrap3'
     });

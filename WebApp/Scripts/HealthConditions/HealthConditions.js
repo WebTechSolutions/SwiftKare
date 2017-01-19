@@ -113,6 +113,15 @@ function addupdateCondition(_patientId) {
             data: { 'conditionID': parseInt(_conditionID), 'condition': condition },
             dataType: 'json',
             success: function (response) {
+                if (response.Message != undefined)
+                {
+                    new PNotify({
+                        title: 'Error',
+                        text: response.Message,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                }
                 if (response.Success == true) {
                     if(response.ApiResultModel.message!="")
                    {
@@ -167,7 +176,7 @@ function addupdateCondition(_patientId) {
         alert(msg);
     }
 
-    $.unblockUI();
+   
 }
 
 function deleteHealthConditions(conditionID) {
@@ -182,6 +191,14 @@ function deleteHealthConditions(conditionID) {
         data: { 'conditionID': parseInt(conditionID) },
         dataType: 'json',
         success: function (response) {
+            if (response.Message != undefined) {
+                new PNotify({
+                    title: 'Error',
+                    text: response.Message,
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+            }
             if (response.Success == true)
             {
                 
