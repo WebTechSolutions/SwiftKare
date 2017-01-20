@@ -368,7 +368,7 @@
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <button style="margin-top:23px" id="btnPharmacySrch" type="button" class="btn btn-primary">Search Pharmacy</button>
-                                                                <button style="margin-top:23px" id="btnPharmacySave" type="button" class="btn btn-primary">Save Pharmacy</button>
+                                                                
                                                             </div>
                                                         </div>
                                                     </div>
@@ -944,9 +944,7 @@
     $(document).ready(function () {
         loadPatientPharmacy('@SessionHandler.UserInfo.Id');
 
-        $("#btnPharmacySave").click(function(){
-            savePatientPharmacy('@SessionHandler.UserInfo.Id');
-        });
+       
 
         $("#btnPharmacySrch").click(function(){
 

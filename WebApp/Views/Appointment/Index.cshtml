@@ -170,11 +170,21 @@
     <!- popup end-->
     
 </div>
-
+<iframe id="iframeDownload" style="display:none;"></iframe>
 <!-- /page content -->
 
  <!-- Load View App Detail Popup -->
 <script>
+    function downloadFile(fileId) {
+
+        if (confirm("Are you sure you want to downlod file?")) {
+            var cUrl = "@Url.Action("Download", "PatientFiles")?fileId=" + fileId;
+
+            $('#iframeDownload').attr('src', cUrl);
+            $('#iframeDownload').load();
+        }
+    }
+
     var currentTab = "";
    
     var fetchDate="";

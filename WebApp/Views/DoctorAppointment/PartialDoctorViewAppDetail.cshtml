@@ -92,7 +92,7 @@
     <div class="modal-body text-left">
         <div class="user-detail">
             <div class="img-1">
-                <img src="@(string.IsNullOrEmpty(Model.PatientVM.ProfilePhotoBase64) ? WebApp.Helper.SessionHandler.ProfilePhoto : Model.PatientVM.ProfilePhotoBase64)" alt="" class="m-b-10 img-responsive">
+                <img src="@Model.PatientVM.ProfilePhotoBase64" alt="" class="m-b-10 img-responsive">
 
             </div>
             <div class="name-sec">
@@ -107,10 +107,10 @@
 
         </div>
         <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 36px -15px -30px; padding: 10px 21px 0; ">
-            <p style="color: #375781;"><span style="width: 150px; float: left;">Pharmacy</span><b>@pharmacy</b></p>
+            <p style="color: #375781;"><span style="width: 133px; float: left;">Pharmacy</span><b>@pharmacy</b></p>
         </div>
         <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 36px -15px 20px; padding: 10px 21px 0; ">
-            <p style="color: #375781;"><span style="width: 150px; float: left;">App. Date/Time</span><b><span id="replaceme"></span>
+            <p style="color: #375781;"><span style="width: 133px; float: left;">App. Date/Time</span><b><span id="replaceme"></span>
             <script type="text/javascript">
                                 var fdate = showLocal('@utcdate');
                                 $("#replaceme").html(fdate);
@@ -119,7 +119,22 @@
         <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Reason of Visit:</b><br> @rov</p>
         <p id="p_chiefComplaints" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Chief Complaint:</b><br> @chiefComplaints</p>
         <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Consult Charges:</b><br> @amount</p>
-      
+        <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
+            <b>Appointment Files:</b><br>
+            @if (Model.AppFiles != null || Model.AppFiles.Count > 0)
+            {
+
+                foreach (var item in Model.AppFiles)
+                {
+
+                    <button id="@item.fileID" type="button" class="btn btn-default" style="display:block; font-size:10px" onclick="window.open('data:application/pdf;base64, ' +'@System.Convert.ToBase64String(item.fileContent)')">
+                        @item.FileName.Trim()
+                    </button>
+                }
+
+            }
+        </p>
+
                     @*<label style="font-weight: 300;" for="">Please enter the number we should call</label>
                         <input type="text" placeholder="(469)237-3768" style="max-width: 100%;" class="form-control" />*@
                     <div class="m-t-10">

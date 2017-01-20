@@ -32,7 +32,7 @@ else
             <tr class="headings">
                 <th class="column-title" style="text-align:center">Alert Text </th>
                 <th class="column-title" style="text-align:center">Date & Time </th>
-                <th class="column-title" style="text-align:center">Action</th>
+                @*<th class="column-title" style="text-align:center">Action</th>*@
             </tr>
         </thead>
 
@@ -45,12 +45,12 @@ else
                     <tr class="even pointer">
                         <td style="text-align:left;width:60%;word-wrap:break-word">@item.alertText</td>
                         <td style="text-align:center;width:10%;">@item.alertDate.Value.ToString("dd/MM/yyyy")</td>
-                        <td style="text-align:center;width:5%;">
+                        @*<td style="text-align:center;width:5%;">
                             <button id="@item.alertID" class="btn btn-primary btn-sm m-b-0 " type="button" 
                                     onclick=deleteAlert(@item.alertID);>
                                 Delete
                             </button>
-                        </td>
+                        </td>*@
                     </tr>
                     j = j + 1;
                 }

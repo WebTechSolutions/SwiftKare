@@ -49,6 +49,7 @@ namespace DataAccess.CustomModels
         public DoctorVM DoctorVM { get; set; }
         public PatientVM PatientVM { get; set; }
         public string utcappDate { get; set; }
+        public List<AppFiles> AppFiles { get; set; }
     }
 
 

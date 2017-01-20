@@ -37,4 +37,11 @@ namespace DataAccess.CustomModels
         }
 
     }
-}
+    public class AppFiles
+    {
+        public long fileID { get; set; }
+        public string documentType { get; set; }
+        public string FileName { get; set; }
+        public byte[] fileContent { get; set; }
+    }
+    }
