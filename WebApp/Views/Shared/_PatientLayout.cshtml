@@ -50,7 +50,10 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.smartWizard.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/switchery.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-material-datetimepicker.js")"></script>
-    
+    <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-wysiwyg.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.hotkeys.js")"></script>
+
+   
     
 
     <style type="text/css">
@@ -176,7 +179,7 @@
                         <a data-toggle="tooltip" data-placement="top" title="FullScreen" onclick="toggleFullScreen();">
                             <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
                         </a>
-                        <a data-toggle="tooltip" data-placement="top" title="Create Help Ticket">
+                        <a  data-toggle="tooltip" data-placement="top" title="Create Help Ticket">
                             <span class="fa fa-ticket" aria-hidden="true"></span>
                         </a>
                         @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
@@ -207,7 +210,7 @@
                                 <ul class="dropdown-menu dropdown-usermenu pull-right">
                                     <li><a href="@Url.Action("Index","PatientProfile")">My Profile</a></li>
 
-                                    <li><a href="javascript:;">Create Help Ticket</a></li>
+                                    <li><a href="@Url.Action("Index","HelpTicket")">Create Help Ticket</a></li>
                                     <li>
                                         <a href="javascript:document.getElementById('logoutForm').submit()">
                                             <i class="fa fa-sign-out pull-right"></i>

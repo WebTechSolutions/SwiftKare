@@ -1,7 +1,9 @@
 ﻿using DataAccess;
 using DataAccess.CustomModels;
+using RestAPIs.Helper;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -31,7 +33,43 @@ namespace RestAPIs.Controllers
                 return false;
             }
         }
-        //private Utility util = new Utility();
+
+        [Route("api/sendHelpTicket")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage SendHelpTicket(HelpTicket model)
+        {
+            try
+            {
+                          
+                model.reciever = ConfigurationManager.AppSettings["SendGridFromEmailAddress"].ToString();
+                if (model.message == null || model.message == "")
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Empty message is not allowed." });
+                    response.ReasonPhrase = "Blank message is not allowed.";
+                    return response;
+                }
+                var sampleEmailBody = @"
+                        <h3>Help Ticket</h3>
+                        <p>From: " + model.sender+@"</p>
+                        <p>"+model.message+@"</p>";
+
+                var oSimpleEmail = new EmailHelper(model.reciever, model.subject, sampleEmailBody,model.attachmentPath);
+                oSimpleEmail.SendMessage();
+                Random rnd = new Random();
+                int id = rnd.Next(100);
+                response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = id, message = "" });
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "sendHelpTicket in MessagesController.");
+            }
+
+
+
+        }
+
         [Route("api/sendMessage")]
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> SendMessage(MessageCustomModel model)
