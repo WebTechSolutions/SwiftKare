@@ -531,7 +531,7 @@
                                                     <th class="colum+n-title">sr.no </th>
                                                     <th class="column-title">My conditions </th>
                                                     <th class="column-title">Reported Date</th>
-                                                    <th class="column-title"></th>
+                                                    <th class="column-title">Action</th>
 
                                                 </tr>
                                             </thead>
@@ -601,8 +601,8 @@
                                                     <th class="column-title">Sr.No </th>
                                                     <th class="column-title">My Medication</th>
                                                     <th class="column-title">Frequency</th>
-                                                    <th class="column-title">Reported Date</th>
-                                                    <th class="column-title"></th>
+                                                    <th class="column-title" style="width:15%">Reported Date</th>
+                                                    <th class="column-title">Action</th>
 
                                                 </tr>
                                             </thead>
@@ -683,8 +683,8 @@
                                                     <th class="column-title">Allergy</th>
                                                     <th class="column-title">Severity</th>
                                                     <th class="column-title">Reaction</th>
-                                                    <th class="column-title">Reported Date</th>
-                                                    <th class="column-title"></th>
+                                                    <th class="column-title" style="width:15%">Reported Date</th>
+                                                    <th class="column-title">Action</th>
 
                                                 </tr>
                                             </thead>
@@ -1304,6 +1304,15 @@
             'order': [[0, 'asc']],
             'columnDefs': [
                { visible: false, targets: [0] }
+             
+            ],
+            "bAutoWidth": false, // Disable the auto width calculation 
+            "aoColumns": [
+             { "sWidth": "5%" },  
+             { "sWidth": "30%" }, 
+             { "sWidth": "20%" }, 
+            { "sWidth": "8%" }
+           
             ]
         });
     });
@@ -1363,10 +1372,17 @@
         $('#medicinestable').DataTable({
             'order': [[0, 'asc']],
             'columnDefs': [
-               { visible: false, targets: [0] },
-               { "width": "20%", "targets": [2] },
-                { "width": "20%", "targets": [3] },
-               { "width": "15%", "targets": [4] }
+               { visible: false, targets: [0] }
+               
+            ],
+            "bAutoWidth": false, // Disable the auto width calculation 
+            "aoColumns": [
+             { "sWidth": "5%" },  
+             { "sWidth": "30%" }, 
+             { "sWidth": "20%" }, 
+             { "sWidth": "15%" },
+             { "sWidth": "15%" }
+           
             ]
         });
 
@@ -1426,11 +1442,17 @@
         $('#allergiestable').DataTable({
             'order': [[0, 'asc']],
             'columnDefs': [
-               { visible: false, targets: [0] },
-                { "width": "20%", "targets": [1] },
-                { "width": "20%", "targets": [2] },
-                { "width": "20%", "targets": [3] },
-               { "width": "15%", "targets": [5] }
+               { visible: false, targets: [0] }
+            
+            ],
+            "bAutoWidth": false, // Disable the auto width calculation 
+            "aoColumns": [
+             { "sWidth": "5%" },  
+             { "sWidth": "20%" }, 
+             { "sWidth": "15%" }, 
+            { "sWidth": "15%" }, 
+            { "sWidth": "20%" }, 
+            { "sWidth": "15%" }
             ]
 
 

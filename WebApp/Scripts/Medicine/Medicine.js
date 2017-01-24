@@ -146,7 +146,8 @@ function bindMedicinesTable(Medications) {
                                                       "<a class='editbtn' onclick='editMedicine(" + JSON.stringify(Medications[i]) + ",this);'>Edit</a>" +
                                                       "</li>" +
                                                       "<li>" +
-                                                       "<button id='delete' type='button' class='btn btn-link submit' style='border-bottom:none' onclick='deleteMedicine(" + Medications[i].medicationID + ");'>Delete</button></li>" +
+                                                      "<a href='javascript:void(0)' id='delete' onclick='deleteMedicine(" + Medications[i].medicationID + ");'>Delete</a></li>" +
+                                                       //"<button id='delete' type='button' class='btn btn-link submit' style='border-bottom:none' onclick='deleteMedicine(" + Medications[i].medicationID + ");'>Delete</button></li>" +
                                                   "</ul>" +
                                               "</div>"
         ]);

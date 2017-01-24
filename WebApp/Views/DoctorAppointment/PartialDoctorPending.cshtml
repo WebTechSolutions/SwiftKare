@@ -15,7 +15,7 @@
 else
 {
 
-    <table id="pendingdatatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <table id="pendingdatatable" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
         <thead>
             <tr class="headings">
                 <th class="column-title" style="text-align:center">Patient Name </th>
@@ -53,13 +53,13 @@ else
                         <td class="clsTdConsult" data-appid="@item.appID" data-patId="@item.patientID" style="text-align:center;width:10%">
                             <div class="btn-group" role="group">
 
-                                <a style="display:none" onclick="makeCallToPatient('@item.patientID','@item.appID')" class="clsCallPatient" href="javascript:">Call</a>
+                                @*<a style="display:none" onclick="makeCallToPatient('@item.patientID','@item.appID')" class="clsCallPatient" href="javascript:">Call</a>*@
 
                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Action
                                     <span class="caret"></span>
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-right" style="width:15%">
+                                <ul class="dropdown-menu dropdown-menu-left" style="width:15%">
                                     <li><a href="#" data-toggle="modal" class="thumbnail-pending" data-id="@item.appID" id="@item.doctorID" data-target="#myModal5" onclick=$("#pvappid").val(@item.appID);>View Detail</a></li>
 
                                     <li><a href="#" class="preschedule" data-id="@item.doctorID" id="@item.appID">Reschedule Req</a></li>
@@ -81,12 +81,7 @@ else
 <script>
     $(document).ready(function() {
 
-        $('#pendingdatatable').dataTable({
-            'order': [[1, 'desc']],
-            columnDefs: [
-              { type: 'date-dd-mmm-yyyy', targets: 1 }
-            ]
-        });
+        $('#pendingdatatable').dataTable();
         $('#datatable-keytable').DataTable({
             keys: true
         });

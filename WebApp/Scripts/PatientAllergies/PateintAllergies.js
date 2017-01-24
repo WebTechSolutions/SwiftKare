@@ -147,21 +147,23 @@ function bindAllergiesTable(Allergies) {
                     Allergies[i].severity,
                     Allergies[i].reaction,
                     ToJavaScriptDateAllergies(Allergies[i].reporteddate),
-                    "<div class='btn-group'> <button style='width:60px'type='button' class='btn btn-primary'>Action</button>" +
+                    "<div class='btn-group' > <button type='button' class='btn btn-primary'>Action</button>" +
                                                   "<button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>" +
                                                       "<span class='caret'></span>" +
                                                       "<span class='sr-only'>Toggle Dropdown</span>" +
                                                   "</button>" +
-                                                  "<ul class='dropdown-menu' role='menu'>" +
+                                                  "<ul class='dropdown-menu dropdown-menu-left' role='menu'>" +
                                                      "<li>" +
                                                       "<a class='editbtn' onclick='editAllergies(" + JSON.stringify(Allergies[i]) + ",this);'>Edit</a>" +
                                                       "</li>" +
                                                       "<li>" +
-                                                       "<button id='delete' type='button' class='btn btn-link submit' style='border-bottom:none' onclick='deleteAllergies(" + Allergies[i].allergiesID + ");'>Delete</button></li>" +
+                                                       "<a href='javascript:void(0)' id='delete' onclick='deleteAllergies(" + Allergies[i].allergiesID + ");'>Delete</a></li>" +
+                                                       //"<button id='delete' type='button' class='btn btn-link submit' style='border-bottom:none' onclick='deleteAllergies(" + Allergies[i].allergiesID + ");'>Delete</button></li>" +
                                                   "</ul>" +
                                               "</div>"
         ]);
-    }
+     }
+     $('#allergiestable').DataTable().fnAdjustColumnSizing();
      $('#allergiestable').DataTable().draw();
 }
 function ToJavaScriptDateAllergies(value) {

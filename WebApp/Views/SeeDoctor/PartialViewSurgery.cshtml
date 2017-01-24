@@ -60,7 +60,7 @@
                 <td>                    
                         @foreach (var item in Model)
                         {
-                            <div class="checkbox" style="display: inline-block; width: 160px;">
+                            <div class="checkbox" style="display: inline-block;">
                                 <label>
                                     <input name="@item.bodyPart" id="@item.surgeryID" type="checkbox" class="flat" onclick="alert(@item.bodyPart)";>&nbsp; @item.bodyPart
                                     <script>
