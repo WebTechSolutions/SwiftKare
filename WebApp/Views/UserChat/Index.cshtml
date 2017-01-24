@@ -3,7 +3,8 @@
 
     string userType = Convert.ToString(ViewBag.UserType);
     string recipientName = Convert.ToString(ViewBag.RecipientName);
-
+    //localStorage.getItem('tokbox');
+    //localStorage.getItem('consultationKey');
     string openTokApi = Convert.ToString(ViewBag.OpenTokApiKey);
     string openTokSession = Convert.ToString(ViewBag.OpenTokSession);
     string openTokToken = Convert.ToString(ViewBag.OpenTokToken);
@@ -307,8 +308,20 @@
     <script src="@Url.Content("~/Scripts/UserChat.js")"></script>
     <script>
         var cEndCallUrl = '@cEndCallUrl';
+        var tokboxSessionAndToken = localStorage.getItem('tokbox');//session*token
 
-        var oUserChat = new UserChat('@openTokApi', '@openTokSession', '@openTokToken');
+        alert('Token Session And Token , Seperate by * :' + tokboxSessionAndToken);
+        var openTokSession = 0;
+        var openTokToken = 0;
+        if (tokboxSessionAndToken != "0")
+        {
+            var tokboxArr = tokboxSessionAndToken.split('*');
+            openTokSession = tokboxArr[0];
+            openTokToken = tokboxArr[1];
+        }
+        console.log('openTokSession:' + openTokSession + ' -> openTokToken:' + openTokToken);
+
+        var oUserChat = new UserChat('@openTokApi', openTokSession, openTokToken);
         oUserChat.initialize();
 
         var consultId = localStorage.getItem('consultationKey');

@@ -85,8 +85,8 @@ namespace WebApp.Hub
             Clients.Client(message.ReceiverConnectionId).patientRejectedCall(message.UserName, message.SenderId, message.consultID);
         }
 
-        public void PatientRedirectedToCall(string connId, string consultId, string patId, string patientName) {
-            Clients.Client(connId).patientRedirectedToCallHandle(consultId, patId, patientName);
+        public void PatientRedirectedToCall(string connId, string tokboxInfo, string patId, string patientName) {
+            Clients.Client(connId).patientRedirectedToCallHandle(tokboxInfo, patId, patientName);
         }
 
         public void SendMessage(MessageInfo message)

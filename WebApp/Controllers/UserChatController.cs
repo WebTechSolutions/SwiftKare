@@ -41,11 +41,11 @@ namespace WebApp.Controllers
                 openTokSession.UserType = userType;
 
                 HttpContext.Session["MyOpenTokSession"] = openTokSession;
-                return openTokSession.ConsultId;
+                return openTokSession.SessionId.ToString()+"*"+ openTokSession.TokenId.ToString();
             }
             catch (Exception ex)
             {
-                return "";
+                return "0";
             }
         }
 

@@ -370,9 +370,18 @@
 
             chat.client.receiveMessage = function (msgFrom, msg, senderConnId, senderid) {
                 if (msgFrom != "ChatHub") {
-
+                    debugger;
                     var msgJson = JSON.parse(msg);
-
+                    if (msgJson.status == 'tokbox') {
+                        alert('tokbox info recieved:' + msgJson.name);
+                        localStorage.setItem('tokbox', msgJson.name);
+                        return;
+                    }
+                    if (msgJson.status == 'consultID') {
+                        alert('consultID recieved:' + msgJson.name);
+                        localStorage.setItem('consultationKey', msgJson.name);
+                        return;
+                    }
                     if (msgJson.status == 'Accepted') {
                         alert("Doctor " + msgJson.name + " accepted your request please continue with payment process.");
                         $('#wizard').smartWizard('goToStep', 2);
@@ -395,7 +404,9 @@
                 }
             };
 
-            chat.client.incomingCallFromDoctor = function (msgFrom, msg, senderConnId, senderid, appId, docName) {
+            chat.client.incomingCallFromDoctor = function (msgFrom, msg, senderConnId, senderid, consultID, docName) {
+                //appID is consult ID in this function param
+                localStorage.setItem('consultID', consultID);
                 debugger;
                 var msgJson = JSON.parse(msg);
 
@@ -416,18 +427,21 @@
                         SenderId: '@SessionHandler.UserInfo.Id',
                         UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
                         ReceiverConnectionId: senderConnId,
-                        AppId: appId
+                        consultID: consultID 
                     });
-                    var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Patient&receiverId=" + senderid + "&doctorName=" + docName + "&patientName=@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)&aptId=" + appId;
+
+
+                    var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Patient&receiverId=" + senderid + "&doctorName=" + docName + "&patientName=@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)&ConsultID=" + consultID;
 
                     $.post(cUrlReadyForCall, function (oResp) {
                         debugger;
-                       // if (oResp)
+                        if (oResp != "0")
                         {
+                            var tokboxInfo = oResp;
                             localStorage.setItem('consultationKey', appId);
 
                             chat.server.patientRedirectedToCall
-                                (senderConnId, appId, '@SessionHandler.UserInfo.Id', '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)');
+                                (senderConnId, tokboxInfo, '@SessionHandler.UserInfo.Id', '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)');
 
                             //Redirect doctor to call
                             window.location = '@Url.Action("Index","UserChat")';
@@ -499,7 +513,7 @@
                         SenderId: '@SessionHandler.UserInfo.Id',
                         UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
                         ReceiverConnectionId: senderConnId,
-                        AppId: appId
+                        consultID: consultID
                     });
                 }
 

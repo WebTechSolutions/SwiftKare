@@ -296,7 +296,7 @@
         </div>
     </div>
     <script type="text/javascript">
-       
+
 
         // Proxy created on the fly
         var chat = $.connection.chatHub;
@@ -315,7 +315,8 @@
         };
 
         function makeCallToPatient(patId, appId,consultID) {
-            debugger;
+            localStorage.setItem('consultationKey', consultID);
+
             var oPatInfo = null;
             for (var i = 0; i < availablePatients.patient.length; i++) {
                 if (availablePatients.patient[i].patId == patId) {
@@ -407,7 +408,7 @@
 
             };
 
-            chat.client.patientAcceptedCall = function (patUserName, patId, appId) {
+            chat.client.patientAcceptedCall = function (patUserName, patId, consultID) {
                 alert('Patient ' + patUserName + ' accepted call. this alert is in _DoctorLayout. NEed to redirect to page');
             }
 
@@ -415,16 +416,20 @@
                 alert('Patient ' + patUserName + ' rejected call.this alert is in _DoctorLayout');
             }
 
-            chat.client.patientRedirectedToCallHandle = function (consultId, patId, patName) {
+            chat.client.patientRedirectedToCallHandle = function (tokboxInfo, patId, patName) {
                 debugger;
-                var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Doctor&receiverId=" + patId + "&doctorName=@(SessionHandler.UserInfo.FirstName + " "+ SessionHandler.UserInfo.LastName)&patientName=" + patName;
+                //
+                localStorage.setItem('tokbox', tokboxInfo);
+             //   var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Doctor&receiverId=" + patId + "&doctorName=@(SessionHandler.UserInfo.FirstName + " "+ SessionHandler.UserInfo.LastName)&patientName=" + patName;
 
-                $.post(cUrlReadyForCall, function (oResp) {
-                    localStorage.setItem('consultationKey', consultId);
+               // $.post(cUrlReadyForCall, function (oResp) {
+                    if (tokboxInfo!='0')
+                        window.location = '@Url.Action("Index","UserChat")';
+                    //localStorage.setItem('consultationKey', consultId);
 
                     //Redirect doctor to call
-                    window.location = '@Url.Action("Index","UserChat")';
-                });
+
+              //  });
             }
 
             chat.client.receiveMessage = function (msgFrom, msg, receiverId, senderid) {
@@ -434,6 +439,11 @@
                     var txt = "";
                     //alert(msg);
                     var fromJson = JSON.parse(msg);
+                    if (fromJson.status == 'consultID') {
+                        alert('consultID recieved:' + fromJson.name);
+                        localStorage.setItem('consultID', fromJson.name);
+                        return;
+                    }
 
                     var confirmCall = confirm(fromJson.name + " want to have a video consultation, Please press OK to accept!");
                     if (confirmCall == true) {
@@ -473,21 +483,31 @@
                         Message: JSON.stringify({ status: txt, name: doctorName })
                     });
 
-                    if (confirmCall == true) {
-                        var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=" + signalRInfo.SenderId + "&userType=Doctor&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + fromJson.name;
+                    //Create tokbox info, and save in local storage
+
+                        var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=" + signalRInfo.SenderId + "&userType=Doctor&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + fromJson.name + "&consultID=" + fromJson.name + "&tokbox=" + fromJson.name;
 
                         $.post(cUrlReadyForCall, function (oResp) {
-                           // if (oResp)
+                            if (oResp!="0")
                             {
-                                localStorage.setItem('consultationKey', oResp);
-
+                                localStorage.setItem('tokbox', oResp);
+                                chat.server.sendMessageToPatient({
+                                    SenderId: '@SessionHandler.UserInfo.Id',
+                                    UserName: '@SessionHandler.UserInfo.Email',
+                                    ReceiverConnectionId: receiverId,
+                                    ReceiverId: '20',
+                                    SenderType: 'Doctor',
+                                    Message: JSON.stringify({ status: 'tokbox', name: oResp })
+                                });
                                 //Redirect doctor to call
                                 window.location = '@Url.Action("Index","UserChat")';
                             }
+                            else
+                                alert('Err in generating tokbox info');
                         });
                     }
                 }
-            };
+           // };
         });
 
 

@@ -1000,7 +1000,9 @@
                             window.location.href = '/Appointment/Index/';
                         }
                         if (appType == "L")
-                        { createConsultFromPatient($("#doctorid").val(), patientID, response.ApiResultModel.ID);}
+                        { console.log('response after create consult:');
+                        console.log(response);
+                        createConsultFromPatient($("#doctorid").val(), patientID, result.ApiResultModel.ID);}
 
 
 
@@ -1042,6 +1044,7 @@
                         });
                     }
                     else if (response.ApiResultModel.message == "") {
+                        
                         new PNotify({
                             title: 'Success',
                             text: "Consultation is created successfully.",
@@ -1051,25 +1054,38 @@
 
                         if(appType="L")
                         {
-
-
+                            localStorage.setItem('consultationKey', response.ApiResultModel.ID);
+                            var tokboxInfo=localStorage.getItem('tokbox');
+                            var consultID=response.ApiResultModel.ID;
+                            //send consultID to doctor incase of live appointment
+                            chat.server.sendMessageToDoctor(
+                   {
+                       SenderId: '@SessionHandler.UserInfo.Id',
+                       UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
+                       ReceiverConnectionId: $('#ddlAvailableDoctors').val(),
+                       ReceiverId: '20',
+                       SenderType: 'Patient',
+                       Message: JSON.stringify({ status: 'consultID', name: consultID }),
+                       UserGroup: 'doctors'
+                   });
+                            alert("Payment successful. Your consultation will be started soon.");
                             var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
                             //check for apptype if l then go here
                             //create consult here
                             var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
 
                             $.post(cUrlReadyForCall, function (oResp) {
-                                // if (oResp)
+                                if (tokboxInfo!="0")
                                 {
-                                    localStorage.setItem('consultationKey', response.ApiResultModel.ID);
-
-                                    //Redirect doctor to call
+                                    //Redirect patient to call
                                     window.location = '@Url.Action("Index","UserChat")';
                                 }
+                                else
+                                {alert('Err in getting tokbox info');}
                             });
 
                             //Redirect User for video chat
-                            alert("Payment successful. Your consultation will be started soon.");
+                           
                             //location.reload();
                         }
 
