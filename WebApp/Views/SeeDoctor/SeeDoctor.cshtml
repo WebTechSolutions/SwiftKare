@@ -1000,7 +1000,7 @@
                             window.location.href = '/Appointment/Index/';
                         }
                         if (appType == "L")
-                        { createConsultFromPatient($("#doctorid").val(), patientID, response.ApiResultModel.ID);}
+                        { createConsultFromPatient($("#doctorid").val(), patientID, result.ApiResultModel.ID);}
 
 
 
@@ -1026,7 +1026,7 @@
 
         $.ajax({
             type: 'POST',
-            url: '/Doctor/CreateConsult',
+            url: '/SeeDoctor/CreateConsult',
             data: JSON.stringify(_objConsult),
             contentType: "application/json",
             dataType: 'json',
