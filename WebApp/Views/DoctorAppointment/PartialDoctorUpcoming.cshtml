@@ -76,6 +76,7 @@ else
         </tbody>
     </table>
 }
+
 <!-- Datatables -->
 <script>
     var flag = 0;
@@ -93,7 +94,8 @@ else
         }
 
         if (oPatInfo == null) {
-            alert('Patient is not online now');
+            showAlert('Alert','Patient is not online now');
+            //alert('Patient is not online now');
             return;
         }
 
@@ -176,19 +178,21 @@ else
 
         if((288000>duration._milliseconds)&&(duration._milliseconds>-842000)) //Check for 5 min before and 15 min after
         {
-            alert("Call...");
+            //alert("Call...");
             createConsultFromDoctor(doctorID,patientID,appID);
         } 
         else
         {
             if(duration._milliseconds>-842000)
             {
-                alert('Apointment time has not been arrived yet.');
+                //alert('Apointment time has not been arrived yet.');
+                showAlert('Alert','Apointment time has not been arrived yet.');
                
             }
             if(duration._milliseconds<288000)
             {
-                alert('Apointment time has been passed.');
+                //alert('Apointment time has been passed.');
+                showAlert('Alert','Apointment time has been passed.');
             }
             
         }

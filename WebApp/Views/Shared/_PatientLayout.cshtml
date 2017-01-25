@@ -258,6 +258,29 @@
 
         </div>
     </div>
+    <div class="modal fade" id="playoutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+        <div class="modal-dialog" role="document" style="width: 350px;">
+            <div class="modal-content" style="border-radius: 0;">
+                <div class="modal-header text-center" style="background: #E4F1FE; border-bottom-color: #c3bebe;">
+                    <h2 style="margin: 0; color: #337ab7" id="heading"><b></b></h2>
+                </div><!--/.modal header-->
+                <div class="modal-body text-left" style="text-align:center;">
+                    <p class="text-center" style="color: #375781;" id="bodytext"></p>
+                    <button style="width: 29%; border-radius: 0; padding: 15px -15px; font-size: 20px;" onclick="$('#playoutModal').modal('hide')" type="button" class="btn btn-primary">OK</button>
+                </div><!--/.modal body-->
+            </div>
+        </div>
+    </div><!-- mymodal1 -->
+    <script>
+        var mymodal = $('#playoutModal');
+    function showAlert(heading,body)
+    {
+
+        mymodal.find('#heading').text(heading);
+        mymodal.find('#bodytext').text(body);
+        mymodal.modal('show');
+    }
+    </script>
     <script src="~/Scripts/jquery.cookie.js"></script>
     <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
     <script src="~/signalr/hubs"></script>
@@ -378,7 +401,8 @@
                     var msgJson = JSON.parse(msg);
 
                     if (msgJson.status == 'Accepted') {
-                        alert("Doctor " + msgJson.name + " accepted your request please continue with payment process.");
+                        showAlert('Alert', "Doctor " + msgJson.name + " accepted your request please continue with payment process.");
+                        //alert("Doctor " + msgJson.name + " accepted your request please continue with payment process.");
                         $('#wizard').smartWizard('goToStep', 2);
                         $('.buttonNext').show();
                         $('.buttonPrevious').show();
@@ -394,7 +418,8 @@
                         var strSignalRInfo = window.JSON.stringify(signalRInfo);
                         localStorage.setItem('signalRInfo', strSignalRInfo);
                     } else {
-                        alert("Sorry! Doctor " + msgJson.name + " is not available now for consultation call.");
+                        showAlert('Alert', 'Sorry! Doctor ' + msgJson.name + ' is not available now for consultation call.');
+                        //alert("Sorry! Doctor " + msgJson.name + " is not available now for consultation call.");
                     }
                 }
             };

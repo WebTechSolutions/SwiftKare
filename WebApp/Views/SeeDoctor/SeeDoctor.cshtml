@@ -875,10 +875,6 @@
     </div>
 </div>
 
-
-
-
-
 <script>
 
     function reloadContainer(callback) {
@@ -918,7 +914,8 @@
                 CreateAppointment(@ViewBag.PatienID,@amount);
             },
             handleFailure: function () {
-                alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
+                showAlert("Alert","OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
+                //alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
             }
         });
 
@@ -1069,7 +1066,8 @@
                             });
 
                             //Redirect User for video chat
-                            alert("Payment successful. Your consultation will be started soon.");
+                            showAlert("Payment Alert","Payment successful. Your consultation will be started soon.");
+                            //alert("Payment successful. Your consultation will be started soon.");
                             //location.reload();
                         }
 

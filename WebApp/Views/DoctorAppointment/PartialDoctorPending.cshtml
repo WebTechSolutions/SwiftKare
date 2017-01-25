@@ -77,6 +77,7 @@ else
         </tbody>
     </table>
 }
+
 <!-- Datatables -->
 <script>
     $(document).ready(function() {
@@ -119,7 +120,8 @@ else
 
         if(consultID==0)
         {
-            alert('Consultation not found for this appointment.');
+            //alert('Consultation not found for this appointment.');
+            showAlert('Alert','Consultation not found for this appointment.');
             return;
         }
         showLoader();
@@ -294,7 +296,8 @@ else
     $(function () {
         $(".complete").click(function () {
             if (consultID == null) {
-                alert('Consultation not found for this appointment.');
+                //alert('Consultation not found for this appointment.');
+                showAlert('Alert','Consultation not found for this appointment.');
                 return false;
             }
 
