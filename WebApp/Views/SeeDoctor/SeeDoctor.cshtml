@@ -886,7 +886,7 @@
             callback();
         });
     }
-   
+
     var reader1  = new FileReader();
     var reader2  = new FileReader();
     var reader3  = new FileReader();
@@ -986,15 +986,15 @@
                         });
                     }
                     else if (result.ApiResultModel.message == "") {
-                       
+
                         new PNotify({
                             title: 'Success',
                             text: "Appointment is scheduled successfully.",
                             type: 'info',addclass: 'dark',
                             styling: 'bootstrap3'
                         });
-                        
-                       
+
+
                         if (appType == "S")
                         {
                             window.location.href = '/Appointment/Index/';
@@ -1044,7 +1044,7 @@
                         });
                     }
                     else if (response.ApiResultModel.message == "") {
-                        
+
                         new PNotify({
                             title: 'Success',
                             text: "Consultation is created successfully.",
@@ -1054,20 +1054,35 @@
 
                         if(appType="L")
                         {
+                            debugger;
                             localStorage.setItem('consultationKey', response.ApiResultModel.ID);
                             var tokboxInfo=localStorage.getItem('tokbox');
                             var consultID=response.ApiResultModel.ID;
                             //send consultID to doctor incase of live appointment
-                            chat.server.sendMessageToDoctor(
-                   {
-                       SenderId: '@SessionHandler.UserInfo.Id',
-                       UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
-                       ReceiverConnectionId: $('#ddlAvailableDoctors').val(),
-                       ReceiverId: '20',
-                       SenderType: 'Patient',
-                       Message: JSON.stringify({ status: 'consultID', name: consultID }),
-                       UserGroup: 'doctors'
-                   });
+                            var docId = doctorID;
+
+                            var oDocInfo = null;
+                            for (var i = 0; i < availableDoctors.doctor.length; i++) {
+                                if (availableDoctors.doctor[i].docId == docId) {
+                                    oDocInfo = availableDoctors.doctor[i];
+                                    break;
+                                }
+                            }
+                            if(oDocInfo!=null){
+                                chat.server.sendMessageToDoctor(
+                                {
+                                    SenderId: '@SessionHandler.UserInfo.Id',
+                                    UserName: '@SessionHandler.UserInfo.Email',
+                                    ReceiverConnectionId: oDocInfo.connectionId,
+                                    ReceiverId: docId,
+                                    DoctorName: oDocInfo.firstName + ' ' + oDocInfo.lastName,
+                                    PatientName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
+                                    SenderType: 'Patient',
+                                    Message: JSON.stringify({ status: 'consultID', name: consultID }),
+                                    UserGroup: 'doctors'
+                                });
+                            }
+                        
                             alert("Payment successful. Your consultation will be started soon.");
                             var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
                             //check for apptype if l then go here
@@ -1085,7 +1100,7 @@
                             });
 
                             //Redirect User for video chat
-                           
+
                             //location.reload();
                         }
 

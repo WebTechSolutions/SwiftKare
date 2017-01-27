@@ -1,4 +1,5 @@
-﻿@{
+﻿@using WebApp.Helper;
+@{
     Layout = null;
 
     string userType = Convert.ToString(ViewBag.UserType);
@@ -53,6 +54,14 @@
     <!-- Custom Theme Style -->
     <link href="@Url.Content("~/Content/css/custom.min.css")" rel="stylesheet">
     <link href="@Url.Content("~/Content/css/style_tokbox.css")" rel="stylesheet">
+
+    <!-- SignalR js files -->
+    <!-- SignalR js files -->
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+
+    <script src="@Url.Content("~/Scripts/jquery.cookie.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.signalR-2.2.1.min.js")"></script>
+    <script src="@Url.Content("~/signalr/hubs")"></script>
 
     <style type="text/css">
         #divPrimaryVideo {
@@ -288,8 +297,7 @@
         </div>
     </div>
 
-    <!-- jQuery -->
-    <script src="@Url.Content("~/Scripts/jquery.min.js")"></script>
+   
     <!-- Bootstrap -->
     <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
     <!-- iCheck -->
@@ -301,6 +309,9 @@
 
     <!-- Custom Theme Scripts -->
     <script src="@Url.Content("~/Scripts/custom.min.js")"></script>
+    <script src="~/Scripts/jquery.cookie.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
+    <script src="~/signalr/hubs"></script>
 
 
     <script src="https://static.opentok.com/v2/js/opentok.js" charset="utf-8"></script>
@@ -376,6 +387,55 @@
                 $.post('@Url.Action("RemoveConsultROS", "UserChat")', { consultID: consultId, sysitemid: sysId, sysitemname: sysName });
             });
         });
+
+        var chat = $.connection.chatHub;
+
+        $.connection.hub.logging = true;
+        $.connection.hub.start().done(function () {
+            debugger;
+            var sid = $.cookie('sid');
+            var userRole;
+            if   ('@(userType.ToLower())' == "doctor") 
+                userRole="Doctor";
+            else userRole="Patient";
+
+            chat.server.join(
+                {
+                    Id: '@SessionHandler.UserInfo.Id',
+                    UserName: '@SessionHandler.UserInfo.Email',
+                    FirstName: '@SessionHandler.UserInfo.FirstName',
+                    LastName: '@SessionHandler.UserInfo.LastName',
+                    UserType: userRole
+                });
+
+            chat.server.adminJoin().done(function () {
+                //alert("New doctor has joined... Refresh list;");
+               // if   ('@(userType.ToLower())' == "doctor")
+                chat.server.getUsersPatient();
+              //  else
+                chat.server.getUsersDoctor();
+            });
+
+
+        });
+
+        $(function () {
+            chat.client.receiveMessage = function (msgFrom, msg, receiverId, senderid) {
+                debugger;
+                if (msgFrom != 'ChatHub') {
+                    var fromJson = JSON.parse(msg);
+                    alert(fromJson.status);
+
+                    if (fromJson.status == 'consultID') {
+                        alert('consultID recieved:' + fromJson.name);
+                        localStorage.setItem('consultID', fromJson.name);
+                        consultId = fromJson.name;
+                        return;
+                    }
+                }
+            }
+        });
+
     </script>
 
     <script src="@Url.Content("~/Scripts/custom.min.js")"></script>

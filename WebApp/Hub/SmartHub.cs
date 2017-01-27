@@ -135,7 +135,36 @@ namespace WebApp.Hub
 
             data.Ip = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
             AllUserList.TryAdd(Context.ConnectionId, data);
+            var oRet = AllUserList.Where(x => x.Value.UserType == "Patient");
+            if (data.UserType.Trim().ToLower().Equals("patient"))
+                oRet = AllUserList.Where(x => x.Value.UserType == "Doctor");
+            else
+                oRet = AllUserList.Where(x => x.Value.UserType == "Patient");
+           // Clients.Group("doctors").showConnected(oRet);
+
+        }
+
+        public UserInfo TestJoin()
+        {
+            UserInfo data = new UserInfo();
+            data.Connected = DateTime.Now.ToString("f");
+            data.ConnectionId = Context.ConnectionId;
+            data.UserGroup = "doctors";
+            data.UserName = "test@test.com";
+            data.UserType = "Doctor";
+            data.LastName = "LastNAme JamTest ";
+            data.FirstName = "FirstNAmt JamTest";
+            data.Id = 12345;
+            data.UserGroup = "doctors";
+            //data.Sid = SessionHandler.UserInfo.Id;
+            //data.UserName = SessionHandler.UserInfo.Email;
+            //data.FirstName = SessionHandler.UserInfo.FirstName;
+            //data.LastName = SessionHandler.UserInfo.LastName;
+
+            data.Ip = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
+            AllUserList.TryAdd(Context.ConnectionId, data);
             Clients.Group("doctors").showConnected(AllUserList);
+            return data;
         }
     }
 }

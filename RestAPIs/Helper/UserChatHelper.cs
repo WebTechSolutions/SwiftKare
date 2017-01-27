@@ -1,4 +1,5 @@
 ﻿using DataAccess.CustomModels;
+using Newtonsoft.Json.Linq;
 using OpenTokSDK;
 using System;
 using System.Collections.Generic;
@@ -32,18 +33,24 @@ namespace RestAPIs.Helpers
 
         #region Public Methods
          
-        public static string GenerateOpenTokSession()
+        public static JObject GenerateOpenTokSession()
         {
             var openTok = new OpenTok(TokBoxApiKey, TokBoxSecretKey);
-            return openTok.CreateSession(mediaMode: MediaMode.RELAYED).Id;
+          //  OpenTokSession session = new OpenTokSession();
+          //  session.SessionId= openTok.CreateSession(mediaMode: MediaMode.RELAYED).Id;
+            dynamic sessionId = new JObject();
+            sessionId.SessionId= openTok.CreateSession(mediaMode: MediaMode.RELAYED).Id;
+           
+            return sessionId;
         }
 
-        public static string GenerateOpenTokToken(string sessionId)
+        public static JObject GenerateOpenTokToken(string sessionId)
         {
             var openTok = new OpenTok(TokBoxApiKey, TokBoxSecretKey);
-
             //By default token is valid for 24 hours. So does not need to modify it
-            return openTok.GenerateToken(sessionId);
+            dynamic token = new JObject();
+            token.TokenId = openTok.CreateSession(mediaMode: MediaMode.RELAYED).Id;
+            return token;
         }
 
         #endregion

@@ -102,7 +102,7 @@ else
         _objConsult["appID"] = appID;
         _objConsult["sessionID"] = "0";
         _objConsult["token"] = "0";
-        _objConsult["userID"] = '0'
+        _objConsult["userID"] = '0';
         
         $.ajax({
             type: 'POST',
@@ -115,7 +115,7 @@ else
                 if (response.Success == true) {
                     if (response.ApiResultModel.message != "") {
                         new PNotify({
-                            title: 'Error',
+                            title: 'Error in create consult',
                             text: response.ApiResultModel.message,
                             type: 'error',
                             styling: 'bootstrap3'
@@ -129,7 +129,8 @@ else
                             styling: 'bootstrap3'
                         });
                         var _consultID=response.ApiResultModel.ID;
-                        makeCallToPatient(patientID, appID,_consultID);
+
+                        makeCallToPatient(patientID, appID,_consultID,oPatInfo);
                                           
                     }
                 }

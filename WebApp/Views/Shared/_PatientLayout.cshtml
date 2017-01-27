@@ -254,9 +254,10 @@
 
         </div>
     </div>
-    <script src="~/Scripts/jquery.cookie.js"></script>
-    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
-    <script src="~/signalr/hubs"></script>
+    @*<script src="~/Scripts/jquery.cookie.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>*@
+    <script src="@Url.Content("~/signalr/hubs")"></script>
+   
     <script type="text/javascript">
 
 
@@ -372,6 +373,7 @@
                 if (msgFrom != "ChatHub") {
                     debugger;
                     var msgJson = JSON.parse(msg);
+                    alert(msgJson.status);
                     if (msgJson.status == 'tokbox') {
                         alert('tokbox info recieved:' + msgJson.name);
                         localStorage.setItem('tokbox', msgJson.name);
@@ -406,7 +408,7 @@
 
             chat.client.incomingCallFromDoctor = function (msgFrom, msg, senderConnId, senderid, consultID, docName) {
                 //appID is consult ID in this function param
-                localStorage.setItem('consultID', consultID);
+                //localStorage.setItem('consultID', consultID);
                 debugger;
                 var msgJson = JSON.parse(msg);
 
@@ -438,7 +440,7 @@
                         if (oResp != "0")
                         {
                             var tokboxInfo = oResp;
-                            localStorage.setItem('consultationKey', appId);
+                            localStorage.setItem('tokbox', tokboxInfo);
 
                             chat.server.patientRedirectedToCall
                                 (senderConnId, tokboxInfo, '@SessionHandler.UserInfo.Id', '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)');
@@ -523,19 +525,23 @@
 
             // Declare a function on the chat hub so the server can invoke it
             chat.client.showConnected = function (message) {
+                debugger;
                 availableDoctors.doctor = [];
 
 
                 console.log(message);
 
                 for (var i = 0; i < message.length; i++) {
-                    availableDoctors.doctor.push({
-                        connectionId: message[i].Key,
-                        firstName: message[i].Value.FirstName,
-                        lastName: message[i].Value.LastName,
-                        userName: message[i].Value.UserName,
-                        docId: message[i].Value.Id
-                    });
+                    console.log(message[i].Value.UserType);
+                    if (message[i].Value.UserType == 'Doctor') {
+                        availableDoctors.doctor.push({
+                            connectionId: message[i].Key,
+                            firstName: message[i].Value.FirstName,
+                            lastName: message[i].Value.LastName,
+                            userName: message[i].Value.UserName,
+                            docId: message[i].Value.Id
+                        });
+                    }
                 }
 
                 //$.each(message, function (index, value) {
@@ -570,7 +576,8 @@
 
                 chat.server.adminJoin().done(function () {
                     //alert("New doctor has joined... Refresh list;");
-                    chat.server.getUsersDoctor();
+                     chat.server.getUsersDoctor();
+                    //chat.server.getu();
                 });
 
                 $('#sendmessage').click(function () {

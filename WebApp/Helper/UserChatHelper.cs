@@ -39,7 +39,7 @@ namespace WebApp.Helper
         {
             OpenTokSession oRet = null;
 
-            var lstAllOpenTokSessions = (List<OpenTokSession>)(HttpContext.Current.Application["AllOpenTokSessions"]);
+           /* var lstAllOpenTokSessions = (List<OpenTokSession>)(HttpContext.Current.Application["AllOpenTokSessions"]);
             if (lstAllOpenTokSessions != null)
             {
                 oRet = lstAllOpenTokSessions.FirstOrDefault(x => (x.SenderId == senderId && x.ReceiverId == receiverId) || (x.SenderId == receiverId && x.ReceiverId == senderId));
@@ -47,7 +47,7 @@ namespace WebApp.Helper
             else
             {
                 lstAllOpenTokSessions = new List<OpenTokSession>();
-            }
+            }*/
 
             if (oRet == null || string.IsNullOrEmpty(oRet.SessionId) || string.IsNullOrEmpty(oRet.TokenId))
             {
@@ -98,10 +98,10 @@ namespace WebApp.Helper
                     oRet.ConsultId = oRetConsultInfo.ID.ToString();
                 }*/
 
-                lstAllOpenTokSessions.Add(oRet);
+               // lstAllOpenTokSessions.Add(oRet);
             }
 
-            HttpContext.Current.Application["AllOpenTokSessions"] = lstAllOpenTokSessions;
+           // HttpContext.Current.Application["AllOpenTokSessions"] = lstAllOpenTokSessions;
             return oRet;
         }
 

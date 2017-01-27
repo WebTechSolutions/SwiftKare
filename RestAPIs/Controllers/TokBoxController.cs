@@ -24,6 +24,7 @@ namespace RestAPIs.Controllers
                 var openTokSession = UserChatHelper.GenerateOpenTokSession();
 
                 response = Request.CreateResponse(HttpStatusCode.OK, openTokSession);
+                
                 return response;
             }
             catch (Exception ex)

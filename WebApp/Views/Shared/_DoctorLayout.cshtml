@@ -314,11 +314,19 @@
             ]
         };
 
-        function makeCallToPatient(patId, appId,consultID) {
+        function makeCallToPatient(patId, appId, consultID, oPat) {
+            var oPatInfo = oPat;
             localStorage.setItem('consultationKey', consultID);
-
-            var oPatInfo = null;
-            for (var i = 0; i < availablePatients.patient.length; i++) {
+            chat.server.sendMessageToPatient({
+                SenderId: '@SessionHandler.UserInfo.Id',
+                UserName: '@SessionHandler.UserInfo.Email',
+                ReceiverConnectionId: oPatInfo.connectionId,
+                ReceiverId: '20',
+                SenderType: 'Doctor',
+                Message: JSON.stringify({ status: 'consultID', name: consultID })
+            });
+            
+            /*for (var i = 0; i < availablePatients.patient.length; i++) {
                 if (availablePatients.patient[i].patId == patId) {
                     oPatInfo = availablePatients.patient[i];
                     break;
@@ -328,7 +336,7 @@
             if (oPatInfo == null) {
                 alert('Patient is not online now');
                 return;
-            }
+            }*/
 
             var PatientName = oPatInfo.firstName + ' ' + oPatInfo.lastName;
 
@@ -358,7 +366,7 @@
             $.connection.hub.logging = true;
             $.connection.hub.start().done(function () {
                 var sid = $.cookie('sid');
-
+                debugger;
                 chat.server.join(
                     {
                         Id: '@SessionHandler.UserInfo.Id',
@@ -371,12 +379,14 @@
                 chat.server.adminJoin().done(function () {
                     //alert("New doctor has joined... Refresh list;");
                     chat.server.getUsersPatient();
+                    chat.server.getUsersDoctor();
                 });
 
             });
 
             // Declare a function on the chat hub so the server can invoke it
             chat.client.showConnected = function (message) {
+                debugger;
                 availablePatients.patient = [];
 
                 for (var i = 0; i < message.length; i++) {
@@ -420,16 +430,17 @@
                 debugger;
                 //
                 localStorage.setItem('tokbox', tokboxInfo);
-             //   var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Doctor&receiverId=" + patId + "&doctorName=@(SessionHandler.UserInfo.FirstName + " "+ SessionHandler.UserInfo.LastName)&patientName=" + patName;
+                var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Doctor&receiverId=" + patId + "&doctorName=@(SessionHandler.UserInfo.FirstName + " "+ SessionHandler.UserInfo.LastName)&patientName=" + patName;
 
-               // $.post(cUrlReadyForCall, function (oResp) {
-                    if (tokboxInfo!='0')
+                $.post(cUrlReadyForCall, function (oResp) {
+                    if (tokboxInfo != '0')
                         window.location = '@Url.Action("Index","UserChat")';
+                    else alert('Err in tokbox connection');
                     //localStorage.setItem('consultationKey', consultId);
 
                     //Redirect doctor to call
 
-              //  });
+                });
             }
 
             chat.client.receiveMessage = function (msgFrom, msg, receiverId, senderid) {
@@ -439,6 +450,8 @@
                     var txt = "";
                     //alert(msg);
                     var fromJson = JSON.parse(msg);
+                    alert(fromJson.status);
+
                     if (fromJson.status == 'consultID') {
                         alert('consultID recieved:' + fromJson.name);
                         localStorage.setItem('consultID', fromJson.name);
