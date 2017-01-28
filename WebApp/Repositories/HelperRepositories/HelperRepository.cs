@@ -39,7 +39,7 @@ namespace WebApp.Repositories.DoctorRepositories
         {
             try
             {
-                var response = ApiConsumerHelper.GetResponseString("api/generateOpenTokSession");
+                var response = ApiConsumerHelper.GetResponseString("api/generateOpenTokSessionWeb");
                 var result = JsonConvert.DeserializeObject<string>(response);
                 return result;
             }
@@ -59,7 +59,7 @@ namespace WebApp.Repositories.DoctorRepositories
         {
             try
             {
-                var response = ApiConsumerHelper.GetResponseString("api/generateOpenTokToken?sessionId=" + sessionId);
+                var response = ApiConsumerHelper.GetResponseString("api/generateOpenTokTokenWeb?sessionId=" + sessionId);
                 var result = JsonConvert.DeserializeObject<string>(response);
                 return result;
             }

@@ -376,7 +376,7 @@
                         UserType: 'Doctor'
                     });
 
-                chat.server.adminJoin().done(function () {
+                chat.server.adminJoinDoctor().done(function () {
                     //alert("New doctor has joined... Refresh list;");
                     chat.server.getUsersPatient();
                     chat.server.getUsersDoctor();
@@ -390,13 +390,15 @@
                 availablePatients.patient = [];
 
                 for (var i = 0; i < message.length; i++) {
-                    availablePatients.patient.push({
-                        connectionId: message[i].Key,
-                        firstName: message[i].Value.FirstName,
-                        lastName: message[i].Value.LastName,
-                        userName: message[i].Value.UserName,
-                        patId: message[i].Value.Id
-                    });
+                    if (message[i].Value.UserType == 'Patient') {
+                        availablePatients.patient.push({
+                            connectionId: message[i].Key,
+                            firstName: message[i].Value.FirstName,
+                            lastName: message[i].Value.LastName,
+                            userName: message[i].Value.UserName,
+                            patId: message[i].Value.Id
+                        });
+                    }
                 }
 
 
@@ -497,10 +499,10 @@
                     });
 
                     //Create tokbox info, and save in local storage
-
+                    debugger;
                         var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=" + signalRInfo.SenderId + "&userType=Doctor&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + fromJson.name + "&consultID=" + fromJson.name + "&tokbox=" + fromJson.name;
 
-                        $.post(cUrlReadyForCall, function (oResp) {
+                    $.post(cUrlReadyForCall, function (oResp) {
                             if (oResp!="0")
                             {
                                 localStorage.setItem('tokbox', oResp);

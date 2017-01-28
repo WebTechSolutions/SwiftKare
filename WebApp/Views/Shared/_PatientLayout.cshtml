@@ -564,7 +564,7 @@
             $.connection.hub.logging = true;
             $.connection.hub.start().done(function () {
                 var id = $.cookie('Id');
-
+                debugger;
                 chat.server.join(
                     {
                         Id: '@SessionHandler.UserInfo.Id',
@@ -576,7 +576,8 @@
 
                 chat.server.adminJoin().done(function () {
                     //alert("New doctor has joined... Refresh list;");
-                     chat.server.getUsersDoctor();
+                    chat.server.getUsersPatient();
+                    chat.server.getUsersDoctor();
                     //chat.server.getu();
                 });
 

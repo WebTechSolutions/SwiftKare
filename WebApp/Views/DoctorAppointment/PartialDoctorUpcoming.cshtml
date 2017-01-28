@@ -82,11 +82,11 @@ else
     var _objConsult = {};
 
     function createConsultFromDoctor(doctorID,patientID,appID)
-    {
+    {debugger;
         
         var oPatInfo = null;
         for (var i = 0; i < availablePatients.patient.length; i++) {
-            if (availablePatients.patient[i].patId == patId) {
+            if (availablePatients.patient[i].patId == patientID) {
                 oPatInfo = availablePatients.patient[i];
                 break;
             }

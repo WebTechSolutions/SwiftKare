@@ -100,6 +100,11 @@ namespace WebApp.Hub
 
         public void AdminJoin()//patient
         {
+            Groups.Add(Context.ConnectionId, "patients");
+        }
+
+        public void AdminJoinDoctor()//doctor
+        {
             Groups.Add(Context.ConnectionId, "doctors");
         }
 
@@ -111,7 +116,7 @@ namespace WebApp.Hub
         public void GetUsersDoctor()
         {
             var oRet = AllUserList.Where(x => x.Value.UserType == "Doctor");
-            Clients.Group("doctors").showConnected(oRet);
+            Clients.Group("patients").showConnected(oRet);
         }
 
         public void GetUsersPatient()
@@ -135,11 +140,11 @@ namespace WebApp.Hub
 
             data.Ip = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
             AllUserList.TryAdd(Context.ConnectionId, data);
-            var oRet = AllUserList.Where(x => x.Value.UserType == "Patient");
+          /*  var oRet = AllUserList.Where(x => x.Value.UserType == "Patient");
             if (data.UserType.Trim().ToLower().Equals("patient"))
                 oRet = AllUserList.Where(x => x.Value.UserType == "Doctor");
             else
-                oRet = AllUserList.Where(x => x.Value.UserType == "Patient");
+                oRet = AllUserList.Where(x => x.Value.UserType == "Patient");*/
            // Clients.Group("doctors").showConnected(oRet);
 
         }
