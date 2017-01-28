@@ -49,12 +49,13 @@ function bindConditionsTable(Conditions) {
                                                 "<span class='caret'></span>" +
                                                 "<span class='sr-only'>Toggle Dropdown</span>" +
                                             "</button>" +
-                                            "<ul class='dropdown-menu' role='menu'>" +
+                                            "<ul class='dropdown-menu dropdown-menu-left'>" +
                                                "<li>" +
-                                                "<a class='editbtn' href='#'  onclick='editHealthConditions(" + JSON.stringify(Conditions[i]) + ",this);'>Edit</a>" +
+                                                "<a href='#'  onclick='editHealthConditions(" + JSON.stringify(Conditions[i]) + ",this);'>Edit</a>" +
                                                 "</li>" +
                                                 "<li>" +
-                                                 "<button id='delete' type='button' class='btn btn-link submit' style='border-bottom:none' onclick='deleteHealthConditions(" + Conditions[i].conditionID + ");'>Delete</button></li>" +
+                                                "<a href='javascript:void(0)' id='delete' onclick='deleteHealthConditions(" + Conditions[i].conditionID + ");'>Delete</a></li>" +
+                                                 //"<button id='delete' type='button' class='btn btn-link submit' style='border-bottom:none' onclick='deleteHealthConditions(" + Conditions[i].conditionID + ");'>Delete</button></li>" +
                                             "</ul>" +
                                         "</div>"
         ]);

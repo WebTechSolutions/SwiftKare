@@ -16,4 +16,13 @@ namespace DataAccess.CustomModels
         public MessageFileModel[] msgFile { get; set; }
 
     }
+    public class HelpTicket
+    {
+        public string message { get; set; }
+        public string sender { get; set; }
+        public string reciever { get; set; }
+        public string subject { get; set; }
+        public string attachmentPath { get; set; }
+
+    }
 }

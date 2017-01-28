@@ -69,7 +69,7 @@
 
 
                     <div class="x_content">
-                        <div id="divUpcoming" class="table-responsive">
+                        <div id="divUpcoming" class="table table-striped table-bordered dataTable no-footer">
 
                             @{
                                 Html.RenderAction("PartialDoctorUpcoming", "DoctorAppointment");
@@ -84,7 +84,7 @@
 
 
                     <div class="x_content">
-                        <div id="divReschedule" class="table-responsive">
+                        <div id="divReschedule" class="table table-striped table-bordered dataTable no-footer">
 
                             @{
                                 Html.RenderAction("PartialDoctorReschedule", "DoctorAppointment");
@@ -100,7 +100,7 @@
 
 
                     <div class="x_content">
-                        <div id="divPending" class="table-responsive">
+                        <div id="divPending" class="table table-striped table-bordered dataTable no-footer">
 
                             @{
                                 Html.RenderAction("PartialDoctorPending", "DoctorAppointment");
@@ -125,17 +125,27 @@
             </div>
         </div>
     </div><!-- View App Detail -->
-    <div class="modal fade" id="myModal6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4">
+    <div class="modal fade" id="myModal6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" style="z-index: 9997;">
         <div class="modal-dialog" style="width: 350px;">
             <div id='myModalContent' class="modal-content" style="border-radius: 0;">
 
             </div>
         </div>
     </div><!-- View App Detail -->
-
+     
     
 </div>
+<div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8" style="z-index: 9998;">
+    <div class="modal-dialog" role="document">
+        <div id='PatientProfileContent' class="modal-content" style="overflow:auto; border-radius: 0;width: 912px;margin-left: 92px;">
+            @{
+                Html.RenderAction("PatientProfile", "DoctorAppointment", new { patientID = 0 });
+            }
+        </div>
 
+
+    </div>
+</div><!-- col4 -->   
 <!-- /page content -->
 <!-- Load View App Detail Popup -->
 <script>
@@ -145,27 +155,15 @@
 
     });
     
-    //$("#myModal4").on('show.bs.modal', function (e) {
+    function showProfile(patientid) {
 
-    //    var $modal = $(this);
-    //     mydocid = e.relatedTarget.id;
-    //    alert(mydocid);
-    //    var appID = $('#' + mydocid).data('todo').appID;
-    //    var appDateTime = $('#' + mydocid).data('todo').appDateTime;
-    //    var rov = $('#' + mydocid).data('todo').rov;
-    //    var chiefcomplaints = $('#' + mydocid).data('todo').chiefComplaints;
-    //    var paymentamount = $('#' + mydocid).data('todo').amount;
-    //    var pharmacy = $('#' + mydocid).data('todo').pharmacy;
-    //    var cellPhone = $('#' + mydocid).data('todo').cellPhone;
+        var id = patientid;
 
-    //    $("#editappid").val(appID);
-    //    $('#p_appdatetime').append("<b>"+appDateTime+"</b>");
-    //    $('#p_rov').append(rov);
-    //    $('#p_chiefComplaints').append(chiefcomplaints);
-    //    $('#p_pharmacy').append(pharmacy);
-    //    $('#p_amount').append(paymentamount);
-    //    $('#cellPhone').append(cellPhone);
-    //});
+        $("#PatientProfileContent").load('@Url.Action("PatientProfile", "DoctorAppointment")?patientID=' + id, function () {
+
+        });
+
+    };
 
    function reloadContainer(callback) {
         

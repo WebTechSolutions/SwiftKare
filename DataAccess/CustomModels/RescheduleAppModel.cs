@@ -49,6 +49,7 @@ namespace DataAccess.CustomModels
         public DoctorVM DoctorVM { get; set; }
         public PatientVM PatientVM { get; set; }
         public string utcappDate { get; set; }
+        public List<AppFiles> AppFiles { get; set; }
     }
 
 
@@ -112,6 +113,7 @@ namespace DataAccess.CustomModels
 
     public class PatientVM
     {
+        public long patientid { get; set; }
         public string ProfilePhotoBase64 { get; set; }
         public byte[] patPicture { get; set; }
         public string patientName { get; set; }

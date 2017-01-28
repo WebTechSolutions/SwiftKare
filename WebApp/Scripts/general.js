@@ -110,7 +110,7 @@ function showLocal(utcdate) {
 
     var localDate = (dbDate.toLocaleTimeString("en-us", options));
 
-    var dd = formatDate(new Date(localDate), "dd/MM/yyyy hh:mm:ssa");
+    var dd = formatDate(new Date(localDate), "dd/MM/yyyy hh:mm a");
     dd;
 
     return dd;

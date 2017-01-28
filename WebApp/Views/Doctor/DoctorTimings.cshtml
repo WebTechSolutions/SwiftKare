@@ -244,7 +244,11 @@
                         }
 
                         if (response == "overlapped")
-                        { alert("Timings can not be overlapped across each other"); $.unblockUI(); }
+                        {
+                            showAlert('Alert', 'Timings can not be overlapped across each other');
+                            $.unblockUI();
+                            //alert("Timings can not be overlapped across each other"); 
+                        }
                         else
                         {
                             reset();
@@ -259,7 +263,8 @@
 
             }
             else {
-                alert(msg);
+                //alert(msg);
+                showAlert('Alert',msg);
             }
 
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.Helper;
-using WebApp.Repositories.DoctorRepositories;
+using WebApp.Repositories.MessageRepositories;
 
 namespace WebApp.Controllers
 {

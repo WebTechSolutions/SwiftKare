@@ -48,7 +48,7 @@ else
                                 Action
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-right">
+                            <ul class="dropdown-menu dropdown-menu-left">
                                 <li>
                                     @*<a href='#' data-toggle="modal" class="thumbnail-col-inner" data-id="@item.doctorID" id="@item.appID" data-target="#myModal4"
             data-todo='{"appID":"@item.appID","appDateTime":"@item.appDate@item.appTime","rov":"@item.rov","chiefComplaints":"@item.chiefComplaints","amount":"@item.paymentAmount","pharmacy":"@item.pharmacy"
@@ -76,33 +76,14 @@ else
           
 
         //$('#rescheduledatatable').dataTable();
-        $('#rescheduledatatable').dataTable({
-            'order': [[1, 'desc']],
-            columnDefs: [
-              { type: 'date-dd-mmm-yyyy', targets: 1 }
-            ]
-        });
+        $('#rescheduledatatable').dataTable();
         $('#datatable-keytable').DataTable({
           keys: true
         });
 
         $('#datatable-responsive').DataTable();
 
-        $('#datatable-scroller').DataTable({
-          ajax: "js/datatables/json/scroller-demo.json",
-          deferRender: true,
-          scrollY: 380,
-          scrollCollapse: true,
-          scroller: true
-        });
-
-        $('#datatable-fixed-header').DataTable({
-          fixedHeader: true
-        });
-
-        var $datatable = $('#datatable-checkbox');
-
-        
+                
       });
 </script>
 <!-- /Datatables -->

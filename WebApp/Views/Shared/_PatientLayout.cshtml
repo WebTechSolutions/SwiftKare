@@ -31,7 +31,8 @@
     <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     @*<script type="text/javascript" src="https://rawgit.com/FezVrasta/bootstrap-material-design/master/dist/js/material.min.js"></script>*@
-    <script type="text/javascript" src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
+    @*<script type="text/javascript" src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>*@
+    <script type="text/javascript" src="@Url.Content("~/Scripts/moment-with-locales.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/custom.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/pnotify.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.cropit.js")"></script>
@@ -50,7 +51,10 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.smartWizard.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/switchery.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-material-datetimepicker.js")"></script>
-    
+    <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-wysiwyg.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.hotkeys.js")"></script>
+
+   
     
 
     <style type="text/css">
@@ -176,7 +180,7 @@
                         <a data-toggle="tooltip" data-placement="top" title="FullScreen" onclick="toggleFullScreen();">
                             <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
                         </a>
-                        <a data-toggle="tooltip" data-placement="top" title="Create Help Ticket">
+                        <a  data-toggle="tooltip" data-placement="top" title="Create Help Ticket">
                             <span class="fa fa-ticket" aria-hidden="true"></span>
                         </a>
                         @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
@@ -207,7 +211,7 @@
                                 <ul class="dropdown-menu dropdown-usermenu pull-right">
                                     <li><a href="@Url.Action("Index","PatientProfile")">My Profile</a></li>
 
-                                    <li><a href="javascript:;">Create Help Ticket</a></li>
+                                    <li><a href="@Url.Action("Index","HelpTicket")">Create Help Ticket</a></li>
                                     <li>
                                         <a href="javascript:document.getElementById('logoutForm').submit()">
                                             <i class="fa fa-sign-out pull-right"></i>
@@ -254,10 +258,34 @@
 
         </div>
     </div>
-    @*<script src="~/Scripts/jquery.cookie.js"></script>
-    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>*@
-    <script src="@Url.Content("~/signalr/hubs")"></script>
-   
+    <div class="modal fade" id="playoutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+        <div class="modal-dialog" role="document" style="width: 350px;">
+            <div class="modal-content" style="border-radius: 0;">
+                <div class="modal-header text-center" style="background: #E4F1FE; border-bottom-color: #c3bebe;">
+                    <h2 style="margin: 0; color: #337ab7" id="heading"><b></b></h2>
+                </div><!--/.modal header-->
+                <div class="modal-body text-left" style="text-align:center;">
+                    <p class="text-center" style="color: #375781;" id="bodytext"></p>
+                    <button style="width: 29%; border-radius: 0; padding: 15px -15px; font-size: 20px;" onclick="$('#playoutModal').modal('hide')" type="button" class="btn btn-primary">OK</button>
+                </div><!--/.modal body-->
+            </div>
+        </div>
+    </div><!-- mymodal1 -->
+    <script>
+        var mymodal = $('#playoutModal');
+    function showAlert(heading,body)
+    {
+
+        mymodal.find('#heading').text(heading);
+        mymodal.find('#bodytext').text(body);
+        mymodal.modal('show');
+    }
+    </script>
+    
+    @* <script src="~/Scripts/jquery.cookie.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
+    <script src="@Url.Content(" ~/signalr/hubs")"></script>*@
+
     <script type="text/javascript">
 
 
@@ -316,6 +344,7 @@
             appType = type;
         }
         function makeCallToDoctor(e) {
+            showAlert("Alert", "Please wait , we are taking doctor consent for the consult.");
             setAppType("L");
             var docId = $(e).attr("data-doctorid");
 
@@ -328,7 +357,7 @@
             }
 
             setDoctorID($(e).attr("data-doctorid"));
-           
+            
             var curElem = $(e);
 
             //Log Call Info - Starts
@@ -385,7 +414,8 @@
                         return;
                     }
                     if (msgJson.status == 'Accepted') {
-                        alert("Doctor " + msgJson.name + " accepted your request please continue with payment process.");
+                        showAlert('Alert', "Doctor " + msgJson.name + " accepted your request please continue with payment process.");
+                        //alert("Doctor " + msgJson.name + " accepted your request please continue with payment process.");
                         $('#wizard').smartWizard('goToStep', 2);
                         $('.buttonNext').show();
                         $('.buttonPrevious').show();
@@ -401,7 +431,8 @@
                         var strSignalRInfo = window.JSON.stringify(signalRInfo);
                         localStorage.setItem('signalRInfo', strSignalRInfo);
                     } else {
-                        alert("Sorry! Doctor " + msgJson.name + " is not available now for consultation call.");
+                        showAlert('Alert', 'Sorry! Doctor ' + msgJson.name + ' is not available now for consultation call.');
+                        //alert("Sorry! Doctor " + msgJson.name + " is not available now for consultation call.");
                     }
                 }
             };
@@ -580,7 +611,6 @@
                     //alert("New doctor has joined... Refresh list;");
                     chat.server.getUsersPatient();
                     chat.server.getUsersDoctor();
-                    //chat.server.getu();
                 });
 
                 $('#sendmessage').click(function () {

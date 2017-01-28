@@ -13,7 +13,7 @@
 else
 {
 
-    <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <table id="datatableupcoming" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
         <thead>
             <tr class="headings">
                 <th class="column-title" style="text-align:center">Doctor's Name </th>
@@ -49,14 +49,11 @@ else
                                 <span class="caret"></span>
                             </button>
                             
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                @*<li><a href='#' data-toggle="modal" class="thumbnail-col-inner"  data-id="@item.doctorID" id="@item.appID" data-target="#myModal4"
-                                       data-todo='{"appID":"@item.appID","appDateTime":"@item.appDate@item.appTime","rov":"@item.rov","chiefComplaints":"@item.chiefComplaints","amount":"@item.paymentAmount","pharmacy":"@item.pharmacy"
-                                       ,"cellPhone":"@item.cellphone"}'>View Detail</a></li>*@
+                            <ul class="dropdown-menu dropdown-menu-left" style="margin-left:-55px">
                                 <li><a href="#" data-toggle="modal" class="thumbnail-col-inner" data-id="@item.doctorID" id="@item.appID" data-target="#myModal4" onclick=$("#pvappid").val(@item.appID);>View Detail</a></li>
-                                <li><a href="#" class="reschedule" data-id="@item.appDate" data-toggle="modal" data-target="#myModal1"  data-todo='{"docid":"@item.doctorID","doctorName":"@item.DoctorName","appID":"@item.appID","appDate":"@item.appDate"}' onclick=showDoctorTimings(@item.doctorID,@item.appID,'@item.appDate') id="@item.doctorID">Reschedule App</a></li>
+                                <li><a href="#" class="reschedule" data-id="@item.appDate" data-toggle="modal" data-target="#myModal1" data-todo='{"docid":"@item.doctorID","doctorName":"@item.DoctorName","appID":"@item.appID","appDate":"@item.appDate"}' onclick=showDoctorTimings(@item.doctorID,@item.appID,'@item.appDate') id="@item.doctorID">Reschedule App</a></li>
                                 <li><input type="text" style="display:none" id="apptype" value="U"></li>
-</ul>
+                            </ul>
                         </div>
                     </td>
                 </tr>
@@ -71,27 +68,8 @@ else
 <script>
       $(document).ready(function() {
         
-
-       // $('#datatable').dataTable();
-        //$('#datatable').dataTable({
-        //    'order': [[1, 'asc']],
-        //    columnDefs: [
-        //      { type: 'date-yyyy-mm-dd', targets: 1 },
-             
-        //    ]
-        //});
-       
-     //   $('#datatable').DataTable();
-
       
-
-        $('#datatable').DataTable({
-          fixedHeader: true
-        });
-
-       
-       
-        
+          $('#datatableupcoming').DataTable();
         
       });
 </script>

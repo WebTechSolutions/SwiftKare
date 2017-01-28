@@ -146,7 +146,7 @@
                                                             <th class="colum+n-title">sr.no </th>
                                                             <th class="column-title">My conditions </th>
                                                             <th class="column-title">Reported Date</th>
-                                                            <th class="column-title"></th>
+                                                            <th class="column-title">Action</th>
 
                                                         </tr>
                                                     </thead>
@@ -216,8 +216,8 @@
                                                             <th class="column-title">Sr.No </th>
                                                             <th class="column-title">My Medication</th>
                                                             <th class="column-title">Frequency</th>
-                                                            <th class="column-title">Reported Date</th>
-                                                            <th class="column-title"></th>
+                                                            <th class="column-title" style="width:15%">Reported Date</th>
+                                                            <th class="column-title">Action</th>
 
                                                         </tr>
                                                     </thead>
@@ -291,15 +291,15 @@
                                                     </tbody>
                                                 </table>
 
-                                                <table id="allergiestable" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
+                                                <table id="allergiestable" class="table table-striped table-bordered" cellspacing="0" style="width:100%;word-wrap:break-word;">
                                                     <thead>
                                                         <tr class="headings">
                                                             <th class="column-title">Sr.No </th>
                                                             <th class="column-title">Allergy</th>
                                                             <th class="column-title">Severity</th>
                                                             <th class="column-title">Reaction</th>
-                                                            <th class="column-title">Reported Date</th>
-                                                            <th class="column-title"></th>
+                                                            <th class="column-title" style="width:15%">Reported Date</th>
+                                                            <th class="column-title">Action</th>
 
                                                         </tr>
                                                     </thead>
@@ -368,7 +368,7 @@
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <button style="margin-top:23px" id="btnPharmacySrch" type="button" class="btn btn-primary">Search Pharmacy</button>
-                                                                <button style="margin-top:23px" id="btnPharmacySave" type="button" class="btn btn-primary">Save Pharmacy</button>
+                                                                
                                                             </div>
                                                         </div>
                                                     </div>
@@ -762,11 +762,16 @@
         $('#conditionstable').DataTable({
             'order': [[0, 'asc']],
             'columnDefs': [
-               { visible: false, targets: [0] },
-               { "width": "10%", "targets": [0] },
-               { "width": "25%", "targets": [1] },
-                 { "width": "20%", "targets": [2] },
-               { "width": "35%", "targets": [3] }
+               { visible: false, targets: [0] }
+             
+            ],
+            "bAutoWidth": false, // Disable the auto width calculation 
+            "aoColumns": [
+             { "sWidth": "5%" },  
+             { "sWidth": "30%" }, 
+             { "sWidth": "20%" }, 
+            { "sWidth": "8%" }
+           
             ]
         });
         GetHealthConditions(@SessionHandler.UserInfo.Id);
@@ -823,11 +828,18 @@
         $('#medicinestable').DataTable({
             'order': [[0, 'asc']],
             'columnDefs': [
-               { visible: false, targets: [0] },
-               { "width": "20%", "targets": [2] },
-                { "width": "20%", "targets": [3] },
-               { "width": "15%", "targets": [4] }
-            ]
+               { visible: false, targets: [0] }
+               
+            ],
+            "bAutoWidth": false, // Disable the auto width calculation 
+            "aoColumns": [
+             { "sWidth": "5%" },  
+             { "sWidth": "30%" }, 
+             { "sWidth": "20%" }, 
+            { "sWidth": "15%" },
+             { "sWidth": "15%" }
+           
+           ]
         });
     });
     $('#addmedicine').on('click', function () {
@@ -883,12 +895,18 @@
         $('#allergiestable').DataTable({
             'order': [[0, 'asc']],
             'columnDefs': [
-               { visible: false, targets: [0] },
-                { "width": "20%", "targets": [1] },
-                { "width": "20%", "targets": [2] },
-                { "width": "20%", "targets": [3] },
-               { "width": "15%", "targets": [5] }
-            ]
+               { visible: false, targets: [0] }
+            
+            ],
+            "bAutoWidth": false, // Disable the auto width calculation 
+             "aoColumns": [
+              { "sWidth": "5%" },  
+              { "sWidth": "20%" }, 
+              { "sWidth": "15%" }, 
+             { "sWidth": "15%" }, 
+             { "sWidth": "20%" }, 
+             { "sWidth": "15%" }
+        ]
 
 
         });
@@ -944,9 +962,7 @@
     $(document).ready(function () {
         loadPatientPharmacy('@SessionHandler.UserInfo.Id');
 
-        $("#btnPharmacySave").click(function(){
-            savePatientPharmacy('@SessionHandler.UserInfo.Id');
-        });
+       
 
         $("#btnPharmacySrch").click(function(){
 

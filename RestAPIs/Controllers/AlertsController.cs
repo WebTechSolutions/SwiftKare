@@ -28,7 +28,7 @@ namespace RestAPIs.Controllers
                 //var alerts = db.Alerts.Where(al=>al.active==true && al.alertFor==patientID).ToList();
                 var alerts = (from al in db.Alerts
                               where al.active == true && al.alertFor == patientID
-                              select new AlertModel { alertID = al.alertID, alertText = al.alertText, alertDate = al.cd,isRead=al.read }).ToList();
+                              select new AlertModel { alertID = al.alertID, alertText = al.alertText, alertDate = al.cd,isRead=al.read }).Take(50).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, alerts);
                 return response;
             }

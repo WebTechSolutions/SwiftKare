@@ -227,6 +227,7 @@
     <Compile Include="Controllers\DoctorConsultationController.cs" />
     <Compile Include="Controllers\DoctorProfileController.cs" />
     <Compile Include="Controllers\DoctorController.cs" />
+    <Compile Include="Controllers\HelpTicketController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MyHealthController.cs" />
@@ -721,6 +722,9 @@
     <Content Include="Views\HealthCareTeam\PartialViewSurgery.cshtml" />
     <Content Include="Views\SeeDoctor\SearchPharmacyView.cshtml" />
     <Content Include="Views\SeeDoctor\PartialViewSurgery.cshtml" />
+    <Content Include="Views\HelpTicket\Index.cshtml" />
+    <Content Include="Views\SeeDoctor\DoctorProfileView.cshtml" />
+    <Content Include="Views\DoctorAppointment\PatientProfileView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

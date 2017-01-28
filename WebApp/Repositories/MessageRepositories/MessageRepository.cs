@@ -12,7 +12,7 @@ using System.Web.Http;
 using System.Net;
 using DataAccess.CustomModels;
 
-namespace WebApp.Repositories.DoctorRepositories
+namespace WebApp.Repositories.MessageRepositories
 {
     public class MessageRepository
     {
@@ -59,6 +59,23 @@ namespace WebApp.Repositories.DoctorRepositories
                 httpResponseMessage.Content = new StringContent(ex.Message);
                 throw new HttpResponseException(httpResponseMessage);
             }
+        }
+        public ApiResultModel SendHelpTicket(HelpTicket model)
+        {
+
+            try
+            {
+
+                var strContent = JsonConvert.SerializeObject(model);
+                var response = ApiConsumerHelper.PostData("api/sendHelpTicket", strContent);
+                var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+
         }
 
     }

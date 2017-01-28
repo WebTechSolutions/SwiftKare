@@ -14,6 +14,12 @@ namespace WebApp.Repositories.PatientRepositories
 {
     public class PatientFilesRepository
     {
+        public IEnumerable<AppFiles> GetAppFiles(long appID)
+        {
+            var response = ApiConsumerHelper.GetResponseString("api/getAppFiles?appID=" + appID);
+            var result = JsonConvert.DeserializeObject<IEnumerable<AppFiles>>(response);
+            return result;
+        }
         public IEnumerable<GetPatientUserFiles> GetPatientFiles(long patientID)
         {
             var response = ApiConsumerHelper.GetResponseString("api/getPatientFiles?patientID=" + patientID);

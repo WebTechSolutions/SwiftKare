@@ -57,6 +57,7 @@ namespace RestAPIs.Controllers
                                                where r.patientID == cn.patientID && r.active == true
                                                select new
                                                {
+                                                   patientid = r.patientID,
                                                    patPicture = r.picture,
                                                    patientName = r.firstName + " " + r.lastName,
                                                    patientGender = r.gender,
@@ -87,7 +88,17 @@ namespace RestAPIs.Controllers
                                                                   where s.doctorID == cn.doctorID && s.active == true
                                                                   select new { specialityName = s.specialityName }).ToList()
 
-                                              }).FirstOrDefault()
+                                              }).FirstOrDefault(),
+                                  AppFiles= (from l in db.UserFiles
+                                             where l.active == true && l.AppID == cn.appID
+                                             orderby l.fileID descending
+                                             select new 
+                                             {
+                                                 fileID = l.fileID,
+                                                 FileName = l.FileName.Trim(),
+                                                 fileContent = l.fileContent,
+                                                 documentType = l.documentType
+                                             }).ToList()
                               }).FirstOrDefault();
                 response = Request.CreateResponse(HttpStatusCode.OK, result);
                 return response;
@@ -372,7 +383,24 @@ namespace RestAPIs.Controllers
                         DateTime mydateTime = DateTime.ParseExact(model.appTime,
                                              "hh:mm tt", CultureInfo.InvariantCulture);
                         result.appTime = mydateTime.ToUniversalTime().TimeOfDay;//To24HrTime(model.appTime);
-                        result.appDate = Convert.ToDateTime(model.appDate);
+                        //date format start
+                        string dateString = model.appDate.Trim();
+                        string format = "dd/MM/yyyy";
+                        CultureInfo provider = CultureInfo.InvariantCulture;
+                        try
+                        {
+                            DateTime resultedDate = DateTime.ParseExact(dateString, format, provider);
+                            Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
+                            //app.appDate = result;
+                            DateTime utcappDateTime = resultedDate + mydateTime.TimeOfDay;
+
+                            result.appDate = utcappDateTime.ToUniversalTime().Date;
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine("{0} is not in the correct format.", dateString);
+                        }
+                        //result.appDate = Convert.ToDateTime(model.appDate);
                         result.mb = model.userID;
                         result.md = System.DateTime.Now;
                         result.appointmentStatus = "C";
@@ -402,7 +430,23 @@ namespace RestAPIs.Controllers
                     DateTime mydateTime = DateTime.ParseExact(model.appTime,
                                              "hh:mm tt", CultureInfo.InvariantCulture);
                     result.appTime = mydateTime.ToUniversalTime().TimeOfDay;
-                     result.appDate = Convert.ToDateTime(model.appDate);
+                    //date format start
+                    string dateString = model.appDate.Trim();
+                    string format = "dd/MM/yyyy";
+                    CultureInfo provider = CultureInfo.InvariantCulture;
+                    try
+                    {
+                        DateTime resultedDate = DateTime.ParseExact(dateString, format, provider);
+                        Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
+                        //app.appDate = result;
+                       DateTime utcappDateTime = resultedDate + mydateTime.TimeOfDay;
+                       result.appDate = utcappDateTime.ToUniversalTime().Date;
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("{0} is not in the correct format.", dateString);
+                    }
+                    //result.appDate = Convert.ToDateTime(model.appDate);
                         result.mb = model.userID;
                         result.md = System.DateTime.Now;
                         result.appointmentStatus = "C";
@@ -429,8 +473,23 @@ namespace RestAPIs.Controllers
                     DateTime mydateTime = DateTime.ParseExact(model.appTime,
                                              "hh:mm tt", CultureInfo.InvariantCulture);
                     result.appTime = mydateTime.ToUniversalTime().TimeOfDay;
-                   
-                    result.appDate = Convert.ToDateTime(model.appDate);
+                    //date format start
+                    string dateString = model.appDate.Trim();
+                    string format = "dd/MM/yyyy";
+                    CultureInfo provider = CultureInfo.InvariantCulture;
+                    try
+                    {
+                        DateTime resultedDate = DateTime.ParseExact(dateString, format, provider);
+                        Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
+                        //app.appDate = result;
+                        DateTime utcappDateTime = resultedDate + mydateTime.TimeOfDay;
+                        result.appDate = utcappDateTime.ToUniversalTime().Date;
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("{0} is not in the correct format.", dateString);
+                    }
+                    //result.appDate = Convert.ToDateTime(model.appDate);
                     result.mb = model.userID;
                     result.md = System.DateTime.Now;
                     result.appointmentStatus = "C";

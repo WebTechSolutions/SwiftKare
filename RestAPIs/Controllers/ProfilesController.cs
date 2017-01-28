@@ -95,23 +95,24 @@ namespace RestAPIs.Controllers
         {
 
             Doctor doctor = new Doctor();
+            var oDoctorProfileVM = new DoctorProfileVM();
             try
             {
 
-                if (doctorID == 0)
-                {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Doctor ID is not valid." });
-                    return response;
-                }
+                //if (doctorID == 0)
+                //{
+                //    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Doctor ID is not valid." });
+                //    return response;
+                //}
                 doctor = db.Doctors.Where(m => m.doctorID == doctorID && m.active == true).FirstOrDefault();
-                if (doctor == null)
+                if (doctor != null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Doctor does not exist." });
-                    return response;
-                }
-                else
-                {
-                    var oDoctorProfileVM = new DoctorProfileVM();
+                    //response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Doctor does not exist." });
+                    //return response;
+                //}
+                //else
+                //{
+                    
 
                     oDoctorProfileVM = (from l in db.Doctors
                                         where l.active == true && l.doctorID == doctorID
@@ -164,10 +165,10 @@ namespace RestAPIs.Controllers
                         oDoctorProfileVM.LicenseStates = db.DoctorLicenseStates.Where(x => x.doctorID == doctorID).Select(x => x.stateName).ToArray();
                     }
 
-                    response = Request.CreateResponse(HttpStatusCode.OK, oDoctorProfileVM);
-                    return response;
+                    
                 }
-
+                response = Request.CreateResponse(HttpStatusCode.OK, oDoctorProfileVM);
+                return response;
             }
             catch (Exception ex)
             {
@@ -649,22 +650,23 @@ namespace RestAPIs.Controllers
         public HttpResponseMessage GetPatientProfileViewOnly(long patientID)
         {
             Patient patient = new Patient();
+            var oPatientProfileVM = new PatientProfileWithExtraInfoVM();
             try
             {
-                if (patientID == 0)
-                {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient ID is not valid." });
-                    return response;
-                }
+                //if (patientID == 0)
+                //{
+                //    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient ID is not valid." });
+                //    return response;
+                //}
                 patient = db.Patients.Where(m => m.patientID == patientID && m.active == true).FirstOrDefault();
-                if (patient == null)
+                if (patient != null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient does not exist." });
-                    return response;
-                }
-                else
-                {
-                    var oPatientProfileVM = new PatientProfileWithExtraInfoVM();
+                //    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient does not exist." });
+                //    return response;
+                //}
+                //else
+                //{
+                    
 
                     oPatientProfileVM = (from l in db.Patients
                                          where l.active == true && l.patientID == patientID
@@ -734,10 +736,10 @@ namespace RestAPIs.Controllers
                                       }).ToList();
 
 
-                    response = Request.CreateResponse(HttpStatusCode.OK, oPatientProfileVM);
-                    return response;
+                    
                 }
-
+                response = Request.CreateResponse(HttpStatusCode.OK, oPatientProfileVM);
+                return response;
             }
             catch (Exception ex)
             {
