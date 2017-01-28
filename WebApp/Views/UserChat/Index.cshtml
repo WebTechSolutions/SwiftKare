@@ -405,7 +405,9 @@
                     UserName: '@SessionHandler.UserInfo.Email',
                     FirstName: '@SessionHandler.UserInfo.FirstName',
                     LastName: '@SessionHandler.UserInfo.LastName',
-                    UserType: userRole
+                    UserType: userRole,
+                    UserID: -1
+                    //UserID -1 is the indication that user is busy
                 });
 
             chat.server.adminJoin().done(function () {

@@ -533,7 +533,8 @@
 
                 for (var i = 0; i < message.length; i++) {
                     console.log(message[i].Value.UserType);
-                    if (message[i].Value.UserType == 'Doctor') {
+                    if (message[i].Value.UserID != -1) //-1 means doctor is bussy with other call
+                    {
                         availableDoctors.doctor.push({
                             connectionId: message[i].Key,
                             firstName: message[i].Value.FirstName,

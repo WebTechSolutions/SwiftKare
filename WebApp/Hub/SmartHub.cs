@@ -131,6 +131,7 @@ namespace WebApp.Hub
             data.Connected = DateTime.Now.ToString("f");
             data.ConnectionId = Context.ConnectionId;
             data.UserGroup = "doctors";
+            
 
 
             //data.Sid = SessionHandler.UserInfo.Id;
