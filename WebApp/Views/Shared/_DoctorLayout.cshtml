@@ -440,7 +440,7 @@
                     var txt = "";
                     //alert(msg);
                     var fromJson = JSON.parse(msg);
-                    alert(fromJson.status);
+                   // alert(fromJson.status);
 
                     if (fromJson.status == 'consultID') {
                         alert('consultID recieved:' + fromJson.name);
@@ -505,6 +505,7 @@
                                 //Redirect doctor to call
                                 window.location = '@Url.Action("Index","UserChat")';
                             }
+
                             else
                                 alert('Err in generating tokbox info');
                         });
