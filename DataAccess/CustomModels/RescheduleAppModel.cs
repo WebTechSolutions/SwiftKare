@@ -113,6 +113,7 @@ namespace DataAccess.CustomModels
 
     public class PatientVM
     {
+        public long patientid { get; set; }
         public string ProfilePhotoBase64 { get; set; }
         public byte[] patPicture { get; set; }
         public string patientName { get; set; }

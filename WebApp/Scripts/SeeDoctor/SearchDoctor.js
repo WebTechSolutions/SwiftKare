@@ -349,7 +349,7 @@ function SearchDoctor(patientID) {
                                     "<i class='crl fa fa-circle clsAvailableSpot' aria-hidden='true' style='color: red; cursor: pointer;font-size: 12px; position:absolute; right:2%;'></i>" +
                                     "<img src='"+ response.DoctorModel.doctor[item].ProfilePhotoBase64 + "' alt='' class='img-circle img-responsive m-b-10 m-t-0' style='margin: 0 auto;display: inline-block;'>" +
                                     "<h2 class='m-0'>" +
-                                     " <a href='#' class='thumbnail-col-inner m-b-15' data-toggle='modal' data-target='#myModal2' style='word-wrap: break-word;font-size: 12px'>Dr." +
+                                     " <a href='' onclick='showProfile("+response.DoctorModel.doctor[item].doctorID+")' id='viewprofile' data-toggle='modal' data-target='#myModal8' style='word-wrap: break-word;font-size: 12px'>Dr." +
                                       response.DoctorModel.doctor[item].firstName + "&nbsp;" + response.DoctorModel.doctor[item].lastName + "</a>" +
                                       
                                      "</h2>" +

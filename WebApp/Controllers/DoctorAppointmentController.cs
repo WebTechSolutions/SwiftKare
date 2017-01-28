@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using WebApp.Helper;
 using WebApp.Repositories.DoctorRepositories;
+using WebApp.Repositories.ProfileRepositories;
 
 namespace WebApp.Controllers
 {
@@ -172,6 +173,28 @@ namespace WebApp.Controllers
 
         }
 
+        public PartialViewResult PatientProfile(long patientID)
+        {
+            try
+            {
+                ProfileRepository oProfileRepository = new ProfileRepository();
+                var oModel = oProfileRepository.GetPatientProfileViewOnly(patientID);
+                if (oModel != null)
+                {
+                    oModel.ConvertByteArrayToBase64();
 
+                }
+
+                return PartialView("PatientProfileView", oModel);
+
+            }
+
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                ViewBag.Error = ex.Response.ReasonPhrase.ToString();
+                ViewBag.Success = "";
+            }
+            return PartialView("PatientProfileView");
+        }
     }
 }

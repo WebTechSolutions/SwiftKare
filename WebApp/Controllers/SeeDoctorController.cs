@@ -16,6 +16,7 @@ using System.Configuration;
 using WebApp.Helper;
 using System.Globalization;
 using Newtonsoft.Json;
+using WebApp.Repositories.ProfileRepositories;
 
 namespace WebApp.Controllers
 {
@@ -959,6 +960,29 @@ namespace WebApp.Controllers
                 return Json(new { Message = ex.Response });
             }
 
+        }
+        public PartialViewResult DoctorProfile(long doctorID)
+        {
+            try
+            {
+                ProfileRepository oProfileRepository = new ProfileRepository();
+                var oModel = oProfileRepository.GetDoctorProfileWithAllValues(doctorID);
+                if (oModel != null)
+                {
+                    oModel.ConvertByteArrayToBase64();
+
+                }
+
+                return PartialView("DoctorProfileView", oModel);
+
+            }
+
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                ViewBag.Error = ex.Response.ReasonPhrase.ToString();
+                ViewBag.Success = "";
+            }
+            return PartialView("DoctorProfileView");
         }
 
         #region Stripe Pay

@@ -57,6 +57,7 @@ namespace RestAPIs.Controllers
                                                where r.patientID == cn.patientID && r.active == true
                                                select new
                                                {
+                                                   patientid = r.patientID,
                                                    patPicture = r.picture,
                                                    patientName = r.firstName + " " + r.lastName,
                                                    patientGender = r.gender,

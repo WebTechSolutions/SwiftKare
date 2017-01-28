@@ -342,6 +342,7 @@
             appType = type;
         }
         function makeCallToDoctor(e) {
+            showAlert("Alert", "Please wait , we are taking doctor consent for the consult.");
             setAppType("L");
             var docId = $(e).attr("data-doctorid");
 
@@ -354,7 +355,7 @@
             }
 
             setDoctorID($(e).attr("data-doctorid"));
-           
+            
             var curElem = $(e);
 
             //Log Call Info - Starts

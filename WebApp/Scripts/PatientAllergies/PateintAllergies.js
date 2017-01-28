@@ -163,7 +163,7 @@ function bindAllergiesTable(Allergies) {
                                               "</div>"
         ]);
      }
-     $('#allergiestable').DataTable().fnAdjustColumnSizing();
+    
      $('#allergiestable').DataTable().draw();
 }
 function ToJavaScriptDateAllergies(value) {
