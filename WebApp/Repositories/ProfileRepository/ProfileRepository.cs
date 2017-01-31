@@ -58,6 +58,34 @@ namespace WebApp.Repositories.ProfileRepositories
             var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
             return result;
         }
+        public TimeZoneModel GetDoctorTimeZone(string userid)
+        {
+            try
+            {
+                var request = ApiConsumerHelper.GetResponseString("api/getDoctorTimezone?userid=" + userid);
+                var result = JsonConvert.DeserializeObject<TimeZoneModel>(request);
+                return result;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+           
+        }
+        public TimeZoneModel GetPatientTimeZone(string userid)
+        {
+            try
+            {
+                var request = ApiConsumerHelper.GetResponseString("api/getPatientTimezone?userid=" + userid);
+                var result = JsonConvert.DeserializeObject<TimeZoneModel>(request);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
 
         public ApiResultModel ChangePassword(DoctorPasswordModel model)
         {

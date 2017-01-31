@@ -1,4 +1,4 @@
-﻿
+﻿@using WebApp.Helper;
 @{
     ViewBag.Title = "Doctor Timings";
     Layout = "~/Views/Shared/_DoctorLayout.cshtml";
@@ -80,6 +80,23 @@
 </div>
 
 @section Scripts {
+<script type="text/javascript">
+        $(document).ready(function () {
+
+            if('@SessionHandler.UserInfo.timeZone'=='')
+            {
+                //showAlert('Alert', 'Please update your timezone.');
+                new PNotify({
+                    title: 'Info',
+                    text: "Please update your timezone.",
+                    type: 'info',
+                    styling: 'bootstrap3'
+                });
+                window.location = '@Url.Action("Index","DoctorProfile")';
+
+            }
+        });
+</script>
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
 
 

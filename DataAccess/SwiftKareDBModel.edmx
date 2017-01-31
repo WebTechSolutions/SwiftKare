@@ -808,6 +808,7 @@
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
+          <Property Name="zoneName" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="TitleMaster">
           <Key>
@@ -2456,7 +2457,6 @@
           <FunctionImport Name="SP_ViewPatientProfile" ReturnType="Collection(SwiftKareDBModel.SP_ViewPatientProfile_Result)">
           <Parameter Name="patID" Mode="In" Type="Int64" />
           </FunctionImport>
-          <EntitySet Name="TimeZones" EntityType="SwiftKareDBModel.TimeZone" />
           <EntitySet Name="ChatLogs" EntityType="SwiftKareDBModel.ChatLog" />
           <EntitySet Name="LiveReqLogs" EntityType="SwiftKareDBModel.LiveReqLog" />
           <EntitySet Name="VCLogs" EntityType="SwiftKareDBModel.VCLog" />
@@ -2603,6 +2603,7 @@
             <End Role="Patient" EntitySet="Patients" />
             <End Role="UserFile" EntitySet="UserFiles" />
           </AssociationSet>
+          <EntitySet Name="TimeZones" EntityType="SwiftKareDBModel.TimeZone" />
           </EntityContainer>
         <ComplexType Name="SP_AppointmentReport_Result">
           <Property Type="Int64" Name="appID" Nullable="false" />
@@ -3730,18 +3731,6 @@
           <Property Type="Int64" Name="surgeryID" Nullable="true" />
           <Property Type="String" Name="bodyPart" Nullable="true" MaxLength="100" />
         </ComplexType>
-        <EntityType Name="TimeZone">
-          <Key>
-            <PropertyRef Name="zoneID" />
-          </Key>
-          <Property Name="zoneID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="timeZonee" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cd" Type="DateTime" Precision="3" />
-          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="md" Type="DateTime" Precision="3" />
-          <Property Name="active" Type="Boolean" />
-        </EntityType>
         <EntityType Name="ChatLog">
           <Key>
             <PropertyRef Name="chatID" />
@@ -4406,6 +4395,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="TimeZone">
+          <Key>
+            <PropertyRef Name="zoneID" />
+          </Key>
+          <Property Name="zoneID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="timeZonee" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+          <Property Name="zoneName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5465,19 +5467,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="TimeZones">
-            <EntityTypeMapping TypeName="SwiftKareDBModel.TimeZone">
-              <MappingFragment StoreEntitySet="TimeZones">
-                <ScalarProperty Name="active" ColumnName="active" />
-                <ScalarProperty Name="md" ColumnName="md" />
-                <ScalarProperty Name="mb" ColumnName="mb" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-                <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="timeZonee" ColumnName="timeZonee" />
-                <ScalarProperty Name="zoneID" ColumnName="zoneID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ChatLogs">
             <EntityTypeMapping TypeName="SwiftKareDBModel.ChatLog">
               <MappingFragment StoreEntitySet="ChatLog">
@@ -5953,6 +5942,20 @@
                 <ScalarProperty Name="lastName" ColumnName="lastName" />
                 <ScalarProperty Name="firstName" ColumnName="firstName" />
                 <ScalarProperty Name="patientID" ColumnName="patientID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TimeZones">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.TimeZone">
+              <MappingFragment StoreEntitySet="TimeZones">
+                <ScalarProperty Name="zoneName" ColumnName="zoneName" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="timeZonee" ColumnName="timeZonee" />
+                <ScalarProperty Name="zoneID" ColumnName="zoneID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

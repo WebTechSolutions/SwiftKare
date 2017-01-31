@@ -820,7 +820,17 @@
 
     };
     $(document).ready(function () {
+        if('@SessionHandler.UserInfo.timeZone'=='')
+        {
+            new PNotify({
+                title: 'Info',
+                text: "Please update your timezone.",
+                type: 'info',
+                styling: 'bootstrap3'
+            });
+            window.location = '@Url.Action("Index","PatientProfile")';
 
+        }
         GetAllLanguages();
         GetAllSpecialities();
         GetROV('@SessionHandler.UserInfo.Id');

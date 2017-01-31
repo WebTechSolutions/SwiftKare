@@ -184,6 +184,7 @@ namespace RestAPIs.Controllers
         {
 
             Doctor doctor = new Doctor();
+            var timezoneid = db.TimeZones.Where(x => x.timeZonee == model.TimeZone).Select(x => x.zoneName).FirstOrDefault();
             try
             {
                 if (model.FirstName == null || model.FirstName == "" || !Regex.IsMatch(model.FirstName, "^[0-9a-zA-Z ]+$"))
@@ -234,8 +235,8 @@ namespace RestAPIs.Controllers
                     doctor.gender = model.Gender;
 
                     doctor.dob = model.DOB;
-                    doctor.timezone = model.TimeZone;
-
+                    //doctor.timezone = model.TimeZone;
+                    doctor.timezone = timezoneid.ToString();
                     doctor.aboutMe = model.AboutMe;
                     doctor.specialization = model.Specialization;
                     doctor.publication = model.Publication;
@@ -348,8 +349,52 @@ namespace RestAPIs.Controllers
             }
 
         }
+        
+        [Route("api/getDoctorTimezone")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage getDoctorTimezone(string userid)
+        {
 
+            try
+            {
+                var timezone = (from l in db.Doctors
+                                where l.userId == userid
+                                select new
+                                {
+                                    zonename = l.timezone,
+                                }).FirstOrDefault();
+                response = Request.CreateResponse(HttpStatusCode.OK, timezone);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "getDoctorTimezone in ProfilesController");
+            }
 
+        }
+
+        [Route("api/getPatientTimezone")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage getPatientTimezone(string userid)
+        {
+
+            try
+            {
+                var timezone = (from l in db.Patients
+                                where l.userId == userid
+                                select new
+                                {
+                                    zonename = l.timezone,
+                                }).FirstOrDefault();
+                response = Request.CreateResponse(HttpStatusCode.OK, timezone);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "getPatientTimezone in ProfilesController");
+            }
+
+        }
         [Route("api/updateConsultCharges")]
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> UpdateConsultCharges(UpdateConsultCharges model)
@@ -1981,6 +2026,7 @@ namespace RestAPIs.Controllers
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
             response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Following Error occurred at method: " + Action + "\n" + ex.Message });
+            response.ReasonPhrase = ex.Message;
             return response;
         }
         public string GetAge(DateTime? patientDOB)

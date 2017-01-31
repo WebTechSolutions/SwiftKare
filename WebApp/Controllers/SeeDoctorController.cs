@@ -360,17 +360,13 @@ namespace WebApp.Controllers
                 var formattedTime = dateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
                 timeSlots.RemoveAt(i);
                 timeSlots.Insert(i, formattedTime);
-                // if (doctimings.Hours<12)
-                // {
-                //     timeSlots.RemoveAt(i);
-                //     timeSlots.Insert(i, doctimings.ToString(@"hh\:mm") + " AM");
-                // }
-                //else if(doctimings.Hours >= 12)
-                // {
-                //     timeSlots.RemoveAt(i);
-                //     timeSlots.Insert(i, doctimings.ToString(@"hh\:mm") + " PM");
-                // }
+                
             }
+           if(timeSlots.Count>0)
+            {
+                timeSlots.RemoveAt(timeSlots.Count - 1);
+            }
+           
             return timeSlots;
         }
 
