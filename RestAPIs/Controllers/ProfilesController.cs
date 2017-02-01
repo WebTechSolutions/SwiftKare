@@ -47,7 +47,7 @@ namespace RestAPIs.Controllers
 
                 var lstTimeZoneVM = (from p in db.TimeZones
                                      where p.active == true
-                                     select new TimeZoneVM { zoneID = p.zoneID, timeZone = p.timeZonee }).ToList();
+                                     select new TimeZoneVM { zoneID = p.zoneID, timeZone = p.timeZonee, zoneName = p.zoneName }).ToList();
 
                 var lstCityVM = (from c in db.Cities
                                  where c.active == true
@@ -527,7 +527,7 @@ namespace RestAPIs.Controllers
 
                 var lstTimeZoneVM = (from p in db.TimeZones
                                      where p.active == true
-                                     select new TimeZoneVM { zoneID = p.zoneID, timeZone = p.timeZonee }).ToList();
+                                     select new TimeZoneVM { zoneID = p.zoneID, timeZone = p.timeZonee,zoneName=p.zoneName }).ToList();
 
                 var lstCityVM = (from c in db.Cities
                                  where c.active == true
@@ -1015,7 +1015,7 @@ namespace RestAPIs.Controllers
 
             try
             {
-                var timezones = (from tz in db.TimeZones where tz.active == true select new TimeZoneVM { zoneID = tz.zoneID, timeZone = tz.timeZonee }).ToList();
+                var timezones = (from tz in db.TimeZones where tz.active == true select new TimeZoneVM { zoneID = tz.zoneID, timeZone = tz.timeZonee , zoneName = tz.zoneName }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, timezones);
                 return response;
 

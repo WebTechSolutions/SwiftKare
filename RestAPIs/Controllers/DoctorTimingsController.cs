@@ -12,6 +12,7 @@ using DataAccess;
 using DataAccess.CustomModels;
 using System.Globalization;
 using RestAPIs.Helper;
+using System.Web.WebPages.Html;
 
 namespace RestAPIs.Controllers
 {
@@ -117,6 +118,7 @@ namespace RestAPIs.Controllers
         [ResponseType(typeof(DoctorTimingsModel))]
         public async Task<IHttpActionResult> PostDoctorTiming(DoctorTimingsModel doctorTimingModel)
         {
+            
             var doctorTiming = new DoctorTiming();
             if (!ModelState.IsValid)
             {

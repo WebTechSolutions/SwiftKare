@@ -391,6 +391,10 @@ namespace DataAccess.CustomModels
     {
         public long zoneID { get; set; }
         public string timeZone { get; set; }
+
+        public string zoneName { get; set; }
+
+        
     }
 
     public class CityVM

@@ -543,6 +543,8 @@
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
           <Property Name="userId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="pharmacy" Type="varchar" MaxLength="1000" />
+          <Property Name="pharmacyid" Type="bigint" />
           <Property Name="title" Type="varchar" MaxLength="10" />
           <Property Name="height" Type="int" />
           <Property Name="weight" Type="int" />
@@ -555,8 +557,6 @@
           <Property Name="iOSToken" Type="varchar" MaxLength="1000" />
           <Property Name="AndroidToken" Type="varchar" MaxLength="1000" />
           <Property Name="DoseSpotPatientId" Type="varchar" MaxLength="10" />
-          <Property Name="pharmacyid" Type="bigint" />
-          <Property Name="pharmacy" Type="varchar" MaxLength="1000" />
           <Property Name="pharmacyaddress" Type="varchar" MaxLength="100" />
           <Property Name="pharmacycitystatezip" Type="varchar" MaxLength="100" />
         </EntityType>
@@ -808,6 +808,7 @@
           <Property Name="mb" Type="varchar" MaxLength="50" />
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
+          <Property Name="zoneName" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="TitleMaster">
           <Key>
@@ -3741,6 +3742,7 @@
           <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
+          <Property Name="zoneName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="ChatLog">
           <Key>
@@ -5468,6 +5470,7 @@
           <EntitySetMapping Name="TimeZones">
             <EntityTypeMapping TypeName="SwiftKareDBModel.TimeZone">
               <MappingFragment StoreEntitySet="TimeZones">
+                <ScalarProperty Name="zoneName" ColumnName="zoneName" />
                 <ScalarProperty Name="active" ColumnName="active" />
                 <ScalarProperty Name="md" ColumnName="md" />
                 <ScalarProperty Name="mb" ColumnName="mb" />

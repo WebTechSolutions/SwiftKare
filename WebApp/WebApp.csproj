@@ -77,6 +77,18 @@
     <Reference Include="OpenTok">
       <HintPath>..\packages\OpenTok.2.3.0\lib\net35\OpenTok.dll</HintPath>
     </Reference>
+    <Reference Include="Orcus.PushNotifications, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Orcus.PushNotifications.dll</HintPath>
+    </Reference>
+    <Reference Include="PushSharp.Apple, Version=4.0.10.0, Culture=neutral, PublicKeyToken=cf74b75eab2c0170, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\PushSharp.Apple.dll</HintPath>
+    </Reference>
+    <Reference Include="PushSharp.Core, Version=4.0.10.0, Culture=neutral, PublicKeyToken=cf74b75eab2c0170, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\PushSharp.Core.dll</HintPath>
+    </Reference>
     <Reference Include="SendGrid">
       <HintPath>..\packages\Sendgrid.6.3.4\lib\SendGrid.dll</HintPath>
     </Reference>
@@ -263,12 +275,19 @@
     <Compile Include="Models\Admin\ComplexModel\AdminRole.cs" />
     <Compile Include="Models\Admin\Utilities\Utility.cs" />
     <Compile Include="Models\ApiConsumerModels.cs" />
+    <Compile Include="Models\APNSNotification.cs" />
+    <Compile Include="Models\APNSNotificationsRepository.cs" />
     <Compile Include="Models\ApplicationGlobalVariables.cs" />
     <Compile Include="Models\AppSettings.cs" />
     <Compile Include="Models\BookAppointment.cs" />
     <Compile Include="Models\DoctorTimingsViewModel.cs" />
     <Compile Include="Models\ForgotPasswordCodeModel.cs" />
+    <Compile Include="Models\IAPNSNotificationsRepository.cs" />
+    <Compile Include="Models\IIOSPushNotificationService.cs" />
+    <Compile Include="Models\IOSPushNotificationService.cs" />
+    <Compile Include="Models\IPushNotificationService.cs" />
     <Compile Include="Models\LoginRegisterViewModel.cs" />
+    <Compile Include="Models\PN_AppModel.cs" />
     <Compile Include="Models\SearchModel.cs" />
     <Compile Include="Models\SeeDoctorDTO.cs" />
     <Compile Include="Models\SeeDoctorViewModel.cs" />
