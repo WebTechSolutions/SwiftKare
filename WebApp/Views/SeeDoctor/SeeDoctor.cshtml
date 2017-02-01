@@ -286,8 +286,8 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title" id="timingsmodaltitle"></h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -10px;color: #0035ff;"><span aria-hidden="true">&times;</span></button>  
+                                                                          <h4 class="modal-title" id="timingsmodaltitle"></h4>
                                     </div><!--/.modal header-->
 
                                     <div class="modal-body text-left">
@@ -854,6 +854,7 @@
             targetButton: "#btnProceedWithPayment",
             actionUrl: '@Url.Action("ProceedWithPay", "seedoctor")',
             handleSuccess: function () {
+                showLoader();
                 CreateAppointment(@ViewBag.PatienID,@amount);
             },
             handleFailure: function () {
@@ -907,6 +908,7 @@
 
                 if(response.Message!=undefined)
                 {
+                    hideLoader();
                     new PNotify({
                         title: 'Error',
                         text: response.Message.ReasonPhrase,
@@ -918,6 +920,7 @@
                 if (result.Success == true) {
 
                     if (result.ApiResultModel.message != "") {
+                        hideLoader();
                         new PNotify({
                             title: 'Error',
                             text: result.ApiResultModel.message,
@@ -926,7 +929,8 @@
                         });
                     }
                     else if (result.ApiResultModel.message == "") {
-
+                        if (appType == "S")
+                        hideLoader();
                         new PNotify({
                             title: 'Success',
                             text: "Appointment is scheduled successfully.",
@@ -940,8 +944,9 @@
                             window.location.href = '/Appointment/Index/';
                         }
                         if (appType == "L")
-                        { console.log('response after create consult:');
-                        console.log(response);
+                        { 
+                            console.log('Live Appointment');
+                       
                         createConsultFromPatient($("#doctorid").val(), patientID, result.ApiResultModel.ID);}
 
 
@@ -976,6 +981,7 @@
 
                 if (response.Success == true) {
                     if (response.ApiResultModel.message != "") {
+                        hideLoader();
                         new PNotify({
                             title: 'Error',
                             text: response.ApiResultModel.message,
@@ -984,13 +990,13 @@
                         });
                     }
                     else if (response.ApiResultModel.message == "") {
-
-                        new PNotify({
+                        console.log('consult created');
+                      /*  new PNotify({
                             title: 'Success',
                             text: "Consultation is created successfully.",
                             type: 'info', addclass: 'dark',
                             styling: 'bootstrap3'
-                        });
+                        });*/
 
                         if(appType="L")
                         {
@@ -1022,8 +1028,14 @@
                                     UserGroup: 'doctors'
                                 });
                             }
-                        
-                            alert("Payment successful. Your consultation will be started soon.");
+                            hideLoader();
+                            new PNotify({
+                                title: 'Success',
+                                text: "Payment Successfull.Your consultation will be started soon.",
+                                type: 'info', addclass: 'dark',
+                                styling: 'bootstrap3'
+                            });
+                            
                             var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
                             //check for apptype if l then go here
                             //create consult here
@@ -1040,7 +1052,7 @@
                             });
 
                             //Redirect User for video chat
-                            showAlert("Payment Alert","Payment successful. Your consultation will be started soon.");
+                           // showAlert("Payment Alert","Payment successful. Your consultation will be started soon.");
                             //alert("Payment successful. Your consultation will be started soon.");
                             //location.reload();
                         }
