@@ -133,7 +133,10 @@ namespace RestAPIs.Controllers
             DateTime dateTimeTo = DateTime.ParseExact(doctorTimingModel.to,
                                 "hh:mm tt", CultureInfo.InvariantCulture);
 
-            TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");//need to get zone info from db
+            //TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");//need to get zone info from db
+            //get zoneid from db for current doctor
+            var timezoneid = db.Doctors.Where(d => d.doctorID == doctorTimingModel.doctorID).Select(d => d.timezone).FirstOrDefault();
+            TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
             doctorTiming.from = TimeZoneInfo.ConvertTimeToUtc(dateTimeFrom, zoneInfo).TimeOfDay;
             doctorTiming.to = TimeZoneInfo.ConvertTimeToUtc(dateTimeTo, zoneInfo).TimeOfDay;
             doctorTiming.active = true;

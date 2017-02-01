@@ -471,3 +471,22 @@
     }
     $(".scheduler").addClass("current-page");
 </script> 
+
+<script type="text/javascript">
+        $(document).ready(function () {
+
+
+
+            if('@SessionHandler.UserInfo.timeZone'=='')
+            {
+                new PNotify({
+                    title: 'Info',
+                    text: "Please update your timezone.",
+                    type: 'info',
+                    styling: 'bootstrap3'
+                });
+                window.location = '@Url.Action("Index","PatientProfile")';
+
+            }
+        });
+</script>

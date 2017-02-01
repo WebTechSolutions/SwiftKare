@@ -181,7 +181,7 @@
                 foreach (var item in Model.AppFiles)
                 {
 
-                    <button id="@item.fileID" type="button" class="btn btn-default" style="display:block; font-size:10px" onclick="downloadfile(@item.fileID)">
+                    <button id="@item.fileID" type="button" class="btn btn-default" style="display:block; font-size:10px" onclick="downloadFile(@item.fileID)">
                        @item.FileName.Trim()
                     </button>
                 }

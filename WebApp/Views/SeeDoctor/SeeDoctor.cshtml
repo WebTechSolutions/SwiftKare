@@ -273,13 +273,13 @@
                         </div>@*step1*@
 
                         <input type="text" style="display:none" id="pvdocid" value="0">
-                        <div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8" >
+                        <div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8">
                             <div class="modal-dialog" role="document" style="border-bottom: 0;">
                                 <div id='DoctorProfileContent' class="modal-content" style="overflow:auto; border-radius: 0;">
-                                    
+
                                 </div>
-                               
-                               
+
+
                             </div>
                         </div><!-- col4 -->
                         <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
@@ -820,7 +820,17 @@
 
     };
     $(document).ready(function () {
+        if('@SessionHandler.UserInfo.timeZone'=='')
+        {
+            new PNotify({
+                title: 'Info',
+                text: "Please update your timezone.",
+                type: 'info',
+                styling: 'bootstrap3'
+            });
+            window.location = '@Url.Action("Index","PatientProfile")';
 
+        }
         GetAllLanguages();
         GetAllSpecialities();
         GetROV('@SessionHandler.UserInfo.Id');

@@ -3,17 +3,13 @@
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div><!--/.modal header-->
 
-<div class="modal-body text-left" style="width: 1000px;margin-left: -147px;margin-right: 105px;">
-    <div class="right_col">
-        <div class="clearfix"></div>
+<div class="modal-body text-left">
+    <div>
+
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
-                    <div class="x_title">
-                        <h2>Patient Profile</h2>
-                        
-                        <div class="clearfix"></div>
-                    </div>
+
                     <div class="x_content">
                         <div class="row">
                             <div class="col-sm-12">
@@ -30,7 +26,7 @@
                                         <h2 class="text-center">@Model.FirstName @Model.LastName <br> <small style="color: #73879C;">(@Model.GetAge())</small></h2>
                                         <p class="m-tb-15 text-center">
                                             <i class="fa fa-language" aria-hidden="true"></i>
-                                            
+
                                             @if (Model.Languages != null && Model.Languages.Count() > 0)
                                             {
                                                 foreach (var item in Model.Languages)
@@ -166,51 +162,51 @@
     </div>
 </div><!--/.modal body-->
 <script>
-        function myMap() {
+    function myMap() {
 
-            var lat = '@Model.Latitude';
-            var lon = '@Model.Longitude';
+        var lat = '@Model.Latitude';
+        var lon = '@Model.Longitude';
 
-            if (lat == '' && lon == '') {
-                var mapCanvas = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 8
+        if (lat == '' && lon == '') {
+            var mapCanvas = new google.maps.Map(document.getElementById('map'), {
+                zoom: 8
+            });
+
+            var geocoder = new google.maps.Geocoder();
+            geocodeAddress(geocoder, mapCanvas, '@Model.City');
+        }
+        else {
+
+            var mapCanvas = document.getElementById('map');
+
+            var mapOptions = {
+                center: new google.maps.LatLng(lat, lon),
+                zoom: 5
+            }
+            var map = new google.maps.Map(mapCanvas, mapOptions);
+        }
+        google.maps.event.addListenerOnce(map, 'idle', function () {
+
+            google.maps.event.trigger(map, 'resize');
+
+        });
+
+    }
+
+    function geocodeAddress(geocoder, resultsMap, address) {
+        geocoder.geocode({ 'address': address }, function (results, status) {
+            if (status === 'OK') {
+                resultsMap.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: resultsMap,
+                    position: results[0].geometry.location
                 });
-
-                var geocoder = new google.maps.Geocoder();
-                geocodeAddress(geocoder, mapCanvas, '@Model.City');
+            } else {
+                //alert('Geocode was not successful for the following reason: ' + status);
+                console.log('Geocode was not successful for the following reason: ' + status);
             }
-            else {
-
-                var mapCanvas = document.getElementById('map');
-
-                var mapOptions = {
-                    center: new google.maps.LatLng(lat, lon),
-                    zoom: 5
-                }
-                var map = new google.maps.Map(mapCanvas, mapOptions);
-            }
-            google.maps.event.addListenerOnce(map, 'idle', function () {
-
-                google.maps.event.trigger(map, 'resize');
-
-            });
-
-        }
-
-        function geocodeAddress(geocoder, resultsMap, address) {
-            geocoder.geocode({ 'address': address }, function (results, status) {
-                if (status === 'OK') {
-                    resultsMap.setCenter(results[0].geometry.location);
-                    var marker = new google.maps.Marker({
-                        map: resultsMap,
-                        position: results[0].geometry.location
-                    });
-                } else {
-                    //alert('Geocode was not successful for the following reason: ' + status);
-                    console.log('Geocode was not successful for the following reason: ' + status);
-                }
-            });
-        }
+        });
+    }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEPd0Djg3V92IbdK1u77KPZCWa-1se_H8&callback=myMap"></script>
 

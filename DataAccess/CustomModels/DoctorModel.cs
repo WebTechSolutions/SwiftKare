@@ -37,4 +37,9 @@ namespace DataAccess.CustomModels
         public string firstName { get; set; }
         public byte[] picture { get; set; }
     }
+
+    public class TimeZoneModel
+    {
+        public string zonename { get; set; }
+    }
 }
