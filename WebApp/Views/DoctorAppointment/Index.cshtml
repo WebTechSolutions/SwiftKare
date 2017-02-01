@@ -135,7 +135,7 @@
      
     
 </div>
-<div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8" style="z-index: 9998;">
+@*<div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8" style="z-index: 9998;">
     <div class="modal-dialog" role="document">
         <div id='PatientProfileContent' class="modal-content" style="overflow:auto; border-radius: 0;width: 912px;margin-left: 92px;">
             @{
@@ -145,16 +145,38 @@
 
 
     </div>
-</div><!-- col4 -->   
+</div>*@<!-- col4 -->   
+<div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8">
+    <div class="modal-dialog" role="document" style="border-bottom: 0;">
+        <div id='PatientProfileContent' class="modal-content" style="overflow:auto; border-radius: 0;">
+            @{
+                Html.RenderAction("PatientProfile", "DoctorAppointment", new { patientID = 0 });
+            }
+        </div>
+
+
+    </div>
+</div><!-- col4 -->
+<iframe id="iframeDownload" style="display:none;"></iframe>
+
 <!-- /page content -->
 <!-- Load View App Detail Popup -->
 <script>
+    function downloadFile(fileId) {
+
+        if (confirm("Are you sure you want to downlod file?")) {
+            var cUrl = "@Url.Action("Download", "PatientFiles")?fileId=" + fileId;
+
+            $('#iframeDownload').attr('src', cUrl);
+            $('#iframeDownload').load();
+        }
+    }
     var currentTab = "";
     $(document).ready(function () {
         currentTab = "U";
 
     });
-    
+
     function showProfile(patientid) {
 
         var id = patientid;
@@ -166,7 +188,7 @@
     };
 
    function reloadContainer(callback) {
-        
+
         $("#divReschedule").load('@Url.Action("PartialDoctorReschedule", "DoctorAppointment")', function () {
             callback();
         });

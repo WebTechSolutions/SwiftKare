@@ -799,6 +799,7 @@ namespace RestAPIs.Controllers
         public async Task<HttpResponseMessage> UpdatePatientProfileWithAllValues(long patientID, PatientProfileVM model)
         {
             Patient patient = new Patient();
+            var timezoneid = db.TimeZones.Where(x => x.timeZonee == model.TimeZone).Select(x => x.zoneName).FirstOrDefault();
             try
             {
                 if (model.FirstName == null || model.FirstName == "" || !Regex.IsMatch(model.FirstName, "^[0-9a-zA-Z ]+$"))
@@ -849,7 +850,7 @@ namespace RestAPIs.Controllers
                     patient.gender = model.Gender;
 
                     patient.dob = model.DOB;
-                    patient.timezone = model.TimeZone;
+                    patient.timezone = timezoneid.ToString();
 
                     patient.height = model.Height;
                     patient.weight = model.Weight;

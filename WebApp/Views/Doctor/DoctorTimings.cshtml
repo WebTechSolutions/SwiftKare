@@ -260,9 +260,30 @@
                             window.location.href = response.redirectUrl;
                         }
 
-                        if (response == "overlapped")
-                        {
+                        if (response == "overlapped") {
                             showAlert('Alert', 'Timings can not be overlapped across each other');
+                            $.unblockUI();
+                            //alert("Timings can not be overlapped across each other"); 
+                        }
+
+                        if (response == "single day")
+                        {
+                            showAlert('Alert', 'Timings should be within single day.');
+                            $.unblockUI();
+                            //alert("Timings can not be overlapped across each other"); 
+                        }
+                        if (response == "same time") {
+                            showAlert('Alert', 'From Time and To Time can not be same.');
+                            $.unblockUI();
+                            //alert("Timings can not be overlapped across each other"); 
+                        }
+                        if (response == "from time greater than to time") {
+                            showAlert('Alert', 'From Time can not be greater than To Time.');
+                            $.unblockUI();
+                            //alert("Timings can not be overlapped across each other"); 
+                        }
+                        if (response == "time range") {
+                            showAlert('Alert', 'Timespan less than 15 minutes is not allowed.');
                             $.unblockUI();
                             //alert("Timings can not be overlapped across each other"); 
                         }

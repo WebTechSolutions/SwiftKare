@@ -181,7 +181,7 @@
                 foreach (var item in Model.AppFiles)
                 {
 
-                    <button id="@item.fileID" type="button" class="btn btn-default" style="display:block; font-size:10px" onclick="window.open('data:application/pdf;base64, ' +'@System.Convert.ToBase64String(item.fileContent)')">
+                    <button id="@item.fileID" type="button" class="btn btn-default" style="display:block; font-size:10px" onclick="downloadFile(@item.fileID)">
                        @item.FileName.Trim()
                     </button>
                 }

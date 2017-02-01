@@ -217,8 +217,11 @@ namespace RestAPIs.Controllers
                 app.doctorID = model.doctorID;
                 app.patientID = model.patientID;
                 //app.appTime = To24HrTime(model.appTime);
-                          
-                app.appTime= myDateTime.ToUniversalTime().TimeOfDay;
+
+                var timezoneid = db.Patients.Where(d => d.patientID == model.patientID).Select(d => d.timezone).FirstOrDefault();
+                TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
+                app.appTime = TimeZoneInfo.ConvertTimeToUtc(myDateTime, zoneInfo).TimeOfDay;
+                //app.appTime= myDateTime.ToUniversalTime().TimeOfDay;
                // app.appDate = DateTime.ParseExact(model.appDate.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
               //  app.appDate = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate.Trim()));
                 string dateString = model.appDate.Trim();
@@ -388,7 +391,11 @@ namespace RestAPIs.Controllers
                         
                         DateTime mydateTime = DateTime.ParseExact(model.appTime,
                                              "hh:mm tt", CultureInfo.InvariantCulture);
-                        result.appTime = mydateTime.ToUniversalTime().TimeOfDay;//To24HrTime(model.appTime);
+
+                        var timezoneid = db.Patients.Where(d => d.userId == model.userID).Select(d => d.timezone).FirstOrDefault();
+                        TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
+                        result.appTime = TimeZoneInfo.ConvertTimeToUtc(mydateTime, zoneInfo).TimeOfDay;
+                        //result.appTime = mydateTime.ToUniversalTime().TimeOfDay;//To24HrTime(model.appTime);
                         //date format start
                         string dateString = model.appDate.Trim();
                         string dateformat = "dd/MM/yyyy";
@@ -435,7 +442,10 @@ namespace RestAPIs.Controllers
                   
                     DateTime mydateTime = DateTime.ParseExact(model.appTime,
                                              "hh:mm tt", CultureInfo.InvariantCulture);
-                    result.appTime = mydateTime.ToUniversalTime().TimeOfDay;
+                    var timezoneid = db.Patients.Where(d => d.userId == model.userID).Select(d => d.timezone).FirstOrDefault();
+                    TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
+                    result.appTime = TimeZoneInfo.ConvertTimeToUtc(mydateTime, zoneInfo).TimeOfDay;
+                    //result.appTime = mydateTime.ToUniversalTime().TimeOfDay;
                     //date format start
                     string dateString = model.appDate.Trim();
                    // string format = "dd/MM/yyyy";
@@ -478,7 +488,11 @@ namespace RestAPIs.Controllers
                     var formattedTime = DateTime.Now.Date.Add(tempapptime.Value).ToString(@"hh\:mm\:tt");
                     DateTime mydateTime = DateTime.ParseExact(model.appTime,
                                              "hh:mm tt", CultureInfo.InvariantCulture);
-                    result.appTime = mydateTime.ToUniversalTime().TimeOfDay;
+
+                    var timezoneid = db.Patients.Where(d => d.userId == model.userID).Select(d => d.timezone).FirstOrDefault();
+                    TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
+                    result.appTime = TimeZoneInfo.ConvertTimeToUtc(mydateTime, zoneInfo).TimeOfDay;
+                    //result.appTime = mydateTime.ToUniversalTime().TimeOfDay;
                     //date format start
                     string dateString = model.appDate.Trim();
                   //  string format = "dd/MM/yyyy";
@@ -522,7 +536,7 @@ namespace RestAPIs.Controllers
             }
             catch (Exception ex)
             {
-                return ThrowError(ex, "AddAppointments in AppointmentController.");
+                return ThrowError(ex, "RescheduleAppointment in AppointmentController.");
             }
 
            

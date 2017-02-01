@@ -122,7 +122,29 @@ namespace WebApp.Controllers
                     isRedirect = true
                 });
             }
-            //jam
+            if (model.from.Contains("PM"))
+            {
+                if (model.to.Contains("AM"))
+                {
+                    return Json("single day", JsonRequestBehavior.AllowGet);
+                }
+            }
+            if (model.from == model.to)
+            {
+                return Json("same time", JsonRequestBehavior.AllowGet);
+
+            }
+            if (DateTime.ParseExact(model.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <
+                DateTime.ParseExact(model.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay)
+            {
+                return Json("from time greater than to time", JsonRequestBehavior.AllowGet);
+            }
+            TimeSpan diff = DateTime.ParseExact(model.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay -
+                DateTime.ParseExact(model.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+            if (diff.TotalMinutes < 15)
+            {
+                return Json("time range", JsonRequestBehavior.AllowGet);
+            }
             var timingsList = objTimingRepo.GetListByDoctorId(model.doctorID);
             var alreadItems = timingsList
                 .Where(o => o.day == model.day &&

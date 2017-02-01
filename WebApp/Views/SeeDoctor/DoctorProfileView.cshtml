@@ -1,126 +1,135 @@
 ﻿@model DataAccess.CustomModels.DoctorProfileVM
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div><!--/.modal header-->
+<div class="modal-body text-left">
+    <div>
 
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    </div><!--/.modal header-->
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
 
-    <div class="modal-body text-left" style="width: 1000px;margin-left: -147px;margin-right: 105px;">
-        <div class="right_col">
-            <div class="clearfix"></div>
-            <div class="row">
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2>Doctor Profile</h2>
-                            
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div style="width:100%; height: 150px;" id="map"></div>
-                                </div>
+                    <div class="x_content">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div style="width:100%; height: 150px;" id="map"></div>
                             </div>
-                            <div class="row p-30">
-                                <div class="col-lg-4 col-md-4 col-sm-12">
-                                    <div class="dr_info w-bg box-s">
-                                        <div class="map-box">
-                                            <div class="box-inner">
-                                                <img src="@Model.ProfilePhotoBase64" alt="" class="m-b-10 img-circle img-responsive">
-                                            </div>
-                                            <h2 class="text-center">@Model.FirstName @Model.LastName <br> <small style="color: #73879C;">(@Model.GetAge())</small></h2>
-                                            <p class="m-tb-15 text-center">
-                                                <i class="fa fa-language" aria-hidden="true"></i>
-                                                @if (Model.Languages != null && Model.Languages.Count() > 0)
+                        </div>
+                        <div class="row p-30">
+                            <div class="col-lg-4 col-md-4 col-sm-12">
+                                <div class="dr_info w-bg box-s">
+                                    <div class="map-box">
+                                        <div class="box-inner">
+                                            <img src="@Model.ProfilePhotoBase64" alt="" class="m-b-10 img-circle img-responsive">
+                                        </div>
+                                        <a class="hrt" href="#" style="color: #5A738E; left: 10px;"><span class="fa fa-heart-o" aria-hidden="true"></span></a>
+                                        <a class="hrt1" href="#" style="color: #5A738E; left: 10px;"><span class="fa fa-heart" aria-hidden="true"></span></a>
+                                        <i class="popup-circle fa fa-circle" aria-hidden="true" style="color: red;"></i>
+                                        <h2 class="text-center">@Model.FirstName @Model.LastName <br> <small style="color: #73879C;">(@Model.GetAge())</small></h2>
+                                        <p class="text-center m-0" style="color: green;">Available for Call</p>
+                                        <p class="ratings m-t-0 m-b-5" style="text-align: center;">
+
+                                            <a href="#"><span class="fa fa-star"></span></a>
+                                            <a href="#"><span class="fa fa-star"></span></a>
+                                            <a href="#"><span class="fa fa-star"></span></a>
+                                            <a href="#"><span class="fa fa-star"></span></a>
+                                            <a href="#"><span class="fa fa-star-o"></span></a>
+                                        </p>
+                                        <p class="m-tb-15 text-center">
+                                            <i class="fa fa-language" aria-hidden="true"></i>
+                                            @if (Model.Languages != null && Model.Languages.Count() > 0)
+                                            {
+                                                foreach (var item in Model.Languages)
                                                 {
-                                                    foreach (var item in Model.Languages)
-                                                    {
-                                                        <span>@item</span><span>&nbsp;</span>
-                                                    }
+                                                    <span>@item</span><span>&nbsp;</span>
                                                 }
-                                                
-                                            </p>
-                                            <div class="gray-bdr-b-1"></div>
-                                            <p class="m-tb-15"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp Location: @Model.City, @Model.State</p>
-                                            <div class="gray-bdr-b-1"></div>
-                                            <p class="m-tb-15"><i class="fa fa-mobile" aria-hidden="true"></i>&nbsp Mobile: @Model.HomePhone</p>
-                                            <div class="gray-bdr-b-1"></div>
-                                            <p class="m-tb-15">
-                                                <i class="fa fa-circle-o" aria-hidden="true"></i>&nbsp Speciality:
-                                                @if (Model.Speciality != null && Model.Speciality.Count() > 0)
+                                            }
+
+                                        </p>
+                                        <div class="gray-bdr-b-1"></div>
+                                        <p class="m-tb-15"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp Location: @Model.City, @Model.State</p>
+                                        <div class="gray-bdr-b-1"></div>
+                                        <p class="m-tb-15"><i class="fa fa-mobile" aria-hidden="true"></i>&nbsp Mobile: @Model.HomePhone</p>
+                                        <div class="gray-bdr-b-1"></div>
+                                        <p class="m-tb-15">
+                                            <i class="fa fa-circle-o" aria-hidden="true"></i>&nbsp Speciality:
+                                            @if (Model.Speciality != null && Model.Speciality.Count() > 0)
+                                            {
+                                                foreach (var item in Model.Speciality)
                                                 {
-                                                    foreach (var item in Model.Speciality)
-                                                    {
-                                                        <span>@item</span><span>&nbsp;</span>
-                                                    }
+                                                    <span>@item</span><span>&nbsp;</span>
                                                 }
-                                                
-                                            </p>
-                                            <div class="gray-bdr-b-1"></div>
-                                            <p class="m-tb-15">
-                                                <i class="fa fa-circle" aria-hidden="true"></i>&nbsp License States:
-                                                @if (Model.LicenseStates != null && Model.LicenseStates.Count() > 0)
+                                            }
+
+                                        </p>
+                                        <div class="gray-bdr-b-1"></div>
+                                        <p class="m-tb-15">
+                                            <i class="fa fa-circle" aria-hidden="true"></i>&nbsp License States:
+                                            @if (Model.LicenseStates != null && Model.LicenseStates.Count() > 0)
+                                            {
+                                                foreach (var item in Model.LicenseStates)
                                                 {
-                                                    foreach (var item in Model.LicenseStates)
-                                                    {
-                                                        <span>@item</span><span>&nbsp;</span>
-                                                    }
+                                                    <span>@item</span><span>&nbsp;</span>
                                                 }
-                                                
-                                            </p>
-                                            @*<div class="text-center">
+                                            }
+
+                                        </p>
+                                        @*<div class="text-center">
                                                 <button type="button" class="m-t-20 btn btn-primary"><i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp Send Message</button>
                                             </div>*@
-                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-8 col-md-8 col-sm-12">
-                                    <h4><i class="fa fa-user" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>About me:</b></h4>
-                                    <p style="padding-left: 30px;">@Model.AboutMe</p>
                                 </div>
                             </div>
-                            <div class="gray-bg p-30 gray-light-bdr-t-1">
-                                <div class="row">
-                                    <div class="col-md-4"></div>
-                                    <div class="col-md-8">
-                                        <div class="border-left"></div>
-                                        @if (!string.IsNullOrEmpty(Model.WorkExperience))
-                                        {
-                                            <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Work Experience</b></h4>
-                                            <p style="padding-left: 25px;"> @Model.WorkExperience</p>
-                                        }
-                                        @if (!string.IsNullOrEmpty(Model.Specialization))
-                                        {
-                                            <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Specialization</b></h4>
-                                            <p style="padding-left: 25px;">@Model.Specialization</p>
-                                        }
-                                        @if (!string.IsNullOrEmpty(Model.Education))
-                                        {
-                                            <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Education</b></h4>
-                                            <p style="padding-left: 25px;">@Model.Education</p>
-                                        }
-                                        @if (!string.IsNullOrEmpty(Model.Publication))
-                                        {
-                                            <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Publications</b></h4>
-                                            <p style="padding-left: 25px;">@Model.Publication</p>
-                                        }
-                                        @if (!string.IsNullOrEmpty(Model.TimeZone))
-                                        {
-                                            <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Time Zone</b></h4>
-                                            <p style="padding-left: 25px;">@Model.TimeZone</p>
-                                        }
-                                    </div>
-                                </div>
-                            </div><!--/.modal body-->
+                            <div class="col-lg-8 col-md-8 col-sm-12">
+                                <h4><i class="fa fa-user" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>About me:</b></h4>
+                                <p style="padding-left: 30px;">@Model.AboutMe</p>
+                            </div>
                         </div>
+                        <div class="gray-bg p-30 gray-light-bdr-t-1">
+                            <div class="row">
+                                <div class="col-md-4"></div>
+                                <div class="col-md-8">
+                                    @*<div class="border-left"></div>*@
+                                    <h4><i class="fa fa-cogs" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>Work Experience:</b></h4>
+                                    @if (!string.IsNullOrEmpty(Model.WorkExperience))
+                                    {
+                                        <p style="padding-left: 30px;">@Model.WorkExperience</p>
+                                    }
+                                    <h4><i class="fa fa-graduation-cap" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>Specialization:</b></h4>
+                                    @if (!string.IsNullOrEmpty(Model.Specialization))
+                                    {
+                                                <p style="padding-left: 30px;">@Model.Specialization</p>
+                                               
+                                    }
+                                    <h4><i class="fa fa-graduation-cap" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>Education:</b></h4>
+                                    @if (!string.IsNullOrEmpty(Model.Education))
+                                    {
+                                        <p style="padding-left: 30px;">@Model.Education</p>
+                                        
+                                    }
+                                    <h4><i class="fa fa-book" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>Publications:</b></h4>
+                                    @if (!string.IsNullOrEmpty(Model.Publication))
+                                    {
+                                        <p style="padding-left: 30px;">@Model.Publication</p>
+                                        
+                                    }
+                                    <h4><i class="fa fa-clock-o" style="width: 20px;" aria-hidden="true"></i>&nbsp <b>TimeZone:</b></h4>
+                                    @if (!string.IsNullOrEmpty(Model.TimeZone))
+                                    {
+                                        
+                                        <p style="padding-left: 30px;">@Model.TimeZone</p>
+                                    }
+                                </div>
+                            </div>
+                        </div><!--/.modal body-->
                     </div>
                 </div>
             </div>
         </div>
-    </div><!--/.modal body-->
+    </div>
+</div><!--/.modal body-->
 
-
-    <script>
+<script>
 
         function myMap() {
 
@@ -147,7 +156,7 @@
 
                 var map = new google.maps.Map(mapCanvas, mapOptions);
             }
-            
+
         }
 
         function geocodeAddress(geocoder, resultsMap, address) {
@@ -164,9 +173,6 @@
                 }
             });
         }
-    </script>
-
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEPd0Djg3V92IbdK1u77KPZCWa-1se_H8&callback=myMap"></script>
-
-
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEPd0Djg3V92IbdK1u77KPZCWa-1se_H8&callback=myMap"></script>
 
