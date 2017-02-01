@@ -104,7 +104,7 @@ else
         _objConsult["appID"] = appID;
         _objConsult["sessionID"] = "0";
         _objConsult["token"] = "0";
-        _objConsult["userID"] = '0';
+        _objConsult["userID"] = '@SessionHandler.UserId';
         
         $.ajax({
             type: 'POST',
@@ -177,7 +177,8 @@ else
         console.log(moment(then,"YYYY/MM/DD HH:mm:ss"));
         var duration = moment.duration(moment(then,"YYYY/MM/DD HH:mm:ss").diff(moment(now,"YYYY/MM/DD HH:mm:ss")));
 
-        if((288000>duration._milliseconds)&&(duration._milliseconds>-842000)) //Check for 5 min before and 15 min after
+        //if((288000>duration._milliseconds)&&(duration._milliseconds>-842000)) //Check for 5 min before and 15 min after
+        if(true)
         {
             //alert("Call...");
             createConsultFromDoctor(doctorID,patientID,appID);

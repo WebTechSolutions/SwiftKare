@@ -458,6 +458,8 @@ namespace RestAPIs.Controllers
                     cons.cb = model.userID;
                     cons.seesionID = model.sessionID;
                     cons.token = model.token;
+                    cons.doctorID = model.doctorId;
+                    cons.patientID = model.patientId;
                     db.Consultations.Add(cons);
                     await db.SaveChangesAsync();
                     response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = cons.consultID, message = "" });
