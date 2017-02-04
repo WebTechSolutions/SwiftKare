@@ -58,7 +58,7 @@ namespace WebApp.Controllers
             {
                 //Redirect user to appropriate page
             }
-
+            if (openTokSession != null) { 
             ViewBag.UserType = openTokSession.UserType;
 
             var userMgr = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
@@ -73,7 +73,7 @@ namespace WebApp.Controllers
             ViewBag.OpenTokApiKey = UserChatHelper.TokBoxApiKey;
             ViewBag.OpenTokSession = openTokSession.SessionId;
             ViewBag.OpenTokToken = openTokSession.TokenId;
-
+        }
             ViewBag.RosItems = oVideoCallRepository.GetROSItems();
 
             return View();
@@ -120,6 +120,65 @@ namespace WebApp.Controllers
             oVideoCallRepository.PatientRejectsCall(SessionHandler.UserInfo.Id, doctorId, SessionHandler.UserInfo.Email);
         }
 
+        [HttpPost]
+        public void ConsultCreatedbyPatient(long doctorId)
+        {
+            oVideoCallRepository.ConsultCreatedLog(SessionHandler.UserInfo.Id, doctorId, SessionHandler.UserInfo.Email);
+        }
+
+        [HttpPost]
+        public void ConsultCreationFailedbyPatient(long doctorId)
+        {
+            oVideoCallRepository.ConsultCreationFailedLog(SessionHandler.UserInfo.Id, doctorId, SessionHandler.UserInfo.Email);
+        }
+
+        [HttpPost]
+        public void ConsultCreatedbyDoctor(long patientId)
+        {
+            oVideoCallRepository.ConsultCreatedLog(patientId,SessionHandler.UserInfo.Id, SessionHandler.UserInfo.Email);
+        }
+
+        [HttpPost]
+        public void ConsultCreationFailedbyDoctor(long patientId)
+        {
+            oVideoCallRepository.ConsultCreationFailedLog(patientId, SessionHandler.UserInfo.Id, SessionHandler.UserInfo.Email);
+        }
+
+        [HttpPost]
+        public void TokBoxInfoCreatedbyDoctor(long patientId)
+        {
+            oVideoCallRepository.TokboxCreatedLog(patientId, SessionHandler.UserInfo.Id, SessionHandler.UserInfo.Email);
+        }
+
+        [HttpPost]
+        public void TokBoxInfoCreationFailedbyDoctor(long patientId)
+        {
+            oVideoCallRepository.TokboxFailLog(patientId, SessionHandler.UserInfo.Id, SessionHandler.UserInfo.Email);
+        }
+
+        [HttpPost]
+        public void TokBoxInfoCreatedbyPatient(long doctorId)
+        {
+            oVideoCallRepository.TokboxCreatedLog(SessionHandler.UserInfo.Id, doctorId,SessionHandler.UserInfo.Email);
+        }
+        [HttpPost]
+        public void TokBoxInfoCreationFailedbyPatient(long doctorId)
+        {
+            oVideoCallRepository.TokboxFailLog(SessionHandler.UserInfo.Id, doctorId, SessionHandler.UserInfo.Email);
+        }
+
+        [HttpPost]
+        public void PaymentSuccessLog(long doctorId)
+        {
+            oVideoCallRepository.PaymentSuccessLog(SessionHandler.UserInfo.Id, doctorId, SessionHandler.UserInfo.Email);
+        }
+
+        [HttpPost]
+        public void PaymentFailLog(long doctorId)
+        {
+            oVideoCallRepository.PaymentFailLog(SessionHandler.UserInfo.Id, doctorId, SessionHandler.UserInfo.Email);
+        }
+
 
         [HttpPost]
         public string CreateConsult(CreateConsultModel oModel)
@@ -150,7 +209,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public void AddChatMessages(long consultId, string message, string sender, string receiver)
         {
-            oVideoCallRepository.AddChatMessages(new ChatMessageModel { consultID = consultId, message = message, sender = "", reciever = SessionHandler.UserInfo.Email });
+            oVideoCallRepository.AddChatMessages(new ChatMessageModel { consultID = consultId, message = message, sender = sender, reciever = SessionHandler.UserInfo.Email });
         }
 
         [HttpPost]

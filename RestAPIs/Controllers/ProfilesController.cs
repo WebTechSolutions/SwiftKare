@@ -184,7 +184,7 @@ namespace RestAPIs.Controllers
         {
 
             Doctor doctor = new Doctor();
-            var timezoneid = db.TimeZones.Where(x => x.timeZonee == model.TimeZone).Select(x => x.zoneName).FirstOrDefault();
+           // var timezoneid = db.TimeZones.Where(x => x.timeZonee == model.TimeZone).Select(x => x.zoneName).FirstOrDefault();
             try
             {
                 if (model.FirstName == null || model.FirstName == "" || !Regex.IsMatch(model.FirstName, "^[0-9a-zA-Z ]+$"))
@@ -211,11 +211,11 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Doctor not found." });
                     return response;
                 }
-                if (model.ZipCode.Length > 10)
+                /*if (model.ZipCode.Length > 10)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Zip is too long. Keep it below ten characters." });
                     return response;
-                }
+                }*/
                 if (model.Gender.Length > 10)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Gender is too long. Keep it below ten characters." });
@@ -235,8 +235,7 @@ namespace RestAPIs.Controllers
                     doctor.gender = model.Gender;
 
                     doctor.dob = model.DOB;
-                    //doctor.timezone = model.TimeZone;
-                    doctor.timezone = timezoneid.ToString();
+                    doctor.timezone = model.TimeZone;
                     doctor.aboutMe = model.AboutMe;
                     doctor.specialization = model.Specialization;
                     doctor.publication = model.Publication;
@@ -343,6 +342,7 @@ namespace RestAPIs.Controllers
                     return response;
                 }
             }
+
             catch (Exception ex)
             {
                 return ThrowError(ex, "UpdateDoctorProfileWithAllValues in ProfileController.");
@@ -799,7 +799,7 @@ namespace RestAPIs.Controllers
         public async Task<HttpResponseMessage> UpdatePatientProfileWithAllValues(long patientID, PatientProfileVM model)
         {
             Patient patient = new Patient();
-            var timezoneid = db.TimeZones.Where(x => x.timeZonee == model.TimeZone).Select(x => x.zoneName).FirstOrDefault();
+            //var timezoneid = db.TimeZones.Where(x => x.timeZonee == model.TimeZone).Select(x => x.zoneName).FirstOrDefault();
             try
             {
                 if (model.FirstName == null || model.FirstName == "" || !Regex.IsMatch(model.FirstName, "^[0-9a-zA-Z ]+$"))
@@ -826,11 +826,11 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Patient not found." });
                     return response;
                 }
-                if (model.ZipCode.Length > 10)
+             /*   if (model.ZipCode.Length > 10)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Zip is too long. Keep it below ten characters." });
                     return response;
-                }
+                }*/
                 if (model.Gender.Length > 10)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Gender is too long. Keep it below ten characters." });
@@ -850,8 +850,7 @@ namespace RestAPIs.Controllers
                     patient.gender = model.Gender;
 
                     patient.dob = model.DOB;
-                    patient.timezone = timezoneid.ToString();
-
+                    patient.timezone = model.TimeZone;
                     patient.height = model.Height;
                     patient.weight = model.Weight;
 

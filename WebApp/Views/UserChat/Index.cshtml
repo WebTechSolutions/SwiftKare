@@ -339,8 +339,8 @@
 
         function saveDoctorNoteSubjective() {
             var cUrl = '@Url.Action("AddDoctorNotesSubjective","UserChat")';
-            $.post(cUrl, { consultId: consultId, cValues: $("#txtDoctorNoteSubjective").val() }, function () {
-                //alert("Saved successfully.");
+            $.post(cUrl, { consultId: consultId, cValues: $("#txtDoctorNoteSubjective").val() }, function (data) {
+                console.log(data);
             });
         }
 

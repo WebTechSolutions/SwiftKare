@@ -800,7 +800,7 @@
 </div>
 
 <script>
-    
+    var doctorId;
     function reloadContainer(callback) {
         $("#mycareteam").load('@Url.Action("MyCareTeam", "SeeDoctor")', function () {
             callback();
@@ -811,7 +811,7 @@
     var reader2  = new FileReader();
     var reader3  = new FileReader();
     function showProfile(docid) {
-        
+
         var did=docid;//$("#pvdocid").val();
 
         $("#DoctorProfileContent").load('@Url.Action("DoctorProfile", "SeeDoctor")?doctorID='+did, function () {
@@ -854,11 +854,16 @@
             targetButton: "#btnProceedWithPayment",
             actionUrl: '@Url.Action("ProceedWithPay", "seedoctor")',
             handleSuccess: function () {
+                console.log('Payment Done...');
+                var cCallLogUrl = '@Url.Action("PaymentSuccessLog", "UserChat")?doctorId=' +  $("#doctorid").val();
+              //  $.post(cCallLogUrl);
                 showLoader();
                 CreateAppointment(@ViewBag.PatienID,@amount);
             },
             handleFailure: function () {
-                showAlert("Alert","OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
+                var cCallLogUrl = '@Url.Action("PaymentFailLog", "UserChat")?doctorId=' +  $("#doctorid").val();
+              //  $.post(cCallLogUrl);
+                showAlert("Alert","Stripe Payment Failed!!!");
                 //alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
             }
         });
@@ -881,8 +886,8 @@
     });
 
    function CreateAppointment(patientID,amount)
-    {
-        _objAppointment["appDate"] = $("#fetchdate").val();
+   {
+         _objAppointment["appDate"] = $("#fetchdate").val();
         _objAppointment["doctorID"] = $("#doctorid").val();
         _objAppointment["patientID"] = patientID;
         _objAppointment["paymentAmt"] = amount;
@@ -944,9 +949,9 @@
                             window.location.href = '/Appointment/Index/';
                         }
                         if (appType == "L")
-                        { 
+                        {
                             console.log('Live Appointment');
-                       
+
                         createConsultFromPatient($("#doctorid").val(), patientID, result.ApiResultModel.ID);}
 
 
@@ -988,6 +993,11 @@
                             type: 'error',
                             styling: 'bootstrap3'
                         });
+                        //Log consult creation error
+
+                        var cCallLogUrl = '@Url.Action("ConsultCreationFailedbyPatient", "UserChat")?doctorId=' + doctorId;
+                      //  $.post(cCallLogUrl);
+                        showAlert('Consult Creation Error', 'Unable to create consult');
                     }
                     else if (response.ApiResultModel.message == "") {
                         console.log('consult created');
@@ -997,6 +1007,10 @@
                             type: 'info', addclass: 'dark',
                             styling: 'bootstrap3'
                         });*/
+
+                        //Log consultion creation sucess
+                        var cCallLogUrl = '@Url.Action("ConsultCreatedbyPatient", "UserChat")?doctorId=' + doctorID;
+                        //$.post(cCallLogUrl);
 
                         if(appType="L")
                         {
@@ -1014,6 +1028,7 @@
                                     break;
                                 }
                             }
+                            debugger;
                             if(oDocInfo!=null){
                                 chat.server.sendMessageToDoctor(
                                 {
@@ -1035,7 +1050,7 @@
                                 type: 'info', addclass: 'dark',
                                 styling: 'bootstrap3'
                             });
-                            
+
                             var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
                             //check for apptype if l then go here
                             //create consult here

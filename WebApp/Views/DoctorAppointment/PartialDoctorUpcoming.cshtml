@@ -84,7 +84,7 @@ else
 
     function createConsultFromDoctor(doctorID,patientID,appID)
     {debugger;
-        
+
         var oPatInfo = null;
         for (var i = 0; i < availablePatients.patient.length; i++) {
             if (availablePatients.patient[i].patId == patientID) {
@@ -105,7 +105,7 @@ else
         _objConsult["sessionID"] = "0";
         _objConsult["token"] = "0";
         _objConsult["userID"] = '0';
-        
+
         $.ajax({
             type: 'POST',
             url: '/Doctor/CreateConsult',
@@ -122,6 +122,10 @@ else
                             type: 'error',
                             styling: 'bootstrap3'
                         });
+                        //Log consult creation error
+                       
+                        var cCallLogUrl = '@Url.Action("ConsultCreationFailedbyDoctor", "UserChat")?patientId=' + patientID;
+                     //   $.post(cCallLogUrl);
                     }
                     else if (response.ApiResultModel.message == "") {
                         new PNotify({
@@ -131,9 +135,12 @@ else
                             styling: 'bootstrap3'
                         });
                         var _consultID=response.ApiResultModel.ID;
+                        //Log consultion creation sucess
+                        var cCallLogUrl = '@Url.Action("ConsultCreatedbyDoctor", "UserChat")?patientId=' + patientID;
+                        //$.post(cCallLogUrl);
 
                         makeCallToPatient(patientID, appID,_consultID,oPatInfo);
-                                          
+
                     }
                 }
 
@@ -167,9 +174,9 @@ else
 
         var then = (dbDate.toLocaleTimeString("en-us", options));
         then = formatDate(new Date(then), "yyyy/MM/dd HH:mm:ss");
-       
+
         now = formatDate(new Date(now), "yyyy/MM/dd HH:mm:ss");
-        
+
         console.log('then '+then);
         console.log('now '+now);
 
@@ -177,32 +184,33 @@ else
         console.log(moment(then,"YYYY/MM/DD HH:mm:ss"));
         var duration = moment.duration(moment(then,"YYYY/MM/DD HH:mm:ss").diff(moment(now,"YYYY/MM/DD HH:mm:ss")));
 
-        if((288000>duration._milliseconds)&&(duration._milliseconds>-842000)) //Check for 5 min before and 15 min after
+        //  if((288000>duration._milliseconds)&&(duration._milliseconds>-842000)) //Check for 5 min before and 15 min after
+        if(true)
         {
             //alert("Call...");
             createConsultFromDoctor(doctorID,patientID,appID);
-        } 
+        }
         else
         {
             if(duration._milliseconds>-842000)
             {
                 //alert('Apointment time has not been arrived yet.');
                 showAlert('Alert','Apointment time has not been arrived yet.');
-               
+
             }
             if(duration._milliseconds<288000)
             {
                 //alert('Apointment time has been passed.');
                 showAlert('Alert','Apointment time has been passed.');
             }
-            
+
         }
         console.log(duration._milliseconds);
     }
-   
+
       $(document).ready(function() {
-        
-       
+
+
         $('#datatable').dataTable({
             'order': [[1, 'desc']],
             columnDefs: [
@@ -227,7 +235,7 @@ else
           fixedHeader: true
         });
 
-       
+
         //TableManageButtons.init();
       });
 </script>

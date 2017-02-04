@@ -126,7 +126,7 @@ namespace WebApp.Controllers
 
             ViewBag.drpdnSpeciality = oInitialData.lstSpecialityVM.Select(x => new SelectListItem { Text = x.specialityName, Value = x.specialityName }).ToList();
             ViewBag.drpdnLanguage = oInitialData.lstLanguageVM.Select(x => new SelectListItem { Text = x.languageName, Value = x.languageName }).ToList();
-            ViewBag.drpdnTimeZone = oInitialData.lstTimeZoneVM.Select(x => new SelectListItem { Text = x.timeZone, Value = x.timeZone }).ToList();
+            ViewBag.drpdnTimeZone = oInitialData.lstTimeZoneVM.Select(x => new SelectListItem { Text = x.timeZone, Value = x.zoneName }).ToList();
             ViewBag.drpdnCity = oInitialData.lstCityVM.Select(x => new SelectListItem { Text = x.cityName, Value = x.cityName }).ToList();
             ViewBag.drpdnState = oInitialData.lstStateVM.Select(x => new SelectListItem { Text = x.stateName, Value = x.stateName }).ToList();
             ViewBag.SecretQuestion = oInitialData.lstSecretQuestionVM.Select(x => new SelectListItem { Text = x.secretQuestion, Value = x.secretQuestion }).ToList();

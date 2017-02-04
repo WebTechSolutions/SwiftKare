@@ -458,6 +458,8 @@ namespace RestAPIs.Controllers
                     cons.cb = model.userID;
                     cons.seesionID = model.sessionID;
                     cons.token = model.token;
+                    cons.doctorID = model.doctorId;
+                    cons.patientID = model.patientId;
                     db.Consultations.Add(cons);
                     await db.SaveChangesAsync();
                     response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = cons.consultID, message = "" });
@@ -590,6 +592,7 @@ namespace RestAPIs.Controllers
                     TimeSpan duration = et.Subtract(st);
                     cons.duration = Convert.ToInt32(duration.TotalSeconds);
                     cons.endby = model.userEmail;
+                    cons.status = "C";
                     db.Entry(cons).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                     response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = cons.consultID, message = "" });
