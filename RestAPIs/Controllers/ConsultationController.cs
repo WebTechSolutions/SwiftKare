@@ -602,6 +602,7 @@ namespace RestAPIs.Controllers
                     TimeSpan duration = et.Subtract(st);
                     cons.duration = Convert.ToInt32(duration.TotalSeconds);
                     cons.endby = model.userEmail;
+                    cons.status = "C";
                     db.Entry(cons).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                     response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = cons.consultID, message = "" });

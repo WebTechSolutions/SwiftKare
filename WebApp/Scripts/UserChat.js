@@ -364,10 +364,10 @@ var UserChat = function (apiKey, sessionId, token) {
             } catch (e) { }
         })
         .on('signal:chat', function (event) {
-
+            debugger;
             var oMsgHtml = "";
 
-            //console.log(event);
+            console.log(event);
             if (event.from.connectionId === session.connection.connectionId) {
                 //my message
                 oMsgHtml = "<div class='sent-item text-right m-b-10'><img src='/Content/images/img.jpg' alt=''><div class='talk-bubble tri-right right-in margin-r'><div class='talktext'><p>";
@@ -388,6 +388,7 @@ var UserChat = function (apiKey, sessionId, token) {
                 }
 
                 //Log received message
+                //AddSenderEmailID here
                 SaveChatMessage(sessionId, 1, 1, event.data);
             }
 

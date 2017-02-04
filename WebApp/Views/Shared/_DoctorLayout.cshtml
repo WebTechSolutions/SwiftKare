@@ -430,9 +430,9 @@
                 }
 
 
-             /*   if (handleOnlinePatientsDisplay) {
-                    handleOnlinePatientsDisplay();
-                }*/
+                /*   if (handleOnlinePatientsDisplay) {
+                       handleOnlinePatientsDisplay();
+                   }*/
 
             };
 
@@ -442,25 +442,26 @@
             }
 
             chat.client.patientRejectedCall = function (patUserName, patId, appId) {
-                showAlert('Alert', 'Patient ' + patUserName + ' rejected call.this alert is in _DoctorLayout');
+                showAlert('Alert', 'Patient ' + patUserName + ' rejected call.Please try again.');
                 //alert('Patient ' + patUserName + ' rejected call.this alert is in _DoctorLayout');
+                return;
             }
 
             chat.client.patientRedirectedToCallHandle = function (tokboxInfo, patId, patName) {
                 debugger;
                 //
                 localStorage.setItem('tokbox', tokboxInfo);
-                var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Doctor&receiverId=" + patId + "&doctorName=@(SessionHandler.UserInfo.FirstName + " "+ SessionHandler.UserInfo.LastName)&patientName=" + patName;
+                  var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Doctor&receiverId=" + patId + "&doctorName=@(SessionHandler.UserInfo.FirstName + " "+ SessionHandler.UserInfo.LastName)&patientName=" + patName;
 
-                $.post(cUrlReadyForCall, function (oResp) {
-                    if (tokboxInfo != '0')
-                        window.location = '@Url.Action("Index","UserChat")';
-                    else alert('Err in tokbox connection');
-                    //localStorage.setItem('consultationKey', consultId);
+                  $.post(cUrlReadyForCall, function (oResp) {
+                if (tokboxInfo != '0')
+                    window.location = '@Url.Action("Index","UserChat")';  //Redirected doctor to call
+                else alert('Err in tokbox connection');
+                //localStorage.setItem('consultationKey', consultId);
 
-                    //Redirect doctor to call
 
-                });
+
+                 });
             }
 
             chat.client.receiveMessage = function (msgFrom, msg, receiverId, senderid) {
@@ -470,7 +471,7 @@
                     var txt = "";
                     //alert(msg);
                     var fromJson = JSON.parse(msg);
-                   // alert(fromJson.status);
+                    // alert(fromJson.status);
 
                     if (fromJson.status == 'consultID') {
                         alert('consultID recieved:' + fromJson.name);
@@ -518,30 +519,35 @@
 
                     //Create tokbox info, and save in local storage
                     debugger;
-                        var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=" + signalRInfo.SenderId + "&userType=Doctor&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + fromJson.name + "&consultID=" + fromJson.name + "&tokbox=" + fromJson.name;
+                    var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=" + signalRInfo.SenderId + "&userType=Doctor&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + fromJson.name + "&consultID=" + fromJson.name + "&tokbox=" + fromJson.name;
 
                     $.post(cUrlReadyForCall, function (oResp) {
-                            if (oResp!="0")
-                            {
-                                localStorage.setItem('tokbox', oResp);
-                                chat.server.sendMessageToPatient({
-                                    SenderId: '@SessionHandler.UserInfo.Id',
-                                    UserName: '@SessionHandler.UserInfo.Email',
-                                    ReceiverConnectionId: receiverId,
-                                    ReceiverId: '20',
-                                    SenderType: 'Doctor',
-                                    Message: JSON.stringify({ status: 'tokbox', name: oResp })
-                                });
-                                //Redirect doctor to call
-                                window.location = '@Url.Action("Index","UserChat")';
-                           }
+                        if (oResp != "0") {
+                            //Log Tokbox info generated event
+                            var cCallLogUrl = '@Url.Action("TokBoxInfoCreatedbyDoctor", "UserChat")?patientId=' + senderid;
+                           // $.post(cCallLogUrl);
+                            localStorage.setItem('tokbox', oResp);
+                            chat.server.sendMessageToPatient({
+                                SenderId: '@SessionHandler.UserInfo.Id',
+                                UserName: '@SessionHandler.UserInfo.Email',
+                                ReceiverConnectionId: receiverId,
+                                ReceiverId: '20',
+                                SenderType: 'Doctor',
+                                Message: JSON.stringify({ status: 'tokbox', name: oResp })
+                            });
+                            //Redirect doctor to call
+                            window.location = '@Url.Action("Index","UserChat")';
+                        }
 
-                            else
-                                alert('Err in generating tokbox info');
-                        });
-                    }
+                        else {
+                            var cCallLogUrl = '@Url.Action("TokBoxInfoCreationFailedbyDoctor", "UserChat")?patientId=' + senderid;
+                          //  $.post(cCallLogUrl);
+                            alert('Err in generating tokbox info');
+                        }
+                    });
                 }
-           // };
+            }
+            // };
         });
 
 

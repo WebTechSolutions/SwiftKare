@@ -454,6 +454,7 @@
                 else {
                     var cCallLogUrl = '@Url.Action("PatientDeclinedCall", "UserChat")?doctorId=' + senderid;
                     $.post(cCallLogUrl);
+                    return;
                 }
 
                 if (isPatientAcceptedCall) {
@@ -470,8 +471,11 @@
 
                     $.post(cUrlReadyForCall, function (oResp) {
                         debugger;
-                        if (oResp != "0")
-                        {
+                        if (oResp != "0") {
+                            //Log Tokbox info generated event
+                            var cCallLogUrl = '@Url.Action("TokBoxInfoCreatedbyPatient", "UserChat")?doctorId=' + senderid;
+                         //   $.post(cCallLogUrl);
+
                             var tokboxInfo = oResp;
                             localStorage.setItem('tokbox', tokboxInfo);
 
@@ -481,7 +485,12 @@
                             //Redirect doctor to call
                             window.location = '@Url.Action("Index","UserChat")';
                         }
-                        else alert('Err in getting tokbox info ');
+                        else {
+                            //Log Tokbox info generated event
+                            var cCallLogUrl = '@Url.Action("TokBoxInfoCreationFailedbyPatient", "UserChat")?doctorId=' + senderid;
+                           // $.post(cCallLogUrl);
+                            alert('Err in getting tokbox info ');
+                        }
                     });
 
 
