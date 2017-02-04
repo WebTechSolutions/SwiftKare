@@ -110,7 +110,7 @@
 
 
     <div class="modal-body text-left">
-        <div class="user-detail">
+        <div style="color: #375781;width: 250px;">
             <div class="img-1">
                 <img src="@(string.IsNullOrEmpty(Model.PatientVM.ProfilePhotoBase64) ? WebApp.Helper.SessionHandler.ProfilePhoto : Model.PatientVM.ProfilePhotoBase64)" alt="" class="m-b-10 img-responsive">
             </div>
@@ -125,8 +125,25 @@
                 </p>
             </div>
         </div>
+        <div style="margin-left: 334px; margin-top: -114px;" class="chat-sec">
+            <h2>Chat Text</h2>
+            <div style="font-size: 10px; overflow: auto; height: 77px;">
+                Doctor:hi<br>
+                Patient: hello<br>
+                Doctor: How are youHow are youHow are youHow are youHow are you How are you How are you How are you How are you How are you How are you<br>
+                Patient: Not fine <br>
+                Doctor: Oh! Ewhat happened<br>
+                Patient: Waru programm hai ustad<br>
+                Doctor:hi<br>
+                Patient: hello<br>
+                Doctor: How are you<br>
+                Patient: Not fine <br>
+                Doctor: Oh! Ewhat happened<br>
+                Patient: Waru programm hai ustad<br>
+            </div>
 
-        <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 36px -15px -30px; padding: 10px 21px 0; ">
+        </div>
+        <div style="border-top: 1px Solid #c3bebe; margin: 15px -15px -30px; padding: 10px 21px 0; ">
             <p style="color: #375781;"><span style="width: 150px; float: left;">Pharmacy</span><b>@pharmacy</b></p>
         </div>
         <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 36px -15px 20px; padding: 10px 21px 0; ">
@@ -136,20 +153,60 @@
                                 $("#replaceme").html(fdate);
             </script></b></p>
         </div>
-        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Reason of Visit:</b><br> @rov</p>
-        <p id="p_chiefComplaints" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Chief Complaint:</b><br> @chiefComplaints</p>
-        <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Consult Charges:</b><br> @amount</p>
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Reason of Visit:</b>
+        <div style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; width:111px; height:40px;overflow:auto;"> @rov</div>
+        </p>
+    <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Chief Complaint:</b>
+        <div  id="p_chiefComplaints" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; height:40px;overflow:auto;">@chiefComplaints</div>
+        </p>
+        
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
+            <b>Consult Charges:</b>
+            <div id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; height:40px;overflow:auto;"> @amount</div>
+        </p>
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
+            <b>Appointment Files:</b>
+            <div id="p_files" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; height:40px;overflow:auto;">
+               
+                @if (Model.AppFiles != null || Model.AppFiles.Count > 0)
+                {
 
-        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Subjective:</b><br> @subjective</p>
-        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Objective:</b><br> @objective</p>
-        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Assessment:</b><br> @assessment</p>
-        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Plans:</b><br> @plans</p>
-        <div class="table-responsive">
-            <table class="table" style="margin-bottom: 5px;">
-                <tbody>
-                    <tr>
-                        <td style="padding: 7px">
-                            <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
+                    foreach (var item in Model.AppFiles)
+                    {
+
+                        <button id="@item.fileID" type="button" class="btn btn-default" style="display:block; font-size:10px" onclick="downloadFile(@item.fileID)">
+                            @item.FileName.Trim()
+                        </button>
+                    }
+
+                }
+            </div>
+            </p>
+<p id="psubjective" style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px; margin-top: -323px;">
+            <b>Subjective:</b>
+            <div style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px; height:40px;overflow:auto;"> @subjective</div>
+        </p>
+        
+        <p id="psubjective" style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px; ">
+            <b>Objective:</b>
+            <div style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px; height:40px;overflow:auto;">@objective</div>
+            </p>
+            
+            <p id="pojective" style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px; ">
+                <b>Assessment:</b>
+                <div style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px; height:40px;overflow:auto;">@assessment</div>
+                </p>
+               
+                <p id="plans" style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px;">
+                    <b>Plans:</b>
+                    <div style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px; height:40px;overflow:auto;">@plans</div>
+                </p>
+                    <div class="table-responsive" style="margin-top: 23px; border:0px">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 7px">
+<p style="color: rgb(55, 87, 129); font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
                                 <b>Review of Systems:</b><br>
                                 @if (Model.rosItems != null || Model.rosItems.Count > 0)
                                 {
@@ -158,13 +215,14 @@
                                     {
 
 
-                                        <div class="checkbox" style="display: inline-block; width: 150px;">
+                                        <div class="checkbox" style="display: inline-block;">
                                             <div class="icheckbox_flat-green checked" style="position: relative;">
                                                 <input type="checkbox" class="flat" checked="checked" disabled style="position: absolute;
                 opacity: 0;"><ins class="iCheck-helper" style="position: absolute;top: 0%;left: 0%;display: block;width: 100%;height: 100%;margin: 0px;padding: 0px;background: rgb(255, 255, 255);border: 0px;opacity: 0;"></ins>
                                             </div>&nbsp; @item.systemItemName
 
                                         </div>
+                                       
 
 
                                     }
