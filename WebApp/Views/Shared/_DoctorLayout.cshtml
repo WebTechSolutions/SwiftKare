@@ -494,6 +494,7 @@
                         var cCallLogUrl = '@Url.Action("DoctorDeclinedCall", "UserChat")?patientId=' + senderid;
                         $.post(cCallLogUrl);
                         //Log Call Declined - Ends
+                        
                     }
 
                     //Save SignalR Information to local storage so that it can be used whenever needed.
@@ -519,6 +520,7 @@
 
                     //Create tokbox info, and save in local storage
                     debugger;
+                    if (txt == 'Declined') return; //if doctor decline then stop here 
                     var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=" + signalRInfo.SenderId + "&userType=Doctor&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + fromJson.name + "&consultID=" + fromJson.name + "&tokbox=" + fromJson.name;
 
                     $.post(cUrlReadyForCall, function (oResp) {

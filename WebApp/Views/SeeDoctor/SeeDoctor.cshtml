@@ -1022,9 +1022,9 @@
                             var docId = doctorID;
 
                             var oDocInfo = null;
-                            for (var i = 0; i < availableDoctors.doctor.length; i++) {
-                                if (availableDoctors.doctor[i].docId == docId) {
-                                    oDocInfo = availableDoctors.doctor[i];
+                            for (var i = 0; i < busyDoctors.doctor.length; i++) {
+                                if (busyDoctors.doctor[i].docId == docId) {
+                                    oDocInfo = busyDoctors.doctor[i];
                                     break;
                                 }
                             }
@@ -1043,6 +1043,8 @@
                                     UserGroup: 'doctors'
                                 });
                             }
+                            else alert("Unable to send consultID to Doctor");
+                            debugger;
                             hideLoader();
                             new PNotify({
                                 title: 'Success',
@@ -1064,7 +1066,7 @@
                                 }
                                 else
                                 {alert('Err in getting tokbox info');}
-                            });
+                           });
 
                             //Redirect User for video chat
                            // showAlert("Payment Alert","Payment successful. Your consultation will be started soon.");

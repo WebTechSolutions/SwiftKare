@@ -308,6 +308,18 @@
             ]
         };
 
+        var busyDoctors = {
+            doctor: [
+                {
+                    connectionId: "",
+                    firstName: "",
+                    lastName: "",
+                    userName: "",
+                    docId: null
+                }
+            ]
+        };
+
 
         function checkAnyDoctorAvailableNow() {
 
@@ -570,6 +582,7 @@
             chat.client.showConnected = function (message) {
                 debugger;
                 availableDoctors.doctor = [];
+                busyDoctors.doctor = [];
 
 
                 console.log(message);
@@ -579,6 +592,15 @@
                     if (message[i].Value.UserID != -1) //-1 means doctor is bussy with other call
                     {
                         availableDoctors.doctor.push({
+                            connectionId: message[i].Key,
+                            firstName: message[i].Value.FirstName,
+                            lastName: message[i].Value.LastName,
+                            userName: message[i].Value.UserName,
+                            docId: message[i].Value.Id
+                        });
+                    }
+                    else {
+                        busyDoctors.doctor.push({
                             connectionId: message[i].Key,
                             firstName: message[i].Value.FirstName,
                             lastName: message[i].Value.LastName,
