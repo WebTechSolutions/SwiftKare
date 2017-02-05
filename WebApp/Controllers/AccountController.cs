@@ -721,7 +721,7 @@ namespace WebApp.Controllers
             var token = ForgotPasswordCodeModel.Token;
             if (model.SecretAnswerHidden.Trim().ToLower() == model.SecretAnswer.Trim().ToLower())
             {
-                var newPassword = "New@Pa_" + System.Web.Security.Membership.GeneratePassword(10, 4);
+                var newPassword = "New@Pa9_" + System.Web.Security.Membership.GeneratePassword(10, 4);
                 var user = await UserManager.FindByNameAsync(model.Email);
                 if (user == null)
                 {

@@ -1,6 +1,7 @@
 ﻿using DataAccess;
 using DataAccess.CommonModels;
 using DataAccess.CustomModels;
+using RestAPIs.Helper;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -297,6 +298,14 @@ namespace RestAPIs.Controllers
                     await db.SaveChangesAsync();
                 }
                 //Save Appointment files in database - Ends
+
+                //Send Email on new appointment
+                var docemail = db.Doctors.Where(d => d.doctorID == model.doctorID).Select(d => d.email).FirstOrDefault();
+                var patemail = db.Patients.Where(p => p.patientID == model.patientID).Select(p => p.email).FirstOrDefault();
+                EmailHelper oHelper = new EmailHelper(docemail, "New appointment.", "You have new appointment on " + model.appDate.Trim() + " at "+ model.appTime.Trim() + ".");
+                oHelper.SendMessage();
+                oHelper = new EmailHelper(patemail, "New appointment.", "Your appointment is scheduled successfully on " + model.appDate.Trim() + " at " + model.appTime.Trim() + ".");
+                oHelper.SendMessage();
             }
             catch (Exception ex)
             {
@@ -392,10 +401,10 @@ namespace RestAPIs.Controllers
                         
                         DateTime mydateTime = DateTime.ParseExact(model.appTime,
                                              "hh:mm tt", CultureInfo.InvariantCulture);
-
                         var timezoneid = db.Patients.Where(d => d.userId == model.userID).Select(d => d.timezone).FirstOrDefault();
                         TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
                         result.appTime = TimeZoneInfo.ConvertTimeToUtc(mydateTime, zoneInfo).TimeOfDay;
+                        
                         //result.appTime = mydateTime.ToUniversalTime().TimeOfDay;//To24HrTime(model.appTime);
                         //date format start
                         string dateString = model.appDate.Trim();
@@ -430,6 +439,24 @@ namespace RestAPIs.Controllers
                         alert.active = true;
                         db.Alerts.Add(alert);
                         await db.SaveChangesAsync();
+                        //Send Email on new appointment
+                        var docemail = (from d in db.Appointments
+                                        where d.appID == model.appID
+                                        select db.Doctors.Where(doc => doc.doctorID == d.doctorID).Select(doc => doc.email).FirstOrDefault()
+                                   ).FirstOrDefault();
+                        var patemail = db.Patients.Where(p => p.userId == model.userID).Select(p => p.email).FirstOrDefault();
+                        if (docemail!=null)
+                        {
+                           
+                            EmailHelper oHelper = new EmailHelper(docemail, "Reschedule appointment.", "Your ppointment on " + formattedDate + " has been rescheduled by patient.");
+                            oHelper.SendMessage();
+                        }
+                        if (patemail != null)
+                        {
+                            EmailHelper oHelper = new EmailHelper(patemail, "Reschedule appointment.", "Your ppointment on " + formattedDate + " is rescheduled successfully.");
+                            oHelper.SendMessage();
+                        }
+                            
                         response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
                         return response;
                     }
@@ -471,13 +498,30 @@ namespace RestAPIs.Controllers
                         await db.SaveChangesAsync();
                         Alert alert = new Alert();
                         alert.alertFor = result.doctorID;
-                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + formattedDate +  ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
+                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + formattedDate + " at " + formattedTime + " "+ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
                     alert.cd = System.DateTime.Now;
                         alert.cb = model.userID;
                         alert.active = true;
                         alert.active = true;
                         db.Alerts.Add(alert);
                         await db.SaveChangesAsync();
+                    //Send Email on new appointment
+                    var docemail = (from d in db.Appointments
+                                    where d.appID == model.appID
+                                    select db.Doctors.Where(doc => doc.doctorID == d.doctorID).Select(doc => doc.email).FirstOrDefault()
+                                   ).FirstOrDefault();
+                    var patemail = db.Patients.Where(p => p.userId == model.userID).Select(p => p.email).FirstOrDefault();
+                    if (docemail != null)
+                    {
+                        EmailHelper oHelper = new EmailHelper(docemail, "Reschedule appointment.", "Your ppointment on " + formattedDate + " has been rescheduled by patient.");
+                        oHelper.SendMessage();
+                    }
+                    if (patemail != null)
+                    {
+                        EmailHelper oHelper = new EmailHelper(patemail, "Reschedule appointment.", "Your ppointment on " + formattedDate + " is rescheduled successfully.");
+                        oHelper.SendMessage();
+                    }
+
                     response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
                     return response;
                 }
@@ -518,13 +562,31 @@ namespace RestAPIs.Controllers
                     await db.SaveChangesAsync();
                     Alert alert = new Alert();
                     alert.alertFor = result.doctorID;
-                    alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + formattedDate + " at " + formattedDate + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
+                    alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + formattedDate + " at " + formattedTime + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
                     alert.cd = System.DateTime.Now;
                     alert.cb = model.userID;
                     alert.active = true;
                     alert.active = true;
                     db.Alerts.Add(alert);
                     await db.SaveChangesAsync();
+
+                    //Send Email on new appointment
+                    var docemail = (from d in db.Appointments
+                                    where d.appID == model.appID
+                                    select db.Doctors.Where(doc => doc.doctorID == d.doctorID).Select(doc => doc.email).FirstOrDefault()
+                                   ).FirstOrDefault();
+                    var patemail = db.Patients.Where(p => p.userId == model.userID).Select(p => p.email).FirstOrDefault();
+                    if (docemail != null)
+                    {
+                        EmailHelper oHelper = new EmailHelper(docemail, "Reschedule appointment.", "Your ppointment on " + formattedDate + " has been rescheduled by patient.");
+                        oHelper.SendMessage();
+                    }
+                    if (patemail != null)
+                    {
+                        EmailHelper oHelper = new EmailHelper(patemail, "Reschedule appointment.", "Your ppointment on " + formattedDate + " is rescheduled successfully.");
+                        oHelper.SendMessage();
+                    }
+
                     response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
                     return response;
                 }

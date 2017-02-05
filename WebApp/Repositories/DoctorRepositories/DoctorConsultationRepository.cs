@@ -29,6 +29,23 @@ namespace WebApp.Repositories.DoctorRepositories
             }
 
         }
+        public List<ChatLogModel> GetChat(long cID)
+        {
+
+            try
+            {
+
+                var response = ApiConsumerHelper.GetResponseString("api/getConsultationChat?consultID=" + cID);
+                var result = JsonConvert.DeserializeObject<List<ChatLogModel>>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+
+        }
+        
         public List<SP_GetDcotorConsultations_Result> GetDoctorConsultations(long dID)
         {
 

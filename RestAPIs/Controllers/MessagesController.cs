@@ -53,11 +53,9 @@ namespace RestAPIs.Controllers
                         <p>From: " + model.sender+@"</p>
                         <p>"+model.message+@"</p>";
 
-                var oSimpleEmail = new EmailHelper(model.reciever, model.subject, sampleEmailBody,model.attachmentPath);
+                var oSimpleEmail = new EmailHelper(model.reciever, model.subject, sampleEmailBody);
                 oSimpleEmail.SendMessage();
-                Random rnd = new Random();
-                int id = rnd.Next(100);
-                response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = id, message = "" });
+                response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 1, message = "" });
                 return response;
 
             }

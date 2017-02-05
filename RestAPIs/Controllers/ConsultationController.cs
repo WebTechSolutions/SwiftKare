@@ -141,6 +141,32 @@ namespace RestAPIs.Controllers
             }
         }
 
+        //
+        [Route("api/getConsultationChat")]
+        public HttpResponseMessage GetConsultationChat(long consultID)
+        {
+            try
+            {
+                var chat = (from c in db.ChatLogs
+                                where c.consultID == consultID
+                            select new 
+                                {
+                                    sender = c.sender,
+                                reciever = c.reciever,
+                                    message=c.message
+                                }).ToList();
+
+
+                response = Request.CreateResponse(HttpStatusCode.OK, chat);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetConsultationChat in ConsultationController");
+            }
+
+
+        }
 
         [Route("api/getConsultationDetails")]
         public HttpResponseMessage GetConsultationDetails(long consultID)
@@ -321,7 +347,30 @@ namespace RestAPIs.Controllers
                     result.reviewStar = model.star;
                     db.Entry(result).State = EntityState.Modified;
                     await db.SaveChangesAsync();
+                    var sampledocEmailBody = @"
+                    <h3>Consultation Review</h3>
+                    <p>You have been reviewed by patient.</p>
+                    <p>"+ model.reviewText + @"</p>
+                    <p>&nbsp;</p>
+                    <p><strong>Best Regards,<br/>SwiftKare</strong></p>
+                    ";
+                    var samplepatEmailBody = @"
+                    <h3>Consultation Review</h3>
+                    <p>You have given review successfully.</p>
+                    <p>&nbsp;</p>
+                    <p><strong>Best Regards,<br/>SwiftKare</strong></p>
+                    ";
 
+                    var docemail = (from d in db.Consultations
+                                    where d.consultID == model.consultID
+                                    select db.Doctors.Where(doc => doc.doctorID == d.doctorID).Select(doc => doc.email).FirstOrDefault()
+                                    ).FirstOrDefault();
+                    var oSimpleEmail = new Helper.EmailHelper(docemail.ToString(), "Consultation Review", sampledocEmailBody);
+                    oSimpleEmail.SendMessage();
+
+                    var patemail = db.Patients.Where(p => p.patientID == model.patientID).Select(p => p.email).FirstOrDefault();
+                    oSimpleEmail = new Helper.EmailHelper(patemail.ToString(), "Consultation Review", samplepatEmailBody);
+                    oSimpleEmail.SendMessage();
                 }
 
                 response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.consultID, message = "" });
@@ -350,11 +399,7 @@ namespace RestAPIs.Controllers
                                                    where si.systemID == ps.systemID && si.active == true
                                                    select new ROSItemDetail { systemItemID = si.systemItemID, systemItemName = si.systemItemName }).ToList()
                                 }).ToList();
-                //select db.SystemItemsses.Where(si => si.systemID == ps.systemID && si.active == true).ToList());
-                //(from si in db.SystemItemsses
-                // where si.systemID == si.systemID && si.active == true
-                // select new { systemItemID = si.systemItemID, systemItemName = si.systemItemName}).ToList()
-                // );
+                
 
                 response = Request.CreateResponse(HttpStatusCode.OK, rosItems);
                 return response;
@@ -605,6 +650,30 @@ namespace RestAPIs.Controllers
                     cons.status = "C";
                     db.Entry(cons).State = EntityState.Modified;
                     await db.SaveChangesAsync();
+
+                    #region 
+                    var sampleEmailBody = @"
+                    <h3>Consultation Completed</h3>
+                    <p>Your consultation is completed successfully.</p>
+                    <p>&nbsp;</p>
+                    <p><strong>Best Regards,<br/>SwiftKare</strong></p>
+                    ";
+                    
+                    var docemail = (from d in db.Consultations
+                                    where d.consultID == cons.consultID
+                                    select db.Doctors.Where(doc => doc.doctorID == d.doctorID).Select(doc => doc.email).FirstOrDefault()
+                                    ).FirstOrDefault();
+                    var oSimpleEmail = new Helper.EmailHelper(docemail.ToString(), "Consultation Completed", sampleEmailBody);
+                    oSimpleEmail.SendMessage();
+
+                    var patemail = (from p in db.Consultations
+                                    where p.consultID == cons.consultID
+                                    select db.Patients.Where(pat => pat.patientID == p.patientID).Select(pat => pat.email).FirstOrDefault()
+                                    ).FirstOrDefault();
+                    oSimpleEmail = new Helper.EmailHelper(patemail.ToString(), "Consultation Completed", sampleEmailBody);
+                    oSimpleEmail.SendMessage();
+                    #endregion
+
                     response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = cons.consultID, message = "" });
                     return response;
                 }
@@ -617,12 +686,13 @@ namespace RestAPIs.Controllers
             }
             catch (Exception ex)
             {
-                return ThrowError(ex, "AddConsultStartTime in ConsultController");
+                return ThrowError(ex, "AddConsultEndTime in ConsultController");
             }
         }
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
             response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = "Internal server error at" + Action });
+            response.ReasonPhrase = ex.Message;
             return response;
 
         }
@@ -867,14 +937,6 @@ namespace RestAPIs.Controllers
                 return ThrowError(ex, "addDoctorNotesPlans in ConsultController");
             }
         }
-
-
-
-
-
-
-
-
 
 
         [HttpPost]

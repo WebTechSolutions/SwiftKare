@@ -296,7 +296,19 @@
             </div>
         </div>
     </div>
-
+    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+        <div class="modal-dialog" role="document" style="width: 350px;">
+            <div class="modal-content" style="border-radius: 0;">
+                <div class="modal-header text-center" style="background: #E4F1FE; border-bottom-color: #c3bebe;">
+                    <h2 style="margin: 0; color: #337ab7" id="heading"><b></b></h2>
+                </div><!--/.modal header-->
+                <div class="modal-body text-left" style="text-align:center;">
+                    <p class="text-center" style="color: #375781;" id="bodytext"></p>
+                    <button style="width: 29%; border-radius: 0; padding: 15px -15px; font-size: 20px;" onclick="$('#myModal1').modal('hide');" type="button" class="btn btn-primary">OK</button>
+                </div><!--/.modal body-->
+            </div>
+        </div>
+    </div><!-- mymodal1 -->
    
     <!-- Bootstrap -->
     <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
@@ -318,6 +330,13 @@
 
     <script src="@Url.Content("~/Scripts/UserChat.js")"></script>
     <script>
+        var mymodal = $('#myModal1');
+        function showAlert(heading, body) {
+
+            mymodal.find('#heading').text(heading);
+            mymodal.find('#bodytext').text(body);
+            mymodal.modal('show');
+        }
         var cEndCallUrl = '@cEndCallUrl';
         var tokboxSessionAndToken = localStorage.getItem('tokbox');//session*token
 

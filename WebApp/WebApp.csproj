@@ -239,6 +239,7 @@
     <Compile Include="Controllers\DoctorConsultationController.cs" />
     <Compile Include="Controllers\DoctorProfileController.cs" />
     <Compile Include="Controllers\DoctorController.cs" />
+    <Compile Include="Controllers\DoctorHelpTicketController.cs" />
     <Compile Include="Controllers\HelpTicketController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -491,6 +492,7 @@
     <Content Include="Scripts\autosize.min.js" />
     <Content Include="Content\css\bootstrap-material-datetimepicker.css" />
     <Content Include="Scripts\blockUI.js" />
+    <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap-material-datetimepicker\font\Material-Design-Icons.svg" />
     <Content Include="Scripts\bootstrap-material-datetimepicker\index.html" />
@@ -744,6 +746,7 @@
     <Content Include="Views\HelpTicket\Index.cshtml" />
     <Content Include="Views\SeeDoctor\DoctorProfileView.cshtml" />
     <Content Include="Views\DoctorAppointment\PatientProfileView.cshtml" />
+    <Content Include="Views\DoctorHelpTicket\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

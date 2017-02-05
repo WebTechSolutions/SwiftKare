@@ -1000,14 +1000,25 @@ namespace WebApp.Controllers
                 //Send Simple Email
 
                 var sampleEmailBody = @"
-                <h3>Thankyou for payment.</h3>
-                <p>Vivamus et pellentesque velit. Morbi nec nisl at tellus placerat finibus. Pellentesque cursus id dui a dictum. Maecenas at augue sollicitudin, condimentum metus eu, sagittis arcu. Proin quis elit ac neque tincidunt egestas a eget enim. Aliquam a augue faucibus, gravida dui eget, semper ipsum. Mauris et luctus nunc. Cras pretium lorem et erat egestas sagittis.</p>
-                <p>Cras placerat a enim et malesuada. Suspendisse eu sapien ultricies, commodo nulla quis, pharetra metus. Proin tempor eros id dui malesuada malesuada. Vivamus at tempus elit. Aliquam erat volutpat. Donec ultricies tortor tortor, ac aliquam diam pretium dignissim. Sed lobortis libero sed neque luctus, quis pellentesque nulla aliquet. Aliquam a nisi lobortis orci pretium tincidunt. Donec ac erat eget massa volutpat ornare ut id nunc.</p>
+                <h3>Thank you for payment.</h3>
+                <p>We have recieved your payment.</p>
                 <p>&nbsp;</p>
-                <p><strong>-Best Regards,<br/>Sender Name</strong></p>
+                <p><strong>-Best Regards,<br/>SwiftKare</strong></p>
                 ";
 
-                var oSimpleEmail = new Helper.EmailHelper("syed_jamshed_ali@yahoo.com", "Payment successful.", sampleEmailBody);
+                //var oSimpleEmail = new Helper.EmailHelper("syed_jamshed_ali@yahoo.com", "Payment successful.", sampleEmailBody);
+                var oSimpleEmail = new Helper.EmailHelper(SessionHandler.UserInfo.Email, "Payment successful.", sampleEmailBody);
+                oSimpleEmail.SendMessage();
+            }
+            else
+            {
+                var sampleEmailBody = @"
+                <h3>Sorry!</h3>
+                <p>We have not recieved your payment.</p>
+                <p>&nbsp;</p>
+                <p><strong>-Best Regards,<br/>SwiftKare</strong></p>
+                ";
+                var oSimpleEmail = new Helper.EmailHelper(SessionHandler.UserInfo.Email, "Payment failure.", sampleEmailBody);
                 oSimpleEmail.SendMessage();
             }
 

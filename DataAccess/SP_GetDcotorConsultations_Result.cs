@@ -25,7 +25,7 @@ namespace DataAccess
         public byte[] picture { get; set; }
         public string gender { get; set; }
         public string languageName { get; set; }
-        public long patientID { get; set; }
         public string utcappDate { get; set; }
+        public long patientID { get; set; }
     }
 }
