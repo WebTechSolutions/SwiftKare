@@ -296,12 +296,13 @@ var UserChat = function (apiKey, sessionId, token) {
     function SaveSessionEnd(sessionId) {
         //Get Consult Id From localStorage
         var consultationId = localStorage.getItem('consultationKey');
-
+       
         var cUrl = '/UserChat/StopConsultation?consultId=' + consultationId;
+        
         $.post(cUrl);
 
         localStorage.removeItem('consultationKey');
-
+        alert("Consult is completed successfully.");
         //cEndCallUrl is defined in page
         window.location = cEndCallUrl;
     }

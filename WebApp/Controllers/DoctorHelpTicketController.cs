@@ -9,10 +9,10 @@ using WebApp.Repositories.MessageRepositories;
 
 namespace WebApp.Controllers
 {
-    [PatientSessionExpire]
-    [Authorize(Roles = "Patient")]
+    [DoctorSessionExpire]
+    [Authorize(Roles = "Doctor")]
    
-    public class HelpTicketController : Controller
+    public class DoctorHelpTicketController : Controller
     {
         // GET: HelpTicket
         public ActionResult Index()

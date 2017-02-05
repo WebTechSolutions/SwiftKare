@@ -171,20 +171,25 @@
                                 <li class="whats_news">
                                     <a href="@Url.Action("Index","News")"><img src="~/Content/images/whats-new.png" alt="">  &nbsp <span class="menu-txt">Whats New</span> </a>
                                 </li>
+                                <li class="help_ticket">
+                                    <a href="@Url.Action("Index","HelpTicket")">
+                                        <i alt="" class="fa fa-send-o" style="color: #ff6000;font-weight:bold;"></i> &nbsp;<span class="menu-txt">Help Ticket</span>
+                                    </a>
+                                </li>
 
-                            </ul>
+                        </ul>
                         </div>
                     </div>
                     <div class="sidebar-footer hidden-small">
                         <a data-toggle="tooltip" data-placement="top" title="My Profile">
                             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                         </a>
-                        <a data-toggle="tooltip" data-placement="top" title="FullScreen" onclick="toggleFullScreen();">
+                        @*<a data-toggle="tooltip" data-placement="top" title="FullScreen" onclick="toggleFullScreen();">
                             <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
                         </a>
                         <a  data-toggle="tooltip" data-placement="top" title="Create Help Ticket">
                             <span class="fa fa-ticket" aria-hidden="true"></span>
-                        </a>
+                        </a>*@
                         @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
                         {
                             @Html.AntiForgeryToken()

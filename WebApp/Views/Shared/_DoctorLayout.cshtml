@@ -43,6 +43,8 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/dataTables.bootstrap.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/dataTables.buttons.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/dataTables.responsive.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-wysiwyg.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.hotkeys.js")"></script>
 
     <!--  If this is an MVC project then use the following -->
     <!--  <script src="~/signalr/hubs" type="text/javascript"></script> -->
@@ -153,6 +155,11 @@
                                 <li class="whats_news">
                                     <a href="@Url.Action("Index","News")"><img src="~/Content/images/whats-new.png" alt="">  &nbsp <span class="menu-txt">Whats New</span> </a>
                                 </li>
+                                <li class="help_ticket">
+                                    <a href="@Url.Action("Index","DoctorHelpTicket")">
+                                        <i alt="" class="fa fa-send-o" style="color: #ff6000;font-weight:bold;"></i> &nbsp;<span class="menu-txt">Help Ticket</span>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -160,12 +167,12 @@
                         <a data-toggle="tooltip" data-placement="top" title="My Profile">
                             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                         </a>
-                        <a data-toggle="tooltip" data-placement="top" title="Full Screen" onclick="toggleFullScreen();">
+                        @*<a data-toggle="tooltip" data-placement="top" title="Full Screen" onclick="toggleFullScreen();">
                             <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
                         </a>
                         <a data-toggle="tooltip" data-placement="top" title="Create Help Ticket">
                             <span class="fa fa-ticket" aria-hidden="true"></span>
-                        </a>
+                        </a>*@
                         @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
                         {
                             @Html.AntiForgeryToken()
@@ -194,7 +201,7 @@
                                 <ul class="dropdown-menu dropdown-usermenu pull-right">
                                     <li><a href="@Url.Action("Index","DoctorProfile")"> My Profile</a></li>
 
-                                    <li><a href="javascript:;">Create Help Ticket</a></li>
+                                    <li><a href="@Url.Action("Index","DoctorHelpTicket")">Create Help Ticket</a></li>
                                     <li>
                                         <a href="javascript:document.getElementById('logoutForm').submit()">
                                             <i class="fa fa-sign-out pull-right"></i>

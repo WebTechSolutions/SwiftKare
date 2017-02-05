@@ -71,11 +71,20 @@
     </div><!-- View App Detail -->
    
 </div>
-
+<iframe id="iframeDownload" style="display:none;"></iframe>
 <!-- /page content -->
 
 <script>
     var cID = 0;
+    function downloadFile(fileId,patID) {
+
+        if (confirm("Are you sure you want to downlod file?")) {
+            var cUrl = "@Url.Action("Download", "DoctorConsultation")?fileId=" + fileId+"&patID="+patID;
+
+            $('#iframeDownload').attr('src', cUrl);
+            $('#iframeDownload').load();
+        }
+    }
     function showConsult(consultID) {
         cID = consultID;
         //debugger;

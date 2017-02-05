@@ -1203,7 +1203,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
         <Function Name="SearchDoctorJSON" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="language" Type="varchar" Mode="In" />
           <Parameter Name="spec" Type="varchar" Mode="In" />
@@ -2330,7 +2329,7 @@
             <Parameter Name="owner_id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="sp_dropextendedproc">
-          <Parameter Name="functname" Mode="In" Type="String" />
+            <Parameter Name="functname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_helpdiagramdefinition">
             <Parameter Name="diagramname" Mode="In" Type="String" />
@@ -2601,10 +2600,11 @@
             <End Role="UserFile" EntitySet="UserFiles" />
           </AssociationSet>
           <FunctionImport Name="SP_GetDcotorConsultations" ReturnType="Collection(SwiftKareDBModel.SP_GetDcotorConsultations_Result)">
-            <Parameter Name="doctorID" Mode="In" Type="Int64" />
+          <Parameter Name="doctorID" Mode="In" Type="Int64" />
           </FunctionImport>
           <EntitySet Name="TimeZones" EntityType="SwiftKareDBModel.TimeZone" />
-          </EntityContainer>
+         
+        </EntityContainer>
         <ComplexType Name="SP_AppointmentReport_Result">
           <Property Type="Int64" Name="appID" Nullable="false" />
           <Property Type="String" Name="DName" Nullable="true" MaxLength="201" />
@@ -3731,19 +3731,7 @@
           <Property Type="Int64" Name="surgeryID" Nullable="true" />
           <Property Type="String" Name="bodyPart" Nullable="true" MaxLength="100" />
         </ComplexType>
-        <EntityType Name="TimeZone">
-          <Key>
-            <PropertyRef Name="zoneID" />
-          </Key>
-          <Property Name="zoneID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="timeZonee" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="cd" Type="DateTime" Precision="3" />
-          <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="md" Type="DateTime" Precision="3" />
-          <Property Name="active" Type="Boolean" />
-          <Property Name="zoneName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-        </EntityType>
+        
         <EntityType Name="ChatLog">
           <Key>
             <PropertyRef Name="chatID" />
@@ -4421,7 +4409,8 @@
           <Property Name="active" Type="Boolean" />
           <Property Name="zoneName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
-        </Schema>
+        
+      </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -5972,7 +5961,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          </EntityContainerMapping>
+        </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>
@@ -5986,7 +5975,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />

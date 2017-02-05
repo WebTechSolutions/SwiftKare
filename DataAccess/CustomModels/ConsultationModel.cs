@@ -20,6 +20,12 @@ namespace DataAccess.CustomModels
         public List<AppFiles> AppFiles { get; set; }
 
     }
+    public class ChatLogModel
+    {
+        public string sender { get; set; }
+        public string reciever { get; set; }
+        public string message { get; set; }
+    }
     public class ROSVM
     {
         public string systemItemName { get; set; }

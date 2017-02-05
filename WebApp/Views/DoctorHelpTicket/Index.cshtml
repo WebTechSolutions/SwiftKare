@@ -1,0 +1,248 @@
+﻿
+@using WebApp.Helper;
+@using System.Configuration;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+<!-- page content -->
+<div class="right_col">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>New Help Ticket</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+    @*<div class="compose left_col" style="display:block;float:left">*@
+
+
+    <div class="compose-body">
+        <div id="alerts"></div>
+
+        <div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor">
+            <div class="row">
+                <div class="col-md-12">
+                    <form class="form-inline m-b-10">
+                        <div class="form-group" style="width: 100%" ;>
+                            <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                            <input type="text" class="form-control" id="reciever" placeholder="To" style="width: 99%; margin-left: 5px;" readonly value="support@swiftkare.com">
+                        </div>
+                    </form>
+                    <!--<form class="form-inline m-b-10">
+                        <div class="form-group" style="width: 100%" ;>
+                            <label for="exampleInputName2" style="margin-left: 5px;">To...</label>
+                            <input type="text" class="form-control" id="exampleInputName2" placeholder="Cc" style="width: 99%; margin-left: 5px;">
+                        </div>
+                    </form>-->
+                    <form class="form-inline m-b-10">
+                        <div class="form-group" style="width: 100%" ;>
+                            <!-- <label for="exampleInputName2" style="margin-left: 5px;">To...</label> -->
+                            <input type="text" class="form-control" id="subject" placeholder="Subject" style="width: 99%; margin-left: 5px;">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
+                        <ul class="dropdown-menu"></ul>
+                    </div>
+
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a data-edit="fontSize 5">
+                                    <p style="font-size:17px">Huge</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-edit="fontSize 3">
+                                    <p style="font-size:14px">Normal</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-edit="fontSize 1">
+                                    <p style="font-size:11px">Small</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="btn-group">
+                        <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
+                        <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
+                        <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
+                        <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
+                    </div>
+
+                    <div class="btn-group">
+                        <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list-ul"></i></a>
+                        <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
+                        <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a>
+                        <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a>
+                    </div>
+
+                    <div class="btn-group">
+                        <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+                        <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
+                        <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
+                        <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
+                    </div>
+
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
+                        <div class="dropdown-menu input-append">
+                            <input class="span2" placeholder="URL" type="text" data-edit="createLink" />
+                            <button class="btn" type="button">Add</button>
+                        </div>
+                        <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="editor" class="editor-wrapper">
+
+        </div>
+    </div>
+
+    <div class="compose-footer">
+        <button id="send" class="btn btn-sm btn-primary" type="button" onclick="sendEmail()">Send</button>
+        @*<button class="btn btn-blank" onclick="document.getElementById('fileID').click();return false;">
+            <i class="fa fa-paperclip" aria-hidden="true" style="font-size: 18px; cursor: pointer;"></i>
+            </button>*@
+
+
+        <input type="file" id="fileID" style="visibility: hidden; display: none" />
+        <button id="btnSelectedFile" type="button" class="btn btn-default" style="display:none;">
+            <span id="spnSelFileName"></span> <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+    </div>
+    @*</div>*@
+</div>
+
+<!-- bootstrap-wysiwyg -->
+<script>
+
+    function sendEmail()
+    {
+        if ($("#subject").val() == '') {
+            alert('Email subject is missing.');
+            return;
+        }
+        var msg = $("#editor").html();
+        msg= msg.replace(/(\r\n|\n|\r)/gm, "");
+        if (msg.trim().length==0) {
+            alert('Blank message is not allowed.');
+            return;
+        }
+        showLoader();
+        var _objEmail = {};
+        _objEmail["reciever"] = $("#reciever").val();
+        _objEmail["subject"] = $("#subject").val();
+
+        _objEmail["message"] = msg.trim();
+        _objEmail["sender"] = '@SessionHandler.UserInfo.Email';
+        _objEmail["attachmentPath"] = $("#fileID").val();
+        $.ajax({
+            url: '@Url.Action("SendHelpTicket", "DoctorHelpTicket")',
+            type: "POST",
+            data: _objEmail,
+            dataType: 'json',
+            success: function (result) {
+
+                   if (result.Message != undefined) {
+                   new PNotify({ title: 'Error', text: result.Message, type: 'error', styling: 'bootstrap3' });
+
+                }
+                else {
+                    new PNotify({ title: 'Success', text: "Email is sent successfully.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
+                     }
+
+            },
+            error: function (err) {
+
+                new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+
+            }
+        });
+        hideLoader();
+    }
+
+    $(document).ready(function () {
+
+        $("#fileID").change(function () {
+            var filepath = $("#fileID").val();
+            var filename = filepath.substring(filepath.lastIndexOf('\\') + 1);
+            $("#spnSelFileName").html(filename);
+            $("#btnSelectedFile").show();
+        });
+        function initToolbarBootstrapBindings() {
+          var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier',
+              'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
+              'Times New Roman', 'Verdana'
+            ],
+            fontTarget = $('[title=Font]').siblings('.dropdown-menu');
+          $.each(fonts, function(idx, fontName) {
+            fontTarget.append($('<li><a data-edit="fontName ' + fontName + '" style="font-family:\'' + fontName + '\'">' + fontName + '</a></li>'));
+          });
+          $('a[title]').tooltip({
+            container: 'body'
+          });
+          $('.dropdown-menu input').click(function() {
+              return false;
+            })
+            .change(function() {
+              $(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');
+            })
+            .keydown('esc', function() {
+              this.value = '';
+              $(this).change();
+            });
+
+          $('[data-role=magic-overlay]').each(function() {
+            var overlay = $(this),
+              target = $(overlay.data('target'));
+            overlay.css('opacity', 0).css('position', 'absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+          });
+
+          if ("onwebkitspeechchange" in document.createElement("input")) {
+            var editorOffset = $('#editor,#editor1,#editor2').offset();
+
+            $('.voiceBtn').css('position', 'absolute').offset({
+              top: editorOffset.top,
+              left: editorOffset.left + $('#editor').innerWidth() - 35
+            });
+          } else {
+            $('.voiceBtn').hide();
+          }
+        }
+
+        function showErrorAlert(reason, detail) {
+          var msg = '';
+          if (reason === 'unsupported-file-type') {
+            msg = "Unsupported format " + detail;
+          } else {
+            console.log("error uploading file", reason, detail);
+          }
+          $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>' +
+            '<strong>File upload error</strong> ' + msg + ' </div>').prependTo('#alerts,#alerts1,#alerts2');
+        }
+
+        initToolbarBootstrapBindings();
+
+        $('#editor,#editor1,#editor2').wysiwyg({
+          fileUploadError: showErrorAlert
+        });
+
+
+      });
+</script>
+<!-- /bootstrap-wysiwyg -->
+

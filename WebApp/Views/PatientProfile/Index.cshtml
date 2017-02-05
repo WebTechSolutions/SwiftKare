@@ -330,7 +330,7 @@
                                                 @Html.DropDownListFor(x => x.SectetQuestion2, (List<SelectListItem>)ViewBag.SecretQuestion, new { @class = "form-control" })
                                             </label>
                                             <span id="spnErrorAnswer2" style="display:none; color:red; float:right;">Please provide answer.</span>
-                                            @Html.TextBoxFor(x => x.SectetAnswer2, new { @class = "form-control" })
+                                            @Html.TextBoxFor(x => x.SectetAnswer2, new { @class = "form-control"})
                                         </div>
                                         <div class="form-group">
                                             <label style="width:100%;">
@@ -655,6 +655,7 @@
 
         $('.datepicker').daterangepicker({
             singleDatePicker: true,
+            showDropdowns: true,
             calender_style: "picker_1"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);

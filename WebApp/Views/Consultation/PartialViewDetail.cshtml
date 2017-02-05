@@ -1,9 +1,11 @@
 ﻿@using System.Globalization
+
+
 @model DataAccess.CustomModels.ConsultationModel
 @{
     Layout = null;
 }
-@if (Model != null && Model.consultID != 0)
+@if (Model != null && Model.consultID != 0)//
 {
     var doctorName = "";
     var age = "N.A";
@@ -20,14 +22,23 @@
     var cellPhone = "N.A";
     var formattedDate = "";
     var formattedTime = "";
-    var subjective = "";
-    var assessment = "";
-    var plans = "";
+    var subjective = "N.A";
+    var objective = "N.A";
+    var assessment = "N.A";
+    var plans = "N.A";
     var utcdate = "";
+
+    if (Model.subjective != null) { subjective = Model.subjective; }
+    if (Model.objective != null) { objective = Model.objective; }
+    if (Model.assessment != null) { assessment = Model.assessment; }
+    if (Model.plans != null) { plans = Model.plans; }
+
+
     if (Model.AppointmentVM != null)
     {
         appDate = Model.AppointmentVM.appDate;
         appTime = Model.AppointmentVM.appTime;
+        pharmacy = Model.PatientVM.pharmacy;
         if (Model.AppointmentVM.rov != null) { rov = Model.AppointmentVM.rov; }
         if (Model.AppointmentVM.chiefComplaints != null)
         {
@@ -38,7 +49,6 @@
             amount = Model.AppointmentVM.paymentAmt.ToString();
         }
     }
-
 
 
     if (Model.DoctorVM != null)
@@ -57,34 +67,9 @@
         {
             cellPhone = Model.DoctorVM.dcellPhone;
         }
-        if (Model.DoctorVM.languages != null)
-        {
-            foreach (var item in Model.DoctorVM.languages)
-            {
-                languages = languages + item.languageName + ",";
 
-            }
-        }
-        if (Model.DoctorVM.specialities != null)
-        {
-            foreach (var item in Model.DoctorVM.specialities)
-            {
-                specialities = specialities + item.specialityName + ",";
-
-            }
-        }
     }
-
-
-    if (Model.PatientVM != null)
-    { pharmacy = Model.PatientVM.pharmacy; }
-
-
-
     if (languages == "") { languages = "N.A"; }
-    if (specialities == "") { specialities = "N.A"; }
-
-
 
     if (appDate != "")
     {
@@ -117,40 +102,151 @@
 
 
     <div class="modal-body text-left">
-        <div class="user-detail">
+        <div style="color: #375781;width: 250px;">
             <div class="img-1">
-                <img src="@(string.IsNullOrEmpty(Model.DoctorVM.ProfilePhotoBase64) ? WebApp.Helper.SessionHandler.ProfilePhoto : Model.DoctorVM.ProfilePhotoBase64)" alt="" class="m-b-10 img-responsive">
+                <img src="@(string.IsNullOrEmpty(Model.PatientVM.ProfilePhotoBase64) ? WebApp.Helper.SessionHandler.ProfilePhoto : Model.PatientVM.ProfilePhotoBase64)" alt="" class="m-b-10 img-responsive">
             </div>
             <div class="name-sec">
                 <h2>Dr.@doctorName</h2>
                 <p style="font-size:10px">
-                    @age<br>@*<span>Gender: @gender</span>*@
+                    Age:@age<br>
                     Gender: @gender<br>
                     Languages: @languages<br>
-                    Specialities: @specialities<br>
                     Cell Phone:@cellPhone
                 </p>
             </div>
         </div>
+        <div style="margin-left: 334px; margin-top: -2px;" class="chat-sec">
+            <h2>Chat Text</h2>
 
+            <div style="font-size: 10px; overflow: auto; height: 77px;">
+                <table>
+                    @if (ViewBag.ChatText != null)
+                    {
+                        foreach (var item in ViewBag.ChatText)
+                        {
+
+                            <tr>
+                                <td style="word-break:break-word"><b>@item.sender</b>: @item.message</td>
+
+                            </tr>
+
+                        }
+                    }
+                </table>
+
+            </div>
+
+        </div>
+        <div style="border-top: 1px Solid #c3bebe; margin: 15px -15px -30px; padding: 10px 21px 0; ">
+            <p style="color: #375781;"><span style="width: 150px; float: left;">Pharmacy</span><b>@pharmacy</b></p>
+        </div>
         <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 36px -15px 20px; padding: 10px 21px 0; ">
-            <p style="color: #375781;"><span style="width: 150px; float: left;">App. Date/Time</span><b>
-                <span id="replaceme"></span>
-            <script type="text/javascript">
+            <p style="color: #375781;">
+                <span style="width: 150px; float: left;">App. Date/Time</span><b>
+                    <span id="replaceme"></span>
+                    <script type="text/javascript">
                                 var fdate = showLocal('@utcdate');
                                 $("#replaceme").html(fdate);
-            </script></b></p>
+                    </script>
+                </b>
+            </p>
         </div>
-        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Reason of Visit:</b><br> @rov</p>
-        <p id="p_chiefComplaints" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Chief Complaint:</b><br> @chiefComplaints</p>
-        <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Consult Charges:</b><br> @amount</p>
-          
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
+            <b>Reason of Visit:</b>
+            <div style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; width:290px; height:40px;overflow:auto;"> @rov</div>
+        </p>
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
+            <b>Chief Complaint:</b>
+            <div id="p_chiefComplaints" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; width:290px; height:40px;overflow:auto;">@chiefComplaints</div>
+        </p>
+
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
+            <b>Consult Charges:</b>
+            <div id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; height:40px; width:290px; overflow:auto;"> @amount</div>
+        </p>
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
+            <b>Appointment Files:</b>
+            <div id="p_files" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; width:290px; height:40px;overflow:auto;">
+                <table>
+                    <tr>
+                        @if (Model.AppFiles != null || Model.AppFiles.Count > 0)
+                {
+
+                    foreach (var item in Model.AppFiles)
+                    {
+                                <td>
+                                    <button id="@item.fileID" type="button" class="btn btn-default" style="display:block; font-size:10px;position:relative" onclick="downloadFile(@item.fileID,@Model.PatientVM.patientid)">
+                                        @item.FileName.Trim()
+                                    </button>
+                                </td>
+
+                            }
+
+                        }
+                    </tr>
+                </table>
+            </div>
+        </p>
+        <p id="psubjective" style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px; margin-top: -323px;">
+            <b>Subjective:</b>
+            <div style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px; height:40px;overflow:auto;"> @subjective</div>
+        </p>
+
+        <p id="psubjective" style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px; ">
+            <b>Objective:</b>
+            <div style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px; height:40px;overflow:auto;">@objective</div>
+        </p>
+
+        <p id="pojective" style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px; ">
+            <b>Assessment:</b>
+            <div style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px; height:40px;overflow:auto;">@assessment</div>
+        </p>
+
+        <p id="plans" style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px;">
+            <b>Plans:</b>
+            <div style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px; height:40px;overflow:auto;">@plans</div>
+        </p>
+        <div class="table-responsive" style="margin-top: 23px; border:0px">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td style="padding: 7px">
+                            <p style="color: rgb(55, 87, 129); font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
+                                <b>Review of Systems:</b><br>
+                                @if (Model.rosItems != null || Model.rosItems.Count > 0)
+                                {
+
+                                    foreach (var item in Model.rosItems)
+                                    {
+
+
+                                        <div class="checkbox" style="display: inline-block;">
+                                            <div class="icheckbox_flat-green checked" style="position: relative;">
+                                                <input type="checkbox" class="flat" checked="checked" disabled style="position: absolute;
+                opacity: 0;"><ins class="iCheck-helper" style="position: absolute;top: 0%;left: 0%;display: block;width: 100%;height: 100%;margin: 0px;padding: 0px;background: rgb(255, 255, 255);border: 0px;opacity: 0;"></ins>
+                                            </div>&nbsp; @item.systemItemName
+
+                                        </div>
+
+
+
+                                    }
+
+                                }
+                            </p>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
         <div class="m-t-10" style="margin-top:-26px">
-            <button onclick=$('#myModal4').modal('toggle');  id="consultationDetail" style="width: 100%; border-radius: 0; color: #fff; padding: 15px 5px; font-size: 20px;" type="button" class="btn btn-primary">OK</button>
-            @*<li><a href="#" class="reschedule" data-id="@item.appDate" data-toggle="modal" data-target="#myModal1" data-todo='{"docid":"@item.doctorID","doctorName":"@item.DoctorName","appID":"@item.appID","appDate":"@item.appDate"}' onclick=showDoctorTimings(@item.doctorID,@item.appID) id="@item.doctorID">Reschedule App</a></li>*@
-            
+            <button onclick=$("#myModal4").hide('hide'); id="consultationDetail" style="width: 100%; border-radius: 0; color: #fff; padding: 15px 5px; font-size: 20px;" type="button" class="btn btn-primary">OK</button>
 
         </div>
 
     </div><!--/.modal body-->
 }
+

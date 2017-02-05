@@ -47,9 +47,18 @@ namespace WebApp.Controllers
         {
             try
             {
-                long cid = Convert.ToInt64(consultID);
-                var oData = oConsultationRepository.GetConsultationDetail(cid);
-                return PartialView("PartialViewDetail",oData);
+                if (consultID != 0)
+                {
+                    long cid = Convert.ToInt64(consultID);
+                    var oData = oConsultationRepository.GetConsultationDetail(cid);
+                    var oChat = oConsultationRepository.GetChat(cid);
+                    ViewBag.ChatText = oChat;
+                    return PartialView("PartialViewDetail", oData);
+                }
+                else
+                {
+                    return PartialView("PartialViewDetail");
+                }
             }
             catch (System.Web.Http.HttpResponseException ex)
             {

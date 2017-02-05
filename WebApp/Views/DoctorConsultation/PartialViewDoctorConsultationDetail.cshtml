@@ -117,7 +117,7 @@
             <div class="name-sec">
                 <h2>@patienName</h2>
                 <p style="font-size:10px">
-                    @age<br>
+                    Age:@age<br>
                     Gender: @gender<br>
                     Languages: @languages<br>
                     Specialities: @specialities<br>
@@ -127,19 +127,23 @@
         </div>
         <div style="margin-left: 334px; margin-top: -114px;" class="chat-sec">
             <h2>Chat Text</h2>
+            
             <div style="font-size: 10px; overflow: auto; height: 77px;">
-                Doctor:hi<br>
-                Patient: hello<br>
-                Doctor: How are youHow are youHow are youHow are youHow are you How are you How are you How are you How are you How are you How are you<br>
-                Patient: Not fine <br>
-                Doctor: Oh! Ewhat happened<br>
-                Patient: Waru programm hai ustad<br>
-                Doctor:hi<br>
-                Patient: hello<br>
-                Doctor: How are you<br>
-                Patient: Not fine <br>
-                Doctor: Oh! Ewhat happened<br>
-                Patient: Waru programm hai ustad<br>
+                <table>
+                    @if (ViewBag.ChatText != null)
+                    {
+                        foreach (var item in ViewBag.ChatText)
+                        {
+
+                            <tr>
+                                <td style="word-break:break-word"><b>@item.sender</b>: @item.message</td>
+                               
+                            </tr>
+
+                        }
+                    }
+                </table>
+               
             </div>
 
         </div>
@@ -154,32 +158,37 @@
             </script></b></p>
         </div>
         <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Reason of Visit:</b>
-        <div style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; width:111px; height:40px;overflow:auto;"> @rov</div>
+        <div style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; width:290px; height:40px;overflow:auto;"> @rov</div>
         </p>
     <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Chief Complaint:</b>
-        <div  id="p_chiefComplaints" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; height:40px;overflow:auto;">@chiefComplaints</div>
+        <div  id="p_chiefComplaints" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; width:290px; height:40px;overflow:auto;">@chiefComplaints</div>
         </p>
         
         <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
             <b>Consult Charges:</b>
-            <div id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; height:40px;overflow:auto;"> @amount</div>
+            <div id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; height:40px; width:290px; overflow:auto;"> @amount</div>
         </p>
         <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
             <b>Appointment Files:</b>
-            <div id="p_files" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; height:40px;overflow:auto;">
-               
-                @if (Model.AppFiles != null || Model.AppFiles.Count > 0)
+            <div id="p_files" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; width:290px; height:40px;overflow:auto;">
+               <table>
+                   <tr>
+                       @if (Model.AppFiles != null || Model.AppFiles.Count > 0)
                 {
 
                     foreach (var item in Model.AppFiles)
                     {
+                               <td>
+                                   <button id="@item.fileID" type="button" class="btn btn-default" style="display:block; font-size:10px;position:relative" onclick="downloadFile(@item.fileID,@Model.PatientVM.patientid)">
+                                       @item.FileName.Trim()
+                                   </button>
+                               </td>
 
-                        <button id="@item.fileID" type="button" class="btn btn-default" style="display:block; font-size:10px" onclick="downloadFile(@item.fileID)">
-                            @item.FileName.Trim()
-                        </button>
-                    }
+                           }
 
-                }
+                       }
+                   </tr>
+                </table>
             </div>
             </p>
 <p id="psubjective" style="color: rgb(55, 87, 129); font-family: Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px; font-weight: 400; line-height: 1.471; margin-left: 333px; margin-top: -323px;">
@@ -243,84 +252,4 @@
             </div><!--/.modal body-->
             }
 
-            <!-- Datatables -->
-            <script>
-                $(document).ready(function () {
-                    var handleDataTableButtons = function () {
-                        if ($("#datatable-buttons").length) {
-                            $("#datatable-buttons").DataTable({
-                                dom: "Bfrtip",
-                                buttons: [
-                                  {
-                                      extend: "copy",
-                                      className: "btn-sm"
-                                  },
-                                  {
-                                      extend: "csv",
-                                      className: "btn-sm"
-                                  },
-                                  {
-                                      extend: "excel",
-                                      className: "btn-sm"
-                                  },
-                                  {
-                                      extend: "pdfHtml5",
-                                      className: "btn-sm"
-                                  },
-                                  {
-                                      extend: "print",
-                                      className: "btn-sm"
-                                  },
-                                ],
-                                responsive: true
-                            });
-                        }
-                    };
-
-                    TableManageButtons = function () {
-                        "use strict";
-                        return {
-                            init: function () {
-                                handleDataTableButtons();
-                            }
-                        };
-                    }();
-
-                    $('#rescheduledatatable').dataTable();
-
-                    $('#datatable-keytable').DataTable({
-                        keys: true
-                    });
-
-                    $('#datatable-responsive').DataTable();
-
-                    $('#datatable-scroller').DataTable({
-                        ajax: "js/datatables/json/scroller-demo.json",
-                        deferRender: true,
-                        scrollY: 380,
-                        scrollCollapse: true,
-                        scroller: true
-                    });
-
-                    $('#datatable-fixed-header').DataTable({
-                        fixedHeader: true
-                    });
-
-                    var $datatable = $('#datatable-checkbox');
-
-                    $datatable.dataTable({
-                        'order': [[1, 'asc']],
-                        'columnDefs': [
-                          { orderable: false, targets: [0] }
-                        ]
-                    });
-                    $datatable.on('draw.dt', function () {
-                        $('input').iCheck({
-                            checkboxClass: 'icheckbox_flat-green'
-                        });
-                    });
-
-                    TableManageButtons.init();
-                });
-            </script>
-            <!-- /Datatables -->
+            

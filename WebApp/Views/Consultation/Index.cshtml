@@ -53,12 +53,12 @@
                 @{
                     Html.RenderAction("PartialViewConsultation", "Consultation");
                 }
-                </div>
             </div>
+        </div>
     </div>
     <input type="text" style="display:none" id="pvappid" value="0">
     <div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4">
-        <div class="modal-dialog" role="document" style="width: 350px;">
+        <div class="modal-dialog" role="document" style="width: 648px;">
             <div id='myModalContent' class="modal-content" style="border-radius: 0;">
                 @{
                     Html.RenderAction("ViewDetail", "Consultation", new { consultID = 0 });
@@ -66,6 +66,7 @@
             </div>
         </div>
     </div><!-- View App Detail -->
+    
     <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="width: 500px;margin-left: 280px;">
@@ -87,20 +88,21 @@
                             </div>
                         </form>
                         <form class="form-horizontal form-label-left">
-                            <div class="col-sm-12 text-center" id="rdiv"> @*style="margin-left:97px"*@
-                               
+                            <div class="col-sm-12 text-center" id="rdiv">
+                                @*style="margin-left:97px"*@
+
                                 <a href="javascript:void(0);" onclick="toggle(this);"><span id="s1" class="fa fa-star-o"></span></a>
                                 <a href="javascript:void(0);"><span id="s2" class="fa fa-star-o"></span></a>
                                 <a href="javascript:void(0);"><span id="s3" class="fa fa-star-o"></span></a>
                                 <a href="javascript:void(0);"><span id="s4" class="fa fa-star-o"></span></a>
                                 <a href="javascript:void(0);"><span id="ss5" class="fa fa-star-o"></span></a>
-                                
+
                             </div>
                             <div class="col-sm-12 text-center" style="margin-top: 20px;">
                                 <textarea id="message" class="form-control" name="message" data-parsley-maxlength="1000"
-                                          data-parsley-validation-threshold="10" ></textarea>
+                                          data-parsley-validation-threshold="10"></textarea>
                             </div>
-                           <button style="margin-right: 210px;margin-top: 6px;" type="button" class="btn btn-primary btn-sm pull-right" id="apply" onclick=WriteReview($("#message").val())>Submit</button>
+                            <button style="margin-right: 210px;margin-top: 6px;" type="button" class="btn btn-primary btn-sm pull-right" id="apply" onclick=WriteReview($("#message").val())>Submit</button>
                         </form>
 
                     </div><!--/.modal body-->
@@ -109,11 +111,21 @@
         </div>
     </div><!-- col1 -->
 </div>
-
+<iframe id="iframeDownload" style="display:none;"></iframe>
 <!-- /page content -->
 <script>
     var star=0;
     var cID = 0;
+
+    function downloadFile(fileId) {
+
+        if (confirm("Are you sure you want to downlod file?")) {
+            var cUrl = "@Url.Action("Download", "PatientFiles")?fileId=" + fileId;
+
+            $('#iframeDownload').attr('src', cUrl);
+            $('#iframeDownload').load();
+        }
+    }
     function showConsult(consultID)
     {
         cID = consultID;
