@@ -318,7 +318,7 @@ var UserChat = function (apiKey, sessionId, token) {
 
     //External Functions - Starts
     this.initialize = function () {
-
+        debugger;
         // Initialize Session Object
         session = OT.initSession(apiKey, sessionId)
         .on('streamCreated', function (event) {
@@ -329,7 +329,7 @@ var UserChat = function (apiKey, sessionId, token) {
                 streamCreateTime = new Date();
 
                 callInterval = setInterval(showTimeElapsed, 1000);
-
+                debugger;
                 subscriber = session.subscribe(event.stream, 'divSecondaryVideo', {
                     insertMode: 'append',
                     buttonDisplayMode: 'off',
@@ -343,7 +343,7 @@ var UserChat = function (apiKey, sessionId, token) {
                 subscriber.on("disconnected", function (event) {
                     alert("It seems another user has network issue, please wait till resolution.");
                 });
-
+                debugger;
                 //For callerId use publisher's id; for calle id use subscriber's id
                 SaveSessionStart(sessionId, 1, 1);
 

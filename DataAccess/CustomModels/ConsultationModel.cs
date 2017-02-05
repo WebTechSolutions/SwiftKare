@@ -17,6 +17,7 @@ namespace DataAccess.CustomModels
         public DoctorVM DoctorVM { get; set; }
         public PatientVM PatientVM { get; set; }
         public AppointmentVM AppointmentVM { get; set; }
+        public List<AppFiles> AppFiles { get; set; }
 
     }
     public class ROSVM

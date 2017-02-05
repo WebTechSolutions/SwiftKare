@@ -202,7 +202,17 @@ namespace RestAPIs.Controllers
                                                   specialities = (from s in db.DoctorSpecialities
                                                                   where s.doctorID == doc.doctorID && s.active == true
                                                                   select new { specialityName = s.specialityName }).ToList()
-                                              }).FirstOrDefault()
+                                              }).FirstOrDefault(),
+                                  AppFiles = (from l in db.UserFiles
+                                              where l.active == true && l.AppID == cn.appID
+                                              orderby l.fileID descending
+                                              select new
+                                              {
+                                                  fileID = l.fileID,
+                                                  FileName = l.FileName.Trim(),
+                                                  fileContent = l.fileContent,
+                                                  documentType = l.documentType
+                                              }).ToList()
                               }).FirstOrDefault();
                 response = Request.CreateResponse(HttpStatusCode.OK, result);
                 return response;
