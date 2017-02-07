@@ -32,7 +32,7 @@ namespace WebApp.Controllers
         {
             setInitialViewData();
             var oModel = oProfileRepository.GetPatientProfileWithAllValues(SessionHandler.UserInfo.Id);
-            oModel.ConvertByteArrayToBase64();
+         //   oModel.ConvertByteArrayToBase64();
 
             return View(oModel);
         }
@@ -40,7 +40,7 @@ namespace WebApp.Controllers
         public ActionResult Profile()
         {
             var oModel = oProfileRepository.GetPatientProfileViewOnly(SessionHandler.UserInfo.Id);
-            oModel.ConvertByteArrayToBase64();
+          //  oModel.ConvertByteArrayToBase64();
 
             return View(oModel);
         }

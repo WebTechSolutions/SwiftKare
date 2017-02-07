@@ -25,5 +25,6 @@ namespace DataAccess
         public string rov { get; set; }
         public string chiefComplaints { get; set; }
         public string utcappDate { get; set; }
+        public byte[] picture { get; set; }
     }
 }

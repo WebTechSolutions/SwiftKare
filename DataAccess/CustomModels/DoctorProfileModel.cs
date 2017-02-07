@@ -30,6 +30,7 @@ namespace DataAccess.CustomModels
         public string zip { get; set; }
         public Nullable<System.DateTime> dob { get; set; }
         public byte[] picture { get; set; }
-       
+        public string ProfileBase64 { get; set; }
+
     }
 }

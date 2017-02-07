@@ -509,6 +509,19 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Scripts\bootstrap\bootstrap-progressbar.min.js" />
+    <Content Include="Scripts\bootstrap\dist\css\bootstrap-theme.css" />
+    <Content Include="Scripts\bootstrap\dist\css\bootstrap-theme.min.css" />
+    <Content Include="Scripts\bootstrap\dist\css\bootstrap.css" />
+    <Content Include="Scripts\bootstrap\dist\css\bootstrap.min.css" />
+    <Content Include="Scripts\bootstrap\dist\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Scripts\bootstrap\dist\js\bootstrap.js" />
+    <Content Include="Scripts\bootstrap\dist\js\bootstrap.min.js" />
+    <Content Include="Scripts\bootstrap\dist\js\npm.js" />
+    <Content Include="Scripts\build\css\custom.css" />
+    <Content Include="Scripts\build\css\custom.min.css" />
+    <Content Include="Scripts\build\js\custom.js" />
+    <Content Include="Scripts\build\js\custom.min.js" />
     <Content Include="Scripts\date.js" />
     <Content Include="Scripts\dateformatter.js" />
     <Content Include="Scripts\dropzone.min.js" />
@@ -535,6 +548,14 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <None Include="Properties\PublishProfiles\SKWeb.pubxml" />
+    <Content Include="Scripts\bootstrap\dist\css\bootstrap-theme.css.map" />
+    <Content Include="Scripts\bootstrap\dist\css\bootstrap-theme.min.css.map" />
+    <Content Include="Scripts\bootstrap\dist\css\bootstrap.css.map" />
+    <Content Include="Scripts\bootstrap\dist\css\bootstrap.min.css.map" />
+    <Content Include="Scripts\bootstrap\dist\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Scripts\bootstrap\dist\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Scripts\bootstrap\dist\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Scripts\bootstrap\dist\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\buttons.bootstrap.min.js" />
     <Content Include="Scripts\buttons.flash.min.js" />
@@ -578,6 +599,8 @@
     <Content Include="Scripts\jquery.vmap.js" />
     <Content Include="Scripts\jquery.vmap.sampledata.js" />
     <Content Include="Scripts\jquery.vmap.world.js" />
+    <Content Include="Scripts\jquery\dist\jquery.js" />
+    <Content Include="Scripts\jquery\dist\jquery.min.js" />
     <Content Include="Scripts\Medicine\Medicine.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
@@ -747,13 +770,11 @@
     <Content Include="Views\SeeDoctor\DoctorProfileView.cshtml" />
     <Content Include="Views\DoctorAppointment\PatientProfileView.cshtml" />
     <Content Include="Views\DoctorHelpTicket\Index.cshtml" />
+    <Content Include="Scripts\jquery\dist\jquery.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\bootstrap\" />
-    <Folder Include="Scripts\build\" />
     <Folder Include="Scripts\charts\" />
-    <Folder Include="Scripts\jquery\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
