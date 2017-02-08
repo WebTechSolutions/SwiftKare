@@ -41,7 +41,9 @@ namespace WebApp.Controllers
                 openTokSession.UserType = userType;
 
                 HttpContext.Session["MyOpenTokSession"] = openTokSession;
-                return openTokSession.SessionId.ToString()+"*"+ openTokSession.TokenId.ToString();
+                return openTokSession.SessionId.ToString()+"*"+ openTokSession.TokenId.ToString()+"*"+
+                    UserChatHelper.TokBoxApiKey+"*"+openTokSession.UserType+"*"+openTokSession.PatientName+"*"+
+                    openTokSession.DoctorName;
             }
             catch (Exception ex)
             {

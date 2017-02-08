@@ -119,7 +119,7 @@ namespace RestAPIs.Controllers
                                         select new DoctorProfileVM
                                         {
                                             DoctorID = l.doctorID,
-                                            ProfilePhotoBase64 = System.Text.Encoding.ASCII.GetString(l.picture),
+                                            ProfilePhoto = ((l.picture)),
                                             TitleName = l.title,
                                             Prefix = l.suffix,
                                             FirstName = l.firstName,
@@ -640,7 +640,7 @@ namespace RestAPIs.Controllers
                                          select new PatientProfileVM
                                          {
                                              PatientID = l.patientID,
-                                             ProfilePhotoBase64 = System.Text.Encoding.ASCII.GetString(l.picture),
+                                             ProfilePhoto = (l.picture),
                                              TitleName = l.title,
                                              Prefix = l.suffix,
                                              FirstName = l.firstName,
@@ -718,7 +718,7 @@ namespace RestAPIs.Controllers
                                          select new PatientProfileWithExtraInfoVM
                                          {
                                              PatientID = l.patientID,
-                                             ProfilePhotoBase64 = System.Text.Encoding.ASCII.GetString(l.picture),
+                                             ProfilePhoto = (l.picture),
                                              TitleName = l.title,
                                              Prefix = l.suffix,
                                              FirstName = l.firstName,

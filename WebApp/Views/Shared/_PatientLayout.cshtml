@@ -487,6 +487,7 @@
                     var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Patient&receiverId=" + senderid + "&doctorName=" + docName + "&patientName=@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)&ConsultID=" + consultID;
 
                     $.post(cUrlReadyForCall, function (oResp) {
+                        //oResp is    SessionId*TokenId*TokBoxApiKey*UserType*PatientName*DoctorName
                         debugger;
                         if (oResp != "0") {
                             //Log Tokbox info generated event
@@ -511,60 +512,7 @@
                     });
 
 
-                    //Create Consult , in succcess cal below
-                    @*debugger;
-                    var _objConsult = {};
-                    _objConsult["doctorId"] = senderid;
-                    _objConsult["patientId"] = '@SessionHandler.UserInfo.Id';
-                    _objConsult["appID"] = appId;
-                    _objConsult["sessionID"] = "0";
-                    _objConsult["token"] = "0";
-                    _objConsult["userID"] = '@SessionHandler.UserInfo.userId';
-                    $.ajax({
-                        type: 'POST',
-                        url: '/Doctor/CreateConsult',
-                        data: JSON.stringify(_objConsult),
-                        contentType: "application/json",
-                        dataType: 'json',
-                        success: function (response) {
-
-                            if (response.Success == true) {
-                                if (response.ApiResultModel.message != "") {
-                                    new PNotify({
-                                        title: 'Error',
-                                        text: response.ApiResultModel.message,
-                                        type: 'error',
-                                        styling: 'bootstrap3'
-                                    });
-                                }
-                                else if (response.ApiResultModel.message == "") {
-                                    new PNotify({
-                                        title: 'Success',
-                                        text: "Consultation is created successfully.",
-                                        type: 'info', addclass: 'dark',
-                                        styling: 'bootstrap3'
-                                    });
-                                    var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Patient&receiverId=" + senderid + "&doctorName=" + docName + "&patientName=@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)&aptId=" + appId;
-
-                                    $.post(cUrlReadyForCall, function (oResp) {
-                                        if (oResp) {
-                                            localStorage.setItem('consultationKey', oResp);
-
-                                            chat.server.patientRedirectedToCall
-                                                (senderConnId, oResp, '@SessionHandler.UserInfo.Id', '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)');
-
-                                            //Redirect doctor to call
-                                            window.location = '@Url.Action("Index","UserChat")';
-                                        }
-                                    });
-
-                                }
-                            }
-
-                        },
-                        error: errorRes
-
-                    });*@
+                    
 
 
 
