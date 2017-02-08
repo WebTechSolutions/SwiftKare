@@ -174,18 +174,25 @@
         <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Consult Charges:</b><br> @amount</p>
         
         <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
-            <b>Appointment Files:</b><br>
-            @if (Model.AppFiles != null || Model.AppFiles.Count > 0)
-            {
-
-                foreach (var item in Model.AppFiles)
-                {
+            
+            @if (Model.AppFiles.Count > 0)
+                        {
+                            var j = 1;
+                <b>Appointment Files:</b><br>
+                            foreach (var item in Model.AppFiles)
+                            {
 
                     <button id="@item.fileID" type="button" class="btn btn-default" style="display:block; font-size:10px" onclick="downloadFile(@item.fileID)">
-                       @item.FileName.Trim()
+                        File+@j;
                     </button>
+                    j = j + 1;
                 }
 
+            }
+            @if (Model.AppFiles ==null)
+            {
+                <b>Appointment Files:</b><br>N.A
+                
             }
         </p>
 

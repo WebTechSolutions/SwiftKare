@@ -32,7 +32,10 @@ else
                 {
 
                 <tr class="even pointer">
-                    <td style="text-align:center">@item.DoctorName</td>
+                    <td style="text-align:center;">
+                        <a href="" onclick='showProfile(@item.doctorID)' class="thumbnail-col-inner m-b-15" data-toggle="modal" data-target="#myModal8" style="word-wrap: break-word;">
+                            @item.DoctorName
+                            </a></td>
                     <td style="text-align:center"><span class="replaceme" id="@("replaceme"+j)"></span>
                         <script type="text/javascript">
                         var fdate = showLocal('@item.utcappDate');
@@ -64,17 +67,30 @@ else
         </tbody>
     </table>
 }
+
 <!-- Datatables -->
 <script>
       $(document).ready(function() {
         
       
-          $('#datatableupcoming').DataTable();
-        
+          //$('#datatableupcoming').DataTable();
+          $('#datatableupcoming').DataTable({
+              "bAutoWidth": false, // Disable the auto width calculation 
+              "aoColumns": [
+               { "sWidth": "15%" },  
+               { "sWidth": "15%" }, 
+               { "sWidth": "15%" }, 
+              { "sWidth": "30%" }, 
+              { "sWidth": "15%" }
+              ]
+
+
+          });
       });
 </script>
 <!-- /Datatables -->
 <script>
+   
     $(document).ready(function () {
         $(".thumbnail-col-inner").click(function () {
 

@@ -134,11 +134,31 @@
     
     
 </div>
+<div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8">
+    <div class="modal-dialog" role="document" style="border-bottom: 0;">
+        <div id='DoctorProfileContent' class="modal-content" style="overflow:auto; border-radius: 0;">
+
+        </div>
+
+
+    </div>
+</div>
 <iframe id="iframeDownload" style="display:none;"></iframe>
 <!-- /page content -->
 
  <!-- Load View App Detail Popup -->
 <script>
+
+    function showProfile(docid) {
+
+        var did = docid;//$("#pvdocid").val();
+
+        $("#DoctorProfileContent").load('@Url.Action("DoctorProfile", "Appointment")?doctorID=' + did, function () {
+
+        });
+
+    }
+
     function downloadFile(fileId) {
 
         if (confirm("Are you sure you want to downlod file?")) {
@@ -195,7 +215,7 @@
                             //stopLoader();
                         }
                         else {
-                            new PNotify({ title: 'Success', text: "Consultation is marked as completed successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
+                            new PNotify({ title: 'Success', text: "Consultation is completed successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                             $('#myModal4').modal('hide');
                            
                             reloadContainer(function () {

@@ -18,7 +18,7 @@
     var rov = "N.A";
     var chiefComplaints = "N.A";
     var amount = "";
-    var pharmacy = "";
+    var pharmacy = "N.A";
     var formattedDate = "";
     var formattedTime = "";
     var utcdate = "";
@@ -111,34 +111,45 @@
             </div>
 
         </div>
-        <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 36px -15px -30px; padding: 10px 21px 0; ">
-            <p style="color: #375781;"><span style="width: 133px; float: left;">Pharmacy</span><b>@pharmacy</b></p>
-        </div>
+        
         <div style="border-bottom: 1px Solid #c3bebe; border-top: 1px Solid #c3bebe; margin: 36px -15px 20px; padding: 10px 21px 0; ">
-            <p style="color: #375781;"><span style="width: 133px; float: left;">App. Date/Time</span><b><span id="replaceme"></span>
+            <p style="color: #375781;"><span style="width: 133px; float: left;"><b>App. Date/Time</b></span><span id="replaceme"></span>
             <script type="text/javascript">
                                 var fdate = showLocal('@utcdate');
                                 $("#replaceme").html(fdate);
-            </script></b></p>
+            </script></p>
         </div>
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Pharmacy:</b><br> @pharmacy</p>
         <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Reason of Visit:</b><br> @rov</p>
         <p id="p_chiefComplaints" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Chief Complaint:</b><br> @chiefComplaints</p>
         <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Consult Charges:</b><br> @amount</p>
+       
+    @if (Model.AppFiles.Count > 0)
+    {
+        var j = 1;
         <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
             <b>Appointment Files:</b><br>
-            @if (Model.AppFiles != null || Model.AppFiles.Count > 0)
+            
+            @foreach (var item in Model.AppFiles)
             {
 
-                foreach (var item in Model.AppFiles)
-                {
-
-                    <button id="@item.fileID" type="button" class="btn btn-default" style="display:block; font-size:10px" onclick="downloadFile(@item.fileID)">
-                        @item.FileName.Trim()
-                    </button>
-                }
-
+            <button id="@item.fileID" type="button" class="btn btn-default" style="display:block; font-size:10px" onclick="downloadFile(@item.fileID)">
+                File+@j;
+            </button>
+                j = j+1;
             }
+
+           
         </p>
+    }
+    @if (Model.AppFiles == null || Model.AppFiles.Count == 0)
+
+    {
+                <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
+                <b>Appointment Files:</b><br>N.A
+                </p>
+    }
+   
 
                     @*<label style="font-weight: 300;" for="">Please enter the number we should call</label>
                         <input type="text" placeholder="(469)237-3768" style="max-width: 100%;" class="form-control" />*@

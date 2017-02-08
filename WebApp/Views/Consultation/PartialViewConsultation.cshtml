@@ -27,7 +27,11 @@
                 foreach (var item in Model)
                 {
                     <tr class="even pointer">
-                        <td style="text-align:center">@item.DoctorName</td>
+                        <td style="text-align:center">
+                            <a href="" onclick='showProfile(@item.doctorID)' class="thumbnail-col-inner m-b-15" data-toggle="modal" data-target="#myModal8" style="word-wrap: break-word;">
+                                @item.DoctorName
+                            </a>
+                        </td>
                         <td style="text-align:center">
                             <span class="replacer" id="@("replacepc" + j)"></span>
                             <script type="text/javascript">

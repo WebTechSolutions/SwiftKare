@@ -31,7 +31,10 @@ else
     foreach (var item in Model)
     {
                 <tr class="even pointer">
-                    <td style="text-align:center">@item.DoctorName</td>
+                    <td style="text-align:center">
+                    <a href="" onclick='showProfile(@item.doctorID)' class="thumbnail-col-inner m-b-15" data-toggle="modal" data-target="#myModal8" style="word-wrap: break-word;">
+                @item.DoctorName
+                </a></td>
                     <td style="text-align:center">
                         <span class="replacer" id="@("replacer" + j)"></span>
                         <script type="text/javascript">
@@ -76,13 +79,25 @@ else
           
 
         //$('#rescheduledatatable').dataTable();
-        $('#rescheduledatatable').dataTable();
+        //$('#rescheduledatatable').dataTable();
         $('#datatable-keytable').DataTable({
           keys: true
         });
 
         $('#datatable-responsive').DataTable();
+        
+        $('#rescheduledatatable').DataTable({
+            "bAutoWidth": false, // Disable the auto width calculation 
+            "aoColumns": [
+             { "sWidth": "15%" },  
+             { "sWidth": "15%" }, 
+             { "sWidth": "15%" }, 
+            { "sWidth": "30%" }, 
+            { "sWidth": "15%" }
+            ]
 
+
+        });
                 
       });
 </script>
@@ -118,5 +133,5 @@ else
 
 
     });
-</script>>
+</script>
 

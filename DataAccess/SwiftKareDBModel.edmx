@@ -543,8 +543,6 @@
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
           <Property Name="userId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="pharmacy" Type="varchar" MaxLength="1000" />
-          <Property Name="pharmacyid" Type="bigint" />
           <Property Name="title" Type="varchar" MaxLength="10" />
           <Property Name="height" Type="int" />
           <Property Name="weight" Type="int" />
@@ -557,6 +555,8 @@
           <Property Name="iOSToken" Type="varchar" MaxLength="1000" />
           <Property Name="AndroidToken" Type="varchar" MaxLength="1000" />
           <Property Name="DoseSpotPatientId" Type="varchar" MaxLength="10" />
+          <Property Name="pharmacyid" Type="bigint" />
+          <Property Name="pharmacy" Type="varchar" MaxLength="1000" />
           <Property Name="pharmacyaddress" Type="varchar" MaxLength="100" />
           <Property Name="pharmacycitystatezip" Type="varchar" MaxLength="100" />
         </EntityType>

@@ -71,11 +71,30 @@
     </div><!-- View App Detail -->
    
 </div>
+<div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8">
+    <div class="modal-dialog" role="document" style="border-bottom: 0;">
+        <div id='PatientProfileContent' class="modal-content" style="overflow:auto; border-radius: 0;">
+            
+        </div>
+
+
+    </div>
+</div><!-- col4 -->
 <iframe id="iframeDownload" style="display:none;"></iframe>
 <!-- /page content -->
 
 <script>
     var cID = 0;
+
+    function showProfile(patientid) {
+
+        var id = patientid;
+
+        $("#PatientProfileContent").load('@Url.Action("PatientProfile", "DoctorConsultation")?patientID=' + id, function () {
+
+        });
+
+    };
     function downloadFile(fileId,patID) {
 
         if (confirm("Are you sure you want to downlod file?")) {

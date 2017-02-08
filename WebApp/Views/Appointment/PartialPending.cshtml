@@ -39,7 +39,10 @@ else
                     }
 
                     <tr class="even pointer">
-                        <td style="text-align:center">@item.DoctorName</td>
+                        <td style="text-align:center">
+                        <a href="" onclick='showProfile(@item.doctorID)' class="thumbnail-col-inner m-b-15" data-toggle="modal" data-target="#myModal8" style="word-wrap: break-word;">
+                         @item.DoctorName
+                    </a></td>
                         <td style="text-align:center">
                             <span class="replacer" id="@("replacep" + j)"></span>
                             <script type="text/javascript">
@@ -48,7 +51,7 @@ else
                             </script>
                         </td>
                         <td style="text-align:center">@item.rov</td>
-                        <td style="text-align:center">@item.chiefComplaints</td>
+                        <td style="text-align:center" >@item.chiefComplaints</td>
                         <!-- <td><button class="btn btn-primary btn-sm m-b-0 " type="submit">View</button></td> -->
                         <td style="text-align:center">
                             <div class="btn-group" role="group">
@@ -82,8 +85,19 @@ else
 <script>
       $(document).ready(function() {
                
-        $('#datatablepending').dataTable();
-               
+       // $('#datatablepending').dataTable();
+        $('#datatablepending').DataTable({
+            "bAutoWidth": false, // Disable the auto width calculation 
+            "aoColumns": [
+             { "sWidth": "15%" },  
+             { "sWidth": "15%" }, 
+             { "sWidth": "15%" }, 
+            { "sWidth": "30%" }, 
+            { "sWidth": "15%" }
+            ]
+
+
+        });     
       });
 </script>
 <!-- /Datatables -->
@@ -233,5 +247,5 @@ else
 
 
     });
-</script>>
+</script>
 
