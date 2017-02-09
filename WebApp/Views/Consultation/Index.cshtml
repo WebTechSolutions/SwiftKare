@@ -110,6 +110,16 @@
             </div>
         </div>
     </div><!-- col1 -->
+
+    <div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8">
+        <div class="modal-dialog" role="document" style="border-bottom: 0;">
+            <div id='DoctorProfileContent' class="modal-content" style="overflow:auto; border-radius: 0;">
+
+            </div>
+
+
+        </div>
+    </div>
 </div>
 <iframe id="iframeDownload" style="display:none;"></iframe>
 <!-- /page content -->
@@ -117,6 +127,15 @@
     var star=0;
     var cID = 0;
 
+    function showProfile(docid) {
+
+        var did = docid;//$("#pvdocid").val();
+
+        $("#DoctorProfileContent").load('@Url.Action("DoctorProfile", "Appointment")?doctorID=' + did, function () {
+
+        });
+
+    }
     function downloadFile(fileId) {
 
         if (confirm("Are you sure you want to downlod file?")) {
@@ -132,7 +151,7 @@
             //debugger;
              reloadModelContainer(function () {
                 var $modal = $('#myModal4');
-                
+
 
             });
 
@@ -155,17 +174,17 @@
         if ( jQuery(this).hasClass('fa fa-star-o'))
         {
 
-           
+
             if( jQuery(this).attr("id")=="s1")
             {
-                
+
                 $("span#s1").removeClass('fa fa-star-o');
                 $("span#s1").addClass('fa fa-star');
                 star=1;
             }
             if( jQuery(this).attr("id")=="s2")
             {
-               
+
                 $("span#s1").removeClass('fa fa-star-o');
                 $("span#s1").addClass('fa fa-star');
                 $("span#s2").removeClass('fa fa-star-o');
@@ -174,7 +193,7 @@
             }
             if( jQuery(this).attr("id")=="s3")
             {
-               
+
                 $("span#s1").removeClass('fa fa-star-o');
                 $("span#s1").addClass('fa fa-star');
                 $("span#s2").removeClass('fa fa-star-o');
@@ -185,7 +204,7 @@
             }
             if( jQuery(this).attr("id")=="s4")
             {
-                
+
                 $("span#s1").removeClass('fa fa-star-o');
                 $("span#s1").addClass('fa fa-star');
                 $("span#s2").removeClass('fa fa-star-o');
@@ -198,7 +217,7 @@
             }
             if( jQuery(this).attr("id")=="ss5")
             {
-                
+
                 $("span#s1").removeClass('fa fa-star-o');
                 $("span#s1").addClass('fa fa-star');
                 $("span#s2").removeClass('fa fa-star-o');
@@ -211,14 +230,14 @@
                 $("span#ss5").addClass('fa fa-star');
                 star=5;
             }
-          
+
         }
         else
         {
-                  
+
             if( jQuery(this).attr("id")=="s1")
             {
-                
+
                 $("#ss5").removeClass('fa fa-star');
                 $("#ss5").addClass('fa fa-star-o');
                 $("#s4").removeClass('fa fa-star');
@@ -233,7 +252,7 @@
             }
             if( jQuery(this).attr("id")=="s2")
             {
-                
+
                 $("#ss5").removeClass('fa fa-star');
                 $("#ss5").addClass('fa fa-star-o');
                 $("#s4").removeClass('fa fa-star');
@@ -246,14 +265,14 @@
             }
             if( jQuery(this).attr("id")=="s3")
             {
-               
+
                 $("#ss5").removeClass('fa fa-star');
                 $("#ss5").addClass('fa fa-star-o');
                 $("#s4").removeClass('fa fa-star');
                 $("#s4").addClass('fa fa-star-o');
                 $("#s3").removeClass('fa fa-star');
                 $("#s3").addClass('fa fa-star-o');
-               
+
                 star=2;
             }
             if( jQuery(this).attr("id")=="s4")
@@ -267,20 +286,20 @@
             }
             if( jQuery(this).attr("id")=="ss5")
             {
-               
+
                 $("#ss5").removeClass('fa fa-star');
                 $("#ss5").addClass('fa fa-star-o');
                 star=4;
             }
         }
 
-       
+
     });
-        
+
     //Write Review
     function WriteReview(message)
     {
-        
+
         var _objReview = {};
         _objReview["consultID"] =  $("#pvappid").val();
         _objReview["patientID"] = @SessionHandler.UserInfo.Id;

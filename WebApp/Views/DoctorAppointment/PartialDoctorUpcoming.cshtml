@@ -34,7 +34,11 @@ else
                 {
 
                     <tr class="even pointer">
-                        <td style="text-align:center;width:20%">@item.PatientName</td>
+                        <td style="text-align:center;width:20%">
+                        <a href='' onclick='showProfile(@item.patientID)' id="viewprofile" data-toggle="modal" data-target='#myModal8'>
+
+    @item.PatientName
+</a></td>
                         <td style="text-align:center;width:15%">
                             <span class="replaceme" id="@("replaceme"+j)"></span>
                             <script type="text/javascript">
@@ -211,26 +215,28 @@ else
       $(document).ready(function() {
 
 
-        $('#datatable').dataTable({
-            'order': [[1, 'desc']],
-            columnDefs: [
-              { type: 'date-dd-mmm-yyyy', targets: 1 }
-            ]
-        });
-        $('#datatable-keytable').DataTable({
-          keys: true
-        });
+        //$('#datatable').dataTable({
+        //    'order': [[1, 'desc']],
+        //    columnDefs: [
+        //      { type: 'date-dd-mmm-yyyy', targets: 1 }
+        //    ]
+        //});
+          $('#datatable').DataTable();
+        //  {
+        //    "bAutoWidth": false, // Disable the auto width calculation 
+        //    "aoColumns": [
+        //     { "sWidth": "15%" },  
+        //     { "sWidth": "18%" }, 
+        //     { "sWidth": "15%" }, 
+        //    { "sWidth": "30%" }, 
+        //    { "sWidth": "15%" }
+        //    ]
 
+
+        //});
         $('#datatable-responsive').DataTable();
 
-        $('#datatable-scroller').DataTable({
-          ajax: "js/datatables/json/scroller-demo.json",
-          deferRender: true,
-          scrollY: 380,
-          scrollCollapse: true,
-          scroller: true
-        });
-
+       
         $('#datatable-fixed-header').DataTable({
           fixedHeader: true
         });

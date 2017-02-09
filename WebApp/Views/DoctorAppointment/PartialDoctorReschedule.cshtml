@@ -45,7 +45,12 @@ else
                 foreach (var item in Model)
                 {
                     <tr class="even pointer">
-                        <td style="text-align:center;width:20%">@item.PatientName</td>
+                        <td style="text-align:center;width:20%">
+                            <a href='' onclick='showProfile(@item.patientID)' id="viewprofile" data-toggle="modal" data-target='#myModal8'>
+
+                                @item.PatientName
+                            </a>
+                       </td>
                         <td style="text-align:center;width:15%">
                             <span class="replacer" id="@("replacedr" + j)"></span>
                             <script type="text/javascript">
@@ -79,7 +84,20 @@ else
 <script>
     $(document).ready(function() {
 
-        $('#rescheduledatatable').dataTable();
+       
+        $('#rescheduledatatable').DataTable();
+        //{
+        //    "bAutoWidth": false, // Disable the auto width calculation 
+        //    "aoColumns": [
+        //     { "sWidth": "15%" },  
+        //     { "sWidth": "18%" }, 
+        //     { "sWidth": "15%" }, 
+        //    { "sWidth": "30%" }, 
+        //    { "sWidth": "15%" }
+        //    ]
+
+
+        //});
       
     });
 </script>
