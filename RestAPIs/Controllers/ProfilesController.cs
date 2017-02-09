@@ -9,6 +9,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
@@ -109,17 +110,18 @@ namespace RestAPIs.Controllers
                 {
                     //response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Doctor does not exist." });
                     //return response;
-                //}
-                //else
-                //{
-                    
+                    //}
+                    //else
+                    //{
+
 
                     oDoctorProfileVM = (from l in db.Doctors
                                         where l.active == true && l.doctorID == doctorID
                                         select new DoctorProfileVM
                                         {
                                             DoctorID = l.doctorID,
-                                            ProfilePhoto = ((l.picture)),
+                                            //ProfilePhoto = ((l.picture)),
+                                            ProfilePhotoBase64 = l.ProfilePhotoBase64,
                                             TitleName = l.title,
                                             Prefix = l.suffix,
                                             FirstName = l.firstName,
@@ -226,8 +228,8 @@ namespace RestAPIs.Controllers
                     //Save Doctor Profile
                     doctor.active = true;
 
-                    doctor.picture = model.ProfilePhoto;
-
+                    //doctor.picture = model.ProfilePhoto;
+                    doctor.ProfilePhotoBase64 = Encoding.ASCII.GetString(model.ProfilePhoto);
                     doctor.title = model.TitleName;
                     doctor.firstName = model.FirstName;
                     doctor.lastName = model.LastName;
@@ -640,7 +642,8 @@ namespace RestAPIs.Controllers
                                          select new PatientProfileVM
                                          {
                                              PatientID = l.patientID,
-                                             ProfilePhoto = (l.picture),
+                                             //ProfilePhoto = (l.picture),
+                                             ProfilePhotoBase64 = l.ProfilePhotoBase64,
                                              TitleName = l.title,
                                              Prefix = l.suffix,
                                              FirstName = l.firstName,
@@ -718,7 +721,8 @@ namespace RestAPIs.Controllers
                                          select new PatientProfileWithExtraInfoVM
                                          {
                                              PatientID = l.patientID,
-                                             ProfilePhoto = (l.picture),
+                                             //ProfilePhoto = (l.picture),
+                                             ProfilePhotoBase64=l.ProfilePhotoBase64,
                                              TitleName = l.title,
                                              Prefix = l.suffix,
                                              FirstName = l.firstName,
@@ -841,8 +845,8 @@ namespace RestAPIs.Controllers
                     //Save Patient Profile
                     patient.active = true;
 
-                    patient.picture = model.ProfilePhoto;
-
+                    //patient.picture = model.ProfilePhoto;
+                    patient.ProfilePhotoBase64 = Encoding.ASCII.GetString(model.ProfilePhoto);
                     patient.title = model.TitleName;
                     patient.firstName = model.FirstName;
                     patient.lastName = model.LastName;

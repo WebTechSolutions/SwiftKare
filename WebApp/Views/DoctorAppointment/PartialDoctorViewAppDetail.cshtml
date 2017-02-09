@@ -123,32 +123,34 @@
         <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Reason of Visit:</b><br> @rov</p>
         <p id="p_chiefComplaints" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Chief Complaint:</b><br> @chiefComplaints</p>
         <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;"><b>Consult Charges:</b><br> @amount</p>
-       
-    @if (Model.AppFiles.Count > 0)
-    {
-        var j = 1;
-        <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
-            <b>Appointment Files:</b><br>
-            
-            @foreach (var item in Model.AppFiles)
-            {
+        <p style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
+            <b>Appointment Files:</b>
+            <div id="p_files" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471; width:290px; height:40px;overflow:auto;">
+                <table>
+                    <tr>
+                        @if (Model.AppFiles.Count > 0)
+                        {
+                            var j = 1;
+                            foreach (var item in Model.AppFiles)
+                            {
+                                <td>
+                                    <button id="@item.fileID" type="button" class="btn btn-default" style="display:block; font-size:10px;position:relative" onclick="downloadFile(@item.fileID,@Model.PatientVM.patientid)">
+                                        File#@j;
+                                    </button>
+                                </td>
+                                j = j + 1;
+                            }
 
-            <button id="@item.fileID" type="button" class="btn btn-default" style="display:block; font-size:10px" onclick="downloadFile(@item.fileID)">
-                File+@j;
-            </button>
-                j = j+1;
-            }
-
-           
+                        }
+                        @if (Model.AppFiles.Count == 0)
+                        {
+                            <td>N.A</td>
+                        }
+                    </tr>
+                </table>
+            </div>
         </p>
-    }
-    @if (Model.AppFiles == null || Model.AppFiles.Count == 0)
-
-    {
-                <p id="p_amount" style="color: #375781;font-family:Helvetica Neue,Roboto,Arial,Droid Sans,sans-serif; font-size: 14px;font-weight: 400;line-height: 1.471;">
-                <b>Appointment Files:</b><br>N.A
-                </p>
-    }
+    
    
 
                     @*<label style="font-weight: 300;" for="">Please enter the number we should call</label>

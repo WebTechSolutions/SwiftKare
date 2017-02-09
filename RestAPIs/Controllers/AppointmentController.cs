@@ -55,11 +55,11 @@ namespace RestAPIs.Controllers
                                   appDate = cn.appDate,
                                   appTime = cn.appTime,
                                   PatientVM = (from r in db.Patients
-                                               where r.patientID == cn.patientID && r.active == true
+                                               where r.patientID == cn.patientID
                                                select new
                                                {
                                                    patientid = r.patientID,
-                                                   patPicture = r.picture,
+                                                   ProfilePhotoBase64 = r.ProfilePhotoBase64,
                                                    patientName = r.firstName + " " + r.lastName,
                                                    patientGender = r.gender,
                                                    pharmacy = r.pharmacy,
@@ -72,11 +72,11 @@ namespace RestAPIs.Controllers
                                                                    select new { languageName = l.languageName }).ToList()
                                                }).FirstOrDefault(),
                                   DoctorVM = (from doc in db.Doctors
-                                              where doc.doctorID == cn.doctorID && doc.active == true
+                                              where doc.doctorID == cn.doctorID
                                               select new
                                               {
                                                   docID = doc.doctorID,
-                                                  docPicture = doc.picture,
+                                                  ProfilePhotoBase64 = doc.ProfilePhotoBase64,
                                                   doctorName = doc.firstName + " " + doc.lastName,
                                                   doctorGender = doc.gender,
                                                   doctordob = doc.dob,

@@ -244,9 +244,9 @@ namespace WebApp.Controllers
                         userModel.AndroidToken = patient.AndroidToken;
                         SessionHandler.UserInfo = userModel;
 
-                        if (patient.picture != null && patient.picture.Count() > 0)
+                        if (patient.ProfilePhotoBase64 != null && patient.ProfilePhotoBase64.Count() > 0)
                         {
-                            SessionHandler.ProfilePhoto = Encoding.ASCII.GetString(patient.picture);
+                            SessionHandler.ProfilePhoto = patient.ProfilePhotoBase64; //Encoding.ASCII.GetString(patient.picture);
                         }
                         else
                         {
@@ -359,9 +359,9 @@ namespace WebApp.Controllers
                         userModel.AndroidToken = doctor.AndroidToken;
                         SessionHandler.UserInfo = userModel;
 
-                        if (doctor.picture != null && doctor.picture.Count() > 0)
+                        if (doctor.ProfilePhotoBase64 != null && doctor.ProfilePhotoBase64.Count() > 0)
                         {
-                            SessionHandler.ProfilePhoto = Encoding.ASCII.GetString(doctor.picture);
+                            SessionHandler.ProfilePhoto = doctor.ProfilePhotoBase64;
                         }
                         else
                         {

@@ -36,12 +36,13 @@ namespace RestAPIs.Controllers
                 var favdoc = (from l in db.FavouriteDoctors
                               where l.patientID == patientID && l.active == true
                               select (from doc in db.Doctors where doc.doctorID == l.doctorID && doc.active == true
-                                              select new DoctorDataset
-                                              {
-                                                  doctorID = doc.doctorID,
-                                                  firstName = doc.firstName,
-                                                  lastName = doc.lastName,
-                                                  picture = doc.picture
+                                      select new DoctorDataset
+                                      {
+                                          doctorID = doc.doctorID,
+                                          firstName = doc.firstName,
+                                          lastName = doc.lastName,
+                                          ProfilePhotoBase64 = doc.ProfilePhotoBase64
+                                                  //picture = doc.picture
                                               }).FirstOrDefault()).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, favdoc);
                 return response;
@@ -181,7 +182,7 @@ namespace RestAPIs.Controllers
                                       firstName=l.firstName,
                                       lastName=l.lastName,
                                       city=l.city,
-                                      picture=l.picture,
+                                      ProfilePhotoBase64=l.ProfilePhotoBase64,
                                       state=l.state,
                                       languageName=l.languageName,
                                       specialityName=l.specialityName
@@ -211,7 +212,7 @@ namespace RestAPIs.Controllers
                                       firstName = l.firstName,
                                       lastName = l.lastName,
                                       city = l.city,
-                                      picture = l.picture,
+                                      ProfilePhotoBase64 = l.ProfilePhotoBase64,
                                       state = l.state,
                                       languageName = l.languageName,
                                       specialityName = l.specialityName
@@ -451,7 +452,7 @@ namespace RestAPIs.Controllers
                               where doc.doctorID == doctorID && doc.active == true
                               select new
                               {
-                                  docPicture = doc.picture,
+                                  docPicture = doc.ProfilePhotoBase64,
                                   doctorName = doc.firstName + " " + doc.lastName,
                                   doctorGender = doc.gender,
                                   doctordob = doc.dob,
