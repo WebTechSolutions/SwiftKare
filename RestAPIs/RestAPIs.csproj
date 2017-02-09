@@ -97,6 +97,15 @@
     <Reference Include="OpenTok">
       <HintPath>..\packages\OpenTok.2.3.0\lib\net35\OpenTok.dll</HintPath>
     </Reference>
+    <Reference Include="Orcus.PushNotifications">
+      <HintPath>..\WebApp\bin\Orcus.PushNotifications.dll</HintPath>
+    </Reference>
+    <Reference Include="PushSharp.Apple">
+      <HintPath>..\WebApp\bin\PushSharp.Apple.dll</HintPath>
+    </Reference>
+    <Reference Include="PushSharp.Core">
+      <HintPath>..\WebApp\bin\PushSharp.Core.dll</HintPath>
+    </Reference>
     <Reference Include="SendGrid">
       <HintPath>..\packages\Sendgrid.6.3.4\lib\SendGrid.dll</HintPath>
     </Reference>
@@ -282,11 +291,18 @@
     <Compile Include="Helper\StripePayHelper.cs" />
     <Compile Include="Helper\UserChatHelper.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Models\APNSNotification.cs" />
+    <Compile Include="Models\APNSNotificationsRepository.cs" />
     <Compile Include="Models\BookAppointment.cs" />
     <Compile Include="Models\ForgotApiModel.cs" />
+    <Compile Include="Models\IAPNSNotificationsRepository.cs" />
+    <Compile Include="Models\IIOSPushNotificationService.cs" />
+    <Compile Include="Models\IOSPushNotificationService.cs" />
     <Compile Include="Models\IPModel.cs" />
+    <Compile Include="Models\IPushNotificationService.cs" />
     <Compile Include="Models\LoginApiModel.cs" />
     <Compile Include="Models\OauthUserModel.cs" />
+    <Compile Include="Models\PN_AppModel.cs" />
     <Compile Include="Models\RegisterApiModel.cs" />
     <Compile Include="Models\RequestHandler.cs" />
     <Compile Include="Models\ApplicationGlobalVariables.cs" />

@@ -300,12 +300,25 @@ namespace RestAPIs.Controllers
                 //Save Appointment files in database - Ends
 
                 //Send Email on new appointment
+                //Get Email and iOSToken and Android Token of doctor and patient
+                //pushNotificationHelper.SendPushNotification(diOSToken,dAndroidToken,piOSToken,pAndroidToken,"Push Title","Push Message",doctorID,patientID);
+
                 var docemail = db.Doctors.Where(d => d.doctorID == model.doctorID).Select(d => d.email).FirstOrDefault();
                 var patemail = db.Patients.Where(p => p.patientID == model.patientID).Select(p => p.email).FirstOrDefault();
-                EmailHelper oHelper = new EmailHelper(docemail, "New appointment.", "You have new appointment on " + model.appDate.Trim() + " at "+ model.appTime.Trim() + ".");
+                EmailHelper oHelper = new EmailHelper(docemail, "New appointment.", "You have new appointment on " + model.appDate.Trim() + " at " + model.appTime.Trim() + ".");
                 oHelper.SendMessage();
                 oHelper = new EmailHelper(patemail, "New appointment.", "Your appointment is scheduled successfully on " + model.appDate.Trim() + " at " + model.appTime.Trim() + ".");
                 oHelper.SendMessage();
+
+
+                string PiOSToken = "";
+                string PandroidToken="";
+                string DiOSToken = "";
+                string DandroidToken = "";
+                string pushTitle = "";
+                string pushMessage = "";
+                PushHelper ph = new PushHelper();
+                ph.sendPush(DiOSToken, DandroidToken, PiOSToken, PandroidToken, pushTitle, pushMessage);
             }
             catch (Exception ex)
             {

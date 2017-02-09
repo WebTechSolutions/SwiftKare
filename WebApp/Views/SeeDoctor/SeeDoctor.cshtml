@@ -1016,7 +1016,7 @@
                         {
                             debugger;
                             localStorage.setItem('consultationKey', response.ApiResultModel.ID);
-                            var tokboxInfo=localStorage.getItem('tokbox');
+
                             var consultID=response.ApiResultModel.ID;
                             //send consultID to doctor incase of live appointment
                             var docId = doctorID;
@@ -1054,19 +1054,21 @@
                             });
 
                             var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
+                            var tokboxInfo=localStorage.getItem('tokbox');
                             //check for apptype if l then go here
                             //create consult here
-                            var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
+                          //  var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
 
-                            $.post(cUrlReadyForCall, function (oResp) {
+                          //  $.post(cUrlReadyForCall, function (oResp) {
                                 if (tokboxInfo!="0")
                                 {
                                     //Redirect patient to call
-                                    window.location = '@Url.Action("Index","UserChat")';
+                                    window.location = '@Url.Action("Index","UserChat")?tokboxInfo='+tokboxInfo;
+                                 
                                 }
                                 else
                                 {alert('Err in getting tokbox info');}
-                           });
+                          // });
 
                             //Redirect User for video chat
                            // showAlert("Payment Alert","Payment successful. Your consultation will be started soon.");

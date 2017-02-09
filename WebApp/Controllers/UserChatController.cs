@@ -41,9 +41,7 @@ namespace WebApp.Controllers
                 openTokSession.UserType = userType;
 
                 HttpContext.Session["MyOpenTokSession"] = openTokSession;
-                return openTokSession.SessionId.ToString()+"*"+ openTokSession.TokenId.ToString()+"*"+
-                    UserChatHelper.TokBoxApiKey+"*"+openTokSession.UserType+"*"+openTokSession.PatientName+"*"+
-                    openTokSession.DoctorName;
+                return openTokSession.SessionId.ToString() + "*" + openTokSession.TokenId.ToString();
             }
             catch (Exception ex)
             {
@@ -52,30 +50,48 @@ namespace WebApp.Controllers
         }
 
         // GET: UserChat
-        public ActionResult Index()
+        public ActionResult Index(string tokboxInfo)
         {
-            var openTokSession = (OpenTokSession)(HttpContext.Session["MyOpenTokSession"]);
+            //tokboxInfo=SessionId*TokenId*TokBoxApiKey*UserType*PatientName*DoctorName
+            
 
-            if (openTokSession == null || string.IsNullOrEmpty(openTokSession.SessionId) || string.IsNullOrEmpty(openTokSession.TokenId))
-            {
-                //Redirect user to appropriate page
-            }
-            if (openTokSession != null) { 
-            ViewBag.UserType = openTokSession.UserType;
+            //  var openTokSession = (OpenTokSession)(HttpContext.Session["MyOpenTokSession"]);
 
-            var userMgr = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            var roles = userMgr.GetRoles(SessionHandler.UserId);
-            if (roles.Contains("Doctor"))
+            //  if (openTokSession == null || string.IsNullOrEmpty(openTokSession.SessionId) || string.IsNullOrEmpty(openTokSession.TokenId))
+            //  {
+            //Redirect user to appropriate page
+            //  }
+            if (tokboxInfo != "0")
             {
-                ViewBag.RecipientName = openTokSession.PatientName;
+                string[] tokboxArray = tokboxInfo.Split('*');
+                string sessionId = tokboxArray[0].ToString();
+                string tokenId = tokboxArray[1].ToString();
+                string tokboxApiKey="";// = tokboxArray[2].ToString();
+                string userType= "";//= tokboxArray[3].ToString();
+                string patientName = "Patient";
+             //   if (tokboxArray[2]!=null) patientName = tokboxArray[2].ToString();
+                string doctorName = "Doctor";
+             //   if (tokboxArray[3] != null) doctorName = tokboxArray[3].ToString();
+
+
+                var userMgr = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                var roles = userMgr.GetRoles(SessionHandler.UserId);
+                userType = roles[0].ToString();
+                if (roles.Contains("Doctor"))
+                {
+                    userType = "Doctor";
+                    ViewBag.RecipientName = patientName;// openTokSession.PatientName;
+                }
+                else
+                {
+                    userType = "Patient";
+                    ViewBag.RecipientName = doctorName;// openTokSession.DoctorName;
+                }
+                ViewBag.UserType = userType;// openTokSession.UserType;
+                ViewBag.OpenTokApiKey = tokboxApiKey;// UserChatHelper.TokBoxApiKey;
+                ViewBag.OpenTokSession = sessionId;// openTokSession.SessionId;
+                ViewBag.OpenTokToken = tokenId;// openTokSession.TokenId;
             }
-            else {
-                ViewBag.RecipientName = openTokSession.DoctorName;
-            }
-            ViewBag.OpenTokApiKey = UserChatHelper.TokBoxApiKey;
-            ViewBag.OpenTokSession = openTokSession.SessionId;
-            ViewBag.OpenTokToken = openTokSession.TokenId;
-        }
             ViewBag.RosItems = oVideoCallRepository.GetROSItems();
 
             return View();

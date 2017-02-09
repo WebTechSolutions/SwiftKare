@@ -9,6 +9,7 @@ using System.Web.Http;
 using WebApp.Helper;
 using DataAccess.CommonModels;
 
+
 namespace WebApp.Repositories.PatientRepositories
 {
     public class AppointmentRepository
@@ -97,5 +98,9 @@ namespace WebApp.Repositories.PatientRepositories
             }
 
         }
+
+        
     }
+
+
 }

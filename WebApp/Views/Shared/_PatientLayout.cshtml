@@ -487,7 +487,7 @@
                     var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Patient&receiverId=" + senderid + "&doctorName=" + docName + "&patientName=@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)&ConsultID=" + consultID;
 
                     $.post(cUrlReadyForCall, function (oResp) {
-                        //oResp is    SessionId*TokenId*TokBoxApiKey*UserType*PatientName*DoctorName
+                        //oResp is    SessionId*TokenId
                         debugger;
                         if (oResp != "0") {
                             //Log Tokbox info generated event
@@ -501,7 +501,8 @@
                                 (senderConnId, tokboxInfo, '@SessionHandler.UserInfo.Id', '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)');
 
                             //Redirect doctor to call
-                            window.location = '@Url.Action("Index","UserChat")';
+                            window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + tokboxInfo;
+                            
                         }
                         else {
                             //Log Tokbox info generated event

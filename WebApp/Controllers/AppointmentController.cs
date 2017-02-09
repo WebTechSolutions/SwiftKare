@@ -9,6 +9,7 @@ using WebApp.Helper;
 
 using WebApp.Repositories.PatientRepositories;
 
+
 //
 namespace WebApp.Controllers
 {
@@ -27,7 +28,7 @@ namespace WebApp.Controllers
         // GET: Appointment
         public ActionResult Index()
         {
-           
+            
                 return View();
            
         }
