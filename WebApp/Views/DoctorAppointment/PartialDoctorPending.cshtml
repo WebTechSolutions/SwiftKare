@@ -4,7 +4,6 @@
     Layout = null;
 }
 
-
 @if (Model == null || Model.Count() == 0)
 {
     <div class="well">
@@ -25,7 +24,6 @@ else
                 <th class="column-title" style="text-align:center">Action</th>
             </tr>
         </thead>
-
         <tbody>
             @if (Model != null)
             {
@@ -41,8 +39,8 @@ else
                     <tr class="even pointer">
                         <td style="text-align:center;width:20%;">
                             <a href='' onclick='showProfile(@item.patientID)' id="viewprofile" data-toggle="modal" data-target='#myModal8'>
-
-                                @item.PatientName</a>
+                                @item.PatientName
+                            </a>
                         </td>
                         <td style="text-align:center;width:15%">
                             <span class="replacer" id="@("replacep" + j)"></span>
@@ -56,20 +54,16 @@ else
                         <!-- <td><button class="btn btn-primary btn-sm m-b-0 " type="submit">View</button></td> -->
                         <td class="clsTdConsult" data-appid="@item.appID" data-patId="@item.patientID" style="text-align:center;width:10%">
                             <div class="btn-group" role="group">
-
                                 @*<a style="display:none" onclick="makeCallToPatient('@item.patientID','@item.appID')" class="clsCallPatient" href="javascript:">Call</a>*@
-
                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Action
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-left" style="width:15%">
                                     <li><a href="#" data-toggle="modal" class="thumbnail-pending" data-id="@item.appID" id="@item.doctorID" data-target="#myModal5" onclick=$("#pvappid").val(@item.appID);>View Detail</a></li>
-
                                     <li><a href="#" class="preschedule" data-id="@item.doctorID" id="@item.appID">Reschedule Req</a></li>
                                     <li><a href="#" onclick="callConsult(@consultId,@item.appID)">Complete Consult</a></li>
                                     <li><input type="text" style="display:none" id="consultid" value="@consultId"></li>
-
                                 </ul>
                             </div>
                         </td>
@@ -81,7 +75,6 @@ else
         </tbody>
     </table>
 }
-
 <!-- Datatables -->
 <script>
     $(document).ready(function() {
@@ -105,13 +98,12 @@ else
             fixedHeader: true
         });
 
-       
+
 
         //TableManageButtons.init();
     });
 </script>
 <!-- /Datatables -->
-
 <script>
 
     function setTab(cTab) {
@@ -150,7 +142,7 @@ else
                     reloadContainer(function () {
 
 
-                        
+
                     });
                     hideLoader();
                 }
@@ -190,7 +182,7 @@ else
                     $('#myModal5').modal('hide');
                     reloadContainer(function () {
 
-                        // 
+                        //
                         //Stop displaying loader
                         //stopLoader();
                     });
@@ -276,7 +268,7 @@ else
                         new PNotify({ title: 'Success', text: "Reschedule Request has been sent to patient.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                         reloadContainer(function () {
 
-                            
+
                         });
                         hideLoader();
                     }
@@ -327,18 +319,18 @@ else
                         hideLoader();
                     }
                     else {
-                        
+
                          new PNotify({ title: 'Success', text: "Consultation is completed successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                         reloadContainer(function () {
 
-                            
+
                         });
                         hideLoader();
                     }
 
                 },
                 error: function (err) {
-                    
+
                     new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
                     //Stop displaying loader
                     hideLoader();
@@ -352,7 +344,6 @@ else
         //});
     });
 </script>
-
 <script>
     $(function () {
         $(".thumbnail-pending").click(function () {

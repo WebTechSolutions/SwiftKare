@@ -18,7 +18,7 @@ namespace DataAccess
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string city { get; set; }
-        public byte[] picture { get; set; }
+        public string ProfilePhotoBase64 { get; set; }
         public string state { get; set; }
         public string languageName { get; set; }
         public string specialityName { get; set; }

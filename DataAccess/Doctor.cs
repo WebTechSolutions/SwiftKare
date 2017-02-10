@@ -69,6 +69,7 @@ namespace DataAccess
         public string timezone { get; set; }
         public string iOSToken { get; set; }
         public string AndroidToken { get; set; }
+        public string ProfilePhotoBase64 { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }
