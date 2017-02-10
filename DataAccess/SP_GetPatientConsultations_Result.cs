@@ -25,5 +25,6 @@ namespace DataAccess
         public byte[] picture { get; set; }
         public string specialityName { get; set; }
         public string utcappDate { get; set; }
+        public long doctorID { get; set; }
     }
 }

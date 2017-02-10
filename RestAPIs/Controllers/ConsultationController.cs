@@ -642,10 +642,10 @@ namespace RestAPIs.Controllers
                     cons.mb = model.userEmail;
                     cons.md = System.DateTime.Now;
                     cons.endTime = TimeSpan.Parse(System.DateTime.Now.ToString("HH:mm"));
-                    TimeSpan st = TimeSpan.Parse(cons.startTime.ToString());
-                    TimeSpan et = TimeSpan.Parse(cons.endTime.ToString());
-                    TimeSpan duration = et.Subtract(st);
-                    cons.duration = Convert.ToInt32(duration.TotalSeconds);
+                 //   TimeSpan st = TimeSpan.Parse(cons.cd.ToString());
+                  //  TimeSpan et = TimeSpan.Parse(cons.endTime.ToString());
+                 //   TimeSpan duration = et.Subtract(st);
+                 //   cons.duration = Convert.ToInt32(duration.TotalSeconds);
                     cons.endby = model.userEmail;
                     cons.status = "C";
                     db.Entry(cons).State = EntityState.Modified;

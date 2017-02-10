@@ -340,7 +340,7 @@
         var cEndCallUrl = '@cEndCallUrl';
         var tokboxSessionAndToken = localStorage.getItem('tokbox');//session*token
 
-        alert('Token Session And Token , Seperate by * :' + tokboxSessionAndToken);
+      //  alert('Token Session And Token , Seperate by * :' + tokboxSessionAndToken);
         var openTokSession = 0;
         var openTokToken = 0;
         if (tokboxSessionAndToken != "0")
@@ -445,10 +445,10 @@
                 debugger;
                 if (msgFrom != 'ChatHub') {
                     var fromJson = JSON.parse(msg);
-                    alert(fromJson.status);
+                  //  alert(fromJson.status);
 
                     if (fromJson.status == 'consultID') {
-                        alert('consultID recieved:' + fromJson.name);
+                        //'consultID recieved:' + fromJson.name);
                         localStorage.setItem('consultID', fromJson.name);
                         consultId = fromJson.name;
                         return;

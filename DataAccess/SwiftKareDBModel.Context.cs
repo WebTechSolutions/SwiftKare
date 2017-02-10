@@ -1842,15 +1842,6 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SearchDoctorJSON_Result>("SearchDoctorJSON", languageParameter, specParameter, nameParameter, appDayParameter, appTimeParameter, genderParameter);
         }
     
-        public virtual ObjectResult<SP_GetPatientConsultations_Result> SP_GetPatientConsultations(Nullable<long> patientID)
-        {
-            var patientIDParameter = patientID.HasValue ?
-                new ObjectParameter("patientID", patientID) :
-                new ObjectParameter("patientID", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConsultations_Result>("SP_GetPatientConsultations", patientIDParameter);
-        }
-    
         public virtual ObjectResult<SearchDoctorWithShift_Result> SearchDoctorWithShift(string language, string spec, string name, string appDay, Nullable<System.TimeSpan> fromTime, Nullable<System.TimeSpan> toTime, string gender)
         {
             var languageParameter = language != null ?
@@ -1945,6 +1936,15 @@ namespace DataAccess
                 new ObjectParameter("patientID", typeof(long));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetUpcomingAppforPatient_Result>("SP_GetUpcomingAppforPatient", patientIDParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetPatientConsultations_Result> SP_GetPatientConsultations(Nullable<long> patientID)
+        {
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConsultations_Result>("SP_GetPatientConsultations", patientIDParameter);
         }
     }
 }

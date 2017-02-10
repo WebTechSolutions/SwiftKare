@@ -88,7 +88,7 @@ namespace WebApp.Controllers
                     ViewBag.RecipientName = doctorName;// openTokSession.DoctorName;
                 }
                 ViewBag.UserType = userType;// openTokSession.UserType;
-                ViewBag.OpenTokApiKey = tokboxApiKey;// UserChatHelper.TokBoxApiKey;
+                ViewBag.OpenTokApiKey =  UserChatHelper.TokBoxApiKey;
                 ViewBag.OpenTokSession = sessionId;// openTokSession.SessionId;
                 ViewBag.OpenTokToken = tokenId;// openTokSession.TokenId;
             }

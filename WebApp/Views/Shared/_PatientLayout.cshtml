@@ -423,12 +423,12 @@
                     var msgJson = JSON.parse(msg);
                  //   alert(msgJson.status);
                     if (msgJson.status == 'tokbox') {
-                        alert('tokbox info recieved:' + msgJson.name);
+                      //  alert('tokbox info recieved:' + msgJson.name);
                         localStorage.setItem('tokbox', msgJson.name);
                         return;
                     }
                     if (msgJson.status == 'consultID') {
-                        alert('consultID recieved:' + msgJson.name);
+                      //  alert('consultID recieved:' + msgJson.name);
                         localStorage.setItem('consultationKey', msgJson.name);
                         return;
                     }
