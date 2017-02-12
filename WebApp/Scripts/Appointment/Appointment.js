@@ -33,7 +33,7 @@ function setDateTime(myappTime,myappDate)
         $('.buttonPrevious').show();
 
     }
-    showDoctorInfo();
+   // showDoctorInfo();
     //showApppointmentSummary(myappTime, myappDate);
     return false;
    // $('#step-2').show();

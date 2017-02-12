@@ -825,7 +825,7 @@
         var tableHtml = "";
         $.ajax({
             type: 'POST',
-            //url: '@Url.Action("GetAllLanguages", "SeeDoctor")',
+           
             url: '/SeeDoctor/FetchDoctoInfo',
             data:{'doctorID': _selecteddoctorID},
             dataType: 'json',
