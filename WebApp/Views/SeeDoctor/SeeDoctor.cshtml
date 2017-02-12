@@ -722,7 +722,7 @@
                         </div>
 
                         <div id="step-5" style="margin-bottom: 70px;">
-                            <h2>You Appointment has been Scheduled Successfully</h2>
+                            <h2>You Appointment Summary. You appointment will be confirmed after payment.</h2>
                             <div class="row">
                                 <div class="col-md-6 col-sm-12 col-xs-12">
                                     <div class="x_panel">
@@ -819,6 +819,92 @@
         });
 
     };
+
+    function showDoctorInfo()
+    {
+        var tableHtml = "";
+        $.ajax({
+            type: 'POST',
+            //url: '@Url.Action("GetAllLanguages", "SeeDoctor")',
+            url: '/SeeDoctor/FetchDoctoInfo',
+            data:{'doctorID': _selecteddoctorID},
+            dataType: 'json',
+            success: function (response) {
+                if (response.Object != null || response.Object != undefined)
+                {
+                
+                    var spec = "";
+                    var lang = "";
+                    for (var i = 0; i < response.Object.specialities.length; i++)
+                    {
+                        spec = spec + response.Object.specialities[i].specialityName + ",";
+                    }
+                    for (var i = 0; i < response.Object.languages.length; i++) {
+                        lang = lang + response.Object.languages[i].languageName + ",";
+                    }
+              
+                    spec = spec.slice(0, -1);
+                    lang = lang.slice(0, -1);
+
+                    if (response.Object.specialities.length == 0) { spec = "N.A"; }
+                    if (response.Object.languages.length == 0) { lang = "N.A"; }
+                    var doccell = "N.A";
+                    var docemail = "N.A";
+                    var cc = "N.A";
+                    var docstate = "N.A";
+                    var gender = "";
+                
+                    if (response.Object.cellPhone != null) { doccell = response.Object.cellPhone; }
+                    if (response.Object.email != null) { docemail = response.Object.email; }
+                    if (response.Object.consultCharges != null) { cc = response.Object.consultCharges; }
+                    if (response.Object.state != null) { docstate = response.Object.state; }
+                    if (response.Object.gender != null) { gender = " (" + response.Object.gender + ")"; }
+                    tableHtml = "<address>" +
+                             "<strong>Dr. " + response.Object.doctorName + gender + "</strong>" +
+                             "<br><strong>Specaility: </strong>&nbsp;" + spec +
+                             "<br><strong>Languages: </strong>&nbsp;" + lang +
+                             "<br><strong>State: </strong>&nbsp;" + docstate +
+                             "<br><strong>Phone: </strong>&nbsp;" + doccell +
+                             "<br><strong>Email: </strong>&nbsp; " + docemail +
+                             "<br><strong>Consult Charges: </strong>&nbsp; " + cc +
+                              "</address>";
+                    document.getElementById("docInfo").innerHTML = tableHtml;
+                }
+
+                //Stripe Initialization after getting consultCharges of selected doctor
+                var amount=response.Object.consultCharges*100;
+                var oStripePayCheckout = new StripePayCheckout({
+                    publisherKey: '@publisherKey',
+                    amount: amount,
+                    targetButton: "#btnProceedWithPayment",
+                    actionUrl: '@Url.Action("ProceedWithPay", "seedoctor")',
+                    handleSuccess: function () {
+                        console.log('Payment Done...');
+                       // var cCallLogUrl = '@Url.Action("PaymentSuccessLog", "UserChat")?doctorId=' +  $("#doctorid").val();
+                       // $.post(cCallLogUrl);
+                        var cUrl = '/UserChat/PaymentSuccessLog?doctorId=' + $("#doctorid").val();
+                        $.post(cUrl);
+                        showLoader();
+                        CreateAppointment(@ViewBag.PatienID,@amount);
+                    },
+                    handleFailure: function () {
+                        var cUrl = '/UserChat/PaymentFailLog?doctorId=' + $("#doctorid").val();
+                        $.post(cUrl);
+                          showAlert("Alert","Stripe Payment Failed!!!");
+                          return;
+                        //alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
+                    }
+                });
+
+                oStripePayCheckout.initialize();
+
+            
+            },
+            error: errorRes
+
+        });
+   
+    }
     $(document).ready(function () {
         if('@SessionHandler.UserInfo.timeZone'=='')
         {
@@ -847,29 +933,7 @@
             $('.buttonNext').hide();
             $('.buttonPrevious').hide();
         }
-
-        var oStripePayCheckout = new StripePayCheckout({
-            publisherKey: '@publisherKey',
-            amount: @amount,
-            targetButton: "#btnProceedWithPayment",
-            actionUrl: '@Url.Action("ProceedWithPay", "seedoctor")',
-            handleSuccess: function () {
-                console.log('Payment Done...');
-                var cCallLogUrl = '@Url.Action("PaymentSuccessLog", "UserChat")?doctorId=' +  $("#doctorid").val();
-              //  $.post(cCallLogUrl);
-                showLoader();
-                CreateAppointment(@ViewBag.PatienID,@amount);
-            },
-            handleFailure: function () {
-                var cCallLogUrl = '@Url.Action("PaymentFailLog", "UserChat")?doctorId=' +  $("#doctorid").val();
-              //  $.post(cCallLogUrl);
-                showAlert("Alert","Stripe Payment Failed!!!");
-                //alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
-            }
-        });
-
-        oStripePayCheckout.initialize();
-
+       
         //Get Files in ROV - Starts
         reader1.addEventListener("load", function () {
             $("#hdnFileID1").val(reader1.result);
@@ -1064,7 +1128,7 @@
                                 {
                                     //Redirect patient to call
                                     window.location = '@Url.Action("Index","UserChat")?tokboxInfo='+tokboxInfo;
-                                 
+
                                 }
                                 else
                                 {alert('Err in getting tokbox info');}

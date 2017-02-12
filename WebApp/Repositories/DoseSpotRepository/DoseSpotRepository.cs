@@ -32,6 +32,22 @@ namespace WebApp.Repositories.DoctorRepositories
             }
         }
 
+        public string GetRefillErr()
+        {
+            try
+            {
+              //  var strContent = JsonConvert.SerializeObject(oSrch);
+                var response = ApiConsumerHelper.GetResponseString("api/GetRefillErr");
+                // var result = JsonConvert.DeserializeObject<List<PharmacyEntry>>(response);
+                var result = JsonConvert.DeserializeObject<string>(response);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         /// <summary>
         /// Get Patient DoseSpot Url

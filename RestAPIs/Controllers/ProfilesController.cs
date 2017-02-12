@@ -229,7 +229,7 @@ namespace RestAPIs.Controllers
                     doctor.active = true;
 
                     //doctor.picture = model.ProfilePhoto;
-                    doctor.ProfilePhotoBase64 = Encoding.ASCII.GetString(model.ProfilePhoto);
+                    doctor.ProfilePhotoBase64 = model.ProfilePhotoBase64;
                     doctor.title = model.TitleName;
                     doctor.firstName = model.FirstName;
                     doctor.lastName = model.LastName;
@@ -413,7 +413,7 @@ namespace RestAPIs.Controllers
                 }
                 else
                 {
-                    doctor.consultCharges = model.consultCharges;
+                    doctor.consultCharges = (model.consultCharges);
                     doctor.md = System.DateTime.Now;
                     doctor.mb = model.doctorID.ToString();
                     db.Entry(doctor).State = EntityState.Modified;

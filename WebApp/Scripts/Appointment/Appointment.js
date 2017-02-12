@@ -38,63 +38,7 @@ function setDateTime(myappTime,myappDate)
     return false;
    // $('#step-2').show();
 }
-function showDoctorInfo()
-{
-    var tableHtml = "";
-    $.ajax({
-        type: 'POST',
-        //url: '@Url.Action("GetAllLanguages", "SeeDoctor")',
-        url: '/SeeDoctor/FetchDoctoInfo',
-        data:{'doctorID': _selecteddoctorID},
-        dataType: 'json',
-        success: function (response) {
-            if (response.Object != null || response.Object != undefined)
-            {
-                
-                var spec = "";
-                var lang = "";
-                for (var i = 0; i < response.Object.specialities.length; i++)
-                {
-                    spec = spec + response.Object.specialities[i].specialityName + ",";
-                }
-                for (var i = 0; i < response.Object.languages.length; i++) {
-                    lang = lang + response.Object.languages[i].languageName + ",";
-                }
-              
-                spec = spec.slice(0, -1);
-                lang = lang.slice(0, -1);
 
-                if (response.Object.specialities.length == 0) { spec = "N.A"; }
-                if (response.Object.languages.length == 0) { lang = "N.A"; }
-                var doccell = "N.A";
-                var docemail = "N.A";
-                var cc = "N.A";
-                var docstate = "N.A";
-                var gender = "";
-                
-                if (response.Object.cellPhone != null) { doccell = response.Object.cellPhone; }
-                if (response.Object.email != null) { docemail = response.Object.email; }
-                if (response.Object.consultCharges != null) { cc = response.Object.consultCharges; }
-                if (response.Object.state != null) { docstate = response.Object.state; }
-                if (response.Object.gender != null) { gender = " (" + response.Object.gender + ")"; }
-                tableHtml = "<address>" +
-                         "<strong>Dr. " + response.Object.doctorName + gender + "</strong>" +
-                         "<br><strong>Specaility: </strong>&nbsp;" + spec +
-                         "<br><strong>Languages: </strong>&nbsp;" + lang +
-                         "<br><strong>State: </strong>&nbsp;" + docstate +
-                         "<br><strong>Phone: </strong>&nbsp;" + doccell +
-                         "<br><strong>Email: </strong>&nbsp; " + docemail +
-                         "<br><strong>Consult Charges: </strong>&nbsp; " + cc +
-                          "</address>";
-                document.getElementById("docInfo").innerHTML = tableHtml;
-            }
-            
-        },
-        error: errorRes
-
-    });
-   
-}
 function showApppointmentSummary() {
     var ROV = $("#ROV option:selected").text()
     if (ROV == "Choose ROV") {

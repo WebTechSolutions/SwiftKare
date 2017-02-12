@@ -48,6 +48,25 @@ namespace RestAPIs.Controllers
             return oResp;
         }
 
+        [HttpPost]
+        [Route("api/GetRefillErr")]
+        public HttpResponseMessage GetRefillReqErr()
+        {
+            RefillRequestsTransmissionErrorsMessageResult oResult = DoseSpotHelper.RefillReqErr();
+
+         
+            HttpResponseMessage oResp = Request.CreateResponse(HttpStatusCode.OK, oResult);
+            return oResp;
+        }
+        //GetRefillReqURL
+        [HttpPost]
+        [Route("api/GetRefillReqURL")]
+        public HttpResponseMessage GetRefillReqURL()
+        {
+            string oResult = DoseSpotHelper.GetRefillUrl();
+            HttpResponseMessage oResp = Request.CreateResponse(HttpStatusCode.OK, oResult);
+            return oResp;
+        }
         [HttpGet]
         [Route("api/GetPatientDoseSpotUrl")]
         public HttpResponseMessage GetPatientDoseSpotUrl(long patientId)

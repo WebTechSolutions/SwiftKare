@@ -506,18 +506,25 @@ namespace RestAPIs.Controllers
                 }
                 else
                 {
-                    Consultation cons = new Consultation();
-                    cons.active = true;
-                    cons.appID = model.appID;
-                    cons.cd = System.DateTime.Now;
-                    cons.cb = model.userID;
-                    cons.seesionID = model.sessionID;
-                    cons.token = model.token;
-                    cons.doctorID = model.doctorId;
-                    cons.patientID = model.patientId;
-                    db.Consultations.Add(cons);
-                    await db.SaveChangesAsync();
-                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = cons.consultID, message = "" });
+                    Consultation Conres = db.Consultations.Where(a => a.appID == model.appID).FirstOrDefault();
+                    if (Conres == null)
+                    {
+                        Consultation cons = new Consultation();
+                        cons.active = true;
+                        cons.appID = model.appID;
+                        cons.cd = System.DateTime.Now;
+                        cons.cb = model.userID;
+                        cons.seesionID = model.sessionID;
+                        cons.token = model.token;
+                        cons.doctorID = model.doctorId;
+                        cons.patientID = model.patientId;
+                        db.Consultations.Add(cons);
+                        await db.SaveChangesAsync();
+                        response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = cons.consultID, message = "" });
+                    }
+                    else {
+                        response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = Conres.consultID, message = "" });
+                    }
                     return response;
                 }
 
@@ -641,11 +648,14 @@ namespace RestAPIs.Controllers
                 {
                     cons.mb = model.userEmail;
                     cons.md = System.DateTime.Now;
+
                     cons.endTime = TimeSpan.Parse(System.DateTime.Now.ToString("HH:mm"));
-                 //   TimeSpan st = TimeSpan.Parse(cons.cd.ToString());
-                  //  TimeSpan et = TimeSpan.Parse(cons.endTime.ToString());
-                 //   TimeSpan duration = et.Subtract(st);
-                 //   cons.duration = Convert.ToInt32(duration.TotalSeconds);
+                    if (cons.startTime ==null) cons.endTime = TimeSpan.Parse(System.DateTime.Now.ToString("HH:mm"));
+                    TimeSpan st = TimeSpan.Parse(cons.startTime.ToString());
+                    TimeSpan et = TimeSpan.Parse(cons.endTime.ToString());
+                    TimeSpan duration = et.Subtract(st);
+                    cons.duration = Convert.ToInt32(duration.TotalSeconds);
+                    
                     cons.endby = model.userEmail;
                     cons.status = "C";
                     db.Entry(cons).State = EntityState.Modified;

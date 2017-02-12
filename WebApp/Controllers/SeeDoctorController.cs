@@ -31,7 +31,7 @@ namespace WebApp.Controllers
                 ViewBag.PatienID = SessionHandler.UserInfo.Id;
 
                 ViewBag.PublisherKey = ConfigurationManager.AppSettings["StripePayPublisherKey"].ToString();
-                ViewBag.Amount = 2000;
+                ViewBag.Amount = 0;
 
                 return View();
            
@@ -1028,6 +1028,7 @@ namespace WebApp.Controllers
         public PartialViewResult SearchPharmacy(DoseSpotPharmacySearch oModel)
         {
             var oDoseSpotRepo = new DoseSpotRepository();
+          //  var rRes=oDoseSpotRepo.
             var oRes = oDoseSpotRepo.GetPharmacySearchResult(oModel);
 
             return PartialView("SearchPharmacyView", oRes);

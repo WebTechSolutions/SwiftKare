@@ -44,6 +44,26 @@ namespace RestAPIs.Helper
         }
 
 
+        public static RefillRequestsTransmissionErrorsMessageResult RefillReqErr()
+        {
+            APISoapClient api = new DoseSpotApi.APISoapClient("APISoap12");
+            SingleSignOn sso = new DoseSpotApi.SingleSignOn();
+
+            var oCredentials = CreateSingleSignOnCodeAndUserIdVerify();
+
+            sso.SingleSignOnClinicId = 664;
+            sso.SingleSignOnUserId = 2844;
+            sso.SingleSignOnCode = oCredentials.Key;
+            sso.SingleSignOnUserIdVerify = oCredentials.Value;
+
+            RefillRequestsTransmissionErrorsMessageRequest rReq = new RefillRequestsTransmissionErrorsMessageRequest();
+            RefillRequestsTransmissionErrorsMessageResult rRes = new RefillRequestsTransmissionErrorsMessageResult();
+            rReq.ClinicianId = sso.SingleSignOnClinicId;
+            rReq.SingleSignOn = sso;
+            rRes = api.GetRefillRequestsTransmissionErrors(rReq);
+            return rRes;
+        }
+
         public static string GetEPrescriptionUrl(DoseSpotPatientEntry oModel)
         {
             DoseSpotPatient oDoseSpotPatient = new DoseSpotPatient
@@ -84,6 +104,23 @@ namespace RestAPIs.Helper
 
             return cRetUrl;
         }
+
+        public static string GetRefillUrl()
+        {
+            //Default Criterias - Starts
+            int SingleSignOnUserId = 2844;
+            int SingleSignOnClinicId = 664;
+            string ClinicKey = "qeF5FJef6T6FNTanQS9HuvvuNdkTvvZT";
+
+            //Default Criterias - Ends
+
+            string cPostData = SingleSignOnUtils.GetRefillReqURL(ClinicKey, SingleSignOnClinicId, SingleSignOnUserId);
+            string cPrefix = SingleSignOnUtils.GetSingleSignOnPageLocation("my.staging.dosespot.com", true);
+            string cRetUrl = cPrefix + cPostData;
+
+            return cRetUrl;
+        }
+
 
         public static string RegisterPatientWithDoseSpot(DoseSpotPatientEntry oModel)
         {
@@ -357,6 +394,20 @@ namespace RestAPIs.Helper
                 QueryStringAddParameter(sb, "SingleSignOnUserIdVerify", SingleSignOnUserIdVerify);
                 QueryStringAddParameter(sb, "SingleSignOnClinicId", ClinicId);
                 sb.Append(patient.ToQueryString());
+                return sb.ToString();
+            }
+
+            public static string GetRefillReqURL(string ClinicKey, int ClinicId, int UserId)
+            {
+                string Phrase = EncryptionCommon.CreatePhrase();
+                string SingleSignOnCode = EncryptionCommon.CreatePhraseEncryptedCombinedString(Phrase, ClinicKey);
+                string SingleSignOnUserIdVerify = EncryptionCommon.EncryptUserId(Phrase, UserId, ClinicKey);
+                StringBuilder sb = new StringBuilder();
+                QueryStringAddParameter(sb, "SingleSignOnCode", SingleSignOnCode);
+                QueryStringAddParameter(sb, "SingleSignOnUserId", UserId);
+                QueryStringAddParameter(sb, "SingleSignOnUserIdVerify", SingleSignOnUserIdVerify);
+                QueryStringAddParameter(sb, "SingleSignOnClinicId", ClinicId);
+                sb.Append("&RefillsErrors=1");
                 return sb.ToString();
             }
             public static string GetSingleSignOnPageLocation(string ServerName, bool isSecure)

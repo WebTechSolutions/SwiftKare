@@ -452,7 +452,7 @@ namespace RestAPIs.Controllers
                               where doc.doctorID == doctorID && doc.active == true
                               select new
                               {
-                                  docPicture = doc.ProfilePhotoBase64,
+                                  ProfilePhotoBase64 = doc.ProfilePhotoBase64,
                                   doctorName = doc.firstName + " " + doc.lastName,
                                   doctorGender = doc.gender,
                                   doctordob = doc.dob,

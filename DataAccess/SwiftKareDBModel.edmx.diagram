@@ -63,7 +63,6 @@
         <EntityTypeShape EntityType="SwiftKareDBModel.UserFile" Width="1.5" PointX="6" PointY="18.375" />
         <EntityTypeShape EntityType="SwiftKareDBModel.ChatLog" Width="1.5" PointX="21.375" PointY="0.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.LiveReqLog" Width="1.5" PointX="21.375" PointY="3.75" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.VCLog" Width="1.5" PointX="21.375" PointY="16.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.Consultation" Width="1.5" PointX="8.25" PointY="19.5" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Consultation_ConsultationROS" />
         <EntityTypeShape EntityType="SwiftKareDBModel.Appointment" Width="1.5" PointX="3" PointY="25.25" />
@@ -91,6 +90,7 @@
         <AssociationConnector Association="SwiftKareDBModel.FK_FamilyHX_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Surgeries_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_UserFiles_Patient" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.VCLog" Width="1.5" PointX="21.375" PointY="16.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

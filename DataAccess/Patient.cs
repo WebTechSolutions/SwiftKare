@@ -53,6 +53,8 @@ namespace DataAccess
         public Nullable<System.DateTime> md { get; set; }
         public Nullable<bool> active { get; set; }
         public string userId { get; set; }
+        public string pharmacy { get; set; }
+        public Nullable<long> pharmacyid { get; set; }
         public string title { get; set; }
         public Nullable<int> height { get; set; }
         public Nullable<int> weight { get; set; }
@@ -65,8 +67,6 @@ namespace DataAccess
         public string iOSToken { get; set; }
         public string AndroidToken { get; set; }
         public string DoseSpotPatientId { get; set; }
-        public Nullable<long> pharmacyid { get; set; }
-        public string pharmacy { get; set; }
         public string pharmacyaddress { get; set; }
         public string pharmacycitystatezip { get; set; }
         public string ProfilePhotoBase64 { get; set; }
