@@ -75,17 +75,17 @@ namespace DataAccess
         public virtual DbSet<SecretQuestion> SecretQuestions { get; set; }
         public virtual DbSet<LifeStyleQuestion> LifeStyleQuestions { get; set; }
         public virtual DbSet<UserFile> UserFiles { get; set; }
-        public virtual DbSet<ChatLog> ChatLogs { get; set; }
-        public virtual DbSet<LiveReqLog> LiveReqLogs { get; set; }
         public virtual DbSet<Consultation> Consultations { get; set; }
         public virtual DbSet<Appointment> Appointments { get; set; }
         public virtual DbSet<Alert> Alerts { get; set; }
         public virtual DbSet<SuffixMaster> SuffixMasters { get; set; }
         public virtual DbSet<TitleMaster> TitleMasters { get; set; }
         public virtual DbSet<TimeZone> TimeZones { get; set; }
-        public virtual DbSet<Doctor> Doctors { get; set; }
         public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<VCLog> VCLogs { get; set; }
+        public virtual DbSet<ChatLog> ChatLogs { get; set; }
+        public virtual DbSet<Doctor> Doctors { get; set; }
+        public virtual DbSet<LiveReqLog> LiveReqLogs { get; set; }
     
         public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
         {

@@ -153,8 +153,9 @@ namespace RestAPIs.Controllers
 
                                             SectetQuestion1 = l.secretQuestion1,
                                             SectetQuestion2 = l.secretQuestion2,
-                                            SectetQuestion3 = l.secretQuestion3
+                                            SectetQuestion3 = l.secretQuestion3,
 
+                                            reviewStar=l.reviewStar
                                             //SectetAnswer1 = l.secretAnswer1,
                                             //SectetAnswer2 = l.secretAnswer2,
                                             //SectetAnswer3 = l.secretAnswer3

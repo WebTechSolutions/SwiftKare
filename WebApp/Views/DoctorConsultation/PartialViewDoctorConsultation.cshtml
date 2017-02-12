@@ -51,7 +51,7 @@ else
                                     for (var i = 0; i < item.reviewStar; i++)
                                     {
 
-                                        <a href='javascript:void(0);'><span class='fa fa-star'></span></a>
+                                        <a href='javascript:void(0);' class="thumbnail-col-inner" data-id="@item.consultID" id="@item.consultID" onclick=showReview(@item.consultID);><span class='fa fa-star'></span></a>
                                     }
                                     for (var i = 0; i < 5 - item.reviewStar; i++)
                                     {
@@ -64,7 +64,7 @@ else
                                     {
                                         for (var i = 0; i < item.reviewStar; i++)
                                         {
-                                            <a href='javascript:void(0);'><span class='fa fa-star'></span></a>
+                                            <a href='javascript:void(0);' class="thumbnail-col-inner" data-id="@item.consultID" id="@item.consultID" onclick=showReview(@item.consultID);><span class='fa fa-star'></span></a>
                                         }
                                         for (var i = 0; i < 5 - item.reviewStar; i++)
                                         {
