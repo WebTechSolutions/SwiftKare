@@ -331,6 +331,7 @@ namespace SwiftKare.Controllers
 
                         id = Request.Form["id"].ToString();
                         var userid = Request.Form["userid"].ToString();
+                        
                         AdminUser adminUser = db.AdminUsers.Where(a => a.userId == userid).FirstOrDefault();
                         if (adminUser != null)
                         {
@@ -340,14 +341,16 @@ namespace SwiftKare.Controllers
                             adminUser.md = DateTime.Now;
                             db.AdminUsers.Add(adminUser);
                             db.Entry(adminUser).State = EntityState.Modified;
+                            db.SaveChanges();
                             ViewBag.successMessage = "Record has been deleted successfully";
                             ViewBag.errorMessage = "";
                         }
+                        
                         //db.sp_DeleteAdmin(Convert.ToInt64(id), Session["LogedUserID"].ToString(), System.DateTime.Now);
                         //AspNetUser admin = db.AspNetUsers.Find(userid);
-                        
+
                         //db.AspNetUsers.Remove(admin);
-                        
+
                         //db.AspNetUsers.Remove(admin);
                         //db.SaveChanges();
                         else

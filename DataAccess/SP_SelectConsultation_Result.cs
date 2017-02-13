@@ -20,8 +20,8 @@ namespace DataAccess
         public string PFirstName { get; set; }
         public string review { get; set; }
         public Nullable<int> reviewStar { get; set; }
-        public Nullable<int> startTime { get; set; }
-        public Nullable<int> endTime { get; set; }
+        public Nullable<System.TimeSpan> startTime { get; set; }
+        public Nullable<System.TimeSpan> endTime { get; set; }
         public string duration { get; set; }
     }
 }

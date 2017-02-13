@@ -209,6 +209,7 @@ namespace SwiftKare.Controllers
                             patient.md = DateTime.Now;
                             db.Patients.Add(patient);
                             db.Entry(patient).State = EntityState.Modified;
+                            db.SaveChanges();
                             ViewBag.successMessage = "Record has been deleted successfully";
                             ViewBag.errorMessage = "";
                         }
