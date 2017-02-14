@@ -224,8 +224,8 @@ namespace RestAPIs.Controllers
                 TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
                 app.appTime = TimeZoneInfo.ConvertTimeToUtc(myDateTime, zoneInfo).TimeOfDay;
                 //app.appTime= myDateTime.ToUniversalTime().TimeOfDay;
-               // app.appDate = DateTime.ParseExact(model.appDate.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-              //  app.appDate = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate.Trim()));
+                // app.appDate = DateTime.ParseExact(model.appDate.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                //  app.appDate = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate.Trim()));
                 string dateString = model.appDate.Trim();
                 string format = "dd/MM/yyyy";
                 CultureInfo provider = CultureInfo.InvariantCulture;
@@ -235,27 +235,52 @@ namespace RestAPIs.Controllers
                     Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
                     //app.appDate = result;
                     DateTime utcappDateTime = result + myDateTime.TimeOfDay;
-                  
+
                     app.appDate = utcappDateTime.ToUniversalTime().Date;
                 }
                 catch (FormatException)
                 {
                     Console.WriteLine("{0} is not in the correct format.", dateString);
                 }
-                
+
                 app.rov = model.rov;
                 app.chiefComplaints = model.chiefComplaints;
                 app.cb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault(); model.patientID.ToString();
                 app.paymentAmt = model.paymentAmt;
                 Random rnd = new Random();
-                app.paymentID= rnd.Next(100).ToString();
+                app.paymentID = rnd.Next(100).ToString();
                 app.cd = System.DateTime.Now;
 
                 db.Appointments.Add(app);
                 await db.SaveChangesAsync();
 
+                //Send Email on new appointment
+                //Get Email and iOSToken and Android Token of doctor and patient
+                //pushNotificationHelper.SendPushNotification(diOSToken,dAndroidToken,piOSToken,pAndroidToken,"Push Title","Push Message",doctorID,patientID);
+
+                var docemail = db.Doctors.Where(d => d.doctorID == model.doctorID).Select(d => d.email).FirstOrDefault();
+                var patemail = db.Patients.Where(p => p.patientID == model.patientID).Select(p => p.email).FirstOrDefault();
+                EmailHelper oHelper = new EmailHelper(docemail, "New appointment.", "You have new appointment on " + model.appDate.Trim() + " at " + model.appTime.Trim() + ".");
+                oHelper.SendMessage();
+                oHelper = new EmailHelper(patemail, "New appointment.", "Your appointment has been scheduled successfully on " + model.appDate.Trim() + " at " + model.appTime.Trim() + ".");
+                oHelper.SendMessage();
+
+                pushModel pm = new pushModel();
+                pm.PPushTitle = "New Appointment";
+                pm.PPushMessage = "Patient has scheduled appointment with you on " + model.appDate;
+                pm.DPushTitle = "New Appointment";
+                pm.DPushMessage = "Patient has scheduled appointment with you on " + model.appDate;
+                pm.sendtoDoctor = true;
+                pm.sendtoPatient = true;
+                pm.doctorID = model.doctorID;
+                pm.patientID = model.patientID;
+
+                PushHelper ph = new PushHelper();
+                ph.sendPush(pm);
+
+
                 //Save Appointment files in database - Starts
-                List<KeyValuePair<byte[],string>> lstFiles = new List<KeyValuePair<byte[], string>>();
+                List<KeyValuePair<byte[], string>> lstFiles = new List<KeyValuePair<byte[], string>>();
 
                 if (!string.IsNullOrEmpty(model.rovFile1Base64))
                 {
@@ -299,26 +324,7 @@ namespace RestAPIs.Controllers
                 }
                 //Save Appointment files in database - Ends
 
-                //Send Email on new appointment
-                //Get Email and iOSToken and Android Token of doctor and patient
-                //pushNotificationHelper.SendPushNotification(diOSToken,dAndroidToken,piOSToken,pAndroidToken,"Push Title","Push Message",doctorID,patientID);
-
-                var docemail = db.Doctors.Where(d => d.doctorID == model.doctorID).Select(d => d.email).FirstOrDefault();
-                var patemail = db.Patients.Where(p => p.patientID == model.patientID).Select(p => p.email).FirstOrDefault();
-                EmailHelper oHelper = new EmailHelper(docemail, "New appointment.", "You have new appointment on " + model.appDate.Trim() + " at " + model.appTime.Trim() + ".");
-                oHelper.SendMessage();
-                oHelper = new EmailHelper(patemail, "New appointment.", "Your appointment is scheduled successfully on " + model.appDate.Trim() + " at " + model.appTime.Trim() + ".");
-                oHelper.SendMessage();
-
-
-                string PiOSToken = "";
-                string PandroidToken="";
-                string DiOSToken = "";
-                string DandroidToken = "";
-                string pushTitle = "";
-                string pushMessage = "";
-                PushHelper ph = new PushHelper();
-                ph.sendPush(DiOSToken, DandroidToken, PiOSToken, PandroidToken, pushTitle, pushMessage);
+                
             }
             catch (Exception ex)
             {
@@ -398,6 +404,13 @@ namespace RestAPIs.Controllers
                 {
                     model.appTime = "0" + model.appTime;
                 }
+
+                var patient = (from p in db.Patients
+                               where p.userId == model.userID
+                               select new { patemail = p.email, patientID = p.patientID }).FirstOrDefault();
+                var doctor = (from p in db.Doctors
+                              where p.userId == model.userID
+                              select new { docemail = p.email, doctorID = p.doctorID }).FirstOrDefault();
                 if (model.appType=="U")
                 {
                     if (timediff.TotalHours < Convert.ToInt32(RescheduleLimit))
@@ -453,23 +466,30 @@ namespace RestAPIs.Controllers
                         db.Alerts.Add(alert);
                         await db.SaveChangesAsync();
                         //Send Email on new appointment
-                        var docemail = (from d in db.Appointments
-                                        where d.appID == model.appID
-                                        select db.Doctors.Where(doc => doc.doctorID == d.doctorID).Select(doc => doc.email).FirstOrDefault()
-                                   ).FirstOrDefault();
-                        var patemail = db.Patients.Where(p => p.userId == model.userID).Select(p => p.email).FirstOrDefault();
-                        if (docemail!=null)
+                       
+                        if (doctor.docemail != null)
                         {
                            
-                            EmailHelper oHelper = new EmailHelper(docemail, "Reschedule appointment.", "Your ppointment on " + formattedDate + " has been rescheduled by patient.");
+                            EmailHelper oHelper = new EmailHelper(doctor.docemail, "Reschedule appointment.", "Your appointment on " + formattedDate + " has been rescheduled by patient.");
                             oHelper.SendMessage();
                         }
-                        if (patemail != null)
+                        if (patient.patemail != null)
                         {
-                            EmailHelper oHelper = new EmailHelper(patemail, "Reschedule appointment.", "Your ppointment on " + formattedDate + " is rescheduled successfully.");
+                            EmailHelper oHelper = new EmailHelper(patient.patemail, "Reschedule appointment.", "Your appointment on " + formattedDate + " is rescheduled successfully.");
                             oHelper.SendMessage();
                         }
-                            
+
+                        pushModel pm = new pushModel();
+                        pm.DPushTitle = "Reschedule Appointment";
+                        pm.DPushMessage = "Your appointment of " + formattedDate + " has been rescheduled successfully by Patient.";
+                        pm.sendtoDoctor = true;
+                        pm.sendtoPatient = false;
+                        pm.doctorID = doctor.doctorID;
+                        pm.patientID = patient.patientID;
+
+                        PushHelper ph = new PushHelper();
+                        ph.sendPush(pm);
+
                         response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
                         return response;
                     }
@@ -519,21 +539,28 @@ namespace RestAPIs.Controllers
                         db.Alerts.Add(alert);
                         await db.SaveChangesAsync();
                     //Send Email on new appointment
-                    var docemail = (from d in db.Appointments
-                                    where d.appID == model.appID
-                                    select db.Doctors.Where(doc => doc.doctorID == d.doctorID).Select(doc => doc.email).FirstOrDefault()
-                                   ).FirstOrDefault();
-                    var patemail = db.Patients.Where(p => p.userId == model.userID).Select(p => p.email).FirstOrDefault();
-                    if (docemail != null)
+                    if (doctor.docemail != null)
                     {
-                        EmailHelper oHelper = new EmailHelper(docemail, "Reschedule appointment.", "Your ppointment on " + formattedDate + " has been rescheduled by patient.");
+
+                        EmailHelper oHelper = new EmailHelper(doctor.docemail, "Reschedule appointment.", "Your appointment on " + formattedDate + " has been rescheduled by patient.");
                         oHelper.SendMessage();
                     }
-                    if (patemail != null)
+                    if (patient.patemail != null)
                     {
-                        EmailHelper oHelper = new EmailHelper(patemail, "Reschedule appointment.", "Your ppointment on " + formattedDate + " is rescheduled successfully.");
+                        EmailHelper oHelper = new EmailHelper(patient.patemail, "Reschedule appointment.", "Your appointment on " + formattedDate + " is rescheduled successfully.");
                         oHelper.SendMessage();
                     }
+                    pushModel pm = new pushModel();
+                    pm.DPushTitle = "Reschedule Appointment";
+                    pm.DPushMessage = "Your appointment of " + formattedDate + " has been rescheduled successfully by Patient.";
+                    pm.sendtoDoctor = true;
+                    pm.sendtoPatient = false;
+                    pm.doctorID = doctor.doctorID;
+                    pm.patientID = patient.patientID;
+
+                    PushHelper ph = new PushHelper();
+                    ph.sendPush(pm);
+
 
                     response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
                     return response;
@@ -584,21 +611,28 @@ namespace RestAPIs.Controllers
                     await db.SaveChangesAsync();
 
                     //Send Email on new appointment
-                    var docemail = (from d in db.Appointments
-                                    where d.appID == model.appID
-                                    select db.Doctors.Where(doc => doc.doctorID == d.doctorID).Select(doc => doc.email).FirstOrDefault()
-                                   ).FirstOrDefault();
-                    var patemail = db.Patients.Where(p => p.userId == model.userID).Select(p => p.email).FirstOrDefault();
-                    if (docemail != null)
-                    {
-                        EmailHelper oHelper = new EmailHelper(docemail, "Reschedule appointment.", "Your ppointment on " + formattedDate + " has been rescheduled by patient.");
-                        oHelper.SendMessage();
-                    }
-                    if (patemail != null)
-                    {
-                        EmailHelper oHelper = new EmailHelper(patemail, "Reschedule appointment.", "Your ppointment on " + formattedDate + " is rescheduled successfully.");
-                        oHelper.SendMessage();
-                    }
+                   if (doctor.docemail != null)
+                        {
+                           
+                            EmailHelper oHelper = new EmailHelper(doctor.docemail, "Reschedule appointment.", "Your appointment on " + formattedDate + " has been rescheduled by patient.");
+                            oHelper.SendMessage();
+                        }
+                        if (patient.patemail != null)
+                        {
+                            EmailHelper oHelper = new EmailHelper(patient.patemail, "Reschedule appointment.", "Your appointment on " + formattedDate + " is rescheduled successfully.");
+                            oHelper.SendMessage();
+                        }
+
+                        pushModel pm = new pushModel();
+                        pm.DPushTitle = "Reschedule Appointment";
+                        pm.DPushMessage = "Your appointment of " + formattedDate + " has been rescheduled successfully by Patient.";
+                        pm.sendtoDoctor = true;
+                        pm.sendtoPatient = false;
+                        pm.doctorID = doctor.doctorID;
+                        pm.patientID = patient.patientID;
+
+                        PushHelper ph = new PushHelper();
+                        ph.sendPush(pm);
 
                     response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
                     return response;
@@ -861,16 +895,18 @@ namespace RestAPIs.Controllers
                 }
                 else
                 {
-                    if(model.appType=="P")
+                    var patient = (from p in db.Patients
+                                   where p.userId == model.userID
+                                   select new { patemail = p.email, patientID = p.patientID }).FirstOrDefault();
+                    var doctor = (from p in db.Doctors
+                                  where p.userId == model.userID
+                                  select new { docemail = p.email, doctorID = p.doctorID }).FirstOrDefault();
+                    if (model.appType=="P")
                     {
                         result.rescheduleRequiredBy = "D";
                         result.appointmentStatus = "R";
                         result.mb = model.userID;
                         result.md = System.DateTime.Now;
-                        db.Entry(result).State = EntityState.Modified;
-                        await db.SaveChangesAsync();
-                        
-                        await db.SaveChangesAsync();
                     }
                     if (model.appType == "U")
                     {
@@ -900,8 +936,24 @@ namespace RestAPIs.Controllers
                             await db.SaveChangesAsync();
                         }
                     }
-                    
+
+                    DateTime? tempappdate = result.appDate.Value.Date;
+                    var formattedDate = string.Format("{0:dd/MM/yyyy}", tempappdate);
+                    db.Entry(result).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+
+                    pushModel pm = new pushModel();
+                    pm.PPushTitle = "Reschedule Request";
+                    pm.PPushMessage = "Doctor has requested for appointment reschedule for appointment date " + formattedDate;
+                    pm.sendtoDoctor = false;
+                    pm.sendtoPatient = true;
+                    pm.doctorID = doctor.doctorID;
+                    pm.patientID = patient.patientID;
+
+                    PushHelper ph = new PushHelper();
+                    ph.sendPush(pm);
                 }
+
                 
                 response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.appID, message = "" });
                 return response;

@@ -2,9 +2,11 @@
 using Identity.Membership;
 using Identity.Membership.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -73,18 +75,45 @@ namespace SwiftKare.Controllers
                     {
                         rolename = Request.Form["rolename"].ToString();
                         desc = Request.Form["desc"].ToString();
-
                         
-                        ViewBag.successMessage = "Record has been saved successfully";
-                        ViewBag.errorMessage = "";
+                        var role= new RoleManager<IdentityRole>(
+                new RoleStore<IdentityRole>(new ApplicationDbContext()));
+                        if (!(role.RoleExists(rolename)))
+                        {
+                            var rm = new RoleManager<ApplicationRole>(
+
+                                                        new RoleStore<ApplicationRole>(new ApplicationDbContext()));
+
+                            var idResult = rm.Create(new ApplicationRole(rolename));
+                            if(idResult.Succeeded)
+                            {
+                                AspNetRole thisRole = db.AspNetRoles.Where(r => r.Name.Equals(rolename, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+                                thisRole.Description = desc;
+                                db.Entry(thisRole).State= EntityState.Modified;
+                                db.SaveChanges();
+                            }
+                            
+                            ViewBag.successMessage = "Record has been saved successfully";
+                            ViewBag.errorMessage = "";
+                        }
+                        else
+                        {
+                            ViewBag.errorMessage = "Role already exists.";
+                            ViewBag.successMessage = "";
+                        }
+                            
 
                     }
                     if (action == "edit")
                     {
-                        roleid = Request.Form["id"].ToString();
+                        //roleid = Request.Form["id"].ToString();
                         rolename = Request.Form["rolename"].ToString();
-                        
-                       
+                        desc = Request.Form["desc"].ToString();
+                        AspNetRole thisRole = db.AspNetRoles.Where(r => r.Name.Equals(rolename, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+                        thisRole.Description = desc;
+                        thisRole.Name = rolename;
+                        db.Entry(thisRole).State = EntityState.Modified;
+                        db.SaveChanges();
                         ViewBag.successMessage = "Record has been saved successfully";
                         ViewBag.errorMessage = "";
                         var _existingroleList = db.AspNetRoles.ToList();
@@ -93,7 +122,9 @@ namespace SwiftKare.Controllers
                     if (action == "delete")
                     {
                         roleid = Request.Form["id"].ToString();
-                       
+                        AspNetRole thisRole = db.AspNetRoles.Where(r => r.Id.Equals(roleid, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+                        db.AspNetRoles.Remove(thisRole);
+                        db.SaveChanges();
                         ViewBag.successMessage = "Record has been deleted successfully";
                         ViewBag.errorMessage = "";
                     }

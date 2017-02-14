@@ -338,8 +338,8 @@ namespace SwiftKare.Controllers
                             adminUser.active = false;
                             adminUser.mb = Session["LogedUserID"].ToString();
                             adminUser.md = DateTime.Now;
-                            db.AdminUsers.Add(adminUser);
-                            db.Entry(adminUser).State = EntityState.Modified;
+                           db.Entry(adminUser).State = EntityState.Modified;
+                            db.SaveChanges();
                             ViewBag.successMessage = "Record has been deleted successfully";
                             ViewBag.errorMessage = "";
                         }

@@ -204,8 +204,8 @@ namespace SwiftKare.Controllers
                             doc.active = false;
                             doc.mb = Session["LogedUserID"].ToString();
                             doc.md = DateTime.Now;
-                            db.Doctors.Add(doc);
-                            db.Entry(doc).State = EntityState.Modified;
+                           db.Entry(doc).State = EntityState.Modified;
+                            db.SaveChanges();
                             ViewBag.successMessage = "Record has been deleted successfully";
                             ViewBag.errorMessage = "";
                         }

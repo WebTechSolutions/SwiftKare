@@ -2018,11 +2018,6 @@
             <Parameter Name="version" Mode="In" Type="Int32" />
             <Parameter Name="definition" Mode="In" Type="Binary" />
           </FunctionImport>
-          <FunctionImport Name="SP_AppointmentReport" ReturnType="Collection(SwiftKareDBModel.SP_AppointmentReport_Result)">
-            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
-            <Parameter Name="dateto" Mode="In" Type="DateTime" />
-            <Parameter Name="criteria" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="sp_ApproveConsultation">
             <Parameter Name="ID" Mode="In" Type="Int64" />
             <Parameter Name="MB" Mode="In" Type="String" />
@@ -2153,23 +2148,23 @@
           </FunctionImport>
           <FunctionImport Name="SP_SelectAdmin" ReturnType="Collection(SwiftKareDBModel.SP_SelectAdmin_Result)" />
           <FunctionImport Name="SP_SelectAlerts" ReturnType="Collection(SwiftKareDBModel.SP_SelectAlerts_Result)" />
-          <FunctionImport Name="SP_SelectAllergy" />
-          <FunctionImport Name="SP_SelectCity" />
+          <FunctionImport Name="SP_SelectAllergy" EntitySet="Allergies" ReturnType="Collection(SwiftKareDBModel.Allergy)" />
+          <FunctionImport Name="SP_SelectCity" EntitySet="Cities" ReturnType="Collection(SwiftKareDBModel.City)" />
           <FunctionImport Name="SP_SelectConsultation" ReturnType="Collection(SwiftKareDBModel.SP_SelectConsultation_Result)" />
-          <FunctionImport Name="SP_SelectDoctor" />
-          <FunctionImport Name="SP_SelectDoctorsForApproval" />
-          <FunctionImport Name="SP_SelectDocType" ReturnType="Collection(SwiftKareDBModel.SP_SelectDocType_Result)" />
-          <FunctionImport Name="SP_SelectLanguages" />
-          <FunctionImport Name="SP_SelectMedicine" />
-          <FunctionImport Name="SP_SelectNewss" />
-          <FunctionImport Name="SP_SelectPatient" />
-          <FunctionImport Name="SP_SelectRole" />
-          <FunctionImport Name="SP_SelectSpeciality" />
-          <FunctionImport Name="SP_SelectStates" />
+          <FunctionImport Name="SP_SelectDoctor" EntitySet="Doctors" ReturnType="Collection(SwiftKareDBModel.Doctor)" />
+          <FunctionImport Name="SP_SelectDoctorsForApproval" EntitySet="Doctors" ReturnType="Collection(SwiftKareDBModel.Doctor)" />
+          <FunctionImport Name="SP_SelectDocType" EntitySet="DocumentTypes" ReturnType="Collection(SwiftKareDBModel.DocumentType)" />
+          <FunctionImport Name="SP_SelectLanguages" EntitySet="Languages" ReturnType="Collection(SwiftKareDBModel.Language)" />
+          <FunctionImport Name="SP_SelectMedicine" EntitySet="Medicines" ReturnType="Collection(SwiftKareDBModel.Medicine)" />
+          <FunctionImport Name="SP_SelectNewss" EntitySet="News" ReturnType="Collection(SwiftKareDBModel.News)" />
+          <FunctionImport Name="SP_SelectPatient" EntitySet="Patients" ReturnType="Collection(SwiftKareDBModel.Patient)" />
+          <FunctionImport Name="SP_SelectRole" EntitySet="AspNetRoles" ReturnType="Collection(SwiftKareDBModel.AspNetRole)" />
+          <FunctionImport Name="SP_SelectSpeciality" EntitySet="Speciallities" ReturnType="Collection(SwiftKareDBModel.Speciallity)" />
+          <FunctionImport Name="SP_SelectStates" EntitySet="States" ReturnType="Collection(SwiftKareDBModel.State)" />
           <FunctionImport Name="SP_SelectSystemItems" ReturnType="Collection(SwiftKareDBModel.SP_SelectSystemItems_Result)" />
-          <FunctionImport Name="SP_SelectSystems" />
+          <FunctionImport Name="SP_SelectSystems" EntitySet="PatientSystems" ReturnType="Collection(SwiftKareDBModel.PatientSystem)" />
           <FunctionImport Name="SP_selectTransactionHistory" ReturnType="Collection(SwiftKareDBModel.SP_selectTransactionHistory_Result)" />
-          <FunctionImport Name="SP_SelectZipCode" />
+          <FunctionImport Name="SP_SelectZipCode" EntitySet="Zips" ReturnType="Collection(SwiftKareDBModel.Zip)" />
           <FunctionImport Name="sp_UpdateAlerts">
             <Parameter Name="alertID" Mode="In" Type="Int64" />
             <Parameter Name="alertText" Mode="In" Type="String" />
@@ -2402,7 +2397,6 @@
           <EntitySet Name="ConsultationROS" EntityType="SwiftKareDBModel.ConsultationRO" />
           <EntitySet Name="DoctorLanguages" EntityType="SwiftKareDBModel.DoctorLanguage" />
           <EntitySet Name="DoctorLicenseStates" EntityType="SwiftKareDBModel.DoctorLicenseState" />
-          <EntitySet Name="DoctorSpecialities" EntityType="SwiftKareDBModel.DoctorSpeciality" />
           <EntitySet Name="DoctorTimings" EntityType="SwiftKareDBModel.DoctorTiming" />
           <EntitySet Name="DocumentTypes" EntityType="SwiftKareDBModel.DocumentType" />
           <EntitySet Name="FamilyHXItems" EntityType="SwiftKareDBModel.FamilyHXItem" />
@@ -2577,10 +2571,6 @@
             <End Role="Doctor" EntitySet="Doctors" />
             <End Role="DoctorLicenseState" EntitySet="DoctorLicenseStates" />
           </AssociationSet>
-          <AssociationSet Name="FK_DoctorSpeciality_Doctor" Association="SwiftKareDBModel.FK_DoctorSpeciality_Doctor">
-            <End Role="Doctor" EntitySet="Doctors" />
-            <End Role="DoctorSpeciality" EntitySet="DoctorSpecialities" />
-          </AssociationSet>
           <AssociationSet Name="FK_DoctorTimings_Doctor" Association="SwiftKareDBModel.FK_DoctorTimings_Doctor">
             <End Role="Doctor" EntitySet="Doctors" />
             <End Role="DoctorTiming" EntitySet="DoctorTimings" />
@@ -2609,13 +2599,6 @@
             <End Role="Patient" EntitySet="Patients" />
             <End Role="UserFile" EntitySet="UserFiles" />
           </AssociationSet>
-          <FunctionImport Name="SearchDoctor1" ReturnType="Collection(String)">
-            <Parameter Name="language" Mode="In" Type="String" />
-            <Parameter Name="spec" Mode="In" Type="String" />
-            <Parameter Name="name" Mode="In" Type="String" />
-            <Parameter Name="appDay" Mode="In" Type="String" />
-            <Parameter Name="gender" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="SearchDoctorWithShift" ReturnType="Collection(SwiftKareDBModel.SearchDoctorWithShift_Result)">
             <Parameter Name="language" Mode="In" Type="String" />
             <Parameter Name="spec" Mode="In" Type="String" />
@@ -2625,25 +2608,19 @@
             <Parameter Name="toTime" Mode="In" Type="Time" />
             <Parameter Name="gender" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="sp_addextendedproc1">
-            <Parameter Name="functname" Mode="In" Type="String" />
-            <Parameter Name="dllname" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="sp_dropextendedproc1">
-          <Parameter Name="functname" Mode="In" Type="String" />
-          </FunctionImport>
           <EntitySet Name="VCLogs" EntityType="SwiftKareDBModel.VCLog" />
+          <FunctionImport Name="SP_AppointmentReport" ReturnType="Collection(SwiftKareDBModel.SP_AppointmentReport_Result)">
+            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateto" Mode="In" Type="DateTime" />
+            <Parameter Name="criteria" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="DoctorSpecialities" EntityType="SwiftKareDBModel.DoctorSpeciality" />
+          <AssociationSet Name="FK_DoctorSpeciality_Doctor" Association="SwiftKareDBModel.FK_DoctorSpeciality_Doctor">
+            <End Role="Doctor" EntitySet="Doctors" />
+            <End Role="DoctorSpeciality" EntitySet="DoctorSpecialities" />
+          </AssociationSet>
          
         </EntityContainer>
-        <ComplexType Name="SP_AppointmentReport_Result">
-          <Property Type="Int64" Name="appID" Nullable="false" />
-          <Property Type="String" Name="DName" Nullable="true" MaxLength="201" />
-          <Property Type="String" Name="PName" Nullable="true" MaxLength="201" />
-          <Property Type="String" Name="appDate" Nullable="true" MaxLength="8" />
-          <Property Type="Time" Name="appTime" Nullable="true" />
-          <Property Type="String" Name="consultationStatus" Nullable="true" MaxLength="10" />
-          <Property Type="String" Name="cd" Nullable="true" MaxLength="8" />
-        </ComplexType>
         <ComplexType Name="SP_CheckForDuplicatePatient_Result">
           <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="lastName" Nullable="true" MaxLength="100" />
@@ -3171,20 +3148,6 @@
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
           <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_DoctorLicenseStates_Doctor" FromRole="DoctorLicenseState" ToRole="Doctor" />
-        </EntityType>
-        <EntityType Name="DoctorSpeciality">
-          <Key>
-            <PropertyRef Name="doctorSpecialityID" />
-          </Key>
-          <Property Name="doctorSpecialityID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="specialityName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="doctorID" Type="Int64" />
-          <Property Name="CB" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="MB" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CD" Type="DateTime" Precision="3" />
-          <Property Name="MD" Type="DateTime" Precision="3" />
-          <Property Name="active" Type="Boolean" />
-          <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_DoctorSpeciality_Doctor" FromRole="DoctorSpeciality" ToRole="Doctor" />
         </EntityType>
         <EntityType Name="DoctorTiming">
           <Key>
@@ -4173,9 +4136,9 @@
           <NavigationProperty Name="Consultations" Relationship="SwiftKareDBModel.FK_Consultation_Doctor" FromRole="Doctor" ToRole="Consultation" />
           <NavigationProperty Name="DoctorLanguages" Relationship="SwiftKareDBModel.FK_DoctorLanguages_Doctor" FromRole="Doctor" ToRole="DoctorLanguage" />
           <NavigationProperty Name="DoctorLicenseStates" Relationship="SwiftKareDBModel.FK_DoctorLicenseStates_Doctor" FromRole="Doctor" ToRole="DoctorLicenseState" />
-          <NavigationProperty Name="DoctorSpecialities" Relationship="SwiftKareDBModel.FK_DoctorSpeciality_Doctor" FromRole="Doctor" ToRole="DoctorSpeciality" />
           <NavigationProperty Name="DoctorTimings" Relationship="SwiftKareDBModel.FK_DoctorTimings_Doctor" FromRole="Doctor" ToRole="DoctorTiming" />
           <NavigationProperty Name="UserFiles" Relationship="SwiftKareDBModel.FK_UserFiles_Doctor" FromRole="Doctor" ToRole="UserFile" />
+          <NavigationProperty Name="DoctorSpecialities" Relationship="SwiftKareDBModel.FK_DoctorSpeciality_Doctor" FromRole="Doctor" ToRole="DoctorSpeciality" />
         </EntityType>
         <EntityType Name="Patient">
           <Key>
@@ -4329,18 +4292,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DoctorSpeciality_Doctor">
-          <End Type="SwiftKareDBModel.Doctor" Role="Doctor" Multiplicity="0..1" />
-          <End Type="SwiftKareDBModel.DoctorSpeciality" Role="DoctorSpeciality" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Doctor">
-              <PropertyRef Name="doctorID" />
-            </Principal>
-            <Dependent Role="DoctorSpeciality">
-              <PropertyRef Name="doctorID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DoctorTimings_Doctor">
           <End Type="SwiftKareDBModel.Doctor" Role="Doctor" Multiplicity="0..1" />
           <End Type="SwiftKareDBModel.DoctorTiming" Role="DoctorTiming" Multiplicity="*" />
@@ -4448,6 +4399,41 @@
           <Property Name="logBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="cd" Type="DateTime" Precision="3" />
         </EntityType>
+        <ComplexType Name="SP_AppointmentReport_Result">
+          <Property Type="Int64" Name="appID" Nullable="false" />
+          <Property Type="String" Name="DName" Nullable="true" MaxLength="201" />
+          <Property Type="String" Name="PName" Nullable="true" MaxLength="201" />
+          <Property Type="String" Name="appDate" Nullable="true" MaxLength="8" />
+          <Property Type="Time" Name="appTime" Nullable="true" />
+          <Property Type="String" Name="consultationStatus" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="cd" Nullable="true" MaxLength="8" />
+        </ComplexType>
+        <EntityType Name="DoctorSpeciality">
+          <Key>
+            <PropertyRef Name="doctorSpecialityID" />
+          </Key>
+          <Property Name="doctorSpecialityID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="specialityName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="doctorID" Type="Int64" />
+          <Property Name="CB" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="MB" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CD" Type="DateTime" Precision="3" />
+          <Property Name="MD" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+          <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_DoctorSpeciality_Doctor" FromRole="DoctorSpeciality" ToRole="Doctor" />
+        </EntityType>
+        <Association Name="FK_DoctorSpeciality_Doctor">
+          <End Type="SwiftKareDBModel.Doctor" Role="Doctor" Multiplicity="0..1" />
+          <End Type="SwiftKareDBModel.DoctorSpeciality" Role="DoctorSpeciality" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctor">
+              <PropertyRef Name="doctorID" />
+            </Principal>
+            <Dependent Role="DoctorSpeciality">
+              <PropertyRef Name="doctorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         
       </Schema>
     </edmx:ConceptualModels>
@@ -4474,19 +4460,6 @@
           <FunctionImportMapping FunctionImportName="SP_AddUSerFiles" FunctionName="SwiftKareDBModel.Store.SP_AddUSerFiles" />
           <FunctionImportMapping FunctionImportName="SP_AddZipCode" FunctionName="SwiftKareDBModel.Store.SP_AddZipCode" />
           <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="SwiftKareDBModel.Store.sp_alterdiagram" />
-          <FunctionImportMapping FunctionImportName="SP_AppointmentReport" FunctionName="SwiftKareDBModel.Store.SP_AppointmentReport">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_AppointmentReport_Result">
-                <ScalarProperty Name="appID" ColumnName="appID" />
-                <ScalarProperty Name="DName" ColumnName="DName" />
-                <ScalarProperty Name="PName" ColumnName="PName" />
-                <ScalarProperty Name="appDate" ColumnName="appDate" />
-                <ScalarProperty Name="appTime" ColumnName="appTime" />
-                <ScalarProperty Name="consultationStatus" ColumnName="consultationStatus" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_ApproveConsultation" FunctionName="SwiftKareDBModel.Store.sp_ApproveConsultation" />
           <FunctionImportMapping FunctionImportName="sp_ApproveDoctor" FunctionName="SwiftKareDBModel.Store.sp_ApproveDoctor" />
           <FunctionImportMapping FunctionImportName="SP_CheckForDuplicatePatient" FunctionName="SwiftKareDBModel.Store.SP_CheckForDuplicatePatient">
@@ -4618,17 +4591,6 @@
           <FunctionImportMapping FunctionImportName="SP_SelectDoctorsForApproval" FunctionName="SwiftKareDBModel.Store.SP_SelectDoctorsForApproval">
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectDocType" FunctionName="SwiftKareDBModel.Store.SP_SelectDocType">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_SelectDocType_Result">
-                <ScalarProperty Name="docTypeID" ColumnName="docTypeID" />
-                <ScalarProperty Name="typeName" ColumnName="typeName" />
-                <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-                <ScalarProperty Name="mb" ColumnName="mb" />
-                <ScalarProperty Name="md" ColumnName="md" />
-                <ScalarProperty Name="active" ColumnName="active" />
-              </ComplexTypeMapping>
-            </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectLanguages" FunctionName="SwiftKareDBModel.Store.SP_SelectLanguages">
           </FunctionImportMapping>
@@ -4977,20 +4939,6 @@
                 <ScalarProperty Name="stateName" ColumnName="stateName" />
                 <ScalarProperty Name="doctorID" ColumnName="doctorID" />
                 <ScalarProperty Name="doctorLicenseStateID" ColumnName="doctorLicenseStateID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DoctorSpecialities">
-            <EntityTypeMapping TypeName="SwiftKareDBModel.DoctorSpeciality">
-              <MappingFragment StoreEntitySet="DoctorSpeciality">
-                <ScalarProperty Name="active" ColumnName="active" />
-                <ScalarProperty Name="MD" ColumnName="MD" />
-                <ScalarProperty Name="CD" ColumnName="CD" />
-                <ScalarProperty Name="MB" ColumnName="MB" />
-                <ScalarProperty Name="CB" ColumnName="CB" />
-                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
-                <ScalarProperty Name="specialityName" ColumnName="specialityName" />
-                <ScalarProperty Name="doctorSpecialityID" ColumnName="doctorSpecialityID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -5981,7 +5929,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SearchDoctor1" FunctionName="SwiftKareDBModel.Store.SearchDoctor" />
           <FunctionImportMapping FunctionImportName="SearchDoctorWithShift" FunctionName="SwiftKareDBModel.Store.SearchDoctorWithShift">
             <ResultMapping>
               <ComplexTypeMapping TypeName="SwiftKareDBModel.SearchDoctorWithShift_Result">
@@ -5997,8 +5944,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="sp_addextendedproc1" FunctionName="SwiftKareDBModel.Store.sp_addextendedproc" />
-          <FunctionImportMapping FunctionImportName="sp_dropextendedproc1" FunctionName="SwiftKareDBModel.Store.sp_dropextendedproc" />
           <EntitySetMapping Name="VCLogs">
             <EntityTypeMapping TypeName="SwiftKareDBModel.VCLog">
               <MappingFragment StoreEntitySet="VCLog">
@@ -6009,6 +5954,33 @@
                 <ScalarProperty Name="duration" ColumnName="duration" />
                 <ScalarProperty Name="consultID" ColumnName="consultID" />
                 <ScalarProperty Name="VCLogID" ColumnName="VCLogID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_AppointmentReport" FunctionName="SwiftKareDBModel.Store.SP_AppointmentReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_AppointmentReport_Result">
+                <ScalarProperty Name="appID" ColumnName="appID" />
+                <ScalarProperty Name="DName" ColumnName="DName" />
+                <ScalarProperty Name="PName" ColumnName="PName" />
+                <ScalarProperty Name="appDate" ColumnName="appDate" />
+                <ScalarProperty Name="appTime" ColumnName="appTime" />
+                <ScalarProperty Name="consultationStatus" ColumnName="consultationStatus" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="DoctorSpecialities">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.DoctorSpeciality">
+              <MappingFragment StoreEntitySet="DoctorSpeciality">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="MD" ColumnName="MD" />
+                <ScalarProperty Name="CD" ColumnName="CD" />
+                <ScalarProperty Name="MB" ColumnName="MB" />
+                <ScalarProperty Name="CB" ColumnName="CB" />
+                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+                <ScalarProperty Name="specialityName" ColumnName="specialityName" />
+                <ScalarProperty Name="doctorSpecialityID" ColumnName="doctorSpecialityID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

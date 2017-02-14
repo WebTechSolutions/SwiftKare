@@ -67,6 +67,16 @@
                             <div class="col-md-3 col-sm-3 col-xs-3">
                                 <input class="form-control col-md-7 col-xs-12" data-validate-length-range="6" maxlength="50" name="rolename" placeholder="Role Name" required="required" style="width: 228px;" type="text">
                             </div>
+                            
+                        </div>
+                        <div class="item form-group">
+                            
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                                Description <span class="required">*</span>
+                            </label>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <input class="form-control col-md-7 col-xs-12" data-validate-length-range="6" maxlength="50" name="desc" placeholder="Description" required="required" style="width: 228px;" type="text">
+                            </div>
                         </div>
 
 
@@ -88,13 +98,22 @@
                        FormMethod.Post, new { novalidate = "novalidate", @class = "form-horizontal form-label-left" }))
                     {
                         <input name="action" type="text" value="edit" style="display: none">
-                        <input id="eroleid" name="id" type="number" style="display: none">
+                        @*<input id="eroleid" name="id" type="text" style="display: none">*@
                         <div class="item form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
                                 Role Name <span class="required">*</span>
                             </label>
                             <div class="col-md-3 col-sm-3 col-xs-3">
                                 <input maxlength="50" id="erolename" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" name="rolename" placeholder="Role Name" required="required" style="width: 228px;" type="text">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                                Description <span class="required">*</span>
+                            </label>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <input id="edesc" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" maxlength="50" name="desc" placeholder="Description" required="required" style="width: 228px;" type="text">
                             </div>
                         </div>
 
@@ -135,8 +154,9 @@
                 <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            @*<th>ID</th>*@
                             <th>Role Name</th>
+                            <th>Description</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -150,17 +170,17 @@
 
 
                                 <tr>
-                                    <td id="id" class="roleid">@item.Id</td>
+                                    @*<td id="id" class="roleid">@item.Id</td>*@
                                     <td class="rolename" style="word-break: break-all;">@item.Name</td>
-
+                                    <td class="rolename" style="word-break: break-all;">@item.Description</td>
                                     <td>
                                         @using (Html.BeginForm("Create", "Role_Admin",
                        FormMethod.Post, new { novalidate = "novalidate", @class = "form-horizontal form-label-left" }))
                                         {
                                             <input name="action" type="text" value="delete" style="display: none">
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-primary">Action</button>
-                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                <button type="button" class="btn btn-primary" onclick="edit()">Edit</button>
+                                                @*<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                                     <span class="caret"></span>
                                                     <span class="sr-only">Toggle Dropdown</span>
                                                 </button>
@@ -168,13 +188,9 @@
                                                     <li>
                                                         <a class="editbtn">Edit</a>
                                                     </li>
-                                                    <li>
-                                                        <input name="id" type="number" style="display:none" value="@item.Id">
-                                                    </li>
-                                                    <li>
-                                                        <button id="delete" type="submit" onclick="return confirm('Are you sure you want to delete this item?');">Delete</button>
-                                                    </li>
-                                                </ul>
+                                                    
+                                                    
+                                                </ul>*@
                                             </div>
                                         }
                                     </td>
@@ -218,19 +234,20 @@
 <!-- Data table Scripts -->
 <!-- validator -->
 <script>
+    function edit() {
+        $('.Edit').css('display', 'block');
+        $('.Create').css('display', 'none');
+        var table = $('#datatable-responsive').DataTable();
+        $('#datatable-responsive tbody').on('click', 'tr', function () {
+            //$("#eroleid").val(table.row(this).data()[0]);
+            $("#erolename").val(table.row(this).data()[0]);
+            $("#edesc").val(table.row(this).data()[1]);
 
-    $(document).ready(function () {
-        $('.editbtn').click(function () {
-
-            $('.Edit').css('display', 'block');
-            $('.Create').css('display', 'none');
-            var table = $('#datatable-responsive').DataTable();
-            $('#datatable-responsive tbody').on('click', 'tr', function () {
-                $("#eroleid").val(table.row(this).data()[0]);
-                $("#erolename").val(table.row(this).data()[1]);
-
-            });
         });
+    }
+    $(document).ready(function () {
+        //$('.editbtn').click(function () {
+        
         $('#cancelbtn').click(function () {
 
             $('.Edit').css('display', 'none');
@@ -285,13 +302,13 @@
     $('#datatable-keytable').DataTable({
         keys: true
     });
-
-    $('#datatable-responsive').DataTable({
-        'order': [[0, 'desc']],
-        'columnDefs': [
-           { visible: false, targets: [0] }
-        ]
-    });
+    $('#datatable-responsive').DataTable();
+    //$('#datatable-responsive').DataTable({
+    //    'order': [[0, 'desc']],
+    //    'columnDefs': [
+    //       { visible: false, targets: [0] }
+    //    ]
+    //});
 
     $('#datatable-scroller').DataTable({
         ajax: "js/datatables/json/scroller-demo.json",
