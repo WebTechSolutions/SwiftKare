@@ -1,6 +1,7 @@
 ﻿using DataAccess;
 using DataAccess.CustomModels;
 using DoseSpot.EncryptionLibrary;
+using Newtonsoft.Json.Linq;
 using RestAPIs.DoseSpotApi;
 using System;
 using System.Collections.Generic;
@@ -64,7 +65,7 @@ namespace RestAPIs.Helper
             return rRes;
         }
 
-        public static string GetEPrescriptionUrl(DoseSpotPatientEntry oModel)
+        public static JObject GetEPrescriptionUrl(DoseSpotPatientEntry oModel)
         {
             DoseSpotPatient oDoseSpotPatient = new DoseSpotPatient
             {
@@ -100,8 +101,9 @@ namespace RestAPIs.Helper
 
             string cPostData = SingleSignOnUtils.GetSingleSignOnQueryStringForPatient(ClinicKey, SingleSignOnClinicId, SingleSignOnUserId, oDoseSpotPatient);
             string cPrefix = SingleSignOnUtils.GetSingleSignOnPageLocation("my.staging.dosespot.com", true);
-            string cRetUrl = cPrefix + cPostData;
-
+           // string cRetUrl = cPrefix + cPostData;
+            dynamic cRetUrl = new JObject();
+            cRetUrl.url = cPrefix + cPostData;
             return cRetUrl;
         }
 
@@ -116,7 +118,8 @@ namespace RestAPIs.Helper
 
             string cPostData = SingleSignOnUtils.GetRefillReqURL(ClinicKey, SingleSignOnClinicId, SingleSignOnUserId);
             string cPrefix = SingleSignOnUtils.GetSingleSignOnPageLocation("my.staging.dosespot.com", true);
-            string cRetUrl = cPrefix + cPostData;
+            dynamic cRetUrl = new JObject();
+            cRetUrl.url = cPrefix + cPostData;
 
             return cRetUrl;
         }

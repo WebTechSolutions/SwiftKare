@@ -409,7 +409,7 @@
                 SenderId: '@SessionHandler.UserInfo.Id',
                 UserName: '@SessionHandler.UserInfo.Email',
                 ReceiverConnectionId: curElem.data("connId"),
-                ReceiverId: '20',
+                ReceiverId: '20',make
                 SenderType: 'Doctor',
                 Message: JSON.stringify({ status: 'call', name: DoctorName }),
                 UserGroup: 'doctors'
@@ -431,9 +431,11 @@
                     if (msgJson.status == 'consultID') {
                       //  alert('consultID recieved:' + msgJson.name);
                         localStorage.setItem('consultationKey', msgJson.name);
+                        localStorage.setItem('otherUser', msgFrom);
                         return;
                     }
                     if (msgJson.status == 'Accepted') {
+                        localStorage.setItem('otherUser', msgFrom);
                         showAlert('Alert', "Doctor " + msgJson.name + " accepted your request please continue with payment process.");
                         //alert("Doctor " + msgJson.name + " accepted your request please continue with payment process.");
                         $('#wizard').smartWizard('goToStep', 2);
@@ -458,8 +460,6 @@
             };
 
             chat.client.incomingCallFromDoctor = function (msgFrom, msg, senderConnId, senderid, consultID, docName) {
-                //appID is consult ID in this function param
-                //localStorage.setItem('consultID', consultID);
                 debugger;
                 var msgJson = JSON.parse(msg);
 

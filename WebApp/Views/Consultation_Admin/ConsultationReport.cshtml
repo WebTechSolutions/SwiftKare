@@ -94,9 +94,9 @@
                                     <td class="appTime" style="word-break: break-all; width: 300px">@item.duration</td>
                                     
                                         
-                                            @if(item.consultationStatus=="A"){<td class="consultationStatus">Approved</td>}
-                                            @if (item.consultationStatus == "P"){<td class="consultationStatus">Pending</td>}
-                                            @if(item.consultationStatus=="R"){<td class="consultationStatus">Reschedule</td>}
+                                            @if(item.consultationStatus==null){<td class="consultationStatus">Not Completed</td>}
+                                            @*@if (item.consultationStatus == "P"){<td class="consultationStatus">Pending</td>}
+                                            @if(item.consultationStatus=="R"){<td class="consultationStatus">Reschedule</td>}*@
                                             @if(item.consultationStatus=="C"){<td class="consultationStatus">Completed</td>}
                                         
 

@@ -40,7 +40,6 @@ namespace DataAccess
         public virtual DbSet<ConsultationRO> ConsultationROS { get; set; }
         public virtual DbSet<DoctorLanguage> DoctorLanguages { get; set; }
         public virtual DbSet<DoctorLicenseState> DoctorLicenseStates { get; set; }
-        public virtual DbSet<DoctorSpeciality> DoctorSpecialities { get; set; }
         public virtual DbSet<DoctorTiming> DoctorTimings { get; set; }
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
         public virtual DbSet<FamilyHXItem> FamilyHXItems { get; set; }
@@ -75,17 +74,18 @@ namespace DataAccess
         public virtual DbSet<SecretQuestion> SecretQuestions { get; set; }
         public virtual DbSet<LifeStyleQuestion> LifeStyleQuestions { get; set; }
         public virtual DbSet<UserFile> UserFiles { get; set; }
+        public virtual DbSet<ChatLog> ChatLogs { get; set; }
+        public virtual DbSet<LiveReqLog> LiveReqLogs { get; set; }
         public virtual DbSet<Consultation> Consultations { get; set; }
         public virtual DbSet<Appointment> Appointments { get; set; }
         public virtual DbSet<Alert> Alerts { get; set; }
         public virtual DbSet<SuffixMaster> SuffixMasters { get; set; }
         public virtual DbSet<TitleMaster> TitleMasters { get; set; }
         public virtual DbSet<TimeZone> TimeZones { get; set; }
+        public virtual DbSet<Doctor> Doctors { get; set; }
         public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<VCLog> VCLogs { get; set; }
-        public virtual DbSet<ChatLog> ChatLogs { get; set; }
-        public virtual DbSet<Doctor> Doctors { get; set; }
-        public virtual DbSet<LiveReqLog> LiveReqLogs { get; set; }
+        public virtual DbSet<DoctorSpeciality> DoctorSpecialities { get; set; }
     
         public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
         {
@@ -475,6 +475,19 @@ namespace DataAccess
                 new ObjectParameter("lastname", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_CheckForDuplicatePatient_Result>("SP_CheckForDuplicatePatient", firstnameParameter, lastnameParameter);
+        }
+    
+        public virtual ObjectResult<SP_ConsultationReport_Result> SP_ConsultationReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto)
+        {
+            var datefromParameter = datefrom.HasValue ?
+                new ObjectParameter("datefrom", datefrom) :
+                new ObjectParameter("datefrom", typeof(System.DateTime));
+    
+            var datetoParameter = dateto.HasValue ?
+                new ObjectParameter("dateto", dateto) :
+                new ObjectParameter("dateto", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ConsultationReport_Result>("SP_ConsultationReport", datefromParameter, datetoParameter);
         }
     
         public virtual int sp_creatediagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
@@ -881,6 +894,11 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<City>("SP_SelectCity", mergeOption);
         }
     
+        public virtual ObjectResult<SP_SelectConsultation_Result> SP_SelectConsultation()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectConsultation_Result>("SP_SelectConsultation");
+        }
+    
         public virtual ObjectResult<Doctor> SP_SelectDoctor()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Doctor>("SP_SelectDoctor");
@@ -951,9 +969,14 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Patient>("SP_SelectPatient", mergeOption);
         }
     
-        public virtual int SP_SelectRole()
+        public virtual ObjectResult<AspNetRole> SP_SelectRole()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectRole");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<AspNetRole>("SP_SelectRole");
+        }
+    
+        public virtual ObjectResult<AspNetRole> SP_SelectRole(MergeOption mergeOption)
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<AspNetRole>("SP_SelectRole", mergeOption);
         }
     
         public virtual ObjectResult<Speciallity> SP_SelectSpeciality()
@@ -1965,24 +1988,6 @@ namespace DataAccess
                 new ObjectParameter("gender", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SearchDoctorWithShift_Result>("SearchDoctorWithShift", languageParameter, specParameter, nameParameter, appDayParameter, fromTimeParameter, toTimeParameter, genderParameter);
-        }
-    
-        public virtual ObjectResult<SP_SelectConsultation_Result> SP_SelectConsultation()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectConsultation_Result>("SP_SelectConsultation");
-        }
-    
-        public virtual ObjectResult<SP_ConsultationReport_Result> SP_ConsultationReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto)
-        {
-            var datefromParameter = datefrom.HasValue ?
-                new ObjectParameter("datefrom", datefrom) :
-                new ObjectParameter("datefrom", typeof(System.DateTime));
-    
-            var datetoParameter = dateto.HasValue ?
-                new ObjectParameter("dateto", dateto) :
-                new ObjectParameter("dateto", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ConsultationReport_Result>("SP_ConsultationReport", datefromParameter, datetoParameter);
         }
     
         public virtual ObjectResult<SP_AppointmentReport_Result> SP_AppointmentReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto, string criteria)

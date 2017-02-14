@@ -14,6 +14,7 @@ using Identity.Membership.Models;
 using RestAPIs.Extensions;
 using RestAPIs.Models;
 using DataAccess;
+using System.Data.Entity;
 
 namespace RestAPIs.Controllers
 {
@@ -197,6 +198,7 @@ namespace RestAPIs.Controllers
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         public async Task<DataAccess.CustomModels.UserModel> UniversalLogin(PatientLoginApiModel model, HttpRequestMessage request)
         {
+            
             var userModel = new DataAccess.CustomModels.UserModel
             {
                 Email = model.Email
@@ -229,7 +231,17 @@ namespace RestAPIs.Controllers
                     SwiftKareDBEntities db = new SwiftKareDBEntities();
                     if (roleFromDb.ToString().ToLower() == "doctor")
                     {
-                        var doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
+                        string iOSToken = model.iOSToken;
+                        string androidToken = model.andriodToken;
+                       
+                        //update doctor table with  Tokens 
+                        Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
+                        doctor.iOSToken = iOSToken;
+                        doctor.AndroidToken = androidToken;
+                        db.Entry(doctor).State = EntityState.Modified;
+                        await db.SaveChangesAsync();
+                       // var doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
+
                         if (doctor != null)
                         {
                             userModel.Id = doctor.doctorID;
@@ -253,7 +265,14 @@ namespace RestAPIs.Controllers
                     }
                     else if (roleFromDb.ToString().ToLower() == "patient")
                     {
-                        var patient = db.Patients.SingleOrDefault(o => o.userId == userId);
+                        string iOSToken = model.iOSToken;
+                        string androidToken = model.andriodToken;
+                        //update patient table with  Tokens 
+                        Patient patient = db.Patients.SingleOrDefault(o => o.userId == userId);
+                        patient.iOSToken = iOSToken;
+                        patient.AndroidToken = androidToken;
+                        db.Entry(patient).State = EntityState.Modified;
+                        await db.SaveChangesAsync();
 
                         if (patient != null)
                         {

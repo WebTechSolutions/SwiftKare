@@ -444,7 +444,8 @@
             };
 
             chat.client.patientAcceptedCall = function (patUserName, patId, appId) {
-                showAlert('Alert', 'Patient ' + patUserName + ' accepted call. this alert is in _DoctorLayout. Need to redirect to page');
+                localStorage.setItem('otherUser', msgFrom);
+               // showAlert('Alert', 'Patient ' + patUserName + ' accepted call. this alert is in _DoctorLayout. Need to redirect to page');
                 //alert('Patient ' + patUserName + ' accepted call. this alert is in _DoctorLayout. NEed to redirect to page');
             }
 
@@ -483,11 +484,13 @@
                     if (fromJson.status == 'consultID') {
                      //   alert('consultID recieved:' + fromJson.name);
                         localStorage.setItem('consultID', fromJson.name);
+                        
                         return;
                     }
-
+                    
                     var confirmCall = confirm(fromJson.name + " want to have a video consultation, Please press OK to accept!");
                     if (confirmCall == true) {
+                        localStorage.setItem('otherUser', msgFrom);
                         txt = "Accepted";
 
                         //Log Call Accepted - Starts

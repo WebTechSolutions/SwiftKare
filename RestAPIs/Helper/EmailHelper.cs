@@ -13,9 +13,11 @@ using PushNotiProject.Models;
 using System.Web.Script.Serialization;
 using System.IO;
 using System.Text;
+using DataAccess;
 
 namespace RestAPIs.Helper
 {
+    
     public class EmailHelper
     {
         #region Declarations
@@ -87,17 +89,48 @@ namespace RestAPIs.Helper
 
         #endregion
     }
+    public class pushModel
+    {
+        public Nullable<long> doctorID { get; set; }
+        public Nullable<long> patientID { get; set; }
+        public bool sendtoPatient { get; set; }
+        public bool sendtoDoctor { get; set; }
+        public string PPushTitle { get; set; }
+        public string DPushTitle { get; set; }
+        public string PPushMessage { get; set; }
+        public string DPushMessage { get; set; }
+        
+
+    }
     public class PushHelper
     {
+        private SwiftKareDBEntities db = new SwiftKareDBEntities();
         //pushNotificationHelper.SendPushNotification(diOSToken,dAndroidToken,piOSToken,pAndroidToken,"Push Title","Push Message",doctorID,patientID);
 
-        public void sendPush(string DiOSToken,string DandroidToken, string PiOSToken, string PandroidToken,string pushTitle,string pushMessage)
+        public void sendPush(pushModel pm)
         {
-            SendPushMessage(PiOSToken, "push Tittle", "push message", "i");
-            SendPushMessage(DiOSToken, "push Tittle", "push message", "i");
+            var Ptokens = (from p in db.Patients
+                         where p.patientID == pm.patientID
+                         select new { PiOSToken = p.iOSToken, PandroidToken = p.AndroidToken }).FirstOrDefault();
+            var Dtokens = (from p in db.Doctors
+                           where p.doctorID == pm.doctorID
+                           select new { DiOSToken = p.iOSToken, DandroidToken = p.AndroidToken }).FirstOrDefault();
+            string PiOSToken = Ptokens.PiOSToken;
+            string PandroidToken = Ptokens.PandroidToken;
+            string DiOSToken = Dtokens.DiOSToken;
+            string DandroidToken = Dtokens.DandroidToken;
 
-            SendPushMessage(PandroidToken, "push Tittle", "push message", "a");
-            SendPushMessage(DandroidToken, "push Tittle", "push message", "a");
+            if (pm.sendtoPatient)
+            {
+                SendPushMessage(PiOSToken, pm.PPushTitle, pm.PPushMessage, "i");
+                SendPushMessage(PandroidToken, pm.PPushTitle, pm.PPushTitle, "a");
+            }
+
+            if (pm.sendtoDoctor)
+            {
+                SendPushMessage(DiOSToken, pm.DPushTitle, pm.DPushMessage, "i");
+                SendPushMessage(DandroidToken, pm.DPushTitle, pm.DPushMessage, "a");
+            }
         }
         private void SendPushMessage(String deviceId, String pushTitle, String pushMessage, String platform, String AndroidpushSubTitle = "")
         {

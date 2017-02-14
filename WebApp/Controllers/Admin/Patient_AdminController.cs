@@ -198,16 +198,15 @@ namespace SwiftKare.Controllers
                     }
                     if (action == "delete")
                     {
-                        id = Request.Form["id"].ToString();
+                        long pid = Convert.ToInt64(Request.Form["id"].ToString());
                         userid = Request.Form["userid"].ToString();
-                        Patient patient = db.Patients.Where(a => a.userId == userid).FirstOrDefault();
+                        Patient patient = db.Patients.Where(a => a.patientID == pid).FirstOrDefault();
                         if (patient != null)
                         {
                             //Update AdminUsers table
                             patient.active = false;
                             patient.mb = Session["LogedUserID"].ToString();
                             patient.md = DateTime.Now;
-                            db.Patients.Add(patient);
                             db.Entry(patient).State = EntityState.Modified;
                             db.SaveChanges();
                             ViewBag.successMessage = "Record has been deleted successfully";

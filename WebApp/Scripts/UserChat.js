@@ -370,15 +370,15 @@ var UserChat = function (apiKey, sessionId, token) {
 
             console.log(event);
             if (event.from.connectionId === session.connection.connectionId) {
-                //my message
-                oMsgHtml = "<div class='sent-item text-right m-b-10'><img src='/Content/images/img.jpg' alt=''><div class='talk-bubble tri-right right-in margin-r'><div class='talktext'><p>";
+                //my message <img src='/Content/images/img.jpg' alt=''>
+                oMsgHtml = "<div class='inbox-item  m-b-10'><div class='talk-bubble tri-right right-in margin-r'><div class='talktext'><p>";
                 oMsgHtml += event.data;
                 oMsgHtml += " <span> ";
                 oMsgHtml += getFormattedTime(new Date());
                 oMsgHtml += " </span></p> </div> </div> </div>";
             } else {
-                //their message
-                oMsgHtml += "<div class='inbox-item m-b-10'><img src='/Content/images/img.jpg' alt=''><div class='talk-bubble tri-right left-in'><div class='talktext'> <p>";
+                //their message<img src='/Content/images/img.jpg' alt=''>
+                oMsgHtml += "<div class='sent-item text-right m-b-10'><div class='talk-bubble tri-right left-in'><div class='talktext'> <p>";
                 oMsgHtml += event.data;
                 oMsgHtml += " <span>";
                 oMsgHtml += getFormattedTime(new Date());
@@ -390,7 +390,7 @@ var UserChat = function (apiKey, sessionId, token) {
 
                 //Log received message
                 //AddSenderEmailID here
-                SaveChatMessage(sessionId, 1, 1, event.data);
+                SaveChatMessage(sessionId,localStorage.getItem('otherUser'), 1, event.data);
             }
 
             $("#divMessageContainer").append(oMsgHtml);

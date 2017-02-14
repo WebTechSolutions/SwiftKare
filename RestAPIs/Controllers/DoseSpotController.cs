@@ -54,7 +54,6 @@ namespace RestAPIs.Controllers
         {
             RefillRequestsTransmissionErrorsMessageResult oResult = DoseSpotHelper.RefillReqErr();
 
-         
             HttpResponseMessage oResp = Request.CreateResponse(HttpStatusCode.OK, oResult);
             return oResp;
         }
@@ -63,7 +62,7 @@ namespace RestAPIs.Controllers
         [Route("api/GetRefillReqURL")]
         public HttpResponseMessage GetRefillReqURL()
         {
-            string oResult = DoseSpotHelper.GetRefillUrl();
+            var oResult = DoseSpotHelper.GetRefillUrl();
             HttpResponseMessage oResp = Request.CreateResponse(HttpStatusCode.OK, oResult);
             return oResp;
         }
@@ -116,7 +115,7 @@ namespace RestAPIs.Controllers
                     }
 
                     //Register Patient
-                    string cFinalUrl = DoseSpotHelper.GetEPrescriptionUrl(oDoseSpotPatientEntry);
+                    var cFinalUrl = DoseSpotHelper.GetEPrescriptionUrl(oDoseSpotPatientEntry);
                     return Request.CreateResponse(HttpStatusCode.OK, cFinalUrl);
                 }
 
