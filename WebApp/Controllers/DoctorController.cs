@@ -9,6 +9,7 @@ using WebApp.Helper;
 using System;
 using System.Globalization;
 using WebApp.Repositories.PatientRepositories;
+using Newtonsoft.Json.Linq;
 
 namespace WebApp.Controllers
 {
@@ -18,6 +19,7 @@ namespace WebApp.Controllers
     public class DoctorController : Controller
     {
         DoctorTimingsRepository objTimingRepo = new DoctorTimingsRepository();
+        DoctorRepository objDoctorRepo = new DoctorRepository();
         // GET: DoctorJson
         public ActionResult Index()
         {
@@ -233,6 +235,30 @@ namespace WebApp.Controllers
                 return Json(new { Message = ex.Response });
             }
 
+        }
+
+        public PartialViewResult DoctorRefillErrorCountView()
+        {
+            try
+            {
+                var oData = objDoctorRepo.GetRefillErrorCount();
+                ViewBag.RefillErrorCount = oData;
+                return PartialView("DoctorRefillErrorCountView");
+
+            }
+
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                ViewBag.Error = ex.Response.ReasonPhrase.ToString();
+                ViewBag.Success = "";
+                return PartialView("DoctorRefillErrorCountView");
+            }
+
+        }
+        public Object GetRefillUrl()
+        {
+            Object cRetUrl = objDoctorRepo.GetRefillUrl();
+            return cRetUrl;
         }
     }
 

@@ -153,13 +153,13 @@ namespace WebApp.Controllers
             try
             {
                 SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
-                List<FetchDoctorTimingModel> appList = new List<FetchDoctorTimingModel>();
+                DocTimingsAndAppointment appList = new DocTimingsAndAppointment();
                 appList = objSeeDoctorRepo.FetchDoctorTimes(model);
                 List<string> timings = new List<string>();
                 if (appList != null)
                 {
                     //calculate time slots
-                    timings = displayTimeSlots(appList);
+                    timings = createTimeSlots(appList);
                 }
 
                 return Json(new { Success = true, Object = timings });
@@ -170,6 +170,120 @@ namespace WebApp.Controllers
                 return Json(new { Message = ex.Response });
             }
 
+        }
+        private List<string> createTimeSlots(DocTimingsAndAppointment appList)
+        {
+            List<string> timeSlots = new List<string> { };
+
+            foreach (var item in appList.timingsVM)
+            {
+                TimeSpan startTime = (TimeSpan)item.fromtime;
+                TimeSpan endTime = (TimeSpan)item.totime;
+                if (startTime.Minutes % 15 != 0)
+                {
+                    TimeSpan tempp = TimeSpan.FromMinutes(15 - (startTime.Minutes % 15));
+                    startTime = startTime.Add(tempp);
+                    if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
+                    {
+                        timeSlots.Add(startTime.ToString(@"hh\:mm"));
+                        TimeSpan temppp = TimeSpan.FromMinutes(15);
+                        startTime = startTime.Add(temppp);
+
+                    }
+                }
+
+                if (endTime.Minutes % 15 != 0)
+                {
+                    TimeSpan tempp = TimeSpan.FromMinutes(15 - (endTime.Minutes % 15));
+                    endTime = endTime.Add(tempp);
+
+                }
+
+                TimeSpan itemstartTime = startTime;//(TimeSpan)item.from;
+
+                if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
+                {
+                    timeSlots.Add(startTime.ToString(@"hh\:mm"));
+                    TimeSpan tempp = TimeSpan.FromMinutes(15);
+                    startTime = startTime.Add(tempp);
+
+                }
+                bool flag = true;
+                while (flag)
+                {
+                    if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
+                    {
+                        //if (!(TimeSpan.Equals(slot, item.appTime)))
+                        //{
+                        timeSlots.Add(startTime.ToString(@"hh\:mm"));
+                        TimeSpan tempp = TimeSpan.FromMinutes(15);
+                        startTime = startTime.Add(tempp);
+
+                        //}
+                    }
+                    else
+                    {
+                        TimeSpan tempp = TimeSpan.FromMinutes(15);
+                        startTime = startTime.Add(tempp);
+
+                    }
+
+                    if (TimeSpan.Equals(startTime, endTime))
+                    {
+
+                        if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
+                        {
+                            timeSlots.Add(startTime.ToString(@"hh\:mm"));
+                            TimeSpan tempp = TimeSpan.FromMinutes(15);
+                            startTime = startTime.Add(tempp);
+
+                        }
+                        flag = false;
+                    }
+                    if (startTime.Hours == endTime.Hours)
+                    {
+                        
+                        if (startTime.Minutes > endTime.Minutes)
+                        {
+                          
+                            flag = false;
+                        }
+                    }
+
+                   
+                } //while end 
+            }//for loop for database records.
+
+
+
+            foreach (var app in appList.appointmentVM)
+            {
+
+                if (app.appTime.HasValue)
+                {
+                    TimeSpan apptime = TimeSpan.Parse(app.appTime.Value.ToString());
+                    if (timeSlots.Contains(apptime.ToString(@"hh\:mm")))
+                    {
+                        timeSlots.Remove(apptime.ToString(@"hh\:mm"));
+                    }
+
+                }
+            }
+            for (var i = 0; i < timeSlots.Count; i++)
+            {
+                TimeSpan doctimings = TimeSpan.Parse(timeSlots[i]);
+                var dateTime = new DateTime(doctimings.Ticks); // Date part is 01-01-0001
+                var formattedTime = dateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                timeSlots.RemoveAt(i);
+                timeSlots.Insert(i, formattedTime);
+
+            }
+            if (timeSlots.Count > 0)
+            {
+                timeSlots.RemoveAt(timeSlots.Count - 1);
+            }
+
+            return timeSlots;
         }
         [HttpPost]
         public JsonResult SaveAppointment(AppointmentModel _objAppointment)

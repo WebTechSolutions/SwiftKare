@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Net;
 using DataAccess.CustomModels;
+using Newtonsoft.Json.Linq;
 
 namespace WebApp.Repositories.DoctorRepositories
 {
@@ -78,33 +79,33 @@ namespace WebApp.Repositories.DoctorRepositories
         {
             throw new NotImplementedException();
         }
-        //public IEnumerable<SeeDoctorDTO> SeeDoctor(string docName, string gender, string langName, string specName, string day, TimeSpan time)
-        //{
-        //    var response = ApiConsumerHelper.GetResponseString("api/searchDoctor/docName/?docName=" + docName);// + "&gender=" + gender + "&langName=" + langName + "&specName=" + specName +
-        //        //"&day=" + day + "&time=" + time);
-
-        //    var result = JsonConvert.DeserializeObject<IEnumerable<SeeDoctorDTO>>(response);
-        //    return result;
-        //}
-        public IEnumerable<Doctor> SeeDoctor(SearchModel searchModel)
+        public Object GetRefillErrorCount()
         {
-
-            //var response = ApiConsumerHelper.GetResponseString("api/searchDoctor/searchModel/?searchModel=" + searchModel);
-            //var result = JsonConvert.DeserializeObject<IList<SeeDoctorDTO>>(response);
             try
             {
-                var strContent = JsonConvert.SerializeObject(searchModel);
-                var response = ApiConsumerHelper.PostData("api/searchDoctor/searchModel/?searchModel", strContent);
-                var result = JsonConvert.DeserializeObject<IEnumerable<Doctor>>(response);
+                var response = ApiConsumerHelper.GetResponseString("api/GetRefillErr");
+                var result = JsonConvert.DeserializeObject<Object>(response);
                 return result;
             }
-            catch(Exception ex)
+            catch (HttpResponseException ex)
             {
-                HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                httpResponseMessage.Content = new StringContent(ex.Message);
-                throw new HttpResponseException(httpResponseMessage);
+
+                throw ex;
             }
-           
+
+        }
+        public Object GetRefillUrl()
+        {
+            try
+            {
+                var response = ApiConsumerHelper.GetResponseString("api/GetRefillReqURL");
+                var result = JsonConvert.DeserializeObject<Object>(response);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
    

@@ -48,7 +48,7 @@ namespace RestAPIs.Controllers
             return oResp;
         }
 
-        [HttpPost]
+       
         [Route("api/GetRefillErr")]
         public HttpResponseMessage GetRefillReqErr()
         {
@@ -58,7 +58,7 @@ namespace RestAPIs.Controllers
             return oResp;
         }
         //GetRefillReqURL
-        [HttpPost]
+        
         [Route("api/GetRefillReqURL")]
         public HttpResponseMessage GetRefillReqURL()
         {
