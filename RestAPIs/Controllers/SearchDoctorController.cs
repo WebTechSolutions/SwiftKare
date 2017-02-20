@@ -39,11 +39,16 @@ namespace RestAPIs.Controllers
                                       select new DoctorDataset
                                       {
                                           doctorID = doc.doctorID,
+                                          title=doc.title,
                                           firstName = doc.firstName,
                                           lastName = doc.lastName,
-                                          ProfilePhotoBase64 = doc.ProfilePhotoBase64
-                                                  //picture = doc.picture
-                                              }).FirstOrDefault()).ToList();
+                                          ProfilePhotoBase64 = doc.ProfilePhotoBase64,
+                                          city=doc.city,
+                                          state=doc.state,
+                                          languageName = db.DoctorLanguages.Where(d => d.doctorID == doc.doctorID).Select(d => d.languageName).FirstOrDefault(),
+                                          specialityName = db.DoctorSpecialities.Where(d => d.doctorID == doc.doctorID).Select(d => d.specialityName).FirstOrDefault()
+
+                                      }).FirstOrDefault()).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, favdoc);
                 return response;
             }
@@ -73,43 +78,7 @@ namespace RestAPIs.Controllers
 
         }
 
-        // POST: api/searchDoctor/SeeDoctorViewModel
-        //[Route("api/searchDoctor")]
-        //public HttpResponseMessage SeeDoctor(SearchDoctorModel searchModel)
-        //{
-          
-
-        //    try
-        //    {
-        //        if(searchModel.appDate==null)
-        //        {
-        //            var result = db.SP_SearchDoctor(searchModel.language, searchModel.speciality, searchModel.name, null,
-        //            searchModel.appTime, searchModel.gender).ToList();
-        //            response = Request.CreateResponse(HttpStatusCode.OK, result);
-        //            //return response;
-        //        }
-
-        //        if (searchModel.appDate != null)
-        //        {
-        //            DateTime day = new DateTime();
-        //            day = Convert.ToDateTime(searchModel.appDate);
-        //            var result = 
-        //                db.SP_SearchDoctor(searchModel.language, searchModel.speciality, searchModel.name, day.DayOfWeek.ToString(),
-        //            searchModel.appTime, searchModel.gender).ToList();
-        //            response = Request.CreateResponse(HttpStatusCode.OK, result);
-        //            //return response;
-        //        }
-        //        return response;
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //       return ThrowError(ex, "SeeDoctor in SeacrhDoctorController.");
-        //    }
-         
-
-        //}
+        
 
        
         [Route("api/searchDoctorwithFav")]

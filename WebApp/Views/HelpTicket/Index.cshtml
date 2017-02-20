@@ -143,12 +143,10 @@
         }
         showLoader();
         var _objEmail = {};
-        _objEmail["reciever"] = $("#reciever").val();
         _objEmail["subject"] = $("#subject").val();
-        
         _objEmail["message"] = msg.trim();
-        _objEmail["sender"] = '@SessionHandler.UserInfo.Email';
-        _objEmail["attachmentPath"] = $("#fileID").val();
+        _objEmail["ccemail"] = '@SessionHandler.UserInfo.Email';
+       
         $.ajax({
             url: '@Url.Action("SendHelpTicket", "HelpTicket")',
             type: "POST",

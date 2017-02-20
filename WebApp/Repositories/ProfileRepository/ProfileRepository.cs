@@ -194,6 +194,14 @@ namespace WebApp.Repositories.ProfileRepositories
             return result;
         }
 
+        public ApiResultModel UpdateTimezone(TimezoneModel model)
+        {
+            var strContent = JsonConvert.SerializeObject(model);
+            var request = ApiConsumerHelper.PostData("api/UpdateTimezone", strContent);
+
+            var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
+            return result;
+        }
         #endregion
 
     }

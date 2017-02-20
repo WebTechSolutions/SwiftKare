@@ -41,7 +41,7 @@ namespace RestAPIs.Controllers
             try
             {
                           
-                model.reciever = ConfigurationManager.AppSettings["SendGridFromEmailAddress"].ToString();
+                model.sender = ConfigurationManager.AppSettings["SendGridFromEmailAddress"].ToString();
                 if (model.message == null || model.message == "")
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Empty message is not allowed." });
@@ -53,7 +53,7 @@ namespace RestAPIs.Controllers
                         <p>From: " + model.sender+@"</p>
                         <p>"+model.message+@"</p>";
 
-                var oSimpleEmail = new EmailHelper(model.reciever, model.subject, sampleEmailBody);
+                var oSimpleEmail = new EmailHelper(model.sender, model.sender, model.ccemail,model.subject, sampleEmailBody);
                 oSimpleEmail.SendMessage();
                 response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = 1, message = "" });
                 return response;

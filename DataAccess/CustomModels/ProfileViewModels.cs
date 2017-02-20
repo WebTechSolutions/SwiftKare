@@ -268,6 +268,11 @@ namespace DataAccess.CustomModels
         public string DeasesName { get; set; }
         public string Relation { get; set; }
     }
+    public class TimezoneModel
+    {
+        public string userid { get; set; }
+        public string timezone { get; set; }
+    }
 
     public class PatientProfileWithExtraInfoVM
     {

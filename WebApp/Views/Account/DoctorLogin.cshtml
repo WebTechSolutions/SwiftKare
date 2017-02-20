@@ -35,10 +35,10 @@
                     @Html.PasswordFor(m => m.LoginViewModel.Password, new { @class = "form-control", @placeholder = "Password" })
                     @Html.ValidationMessageFor(m => m.LoginViewModel.Password, "", new { @class = "text-danger" })
                 </div>
-                <div>
+                @*<div>
                     @Html.CheckBoxFor(m => m.LoginViewModel.RememberMe)
                     @Html.LabelFor(m => m.LoginViewModel.RememberMe)
-                </div>
+                </div>*@
 
 
                 <div>
