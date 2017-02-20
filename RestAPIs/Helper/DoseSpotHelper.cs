@@ -108,7 +108,7 @@ namespace RestAPIs.Helper
             return cRetUrl;
         }
 
-        public static string GetRefillUrl()
+        public static JObject GetRefillUrl()
         {
             //Default Criterias - Starts
             int SingleSignOnUserId = 2844;

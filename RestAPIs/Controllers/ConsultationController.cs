@@ -320,6 +320,7 @@ namespace RestAPIs.Controllers
                 if (model.consultID == 0)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid consultation ID." });
+                    response.ReasonPhrase = "Provide consult id.";
                     return response;
                 }
                 if (model.patientID == 0)
@@ -330,6 +331,13 @@ namespace RestAPIs.Controllers
                 if (model.star == 0 || model.star > 5 || model.star < 0)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid review star." });
+                    response.ReasonPhrase = "Please give stars.";
+                    return response;
+                }
+                if (model.reviewText == "")
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid review star." });
+                    response.ReasonPhrase = "Please write reiview.";
                     return response;
                 }
                 Consultation result = db.Consultations.Where(app => app.consultID == model.consultID && app.active == true).FirstOrDefault();
@@ -347,6 +355,30 @@ namespace RestAPIs.Controllers
                     result.reviewStar = model.star;
                     db.Entry(result).State = EntityState.Modified;
                     await db.SaveChangesAsync();
+                    
+                    #region SaveDoctorRating
+                    var docid = (from d in db.Consultations
+                                    where d.consultID == model.consultID
+                                    select db.Doctors.Where(doc => doc.doctorID == d.doctorID).Select(doc => doc.doctorID).FirstOrDefault()
+                                    ).FirstOrDefault();
+                    var docreview = db.Consultations.Where(con => con.doctorID == docid && con.reviewStar!=null).Select(doc => doc.reviewStar).ToList();
+                    int star = 0;
+                    if(docreview!=null)
+                    {
+                        foreach (var item in docreview)
+                        {
+                            star = star + Convert.ToInt32(item);
+                        }
+                        star = (star / docreview.Count);
+                        Doctor objDoc = db.Doctors.Where(d => d.doctorID == docid).FirstOrDefault();
+                        objDoc.reviewStar = star;
+                        db.Entry(objDoc).State = EntityState.Modified;
+                        await db.SaveChangesAsync();
+                    }
+                    
+                    #endregion
+
+                    #region sendEmail
                     var sampledocEmailBody = @"
                     <h3>Consultation Review</h3>
                     <p>You have been reviewed by patient.</p>
@@ -371,6 +403,7 @@ namespace RestAPIs.Controllers
                     var patemail = db.Patients.Where(p => p.patientID == model.patientID).Select(p => p.email).FirstOrDefault();
                     oSimpleEmail = new Helper.EmailHelper(patemail.ToString(), "Consultation Review", samplepatEmailBody);
                     oSimpleEmail.SendMessage();
+                    #endregion
                 }
 
                 response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.consultID, message = "" });
@@ -460,6 +493,32 @@ namespace RestAPIs.Controllers
             }
 
 
+        }
+
+        [Route("api/getConsultationReview")]
+        public HttpResponseMessage GetConsultationReview(long consultID)
+        {
+
+            try
+            {
+                var consReview = (from cn in db.Consultations
+                                  where cn.consultID == consultID
+                                  select new
+                                  {
+                                      consultID = cn.consultID,
+                                      patientID = cn.patientID,
+                                      star = cn.reviewStar,
+                                      reviewText = cn.review
+
+                                  }).FirstOrDefault();
+
+                response = Request.CreateResponse(HttpStatusCode.OK, consReview);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "getConsultationReview in ConsultationController");
+            }
         }
         private bool IsValid(string emailaddress)
         {

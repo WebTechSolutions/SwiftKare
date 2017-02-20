@@ -87,12 +87,25 @@ namespace WebApp.Controllers
             }
             catch (System.Web.Http.HttpResponseException ex)
             {
-                return Json(new { Message = ex.Response });
+                return Json(new { Message = ex.Response.ReasonPhrase });
             }
 
         }
 
+        [HttpPost]
+        public JsonResult GetConsultationReview(long consultID)
+        {
+            try
+            {
+                var consultReview = oConsultationRepository.GetConsultationReview(consultID);
+                return Json(new { Success = true, Object = consultReview });
 
-       
+            }
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                return Json(new { Message = ex.Response.ReasonPhrase });
+            }
+        }
+
     }
 }

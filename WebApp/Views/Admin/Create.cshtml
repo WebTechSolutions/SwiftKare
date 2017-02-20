@@ -161,7 +161,7 @@
                                 Email <span class="required">*</span>
                             </label>
                             <div class="col-md-3 col-sm-3 col-xs-3">
-                                <input type="email" id="eemail" name="email" required="required" class="form-control has-feedback-left" placeholder="Email">
+                                <input type="email" id="eemail" name="email" required="required" class="form-control has-feedback-left" placeholder="Email" style="width: 228px;">
                                 <span class="fa fa-envelope form-control-feedback left" aria-hidden="true"></span>
                             </div>
                         </div>
@@ -273,6 +273,8 @@
                                                 <ul class="dropdown-menu" role="menu">
                                                     <li>
                                                         <a class="editbtn">Edit</a>
+                                                        @*<button id="editbtn" class="btn btn-link">Edit</button>*@
+                                                   
                                                     </li>
                                                     @*<li><a class="editbtn">Delete</a> </li>*@
                                                     <li> <input name="id" type="number" style="display:none" value="@item.Id"></li>
@@ -338,7 +340,7 @@
                 { data: "userid", className: "never" } //does not show on load
             ]
         });
-        $('.editbtn').click(function () {
+        $('editbtn').click(function () {
 
             //var id = $(this).parent().parent().parent().parent().parent().siblings('#adminid').text();
             var password = $(this).parent().parent().parent().parent().parent().siblings('.password').text();

@@ -13,6 +13,22 @@ namespace WebApp.Repositories.DoctorRepositories
 {
     public class DoctorConsultationRepository
     {
+        public AddConsultReviewodel GetConsultationReview(long consultID)
+        {
+
+            try
+            {
+
+                var response = ApiConsumerHelper.GetResponseString("api/getConsultationReview?consultID=" + consultID);
+                var result = JsonConvert.DeserializeObject<AddConsultReviewodel>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+
+        }
         public ConsultationModel GetConsultationDetail(long cID)
         {
 

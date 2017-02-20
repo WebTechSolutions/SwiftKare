@@ -11,4 +11,20 @@ namespace DataAccess.CommonModels
         public string appDate { get; set; }
         public long doctorID { get; set; }
     }
+    public class TimingsVM
+    {
+        public TimeSpan? fromtime { get; set; }
+        public TimeSpan? totime { get; set; }
+        public long? doctorID { get; set; }
+    }
+    public class AppointmentsVM
+    {
+        public TimeSpan? appTime { get; set; }
+       public long doctorID { get; set; }
+    }
+    public class DocTimingsAndAppointment
+    {
+        public List<TimingsVM> timingsVM { get; set; }
+        public List<AppointmentsVM> appointmentVM { get; set; }
+    } 
 }

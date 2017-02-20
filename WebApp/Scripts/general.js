@@ -72,6 +72,7 @@ function toggleFullScreen() {
 }
 //for doctor timings
 function formatAMPM(date) {
+    //console.log(date);
     var hours = date.getHours();
     var minutes = date.getMinutes();
     var ampm = hours >= 12 ? 'PM' : 'AM';
@@ -82,15 +83,40 @@ function formatAMPM(date) {
     return strTime;
 }
 function converttoLocal(timespan) {
-    var d = new Date(),
-    s = timespan,
-    parts = s.match(/(\d+)\:(\d+) (\w+)/),
-    hours = /am/i.test(parts[3]) ? parseInt(parts[1], 10) : parseInt(parts[1], 10) + 12,
-    minutes = parseInt(parts[2], 10);
+    var d = new Date();
+    var s = timespan;
+    var hours;
+    var parts = s.match(/(\d+)\:(\d+) (\w+)/);
+    if (parts[1] == '12' && parts[3]=='PM')
+    {
+        hours = parseInt(parts[1], 10);
+        var minutes = parseInt(parts[2], 10);
+        d.setUTCHours(hours);
+        d.setUTCMinutes(minutes);
+        d.setUTCSeconds(0);
+    }
+    else if (parts[1] == '12' && parts[3] == 'AM') {
+        var minutes = parseInt(parts[2], 10);
+        d.setUTCHours(0);
+        d.setUTCMinutes(minutes);
+        d.setUTCSeconds(0);
+        
+    }
+    else 
+    {
+        hours = /am/i.test(parts[3]) ? parseInt(parts[1], 10) : parseInt(parts[1], 10) + 12;
+        var minutes = parseInt(parts[2], 10);
+        d.setUTCHours(hours);
+        d.setUTCMinutes(minutes);
+        d.setUTCSeconds(0);
+    }
+   
+    
 
-    d.setUTCHours(hours);
-    d.setUTCMinutes(minutes);
-    d.setUTCSeconds(0);
+    //d.setUTCHours(hours);
+    //d.setUTCMinutes(minutes);
+    //d.setUTCSeconds(0);
+    console.log(d);
     return formatAMPM(d);
 }
 
