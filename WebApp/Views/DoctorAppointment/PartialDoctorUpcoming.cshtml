@@ -134,14 +134,14 @@ else
                     else if (response.ApiResultModel.message == "") {
                         new PNotify({
                             title: 'Success',
-                            text: "Consultation is created successfully.",
+                            text: "Please wait.Initiating video call with patient.",
                             type: 'info',addclass: 'dark',
                             styling: 'bootstrap3'
                         });
                         var _consultID=response.ApiResultModel.ID;
                         //Log consultion creation sucess
                         var cCallLogUrl = '@Url.Action("ConsultCreatedbyDoctor", "UserChat")?patientId=' + patientID;
-                        //$.post(cCallLogUrl);
+                        $.post(cCallLogUrl);
                         debugger;
                         makeCallToPatient(patientID, appID,_consultID,oPatInfo);
 

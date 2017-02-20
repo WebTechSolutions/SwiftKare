@@ -91,7 +91,8 @@ namespace RestAPIs.Controllers
                         ZipCode = oPatientInfo.zip,
                         Gender = oPatientInfo.gender,
                         Phone = oPatientInfo.cellPhone,
-                        DateOfBirth = oPatientInfo.dob.Value
+                        DateOfBirth = oPatientInfo.dob.Value,
+                        PharmacyId=oPatientInfo.pharmacyid
                     };
 
                     if (string.IsNullOrEmpty(oPatientInfo.DoseSpotPatientId))

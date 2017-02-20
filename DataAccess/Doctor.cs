@@ -21,9 +21,9 @@ namespace DataAccess
             this.Consultations = new HashSet<Consultation>();
             this.DoctorLanguages = new HashSet<DoctorLanguage>();
             this.DoctorLicenseStates = new HashSet<DoctorLicenseState>();
+            this.DoctorSpecialities = new HashSet<DoctorSpeciality>();
             this.DoctorTimings = new HashSet<DoctorTiming>();
             this.UserFiles = new HashSet<UserFile>();
-            this.DoctorSpecialities = new HashSet<DoctorSpeciality>();
         }
     
         public long doctorID { get; set; }
@@ -70,6 +70,7 @@ namespace DataAccess
         public string iOSToken { get; set; }
         public string AndroidToken { get; set; }
         public string ProfilePhotoBase64 { get; set; }
+        public Nullable<int> reviewStar { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }
@@ -80,10 +81,10 @@ namespace DataAccess
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DoctorLicenseState> DoctorLicenseStates { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DoctorSpeciality> DoctorSpecialities { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DoctorTiming> DoctorTimings { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserFile> UserFiles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DoctorSpeciality> DoctorSpecialities { get; set; }
     }
 }

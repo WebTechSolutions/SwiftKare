@@ -219,9 +219,9 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public void AddVCLog(long consultId, string endReason)
+        public void AddVCLog(long consultId, string endReason,int callDuration)
         {
-            oVideoCallRepository.AddVCLog(new VCLogModel { consultID = consultId, endBy = SessionHandler.UserInfo.Email, endReason = endReason, logBy = SessionHandler.UserInfo.Email });
+            oVideoCallRepository.AddVCLog(new VCLogModel { consultID = consultId, endBy = SessionHandler.UserInfo.Email, endReason = endReason, logBy = SessionHandler.UserInfo.Email,duration=callDuration });
         }
 
         [HttpPost]

@@ -115,33 +115,40 @@ namespace RestAPIs.Helper
             var Dtokens = (from p in db.Doctors
                            where p.doctorID == pm.doctorID
                            select new { DiOSToken = p.iOSToken, DandroidToken = p.AndroidToken }).FirstOrDefault();
-            string PiOSToken = Ptokens.PiOSToken;
-            string PandroidToken = Ptokens.PandroidToken;
-            string DiOSToken = Dtokens.DiOSToken;
-            string DandroidToken = Dtokens.DandroidToken;
+            string PiOSToken = "";
+            string PandroidToken = "";
+            string DiOSToken = "";
+            string DandroidToken = "";
+            if (Ptokens.PiOSToken != null) {  PiOSToken = Ptokens.PiOSToken; }
+            if (Ptokens.PandroidToken != null) {  PandroidToken = Ptokens.PandroidToken; }
+            if (Ptokens.PiOSToken != null)  DiOSToken = Dtokens.DiOSToken;
+            if (Ptokens.PiOSToken != null)  DandroidToken = Dtokens.DandroidToken;
 
             if (pm.sendtoPatient)
             {
-                SendPushMessage(PiOSToken, pm.PPushTitle, pm.PPushMessage, "i");
-                SendPushMessage(PandroidToken, pm.PPushTitle, pm.PPushTitle, "a");
+                if (PandroidToken != "" || PandroidToken != null) SendPushMessage(PiOSToken, pm.PPushTitle, pm.PPushMessage, "i");
+                if (PandroidToken != "" || PandroidToken != null) SendPushMessage(PandroidToken, pm.PPushTitle, pm.PPushTitle, "a");
             }
 
             if (pm.sendtoDoctor)
             {
-                SendPushMessage(DiOSToken, pm.DPushTitle, pm.DPushMessage, "i");
-                SendPushMessage(DandroidToken, pm.DPushTitle, pm.DPushMessage, "a");
+                if (DiOSToken != "" || DiOSToken != "null") SendPushMessage(DiOSToken, pm.DPushTitle, pm.DPushMessage, "i");
+                if (DandroidToken != "" || DandroidToken!="null") SendPushMessage(DandroidToken, pm.DPushTitle, pm.DPushMessage, "a");
             }
         }
         private void SendPushMessage(String deviceId, String pushTitle, String pushMessage, String platform, String AndroidpushSubTitle = "")
         {
-            switch (platform)
+            if (deviceId != null)
             {
-                case "a":
-                    callAndriodPushNotification(deviceId, pushTitle, AndroidpushSubTitle, pushMessage);
-                    break;
-                case "i":
-                    callIOSPushNotification(deviceId, "high", pushTitle, 1, "default", pushMessage);
-                    break;
+                switch (platform)
+                {
+                    case "a":
+                        callAndriodPushNotification(deviceId, pushTitle, AndroidpushSubTitle, pushMessage);
+                        break;
+                    case "i":
+                        callIOSPushNotification(deviceId, "high", pushTitle, 1, "default", pushMessage);
+                        break;
+                }
             }
         }
 

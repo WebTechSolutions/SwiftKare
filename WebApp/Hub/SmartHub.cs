@@ -29,8 +29,11 @@ namespace WebApp.Hub
             UserInfo Value;
             AllUserList.TryRemove(Context.ConnectionId, out Value);
             MessageList.Clear();
-
-            return Clients.Group("doctors").showConnected(AllUserList);
+           // List<string> grp = new List<string>();
+            IList<string> grp = new List<string>();
+            grp.Add("patients");
+            grp.Add("doctors");
+            return Clients.Groups(grp).showConnected(AllUserList);
         }
 
         public override Task OnConnected()
@@ -76,13 +79,13 @@ namespace WebApp.Hub
         public void PatientAcceptedCall(MessageInfo message)
         {
             var ConnectionId = Context.ConnectionId;
-            Clients.Client(message.ReceiverConnectionId).patientAcceptedCall(message.UserName, message.SenderId, message.consultID);
+            Clients.Client(message.ReceiverConnectionId).patientAcceptedCall(message.PatientName, message.SenderId, message.consultID, message.UserName);
         }
 
         public void PatientRejectedCall(MessageInfo message)
         {
             var ConnectionId = Context.ConnectionId;
-            Clients.Client(message.ReceiverConnectionId).patientRejectedCall(message.UserName, message.SenderId, message.consultID);
+            Clients.Client(message.ReceiverConnectionId).patientRejectedCall(message.PatientName, message.SenderId, message.consultID,message.UserName);
         }
 
         public void PatientRedirectedToCall(string connId, string tokboxInfo, string patId, string patientName) {

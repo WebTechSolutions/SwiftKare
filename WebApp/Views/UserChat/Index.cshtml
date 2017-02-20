@@ -54,6 +54,7 @@
     <!-- Custom Theme Style -->
     <link href="@Url.Content("~/Content/css/custom.min.css")" rel="stylesheet">
     <link href="@Url.Content("~/Content/css/style_tokbox.css")" rel="stylesheet">
+    <link href="@Url.Content("~/Content/css/pnotify.css")" rel="stylesheet">
 
     <!-- SignalR js files -->
     <!-- SignalR js files -->
@@ -61,6 +62,7 @@
 
     <script src="@Url.Content("~/Scripts/jquery.cookie.js")"></script>
     <script src="@Url.Content("~/Scripts/jquery.signalR-2.2.1.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/pnotify.js")"></script>
     <script src="@Url.Content("~/signalr/hubs")"></script>
 
     <style type="text/css">
@@ -99,7 +101,7 @@
 
 
         @*<img id="imgSecondaryVideo" class="img-responsive" src="@Url.Content("~/Content/images/123.jpg")" alt="">*@
-        <h1 id="h1Name" data-name="@recipientName" class="video_title"> @(userType.ToLower() == "patient" ? ("Please wait , while " + recipientName + " will join you after doing payment !") : ("Please wait , while " + recipientName + " will join you!"))</h1>
+        <h1 id="h1Name" data-name="@recipientName" class="video_title"> @(userType.ToLower() == "patient" ? ("Please wait , while " + recipientName + " will join you  !") : ("Please wait , while " + recipientName + " will join you "))</h1>
         <div class="small_img">
             <a href="#" id="aHideMyCamera" style="display:none;">
                 <div id="divPrimaryVideo" class="xs-video-img img-responsive" style="display:block;"></div>
@@ -330,7 +332,9 @@
 
     <script src="@Url.Content("~/Scripts/UserChat.js")"></script>
     <script>
+        new PNotify({ title: 'Video Consult setup', text: "Please wait, System is initiating the consult for you.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
         var mymodal = $('#myModal1');
+        var isConsultComplete = false;
         function showAlert(heading, body) {
 
             mymodal.find('#heading').text(heading);
@@ -349,6 +353,10 @@
             openTokSession = tokboxArr[0];
             openTokToken = tokboxArr[1];
         }
+        else {
+
+            new PNotify({ title: 'Error', text: 'Error in getting tokbox info.', type: 'error', styling: 'bootstrap3' });
+        }
         console.log('openTokSession:' + openTokSession + ' -> openTokToken:' + openTokToken);
 
         var oUserChat = new UserChat('@openTokApi', openTokSession, openTokToken);
@@ -360,6 +368,7 @@
             var cUrl = '@Url.Action("AddDoctorNotesSubjective","UserChat")';
             $.post(cUrl, { consultId: consultId, cValues: $("#txtDoctorNoteSubjective").val() }, function (data) {
                 console.log(data);
+                new PNotify({ title: 'Success', text: "Consult Updated.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
             });
         }
 
@@ -367,6 +376,7 @@
             var cUrl = '@Url.Action("AddDoctorNotesObjective", "UserChat")';
             $.post(cUrl, { consultId: consultId, cValues: $("#txtDoctorNoteObjective").val() }, function () {
                 //alert("Saved successfully.");
+                new PNotify({ title: 'Success', text: "Consult Updated.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
             });
         }
 
@@ -374,6 +384,7 @@
             var cUrl = '@Url.Action("AddDoctorNotesAssessment", "UserChat")';
             $.post(cUrl, { consultId: consultId, cValues: $("#txtDoctorNoteAssessment").val() }, function () {
                 //alert("Saved successfully.");
+                new PNotify({ title: 'Success', text: "Consult Updated.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
             });
         }
 
@@ -381,10 +392,16 @@
             var cUrl = '@Url.Action("AddDoctorNotesPlans", "UserChat")';
             $.post(cUrl, { consultId: consultId, cValues: $("#txtDoctorNotePlans").val() }, function () {
                 //alert("Saved successfully.");
+                new PNotify({ title: 'Success', text: "Consult Updated.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
             });
         }
 
         $(document).ready(function () {
+            $(document.body).on("keydown", this, function (event) {
+                if (event.keyCode == 116) {
+                     return false;
+                }
+            });
 
             $('#tblROS').on('ifChecked', 'input', function (event) {
                 var curElem = $(this);

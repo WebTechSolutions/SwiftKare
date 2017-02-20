@@ -59,8 +59,8 @@ namespace WebApp.Repositories.DoctorRepositories
             try
             {
                 var response = ApiConsumerHelper.GetResponseString("api/GetPatientDoseSpotUrl?patientId=" + patientId);
-                var result = JsonConvert.DeserializeObject<string>(response);
-                return result;
+               // var result = JsonConvert.DeserializeObject<string>(response);
+                return response;
             }
             catch (Exception ex)
             {

@@ -35,7 +35,7 @@ namespace RestAPIs.Controllers
                 //Doctor.doctorID, Doctor.firstName, Doctor.lastName,Doctor.picture
                 var favdoc = (from l in db.FavouriteDoctors
                               where l.patientID == patientID && l.active == true
-                              select (from doc in db.Doctors where doc.doctorID == l.doctorID && doc.active == true
+                              select (from doc in db.Doctors where doc.doctorID == l.doctorID
                                       select new DoctorDataset
                                       {
                                           doctorID = doc.doctorID,

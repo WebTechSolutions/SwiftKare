@@ -130,7 +130,10 @@ else
 
             var cUrl = "@Url.Action("GetDoseSpotUrl", "DoctorConsultation")?patientId=" + patId;
             $.get(cUrl, function (resp) {
-                $("#iframeUrl").attr('src', resp);
+               
+                var o=$.parseJSON(resp)
+                console.log(o);
+                $("#iframeUrl").attr('src', o.url);
                 $("#mdlIframe").modal('show');
             });
         });

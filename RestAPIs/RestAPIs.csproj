@@ -97,9 +97,6 @@
     <Reference Include="OpenTok">
       <HintPath>..\packages\OpenTok.2.3.0\lib\net35\OpenTok.dll</HintPath>
     </Reference>
-    <Reference Include="Orcus.PushNotifications">
-      <HintPath>..\WebApp\bin\Orcus.PushNotifications.dll</HintPath>
-    </Reference>
     <Reference Include="PushSharp.Apple">
       <HintPath>..\WebApp\bin\PushSharp.Apple.dll</HintPath>
     </Reference>

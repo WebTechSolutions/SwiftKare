@@ -30,6 +30,7 @@ namespace DataAccess.CustomModels
         public string ZipCode { get; set; }
 
         public string Phone { get; set; }
+        public long? PharmacyId { get; set; }
 
     }
 

@@ -85,11 +85,12 @@ namespace RestAPIs.Helper
                 ZipCode = oModel.ZipCode,
 
                 PrimaryPhone = oModel.Phone,
-                PrimaryPhoneType = "Home",
+                PrimaryPhoneType = "Cell",
                 PhoneAdditional1 = "",
                 PhoneAdditionalType1 = "",
                 PhoneAdditional2 = "",
-                PhoneAdditionalType2 = ""
+                PhoneAdditionalType2 = "",
+                PharmacyId=oModel.PharmacyId
             };
 
             //Default Criterias - Starts
@@ -144,11 +145,13 @@ namespace RestAPIs.Helper
                 ZipCode = oModel.ZipCode,
 
                 PrimaryPhone = oModel.Phone,
-                PrimaryPhoneType = "Home",
+                PrimaryPhoneType = "Cell",
                 PhoneAdditional1 = "",
                 PhoneAdditionalType1 = "",
                 PhoneAdditional2 = "",
-                PhoneAdditionalType2 = ""
+                PhoneAdditionalType2 = "",
+                PharmacyId=oModel.PharmacyId
+
             };
 
             //Default Criterias - Starts
@@ -237,6 +240,7 @@ namespace RestAPIs.Helper
             public string PhoneAdditionalType1 { get; set; }
             public string PhoneAdditional2 { get; set; }
             public string PhoneAdditionalType2 { get; set; }
+            public long? PharmacyId { get; set; }
 
             public float? Height { get; set; }
             public float? Weight { get; set; }

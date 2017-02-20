@@ -82,10 +82,10 @@ namespace DataAccess
         public virtual DbSet<SuffixMaster> SuffixMasters { get; set; }
         public virtual DbSet<TitleMaster> TitleMasters { get; set; }
         public virtual DbSet<TimeZone> TimeZones { get; set; }
-        public virtual DbSet<Doctor> Doctors { get; set; }
         public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<VCLog> VCLogs { get; set; }
         public virtual DbSet<DoctorSpeciality> DoctorSpecialities { get; set; }
+        public virtual DbSet<Doctor> Doctors { get; set; }
     
         public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
         {

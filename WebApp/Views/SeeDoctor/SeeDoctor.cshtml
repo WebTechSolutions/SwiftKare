@@ -725,7 +725,7 @@
                             <h2>You Appointment Summary. You appointment will be confirmed after payment.</h2>
                             <div class="row">
                                 <div class="col-md-6 col-sm-12 col-xs-12">
-                                    <div class="x_panel">
+                                    <div class="x_panel" style="height:262px;">
                                         <div class="x_title">
                                             <h2>Doctor Information</h2>
                                             <ul class="nav navbar-right panel_toolbox">
@@ -744,7 +744,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12 col-xs-12">
-                                    <div class="x_panel">
+                                    <div class="x_panel" style="height:262px;">
                                         <div class="x_title">
                                             <h2>Appointment Information</h2>
                                             <ul class="nav navbar-right panel_toolbox">
@@ -764,7 +764,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button class="btn btn-primary" id="btnProceedWithPayment" type="button">Proceed with payment</button>
+                            <center>  <button class="btn btn-primary" id="btnProceedWithPayment" type="button">Proceed with payment</button></center>
 
                         </div>
 
@@ -870,7 +870,29 @@
                               "</address>";
                     document.getElementById("docInfo").innerHTML = tableHtml;
                 }
+                var oDocInfo = null;
+                for (var i = 0; i < availableDoctors.doctor.length; i++) {
+                    if (availableDoctors.doctor[i].docId == _selecteddoctorID) {
+                        oDocInfo = availableDoctors.doctor[i];
+                        break;
+                    }
+                }
+                debugger;
+                if(oDocInfo==null){
+                   
+                    new PNotify({
+                        title: 'Oops, Doctor is Offline!!!',
+                        text: "Sorry, the doctor is offline now. Please select any other doctor before making payment.",
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                    $('#wizard').smartWizard('goToStep', 1);
 
+                    
+
+                }
+               
+                else{
                 //Stripe Initialization after getting consultCharges of selected doctor
                 var amount=response.Object.consultCharges*100;
                 var oStripePayCheckout = new StripePayCheckout({
@@ -880,24 +902,28 @@
                     actionUrl: '@Url.Action("ProceedWithPay", "seedoctor")',
                     handleSuccess: function () {
                         console.log('Payment Done...');
-                       // var cCallLogUrl = '@Url.Action("PaymentSuccessLog", "UserChat")?doctorId=' +  $("#doctorid").val();
-                       // $.post(cCallLogUrl);
-                        var cUrl = '/UserChat/PaymentSuccessLog?doctorId=' + $("#doctorid").val();
-                        $.post(cUrl);
+                        new PNotify({
+                            title: 'Success',
+                            text: "$"+amount/100+" has been  charged successfull.",
+                            type: 'info', addclass: 'dark',
+                            styling: 'bootstrap3'
+                        });
+                         var cCallLogUrl = '@Url.Action("PaymentSuccessLog", "UserChat")?doctorId=' +  $("#doctorid").val();
+                         $.post(cCallLogUrl);
                         showLoader();
                         CreateAppointment(@ViewBag.PatienID,@amount);
                     },
                     handleFailure: function () {
                         var cUrl = '/UserChat/PaymentFailLog?doctorId=' + $("#doctorid").val();
                         $.post(cUrl);
-                          showAlert("Alert","Stripe Payment Failed!!!");
-                          return;
+                        showAlert("Alert","Stripe Payment Failed!!!");
+                        return;
                         //alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
                     }
                 });
 
                 oStripePayCheckout.initialize();
-
+            }
             
             },
             error: errorRes
@@ -967,6 +993,7 @@
         _objAppointment["rovFile3Base64"] = $("#hdnFileID3").val();
         _objAppointment["rovFile3Name"] = $("#hdnFileID3Name").val();
 
+        
 
         $.ajax({
             type: 'POST',
@@ -1002,7 +1029,7 @@
                         hideLoader();
                         new PNotify({
                             title: 'Success',
-                            text: "Appointment is scheduled successfully.",
+                            text: "Appointment has been scheduled successfully. Reference #:"+result.ApiResultModel.ID,
                             type: 'info',addclass: 'dark',
                             styling: 'bootstrap3'
                         });
@@ -1015,6 +1042,11 @@
                         if (appType == "L")
                         {
                             console.log('Live Appointment');
+                            localStorage.setItem("livecall","1");
+                            localStorage.setItem("doctorid",$("#doctorid").val());
+                            localStorage.setItem("patientid",patientID);
+                            localStorage.setItem("apptime",new Date());
+
 
                         createConsultFromPatient($("#doctorid").val(), patientID, result.ApiResultModel.ID);}
 
@@ -1060,8 +1092,8 @@
                         //Log consult creation error
 
                         var cCallLogUrl = '@Url.Action("ConsultCreationFailedbyPatient", "UserChat")?doctorId=' + doctorId;
-                      //  $.post(cCallLogUrl);
-                        showAlert('Consult Creation Error', 'Unable to create consult');
+                        $.post(cCallLogUrl);
+                        showAlert('Consult Creation Error', 'Appointment schedule with app ID:'+appID+', but Unable to create consult');
                     }
                     else if (response.ApiResultModel.message == "") {
                         console.log('consult created');
@@ -1074,7 +1106,7 @@
 
                         //Log consultion creation sucess
                         var cCallLogUrl = '@Url.Action("ConsultCreatedbyPatient", "UserChat")?doctorId=' + doctorID;
-                        //$.post(cCallLogUrl);
+                        $.post(cCallLogUrl);
 
                         if(appType="L")
                         {
@@ -1086,9 +1118,9 @@
                             var docId = doctorID;
 
                             var oDocInfo = null;
-                            for (var i = 0; i < busyDoctors.doctor.length; i++) {
-                                if (busyDoctors.doctor[i].docId == docId) {
-                                    oDocInfo = busyDoctors.doctor[i];
+                            for (var i = 0; i < availableDoctors.doctor.length; i++) {
+                                if (availableDoctors.doctor[i].docId == docId) {
+                                    oDocInfo = availableDoctors.doctor[i];
                                     break;
                                 }
                             }
@@ -1106,16 +1138,20 @@
                                     Message: JSON.stringify({ status: 'consultID', name: consultID }),
                                     UserGroup: 'doctors'
                                 });
+                                hideLoader();
+                                new PNotify({
+                                    title: 'Success',
+                                    text: "Your Live consultation consultation will be started soon.",
+                                    type: 'info', addclass: 'dark',
+                                    styling: 'bootstrap3'
+                                });
                             }
-                            else alert("Unable to send consultID to Doctor");
+                            else {
+                                new PNotify({ title: 'Error', text: "Doctor is offline. Please try later", type: 'error', styling: 'bootstrap3' });
+                                return false;
+                            }
                             debugger;
-                            hideLoader();
-                            new PNotify({
-                                title: 'Success',
-                                text: "Payment Successfull.Your consultation will be started soon.",
-                                type: 'info', addclass: 'dark',
-                                styling: 'bootstrap3'
-                            });
+                            
 
                             var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
                             var tokboxInfo=localStorage.getItem('tokbox');
@@ -1131,7 +1167,7 @@
 
                                 }
                                 else
-                                {alert('Err in getting tokbox info');}
+                                { new PNotify({ title: 'Error', text: "Error in getting tokbox info.", type: 'error', styling: 'bootstrap3' });}
                           // });
 
                             //Redirect User for video chat

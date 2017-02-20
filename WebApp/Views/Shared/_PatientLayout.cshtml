@@ -1,4 +1,4 @@
-﻿@using WebApp.Helper;
+﻿ @using WebApp.Helper;
 
 <!DOCTYPE html>
 <html>
@@ -298,7 +298,21 @@
 
 
         // Proxy created on the fly
-        var chat = $.connection.chatHub;
+      /*  var chat;
+        if (localStorage.getItem('chat') == null)
+        {
+            chat = $.connection.chatHub;
+            localStorage.setItem('chat', chat);
+            console.log("chathub connected created");
+        }
+        else
+        {
+            chat = localStorage.getItem('chat');
+            console.log("chathub connected restored");
+        }*/
+
+      var  chat = $.connection.chatHub;
+
         var senderConnectionId;
         var found = false;
 
@@ -377,7 +391,7 @@
             }
 
             setDoctorID($(e).attr("data-doctorid"));
-            
+
             var curElem = $(e);
 
             //Log Call Info - Starts
@@ -415,7 +429,7 @@
                 UserGroup: 'doctors'
             });
         }*@
-       
+
         $(function () {
 
             chat.client.receiveMessage = function (msgFrom, msg, senderConnId, senderid) {
@@ -467,33 +481,25 @@
 
                 if (isPatientAcceptedCall) {
                     var cCallLogUrl = '@Url.Action("PatientAcceptedCall", "UserChat")?doctorId=' + senderid;
-                    $.post(cCallLogUrl);
-                }
-                else {
-                    var cCallLogUrl = '@Url.Action("PatientDeclinedCall", "UserChat")?doctorId=' + senderid;
-                    $.post(cCallLogUrl);
-                    return;
-                }
-
-                if (isPatientAcceptedCall) {
-
-                    chat.server.patientAcceptedCall({
-                        SenderId: '@SessionHandler.UserInfo.Id',
-                        UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
-                        ReceiverConnectionId: senderConnId,
-                        consultID: consultID 
-                    });
-
-
+                    //  $.post(cCallLogUrl);
+                   
                     var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Patient&receiverId=" + senderid + "&doctorName=" + docName + "&patientName=@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)&ConsultID=" + consultID;
 
                     $.post(cUrlReadyForCall, function (oResp) {
                         //oResp is    SessionId*TokenId
                         debugger;
                         if (oResp != "0") {
+                            //send message to patient about confirmation
+                            chat.server.patientAcceptedCall({
+                                SenderId: '@SessionHandler.UserInfo.Id',
+                                PatientName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
+                                ReceiverConnectionId: senderConnId,
+                                consultID: consultID,
+                                UserName: '@SessionHandler.UserInfo.Email'
+                            });
                             //Log Tokbox info generated event
                             var cCallLogUrl = '@Url.Action("TokBoxInfoCreatedbyPatient", "UserChat")?doctorId=' + senderid;
-                         //   $.post(cCallLogUrl);
+                            $.post(cCallLogUrl);
 
                             var tokboxInfo = oResp;
                             localStorage.setItem('tokbox', tokboxInfo);
@@ -503,34 +509,43 @@
 
                             //Redirect doctor to call
                             window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + tokboxInfo;
-                            
+
                         }
                         else {
                             //Log Tokbox info generated event
                             var cCallLogUrl = '@Url.Action("TokBoxInfoCreationFailedbyPatient", "UserChat")?doctorId=' + senderid;
-                           // $.post(cCallLogUrl);
-                            alert('Err in getting tokbox info ');
+                            $.post(cCallLogUrl);
+                            new PNotify({ title: 'Error', text: 'Err in getting tokbox info ', type: 'error', styling: 'bootstrap3' });
+
+                            chat.server.patientRejectedCall({
+                                SenderId: '@SessionHandler.UserInfo.Id',
+                                PatientName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
+                                ReceiverConnectionId: senderConnId,
+                                consultID: consultID,
+                                UserName: '@SessionHandler.UserInfo.Email'
+                            });
+                            return;
                         }
                     });
 
 
-                    
-
-
-
-
                 }
                 else {
+                    var cCallLogUrl = '@Url.Action("PatientDeclinedCall", "UserChat")?doctorId=' + senderid;
+                    //   $.post(cCallLogUrl);
                     chat.server.patientRejectedCall({
                         SenderId: '@SessionHandler.UserInfo.Id',
                         UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
                         ReceiverConnectionId: senderConnId,
                         consultID: consultID
                     });
+                    return;
                 }
 
+                
+
             };
-            
+
 
 
             // Declare a function on the chat hub so the server can invoke it

@@ -27,7 +27,7 @@ namespace DataAccess
         public Nullable<long> doctorID { get; set; }
         public Nullable<long> AppID { get; set; }
     
-        public virtual Doctor Doctor { get; set; }
         public virtual Patient Patient { get; set; }
+        public virtual Doctor Doctor { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-
+ 
     $.fn.animateHighlight = function (highlightColor, duration) {
         var highlightBg = highlightColor || "#4198e6";
         var animateMs = duration || 500;
@@ -51,7 +51,8 @@ var UserChat = function (apiKey, sessionId, token) {
                 //console.log('There was an error connecting to the session:', error.code, error.message);
 
                 if (error.code == 1006) {
-                    alert("You are not connected to the internet. Check your network connection.");
+                    new PNotify({ title: 'Error', text: "You are not connected to the internet. Check your network connection.", type: 'error', styling: 'bootstrap3' });
+                 //   alert();
                 }
             }
             else {
@@ -91,12 +92,24 @@ var UserChat = function (apiKey, sessionId, token) {
     }
 
     function stopCall() {
+        session.signal({
+            type: 'chat',
+            data: "#endconsult#"
+        },
+                 function (error) {
+                     if (!error) {
+                        console.log('Error in sending end consult signal to other party')
+                     }
+                 }
+               );
+
         $('#aStrtCall').show();
         $('#aStopCall').hide();
 
         $(".clsCallActive").addClass("clsHide");
 
-        endSession();
+       endSession();
+        localStorage.setItem("livecall", "0");
 
 
         streamCreateTime = null;
@@ -211,11 +224,13 @@ var UserChat = function (apiKey, sessionId, token) {
     }
 
     function intentetConnectivityLost() {
-        alert("There is problem with your network connection. Please check your network connection.");
+      //  alert("There is problem with your network connection. Please check your network connection.");
+        new PNotify({ title: 'Error', text: "There is problem with your network connection. Please check your network connection.", type: 'error', styling: 'bootstrap3' });
     }
 
     function intentetConnectivityRegain() {
-        alert("Network connection has been restored. Conneting your call.");
+      //  alert("Network connection has been restored. Conneting your call.");
+        new PNotify({ title: 'Success', text: "Network connection has been restored. Conneting your call.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
         session.connect(token);
         session.publish(publisher);
         publisher.publishVideo(true);
@@ -278,11 +293,17 @@ var UserChat = function (apiKey, sessionId, token) {
     //Database connection end points - Starts
 
     function networkDisconntected() {
+
+      
+        new PNotify({ title: 'Error', text: "It seems other user has some network issue.Please try later.", type: 'error', styling: 'bootstrap3' });
         //Get Consult Id From localStorage
         var consultationId = localStorage.getItem('consultationKey');
 
-        var cUrl = '/UserChat/AddVCLog?consultId=' + consultationId + '&endReason=networkDisconnected';
-        $.post(cUrl);
+        var cUrl = '/UserChat/AddVCLog?consultId=' + consultationId + '&endReason=Other user Disconnected&callDuration=' + parseInt($('#pTimeCounter').text());
+        $.post(cUrl, function () {
+           // alert('VC Log added for network disconnection');
+            window.location = cEndCallUrl;
+        });
     }
 
     function SaveSessionStart(sessionId, callerId, calleId) {
@@ -302,8 +323,11 @@ var UserChat = function (apiKey, sessionId, token) {
         $.post(cUrl);
 
         localStorage.removeItem('consultationKey');
-        alert("Consult is completed successfully.");
+      //  alert("Consult is completed successfully by End call button.");
+        new PNotify({ title: 'Success', text: "Consult Completed Successfully..", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
         //cEndCallUrl is defined in page
+       // alert(cEndCallUrl)
+
         window.location = cEndCallUrl;
     }
 
@@ -324,7 +348,9 @@ var UserChat = function (apiKey, sessionId, token) {
         session = OT.initSession(apiKey, sessionId)
         .on('streamCreated', function (event) {
             try {
-
+                alert('consultationId @ Stream Created:' + localStorage.getItem('consultationKey'))
+                var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=VC Started ';
+                $.post(cUrl);
                 curStream = event.stream;
                 //streamCreateTime = new Date(curStream.creationTime);
                 streamCreateTime = new Date();
@@ -340,27 +366,43 @@ var UserChat = function (apiKey, sessionId, token) {
                 });
 
                 $("#h1Name").html($("#h1Name").data("name"));
-
+                SaveSessionStart(sessionId, 1, 1);
                 subscriber.on("disconnected", function (event) {
-                    alert("It seems another user has network issue, please wait till resolution.");
+                  //  alert("It seems another user has network issue, please wait till resolution.");
+                    networkDisconntected();
                 });
                 debugger;
                 //For callerId use publisher's id; for calle id use subscriber's id
-                SaveSessionStart(sessionId, 1, 1);
+                
 
             } catch (e) { }
         })
         .on("streamDestroyed", function (event) {
             try {
-                //alert(event.reason);
-
-                if (event.reason == "networkDisconnected") {
+                
+                debugger;
+               // alert(isConsultComplete);
+                if (isConsultComplete == false) {
+                    //alert(event.reason);
+                    
                     networkDisconntected();
-
-                    //Try reconnecting till network available
-                } else {
-                    stopCall();
+                    /*
+                                        if (event.reason == "networkDisconnected") {
+                                            
+                                            networkDisconntected();
+                    
+                                            //Try reconnecting till network available
+                                        } else {
+                                            // stopCall();
+                                        }*/
                 }
+                else {
+                    var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Consult compelted by other user ';
+                    $.post(cUrl);
+                    new PNotify({ title: 'Success', text: "Other user completed the consult.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
+                    window.location = cEndCallUrl;
+                }
+
 
             } catch (e) { }
         })
@@ -369,28 +411,36 @@ var UserChat = function (apiKey, sessionId, token) {
             var oMsgHtml = "";
 
             console.log(event);
-            if (event.from.connectionId === session.connection.connectionId) {
-                //my message <img src='/Content/images/img.jpg' alt=''>
-                oMsgHtml = "<div class='inbox-item  m-b-10'><div class='talk-bubble tri-right right-in margin-r'><div class='talktext'><p>";
-                oMsgHtml += event.data;
-                oMsgHtml += " <span> ";
-                oMsgHtml += getFormattedTime(new Date());
-                oMsgHtml += " </span></p> </div> </div> </div>";
-            } else {
-                //their message<img src='/Content/images/img.jpg' alt=''>
-                oMsgHtml += "<div class='sent-item text-right m-b-10'><div class='talk-bubble tri-right left-in'><div class='talktext'> <p>";
-                oMsgHtml += event.data;
-                oMsgHtml += " <span>";
-                oMsgHtml += getFormattedTime(new Date());
-                oMsgHtml += "</span></p> </div> </div> </div>";
+            if (event.data.toString().trim() == "#endconsult#") {
+                isConsultComplete = true;
+              //  window.location = cEndCallUrl;
+//alert('consult completed via chat signal')
+            }
+            else{
+                if (event.from.connectionId === session.connection.connectionId) {
+                    //my message <img src='/Content/images/img.jpg' alt=''>
+                    oMsgHtml = "<div class='inbox-item  m-b-10'><div class='talk-bubble tri-right right-in margin-r'><div class='talktext'><p>";
+                    oMsgHtml += event.data;
+                    oMsgHtml += " <span> ";
+                    oMsgHtml += getFormattedTime(new Date());
+                    oMsgHtml += " </span></p> </div> </div> </div>";
+                } else {
+                    //their message<img src='/Content/images/img.jpg' alt=''>
 
-                if (!$("#messages-sec").is(":visible")) {
-                    showVideoMessages();
+                    oMsgHtml += "<div class='sent-item text-right m-b-10'><div class='talk-bubble tri-right left-in'><div class='talktext'> <p>";
+                    oMsgHtml += event.data;
+                    oMsgHtml += " <span>";
+                    oMsgHtml += getFormattedTime(new Date());
+                    oMsgHtml += "</span></p> </div> </div> </div>";
+
+                    if (!$("#messages-sec").is(":visible")) {
+                        showVideoMessages();
+                    }
+
+                    //Log received message
+                    //AddSenderEmailID here
+                    SaveChatMessage(sessionId, localStorage.getItem('otherUser'), 1, event.data);
                 }
-
-                //Log received message
-                //AddSenderEmailID here
-                SaveChatMessage(sessionId,localStorage.getItem('otherUser'), 1, event.data);
             }
 
             $("#divMessageContainer").append(oMsgHtml);
@@ -407,13 +457,19 @@ var UserChat = function (apiKey, sessionId, token) {
 
 
             if (audioInputDevices.length == 0 && videoInputDevices.length == 0) {
-                alert("Your computer is not connected to any audio or video device. Please connect these devices.");
+                new PNotify({ title: 'Error', text: "Your computer is not connected to any audio or video device. Please connect these devices.", type: 'error', styling: 'bootstrap3' });
+                var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Your computer is not connected to any audio or video device ';
+                $.post(cUrl);
             }
             else if (audioInputDevices.length == 0) {
-                alert("Your computer is not connected to any audio device.");
+                new PNotify({ title: 'Error', text: "Your computer is not connected to any audio device.", type: 'error', styling: 'bootstrap3' });
+                var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Your computer is not connected to any audio  ';
+                $.post(cUrl);
             }
             else if (videoInputDevices.length == 0) {
-                alert("Your computer is not connected to any video device.");
+                new PNotify({ title: 'Error', text: "Your computer is not connected to any video device.", type: 'error', styling: 'bootstrap3' });
+                var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Your computer is not connected to any  video device ';
+                $.post(cUrl);
             }
         });
 

@@ -221,6 +221,11 @@ namespace RestAPIs.Controllers
                 //app.appTime = To24HrTime(model.appTime);
 
                 var timezoneid = db.Patients.Where(d => d.patientID == model.patientID).Select(d => d.timezone).FirstOrDefault();
+                if (timezoneid.Trim() == "")
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "User Timezone is missing." });
+                    return response;
+                }
                 TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
                 app.appTime = TimeZoneInfo.ConvertTimeToUtc(myDateTime, zoneInfo).TimeOfDay;
                 //app.appTime= myDateTime.ToUniversalTime().TimeOfDay;
@@ -271,7 +276,7 @@ namespace RestAPIs.Controllers
                 pm.DPushTitle = "New Appointment";
                 pm.DPushMessage = "Patient has scheduled appointment with you on " + model.appDate;
                 pm.sendtoDoctor = true;
-                pm.sendtoPatient = true;
+                pm.sendtoPatient = false;
                 pm.doctorID = model.doctorID;
                 pm.patientID = model.patientID;
 
@@ -408,9 +413,13 @@ namespace RestAPIs.Controllers
                 var patient = (from p in db.Patients
                                where p.userId == model.userID
                                select new { patemail = p.email, patientID = p.patientID }).FirstOrDefault();
-                var doctor = (from p in db.Doctors
-                              where p.userId == model.userID
-                              select new { docemail = p.email, doctorID = p.doctorID }).FirstOrDefault();
+                var App= ((from a in db.Appointments
+                            where a.appID == model.appID
+                            select new { doctorID = a.doctorID}).FirstOrDefault());
+
+                var doctor = (from d in db.Doctors
+                              where d.doctorID == App.doctorID
+                              select new { docemail = d.email, doctorID = d.doctorID }).FirstOrDefault();
                 if (model.appType=="U")
                 {
                     if (timediff.TotalHours < Convert.ToInt32(RescheduleLimit))
@@ -634,7 +643,7 @@ namespace RestAPIs.Controllers
                         PushHelper ph = new PushHelper();
                         ph.sendPush(pm);
 
-                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = app.appID, message = "" });
+                    response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = model.appID, message = "" });
                     return response;
                 }
                 else
@@ -895,11 +904,11 @@ namespace RestAPIs.Controllers
                 }
                 else
                 {
-                    var patient = (from p in db.Patients
-                                   where p.userId == model.userID
-                                   select new { patemail = p.email, patientID = p.patientID }).FirstOrDefault();
+                    var patient = (from pp in db.Patients
+                                   where pp.patientID == result.patientID
+                                   select new { patemail = pp.email, patientID = pp.patientID }).FirstOrDefault();
                     var doctor = (from p in db.Doctors
-                                  where p.userId == model.userID
+                                  where p.doctorID == result.doctorID
                                   select new { docemail = p.email, doctorID = p.doctorID }).FirstOrDefault();
                     if (model.appType=="P")
                     {

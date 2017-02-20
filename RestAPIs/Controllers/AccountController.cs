@@ -236,8 +236,8 @@ namespace RestAPIs.Controllers
                        
                         //update doctor table with  Tokens 
                         Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
-                        doctor.iOSToken = iOSToken;
-                        doctor.AndroidToken = androidToken;
+                        if(iOSToken.Trim() != "") doctor.iOSToken = iOSToken;
+                        if (androidToken.Trim() != "") doctor.AndroidToken = androidToken;
                         db.Entry(doctor).State = EntityState.Modified;
                         await db.SaveChangesAsync();
                        // var doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
@@ -269,8 +269,8 @@ namespace RestAPIs.Controllers
                         string androidToken = model.andriodToken;
                         //update patient table with  Tokens 
                         Patient patient = db.Patients.SingleOrDefault(o => o.userId == userId);
-                        patient.iOSToken = iOSToken;
-                        patient.AndroidToken = androidToken;
+                        if (iOSToken.Trim()!="")patient.iOSToken = iOSToken;
+                        if (androidToken.Trim() != "") patient.AndroidToken = androidToken;
                         db.Entry(patient).State = EntityState.Modified;
                         await db.SaveChangesAsync();
 
