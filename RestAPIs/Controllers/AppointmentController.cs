@@ -941,8 +941,9 @@ namespace RestAPIs.Controllers
                             result.appointmentStatus = "R";
                             result.mb = model.userID;
                             result.md = System.DateTime.Now;
-                            db.Entry(result).State = EntityState.Modified;
-                            await db.SaveChangesAsync();
+                            //db.Entry(result).State = EntityState.Modified;
+                            //await db.SaveChangesAsync();
+                            
                         }
                     }
 
@@ -950,7 +951,16 @@ namespace RestAPIs.Controllers
                     var formattedDate = string.Format("{0:dd/MM/yyyy}", tempappdate);
                     db.Entry(result).State = EntityState.Modified;
                     await db.SaveChangesAsync();
-
+                    Alert alert = new Alert();
+                    alert.alertFor = result.patientID;
+                    alert.alertText = " Doctor has requested to reschedule the appointment.";
+                    alert.cd = System.DateTime.Now;
+                    alert.md = System.DateTime.Now;
+                    alert.mb = model.userID;
+                    alert.cb = model.userID;
+                    alert.active = true;
+                    db.Alerts.Add(alert);
+                    await db.SaveChangesAsync();
                     pushModel pm = new pushModel();
                     pm.PPushTitle = "Reschedule Request";
                     pm.PPushMessage = "Doctor has requested for appointment reschedule for appointment date " + formattedDate;
