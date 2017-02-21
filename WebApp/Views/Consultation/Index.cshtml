@@ -92,10 +92,10 @@
                                 @*style="margin-left:97px"*@
 
                                 <a href="javascript:void(0);" onclick="toggle(this);"><span id="s1" class="fa fa-star-o"></span></a>
-                                <a href="javascript:void(0);"><span id="s2" class="fa fa-star-o"></span></a>
-                                <a href="javascript:void(0);"><span id="s3" class="fa fa-star-o"></span></a>
-                                <a href="javascript:void(0);"><span id="s4" class="fa fa-star-o"></span></a>
-                                <a href="javascript:void(0);"><span id="ss5" class="fa fa-star-o"></span></a>
+                                <a href="javascript:void(0);"><span id="s2" class="fa-star-o"></span></a>
+                                <a href="javascript:void(0);"><span id="s3" class="fa-star-o"></span></a>
+                                <a href="javascript:void(0);"><span id="s4" class="fa-star-o"></span></a>
+                                <a href="javascript:void(0);"><span id="ss5" class="fa-star-o"></span></a>
 
                             </div>
                             <div class="col-sm-12 text-center" style="margin-top: 20px;">
@@ -147,8 +147,10 @@
         $("#s1").addClass('fa fa-star-o');
        
         mymodal.find('#message').val("");
+        mymodal.find('#message').removeAttr("disabled");
         mymodal.find('#apply').show();
         mymodal.find('#ok').hide();
+       
         mymodal.modal('show');
         $("#pvappid").val(consultID);
     }
@@ -300,70 +302,70 @@
      }
     //set stars
     jQuery('span').click(function(){
-        if ( jQuery(this).hasClass('fa fa-star-o'))
+        if ( jQuery(this).hasClass('fa-star-o'))
         {
 
-
+            //alert($(this).attr('class'));
             if( jQuery(this).attr("id")=="s1")
             {
 
-                $("span#s1").removeClass('fa fa-star-o');
-                $("span#s1").addClass('fa fa-star');
+                $("span#s1").removeClass('fa-star-o');
+                $("span#s1").addClass('fa-star');
                 star=1;
             }
             if( jQuery(this).attr("id")=="s2")
             {
 
-                $("span#s1").removeClass('fa fa-star-o');
-                $("span#s1").addClass('fa fa-star');
+                $("span#s1").removeClass('fa-star-o');
+                $("span#s1").addClass('fa-star');
                 $("span#s2").removeClass('fa fa-star-o');
-                $("span#s2").addClass('fa fa-star');
+                $("span#s2").addClass('fa-star');
                 star=2;
             }
             if( jQuery(this).attr("id")=="s3")
             {
 
-                $("span#s1").removeClass('fa fa-star-o');
-                $("span#s1").addClass('fa fa-star');
-                $("span#s2").removeClass('fa fa-star-o');
-                $("span#s2").addClass('fa fa-star');
-                $("span#s3").removeClass('fa fa-star-o');
-                $("span#s3").addClass('fa fa-star');
+                $("span#s1").removeClass('fa-star-o');
+                $("span#s1").addClass('fa-star');
+                $("span#s2").removeClass('fa-star-o');
+                $("span#s2").addClass('fa-star');
+                $("span#s3").removeClass('fa-star-o');
+                $("span#s3").addClass('fa-star');
                 star=3;
             }
             if( jQuery(this).attr("id")=="s4")
             {
 
-                $("span#s1").removeClass('fa fa-star-o');
-                $("span#s1").addClass('fa fa-star');
-                $("span#s2").removeClass('fa fa-star-o');
-                $("span#s2").addClass('fa fa-star');
-                $("span#s3").removeClass('fa fa-star-o');
-                $("span#s3").addClass('fa fa-star');
-                $("span#s4").removeClass('fa fa-star-o');
-                $("span#s4").addClass('fa fa-star');
+                $("span#s1").removeClass('fa-star-o');
+                $("span#s1").addClass('fa-star');
+                $("span#s2").removeClass('fa-star-o');
+                $("span#s2").addClass('fa-star');
+                $("span#s3").removeClass('fa-star-o');
+                $("span#s3").addClass('fa-star');
+                $("span#s4").removeClass('fa-star-o');
+                $("span#s4").addClass('fa-star');
                 star=4;
             }
             if( jQuery(this).attr("id")=="ss5")
             {
 
-                $("span#s1").removeClass('fa fa-star-o');
-                $("span#s1").addClass('fa fa-star');
-                $("span#s2").removeClass('fa fa-star-o');
-                $("span#s2").addClass('fa fa-star');
-                $("span#s3").removeClass('fa fa-star-o');
-                $("span#s3").addClass('fa fa-star');
-                $("span#s4").removeClass('fa fa-star-o');
-                $("span#s4").addClass('fa fa-star');
-                $("span#ss5").removeClass('fa fa-star-o');
-                $("span#ss5").addClass('fa fa-star');
+                $("span#s1").removeClass('fa-star-o');
+                $("span#s1").addClass('fa-star');
+                $("span#s2").removeClass('fa-star-o');
+                $("span#s2").addClass('fa-star');
+                $("span#s3").removeClass('fa-star-o');
+                $("span#s3").addClass('fa-star');
+                $("span#s4").removeClass('fa-star-o');
+                $("span#s4").addClass('fa-star');
+                $("span#ss5").removeClass('fa-star-o');
+                $("span#ss5").addClass('fa-star');
                 star=5;
             }
 
         }
         else
         {
-
+            //alert($(this).attr('class'));
             if( jQuery(this).attr("id")=="s1")
             {
 

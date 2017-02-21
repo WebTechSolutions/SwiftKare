@@ -654,7 +654,49 @@
        function () { $(this).addClass('current-page') },
        function () { $(this).removeClass('current-page') })
     </script>
+    <script>
+        $(document).ready(function () {
+            if ('@SessionHandler.UserInfo.timeZone' != '') {
+                var localtimezone = new Date().toString().match(/\(([A-Za-z\s].*)\)/)[1];
+                //alert('@SessionHandler.UserInfo.timeZone');
+                if ('@SessionHandler.UserInfo.timeZone' != localtimezone) {
+                    $.ajax({
+                        url: '@Url.Action("UpdateTimezone", "Appointment")',
+                        type: "POST",
+                        data: { 'localtimezone': localtimezone },
+                        dataType: 'json',
+                        success: function (result) {
+                            //Reload container
+                            if (result.Message != undefined) {
+                                new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                                hideLoader();
+                            }
+                            else {
 
+                                if (result.ApiResultModel.message == "") {
+                                    new PNotify({ title: 'Success', text: "Timezone is updated successfully.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
+                                    hideLoader();
+                                }
+                                else {
+                                    new PNotify({ title: 'Error', text: result.ApiResultModel.message, type: 'error', styling: 'bootstrap3' });
+                                    hideLoader();
+                                }
+
+
+                            }
+
+                        },
+                        error: function (err) {
+                            //alert(err.statusText);
+                            new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                            //Stop displaying loader
+                            hideLoader();
+                        }
+                    });
+                }
+            }
+        });
+    </script>
 
     @RenderSection("scripts", required: false)
 
