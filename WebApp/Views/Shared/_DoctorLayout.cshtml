@@ -304,6 +304,8 @@
         function makeCallToPatient(patId, appId, consultID, oPat) {
             var oPatInfo = oPat;
             localStorage.setItem('consultationKey', consultID);
+            var cCallLogUrl = '@Url.Action("AddCallLogbyDoctor", "UserChat")?patientId=' + patId + '&message=ConsultID-sent-to-Patient';
+            $.post(cCallLogUrl);
             chat.server.sendMessageToPatient({
                 SenderId: '@SessionHandler.UserInfo.Id',
                 UserName: '@SessionHandler.UserInfo.Email',
@@ -329,8 +331,11 @@
             var PatientName = oPatInfo.firstName + ' ' + oPatInfo.lastName;
 
             //Log Call Info - Starts
-            var cCallLogUrl = '@Url.Action("DoctorCallPatient", "UserChat")?patientId=' + patId;
-          //  $.post(cCallLogUrl);
+           // var cCallLogUrl = '@Url.Action("DoctorCallPatient", "UserChat")?patientId=' + patId;
+            //  $.post(cCallLogUrl);
+
+              var cCallLogUrl = '@Url.Action("AddCallLogbyDoctor", "UserChat")?patientId=' + patId + '&message=Doctor-call-patient';
+            $.post(cCallLogUrl);
             //Log Call Info- Ends
 
             chat.server.callPatient(
@@ -398,7 +403,7 @@
 
             chat.client.patientAcceptedCall = function (patientName, patId, appId, patUserName) {
                 localStorage.setItem('otherUser', patUserName);
-                
+
                 new PNotify({ title: 'Success', text: 'Patient ' + patientName + ' accepted call. ', type: 'info', addclass: 'dark', styling: 'bootstrap3' });
                 //alert('Patient ' + patUserName + ' accepted call. this alert is in _DoctorLayout. NEed to redirect to page');
             }
@@ -414,12 +419,17 @@
                 debugger;
                 //
                 localStorage.setItem('tokbox', tokboxInfo);
-                 // var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Doctor&receiverId=" + patId + "&doctorName=@(SessionHandler.UserInfo.FirstName + " "+ SessionHandler.UserInfo.LastName)&patientName=" + patName;
-
                 //  $.post(cUrlReadyForCall, function (oResp) {
-                if (tokboxInfo != '0')
+                if (tokboxInfo != '0') {
+                    var cCallLogUrl = '@Url.Action("AddCallLogbyDoctor", "UserChat")?patientId=' + patId + '&message=Tokbox-info-received-by-doctor-and-Doctor-ready-for-vc';
+                    $.post(cCallLogUrl);
                     window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + tokboxInfo;  //Redirected doctor to call
-                else alert('Err in tokbox connection');
+                }
+                else {
+                    var cCallLogUrl = '@Url.Action("AddCallLogbyDoctor", "UserChat")?patientId=' + patId + '&message=Err-in-tokbox-info';
+                    $.post(cCallLogUrl);
+                    alert('Err in tokbox connection');
+                }
                 //localStorage.setItem('consultationKey', consultId);
 
 
@@ -431,7 +441,7 @@
                 $('#messages').empty();
                 debugger;
                 if (msgFrom != 'ChatHub') {
-                   
+
                     //alert(msg);
                     var fromJson = JSON.parse(msg);
                     // alert(fromJson.status);
@@ -442,7 +452,7 @@
                             //Show pnotify alert "Patient is ready for consultation.We are taking you to conference page."
                             window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + _tokboxinfo;
                     }
-                    
+
                     if (fromJson.status == 'call') {
                         var confirmCall = confirm(fromJson.name + " want to have a video consultation, Please press OK to accept!");
 

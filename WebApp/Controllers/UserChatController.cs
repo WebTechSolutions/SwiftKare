@@ -162,6 +162,21 @@ namespace WebApp.Controllers
             oVideoCallRepository.ConsultCreationFailedLog(patientId, SessionHandler.UserInfo.Id, SessionHandler.UserInfo.Email);
         }
 
+        
+        [HttpPost]
+        public void AddCallLogbyDoctor(long patientId,string message)
+        {
+            oVideoCallRepository.AddCallLog(patientId, SessionHandler.UserInfo.Id, SessionHandler.UserInfo.Email,message);
+        }
+
+        [HttpPost]
+        public void AddCallLogbyPatient(long doctorId, string message)
+        {
+            oVideoCallRepository.AddCallLog(SessionHandler.UserInfo.Id,doctorId, SessionHandler.UserInfo.Email, message);
+        }
+
+
+
         [HttpPost]
         public void TokBoxInfoCreatedbyDoctor(long patientId)
         {

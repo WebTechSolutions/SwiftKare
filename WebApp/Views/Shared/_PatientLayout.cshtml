@@ -440,18 +440,24 @@
                     if (msgJson.status == 'tokbox') {
                       //  alert('tokbox info recieved:' + msgJson.name);
                         localStorage.setItem('tokbox', msgJson.name);
+                        var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Tokbox-Info-Received-By-Patient';
+                        $.post(cCallLogUrl);
                         return;
                     }
                     if (msgJson.status == 'consultID') {
                       //  alert('consultID recieved:' + msgJson.name);
                         localStorage.setItem('consultationKey', msgJson.name);
                         localStorage.setItem('otherUser', msgFrom);
+                        var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=ConsultID-Received-By-Patient';
+                        $.post(cCallLogUrl);
                         return;
                     }
                     if (msgJson.status == 'Accepted') {
                         localStorage.setItem('otherUser', msgFrom);
                         showAlert('Alert', "Doctor " + msgJson.name + " accepted your request please continue with payment process.");
                         //alert("Doctor " + msgJson.name + " accepted your request please continue with payment process.");
+                        var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Patient-moved-to-Step2';
+                        $.post(cCallLogUrl);
                         $('#wizard').smartWizard('goToStep', 2);
                         $('.buttonNext').show();
                         $('.buttonPrevious').show();
@@ -480,9 +486,11 @@
                 var isPatientAcceptedCall = confirm('Doctor ' + msgJson.name + ' want to have consultation with you. Press OK to proceed.');
 
                 if (isPatientAcceptedCall) {
-                    var cCallLogUrl = '@Url.Action("PatientAcceptedCall", "UserChat")?doctorId=' + senderid;
+                   // var cCallLogUrl = '@Url.Action("PatientAcceptedCall", "UserChat")?doctorId=' + senderid;
                     //  $.post(cCallLogUrl);
-                   
+                    var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Patient-accepted-schedle-call';
+                    $.post(cCallLogUrl);
+
                     var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Patient&receiverId=" + senderid + "&doctorName=" + docName + "&patientName=@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)&ConsultID=" + consultID;
 
                     $.post(cUrlReadyForCall, function (oResp) {
@@ -498,12 +506,14 @@
                                 UserName: '@SessionHandler.UserInfo.Email'
                             });
                             //Log Tokbox info generated event
-                            var cCallLogUrl = '@Url.Action("TokBoxInfoCreatedbyPatient", "UserChat")?doctorId=' + senderid;
+                            var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Tokbox-info-created-and-sent-to-doctor';
                             $.post(cCallLogUrl);
 
                             var tokboxInfo = oResp;
                             localStorage.setItem('tokbox', tokboxInfo);
 
+                            var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Patient-readyFor-VC';
+                            $.post(cCallLogUrl);
                             chat.server.patientRedirectedToCall
                                 (senderConnId, tokboxInfo, '@SessionHandler.UserInfo.Id', '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)');
 
@@ -542,7 +552,7 @@
                     return;
                 }
 
-                
+
 
             };
 

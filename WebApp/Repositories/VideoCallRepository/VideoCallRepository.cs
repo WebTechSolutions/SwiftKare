@@ -128,6 +128,17 @@ namespace WebApp.Repositories.VideoCallRepository
             });
         }
 
+        public ApiResultModel AddCallLog(long patientId, long doctorId, string from,string message)
+        {
+            return AddLiveReqLog(new LiveReqLogModel
+            {
+                doctorID = doctorId,
+                patientID = patientId,
+                From = from,
+                message = message
+            });
+        }
+
         public ApiResultModel TokboxCreatedLog(long patientId, long doctorId, string tokboxCreatedBy)
         {
             return AddLiveReqLog(new LiveReqLogModel

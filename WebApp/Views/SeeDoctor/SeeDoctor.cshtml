@@ -879,14 +879,15 @@
                 }
                 debugger;
                 if(oDocInfo==null){
-                   
+                    var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + _selecteddoctorID + '&message=Doctor-is-offline-for-live-call';
+                    $.post(cCallLogUrl);
                     new PNotify({
                         title: 'Oops, Doctor is Offline!!!',
                         text: "Sorry, the doctor is offline now. Please select any other doctor before making payment.",
                         type: 'error',
                         styling: 'bootstrap3'
                     });
-                    $('#wizard').smartWizard('goToStep', 1);
+                  //  $('#wizard').smartWizard('goToStep', 1);
 
                     
 
@@ -908,15 +909,22 @@
                             type: 'info', addclass: 'dark',
                             styling: 'bootstrap3'
                         });
-                         var cCallLogUrl = '@Url.Action("PaymentSuccessLog", "UserChat")?doctorId=' +  $("#doctorid").val();
-                         $.post(cCallLogUrl);
+
+                        var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + $("#doctorid").val() + '&message=Patient-paid-successfully';
+                        $.post(cCallLogUrl);
                         showLoader();
                         CreateAppointment(@ViewBag.PatienID,@amount);
                     },
                     handleFailure: function () {
-                        var cUrl = '/UserChat/PaymentFailLog?doctorId=' + $("#doctorid").val();
-                        $.post(cUrl);
+                        var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + $("#doctorid").val() + '&message=Patient-payment-failed';
+                        $.post(cCallLogUrl);
                         showAlert("Alert","Stripe Payment Failed!!!");
+                        new PNotify({
+                            title: 'Payment Failed',
+                            text: "Stripe Payment Failed!!!",
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
                         return;
                         //alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
                     }
@@ -977,6 +985,7 @@
 
    function CreateAppointment(patientID,amount)
    {
+       debugger;
          _objAppointment["appDate"] = $("#fetchdate").val();
         _objAppointment["doctorID"] = $("#doctorid").val();
         _objAppointment["patientID"] = patientID;
@@ -1001,32 +1010,23 @@
             dataType: 'text',
             data: 'inputModel='+ JSON.stringify(_objAppointment),
             success: function (response) {
-
-                if(response.Message!=undefined)
+                var result=JSON.parse(response);
+                if(result.Message!=undefined)
                 {
                     hideLoader();
                     new PNotify({
                         title: 'Error',
-                        text: response.Message.ReasonPhrase,
+                        text: result.Message.ReasonPhrase,
                         type: 'error',
                         styling: 'bootstrap3'
                     });
                 }
-                var result=JSON.parse(response);
+                
                 if (result.Success == true) {
 
-                    if (result.ApiResultModel.message != "") {
-                        hideLoader();
-                        new PNotify({
-                            title: 'Error',
-                            text: result.ApiResultModel.message,
-                            type: 'error',
-                            styling: 'bootstrap3'
-                        });
-                    }
-                    else if (result.ApiResultModel.message == "") {
+                    if (result.ApiResultModel.message == "") {
                         if (appType == "S")
-                        hideLoader();
+                            hideLoader();
                         new PNotify({
                             title: 'Success',
                             text: "Appointment has been scheduled successfully. Reference #:"+result.ApiResultModel.ID,
@@ -1048,13 +1048,21 @@
                             localStorage.setItem("apptime",new Date());
 
 
-                        createConsultFromPatient($("#doctorid").val(), patientID, result.ApiResultModel.ID);}
+                            createConsultFromPatient($("#doctorid").val(), patientID, result.ApiResultModel.ID);}
 
 
 
 
                     }
                 }
+                else
+                { hideLoader();
+                new PNotify({
+                    title: 'Error',
+                    text: 'Error in appointment saving.',
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });}
 
             },
             error: errorRes
