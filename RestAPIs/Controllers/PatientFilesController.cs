@@ -48,9 +48,10 @@ namespace RestAPIs.Controllers
                                  patientID = l.patientID,
                                  doctorID = l.doctorID,
                                  FileName = l.FileName.Trim(),
-                                 fileContent = l.fileContent,
-                                 documentType =l.documentType
-                                              }).ToList();
+                                 fileContent = null,
+                                 documentType =l.documentType,
+                                 createdDate = l.md
+                             }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, files);
                 return response;
             }
@@ -66,7 +67,7 @@ namespace RestAPIs.Controllers
             try
             {
                 var files = (from l in db.UserFiles
-                             where l.active == true && l.patientID == patientID&& l.fileID == fileId
+                             where l.active == true && l.patientID == patientID && l.fileID == fileId
                              orderby l.fileID descending
                              select new GetPatientUserFiles
                              {
@@ -75,7 +76,8 @@ namespace RestAPIs.Controllers
                                  doctorID = l.doctorID,
                                  FileName = l.FileName.Trim(),
                                  fileContent = l.fileContent,
-                                 documentType = l.documentType
+                                 documentType = l.documentType,
+                                 createdDate = l.md
                              }).FirstOrDefault();
                 response = Request.CreateResponse(HttpStatusCode.OK, files);
                 return response;
@@ -129,6 +131,7 @@ namespace RestAPIs.Controllers
                     patfile.FileName = model.FileName;
                     patfile.patientID = model.patientID;
                     patfile.cd = System.DateTime.Now;
+                    patfile.md= System.DateTime.Now;
                     patfile.doctorID = model.doctorID == -1 ? null : model.doctorID;
                     patfile.fileContent = model.fileContent;
                     patfile.documentType = model.documentType;

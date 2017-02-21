@@ -14,6 +14,7 @@ namespace DataAccess.CustomModels
         public byte[] fileContent { get; set; }
         public Nullable<long> patientID { get; set; }
         public Nullable<long> doctorID { get; set; }
+        public Nullable<DateTime> createdDate { get; set; }
 
         /// <summary>
         /// Returns file size
@@ -22,17 +23,25 @@ namespace DataAccess.CustomModels
         {
             get
             {
-                string[] sizes = { "B", "KB", "MB", "GB" };
-                double len = fileContent.Length;
-                int order = 0;
-                while (len >= 1024 && ++order < sizes.Length)
+                if (fileContent != null)
                 {
-                    len = len / 1024;
-                }
+                    string[] sizes = { "B", "KB", "MB", "GB" };
+                    double len = fileContent.Length;
+                    int order = 0;
+                    while (len >= 1024 && ++order < sizes.Length)
+                    {
+                        len = len / 1024;
+                    }
 
-                // Adjust the format string to your preferences. For example "{0:0.#}{1}" would
-                // show a single decimal place, and no space.
-                return String.Format("{0:0.##} {1}", len, sizes[order]);
+                    // Adjust the format string to your preferences. For example "{0:0.#}{1}" would
+                    // show a single decimal place, and no space.
+                    return String.Format("{0:0.##} {1}", len, sizes[order]);
+                }
+                else
+                {
+                    return "0";
+                }
+                
             }
         }
 
