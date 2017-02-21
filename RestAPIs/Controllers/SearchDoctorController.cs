@@ -35,15 +35,21 @@ namespace RestAPIs.Controllers
                 //Doctor.doctorID, Doctor.firstName, Doctor.lastName,Doctor.picture
                 var favdoc = (from l in db.FavouriteDoctors
                               where l.patientID == patientID && l.active == true
-                              select (from doc in db.Doctors where doc.doctorID == l.doctorID
+                              select (from doc in db.Doctors
+                                      where doc.doctorID == l.doctorID
                                       select new DoctorDataset
                                       {
                                           doctorID = doc.doctorID,
+                                          title = doc.title,
                                           firstName = doc.firstName,
                                           lastName = doc.lastName,
-                                          ProfilePhotoBase64 = doc.ProfilePhotoBase64
-                                                  //picture = doc.picture
-                                              }).FirstOrDefault()).ToList();
+                                          ProfilePhotoBase64 = doc.ProfilePhotoBase64,
+                                          city = doc.city,
+                                          state = doc.state,
+                                          languageName = db.DoctorLanguages.Where(d => d.doctorID == doc.doctorID).Select(d => d.languageName).FirstOrDefault(),
+                                          specialityName = db.DoctorSpecialities.Where(d => d.doctorID == doc.doctorID).Select(d => d.specialityName).FirstOrDefault()
+
+                                      }).FirstOrDefault()).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, favdoc);
                 return response;
             }
