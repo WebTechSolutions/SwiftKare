@@ -24,7 +24,55 @@ namespace RestAPIs.Controllers
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
         HttpResponseMessage response;
 
+        [Route("api/UpdateTimezone")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public async Task<HttpResponseMessage> UpdateTimezone(TimezoneModel model)
+        {
 
+            try
+            {
+                if (model.timezone == null)
+                {
+
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Timezone is not provided." });
+                    response.ReasonPhrase = "Timezone is not provided.";
+                    return response;
+                }
+                if (model.userid == null)
+                {
+
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "UserId is not provided." });
+                    response.ReasonPhrase = "UserId is not provided.";
+                    return response;
+                }
+                Patient pat = db.Patients.Where(p=>p.userId==model.userid).FirstOrDefault();
+                Doctor doc = db.Doctors.Where(p => p.userId == model.userid).FirstOrDefault();
+                long id = 0;
+                if (pat!=null)
+                {
+                    pat.timezone = model.timezone;
+                    id = pat.patientID;
+                    db.Entry(pat).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                }
+               
+                if (doc!= null)
+                {
+
+                    doc.timezone = model.timezone;
+                    id = doc.doctorID;
+                    db.Entry(doc).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                }
+                response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = id, message = "" });
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "UpdateTimezone in ProfilesController.");
+            }
+
+        }
         #region Doctor APIs 
 
         [HttpGet]

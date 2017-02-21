@@ -49,11 +49,17 @@ namespace RestAPIs.Helper
             this.message = message;
         }
 
-        public EmailHelper(string toEmailAddress, string subject, string message, string attachmentPath)
+        public EmailHelper(string fromEmailAddress,string toEmailAddress, string bccEmailAddress, string subject, string message)
             : this(toEmailAddress, subject, message)
         {
-            this.attachmentPath = attachmentPath;
+          this.bccEmailAddress = bccEmailAddress;
+          this.fromEmailAddress = fromEmailAddress;
         }
+        //public EmailHelper(string toEmailAddress, string subject, string message, string attachmentPath)
+        //    : this(toEmailAddress, subject, message)
+        //{
+        //    this.attachmentPath = attachmentPath;
+        //}
 
         #endregion
 

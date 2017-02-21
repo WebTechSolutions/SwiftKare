@@ -107,7 +107,7 @@
 
                         <form class="form-horizontal form-label-left">
                             <div class="col-sm-offset-4 col-sm-4" style="width:320px">
-                                <button style="font-size:14px" type="button" class="btn btn-primary btn-sm pull-right" id="RAPP" onclick="rescheduleApp($('#RAppID').val())">Reschedule App</button>
+                                <button style="font-size:14px;display:none" type="button" class="btn btn-primary btn-sm pull-right" id="RAPP" onclick="rescheduleApp($('#RAppID').val())">Reschedule App</button>
                                 <div class="xdisplay_inputx form-group has-feedback" style="width:168px">
                                     <input type="text" class="form-control has-feedback-left active" id="fetchdate" placeholder="Choose a Date" aria-describedby="inputSuccess2Status">
                                     
@@ -245,7 +245,7 @@
     function rescheduleApp(appID)
     {
 
-        _objAppointment["appID"] = $("#RAppID").val();
+        _objAppointment["appID"] = appID;// $("#RAppID").val();
         _objAppointment["appType"] = currentTab;
         
         _objAppointment["userID"] = '@SessionHandler.UserInfo.userId';
@@ -452,18 +452,10 @@
         _objAppointment["appDate"] = myappDate;
         _objAppointment["appTime"] = myappTime;
         _selecteddoctorID = $("#doctorid").val();
-        //$('#myModal1').modal('hide');
-        //$('#wizard').smartWizard('goToStep', 2);
-        //if ($("#wizard").smartWizard('currentStep', '2')) {
-        //    //alert('2');
-        //    $('.buttonNext').show();
-        //    $('.buttonPrevious').show();
-
-        //}
-        //showDoctorInfo();
-        //showApppointmentSummary(myappTime, myappDate);
+        //alert($('#RAppID').val());
+        rescheduleApp($('#RAppID').val());
         return false;
-        // $('#step-2').show();
+       
     }
 
     function reloadContainer(callback) {
@@ -495,7 +487,46 @@
 <script type="text/javascript">
         $(document).ready(function () {
 
+            if ('@SessionHandler.UserInfo.timeZone' != '')
+            {
+                var localtimezone = new Date().toString().match(/\(([A-Za-z\s].*)\)/)[1];
+                if('@SessionHandler.UserInfo.timeZone'!=localtimezone)
+                {
+                    $.ajax({
+                        url: '@Url.Action("UpdateTimezone", "Appointment")',
+                        type: "POST",
+                        data: { 'localtimezone': localtimezone },
+                        dataType: 'json',
+                        success: function (result) {
+                            //Reload container
+                            if (result.Message != undefined) {
+                                new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                                hideLoader();
+                            }
+                            else {
 
+                                if (result.ApiResultModel.message == "") {
+                                    new PNotify({ title: 'Success', text: "Timezone is updated successfully.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
+                                    hideLoader();
+                                }
+                                else {
+                                    new PNotify({ title: 'Error', text: result.ApiResultModel.message, type: 'error', styling: 'bootstrap3' });
+                                    hideLoader();
+                                }
+
+
+                            }
+
+                        },
+                        error: function (err) {
+                            //alert(err.statusText);
+                            new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                            //Stop displaying loader
+                            hideLoader();
+                        }
+                    });
+                }
+            }
 
             if('@SessionHandler.UserInfo.timeZone'=='')
             {

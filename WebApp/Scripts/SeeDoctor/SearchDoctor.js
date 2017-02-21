@@ -350,7 +350,7 @@ function SearchDoctor(patientID) {
                                     "<img src='"+ response.DoctorModel.doctor[item].ProfilePhotoBase64 + "' alt='' class='img-circle img-responsive m-b-10 m-t-0' style='margin: 0 auto;display: inline-block;'>" +
                                     "<h2 class='m-0'>" +
                                      " <a href='' onclick='showProfile("+response.DoctorModel.doctor[item].doctorID+")' id='viewprofile' data-toggle='modal' data-target='#myModal8' style='word-wrap: break-word;font-size: 12px'>Dr." +
-                                      response.DoctorModel.doctor[item].firstName + "&nbsp;" + response.DoctorModel.doctor[item].lastName + "</a>" +
+                                      response.DoctorModel.doctor[item].firstName + " " + response.DoctorModel.doctor[item].lastName + "</a>" +
                                       
                                      "</h2>" +
                                     "<h4 class='brief m-0 clsAvailbleForCall' style='color: green; display:none;' style='font-size: 14px'>Available</h4><h4 class='brief m-0 clsNotAvailbleForCall' style='color: red;font-size: 14px'>Not Available</h4>" +

@@ -197,5 +197,25 @@ namespace WebApp.Controllers
             }
             return PartialView("PatientProfileView");
         }
+
+        public JsonResult UpdateTimezone(string localtimezone)
+        {
+            try
+            {
+                ApiResultModel apiresult = new ApiResultModel();
+                TimezoneModel model = new TimezoneModel();
+                model.timezone = localtimezone;
+                model.userid = SessionHandler.UserId;
+                ProfileRepository oProfileRepository = new ProfileRepository();
+                apiresult = oProfileRepository.UpdateTimezone(model);
+                return Json(new { Success = true, ApiResultModel = apiresult });
+
+            }
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                return Json(new { Message = ex.Response.ReasonPhrase.ToString() });
+            }
+
+        }
     }
 }

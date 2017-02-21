@@ -20,9 +20,9 @@ namespace DataAccess.CustomModels
     {
         public string message { get; set; }
         public string sender { get; set; }
-        public string reciever { get; set; }
+        public string ccemail { get; set; }
         public string subject { get; set; }
-        public string attachmentPath { get; set; }
+       
 
     }
 }
