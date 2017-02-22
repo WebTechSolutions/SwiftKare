@@ -10,7 +10,7 @@ namespace WebApp
         {
             filters.Add(new HandleErrorAttribute());
 
-            filters.Add(new CustomAuthorizationAttribute());
+            
 
         }
     }

@@ -20,7 +20,9 @@ namespace DataAccess.CustomModels
         public string rov { get; set; }
         public string chiefComplaints { get; set; }
         public string utcappDate { get; set; }
-        public byte[] picture { get; set; }
+        public string specialityName { get; set; }
+        public string languageName { get; set; }
+        //public byte[] picture { get; set; }
     }
     public class ReschedulePendingAppModel
     {
@@ -36,7 +38,9 @@ namespace DataAccess.CustomModels
         public string rov { get; set; }
         public string chiefComplaints { get; set; }
         public string utcappDate { get; set; }
-        public byte[] picture { get; set; }
+        public string specialityName { get; set; }
+        public string languageName { get; set; }
+        //public byte[] picture { get; set; }
     }
 
     public class GetAppDetail

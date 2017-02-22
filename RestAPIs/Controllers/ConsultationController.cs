@@ -573,6 +573,8 @@ namespace RestAPIs.Controllers
                         cons.appID = model.appID;
                         cons.cd = System.DateTime.Now;
                         cons.cb = model.userID;
+                        cons.md = System.DateTime.Now;
+                        cons.mb = model.userID;
                         cons.seesionID = model.sessionID;
                         cons.token = model.token;
                         cons.doctorID = model.doctorId;
@@ -627,6 +629,8 @@ namespace RestAPIs.Controllers
 
                 cons.cd = System.DateTime.Now;
                 cons.cb = model.userID;
+                cons.md = System.DateTime.Now;
+                cons.mb = model.userID;
                 cons.seesionID = model.sessionID;
                 cons.token = model.token;
                 db.Consultations.Add(cons);
