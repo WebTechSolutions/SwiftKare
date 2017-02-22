@@ -512,13 +512,17 @@
                             var tokboxInfo = oResp;
                             localStorage.setItem('tokbox', tokboxInfo);
 
-                            var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Patient-readyFor-VC';
-                            $.post(cCallLogUrl);
+                           
                             chat.server.patientRedirectedToCall
                                 (senderConnId, tokboxInfo, '@SessionHandler.UserInfo.Id', '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)');
 
+                            var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Patient-readyFor-VC';
                             //Redirect doctor to call
-                            window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + tokboxInfo;
+                            $.post(cCallLogUrl, function () {
+                                //Redirect patient to call
+                                window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + tokboxInfo;
+                            });
+
 
                         }
                         else {
@@ -545,6 +549,7 @@
                     //   $.post(cCallLogUrl);
                     chat.server.patientRejectedCall({
                         SenderId: '@SessionHandler.UserInfo.Id',
+                        PatientName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
                         UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
                         ReceiverConnectionId: senderConnId,
                         consultID: consultID

@@ -333,6 +333,19 @@
     <script src="@Url.Content("~/Scripts/UserChat.js")"></script>
     <script>
         new PNotify({ title: 'Video Consult setup', text: "Please wait, System is initiating the consult for you.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
+        if ('@(userType.ToLower())' == "doctor")
+        {
+            
+            var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Doctor-join-VC ';
+            $.post(cUrl);
+        }
+        else
+        {
+            var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Patient-join-VC ';
+            $.post(cUrl);
+            
+        }
+
         var mymodal = $('#myModal1');
         var isConsultComplete = false;
         function showAlert(heading, body) {

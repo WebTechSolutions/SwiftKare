@@ -421,9 +421,11 @@
                 localStorage.setItem('tokbox', tokboxInfo);
                 //  $.post(cUrlReadyForCall, function (oResp) {
                 if (tokboxInfo != '0') {
-                    var cCallLogUrl = '@Url.Action("AddCallLogbyDoctor", "UserChat")?patientId=' + patId + '&message=Tokbox-info-received-by-doctor-and-Doctor-ready-for-vc';
-                    $.post(cCallLogUrl);
-                    window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + tokboxInfo;  //Redirected doctor to call
+                    var cCallLogUrl = '@Url.Action("AddCallLogbyDoctor", "UserChat")?patientId=' + patId + '&message=Tokbox-info-received-and-Doctor-ready-for-vc';
+                    $.post(cCallLogUrl, function () {
+                        //Redirect patient to call
+                        window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + tokboxInfo;  //Redirected doctor to call
+                    });
                 }
                 else {
                     var cCallLogUrl = '@Url.Action("AddCallLogbyDoctor", "UserChat")?patientId=' + patId + '&message=Err-in-tokbox-info';
@@ -449,8 +451,11 @@
                     if (fromJson.status == 'consultID') {
                      //   alert('consultID recieved:' + fromJson.name);
                         localStorage.setItem('consultationKey', fromJson.name);
+                        var cCallLogUrl = '@Url.Action("AddCallLogbyDoctor", "UserChat")?patientId=' + senderid + '&message=ConsultID-receieved-from-patient';
+                        $.post(cCallLogUrl, function () {
                             //Show pnotify alert "Patient is ready for consultation.We are taking you to conference page."
                             window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + _tokboxinfo;
+                        });
                     }
 
                     if (fromJson.status == 'call') {
