@@ -251,11 +251,12 @@ namespace RestAPIs.Controllers
                 app.rov = model.rov;
                 app.chiefComplaints = model.chiefComplaints;
                 app.cb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault(); model.patientID.ToString();
+                app.mb = db.Patients.Where(p => p.patientID == model.patientID && p.active == true).Select(pt => pt.userId).FirstOrDefault(); model.patientID.ToString();
                 app.paymentAmt = model.paymentAmt;
                 Random rnd = new Random();
                 app.paymentID = rnd.Next(100).ToString();
                 app.cd = System.DateTime.Now;
-
+                app.md = System.DateTime.Now;
                 db.Appointments.Add(app);
                 await db.SaveChangesAsync();
 
@@ -318,6 +319,7 @@ namespace RestAPIs.Controllers
                     patfile.FileName = itmFile.Value;
                     patfile.patientID = model.patientID;
                     patfile.cd = System.DateTime.Now;
+                    patfile.md = System.DateTime.Now;
                     patfile.doctorID = model.doctorID == -1 ? null : model.doctorID;
                     patfile.fileContent = itmFile.Key;
                     patfile.documentType = "Appointment";
@@ -941,8 +943,9 @@ namespace RestAPIs.Controllers
                             result.appointmentStatus = "R";
                             result.mb = model.userID;
                             result.md = System.DateTime.Now;
-                            db.Entry(result).State = EntityState.Modified;
-                            await db.SaveChangesAsync();
+                            //db.Entry(result).State = EntityState.Modified;
+                            //await db.SaveChangesAsync();
+                            
                         }
                     }
 
@@ -950,7 +953,16 @@ namespace RestAPIs.Controllers
                     var formattedDate = string.Format("{0:dd/MM/yyyy}", tempappdate);
                     db.Entry(result).State = EntityState.Modified;
                     await db.SaveChangesAsync();
-
+                    Alert alert = new Alert();
+                    alert.alertFor = result.patientID;
+                    alert.alertText = " Doctor has requested to reschedule the appointment.";
+                    alert.cd = System.DateTime.Now;
+                    alert.md = System.DateTime.Now;
+                    alert.mb = model.userID;
+                    alert.cb = model.userID;
+                    alert.active = true;
+                    db.Alerts.Add(alert);
+                    await db.SaveChangesAsync();
                     pushModel pm = new pushModel();
                     pm.PPushTitle = "Reschedule Request";
                     pm.PPushMessage = "Doctor has requested for appointment reschedule for appointment date " + formattedDate;

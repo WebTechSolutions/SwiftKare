@@ -153,6 +153,7 @@ namespace WebApp.Controllers
                 model.userid = SessionHandler.UserId;
                 ProfileRepository oProfileRepository = new ProfileRepository();
                 apiresult = oProfileRepository.UpdateTimezone(model);
+                SessionHandler.UserInfo.timeZone = localtimezone;
                 return Json(new { Success = true, ApiResultModel = apiresult });
 
             }

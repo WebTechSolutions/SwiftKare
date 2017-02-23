@@ -242,7 +242,6 @@
     <Compile Include="Controllers\UserChatController.cs" />
     <Compile Include="Controllers\UsersAdminController.cs" />
     <Compile Include="Controllers\UsersSuperAdminController.cs" />
-    <Compile Include="CustomAuthorizationAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -503,6 +502,7 @@
     <Content Include="Scripts\date.js" />
     <Content Include="Scripts\dateformatter.js" />
     <Content Include="Scripts\dropzone.min.js" />
+    <Content Include="Scripts\eModal.min.js" />
     <Content Include="Scripts\font-awesome\css\font-awesome.css.map" />
     <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.eot" />
     <Content Include="Scripts\font-awesome\fonts\fontawesome-webfont.ttf" />

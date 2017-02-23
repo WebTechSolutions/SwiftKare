@@ -83,7 +83,7 @@ namespace SwiftKare.Controllers.Consultation
         }
 
         [HttpPost]
-        [CustomAuthorizationAttribute]
+       
         public ActionResult ConsultationReport(FormCollection form)
         {
             if (Session["LogedUserID"] != null)
@@ -127,7 +127,7 @@ namespace SwiftKare.Controllers.Consultation
             }
         }
         [HttpPost]
-        [CustomAuthorizationAttribute]
+        
         public ActionResult AppReport(FormCollection form)
         {
             if (Session["LogedUserID"] != null)

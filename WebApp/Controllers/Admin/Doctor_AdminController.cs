@@ -336,7 +336,7 @@ namespace SwiftKare.Controllers
                 return RedirectToAction("../AdminLogin/AdminLogin");
             }
          }
-         [CustomAuthorizationAttribute]
+         
         [HttpPost]
          public ActionResult Report(FormCollection form)
          {

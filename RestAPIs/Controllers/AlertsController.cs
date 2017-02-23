@@ -38,6 +38,22 @@ namespace RestAPIs.Controllers
             }
         }
 
+        [Route("api/getPatientAlertsCount")]
+        public HttpResponseMessage getPatientAlertsCount(long patientID)
+        {
+            try
+            {
+                
+                var count = db.Alerts.Where(al=>al.active == true && al.alertFor == patientID && al.read==null).Count();
+                response = Request.CreateResponse(HttpStatusCode.OK, count);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetPatientAlerts in AlertsController");
+            }
+        }
+
         [Route("api/deletePatientAlert")]
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> RemovePatientAlert(DeleteAlertModel model)
@@ -100,7 +116,21 @@ namespace RestAPIs.Controllers
 
 
 
+        [Route("api/getDoctorAlertsCount")]
+        public HttpResponseMessage getDoctorAlertsCount(long doctorID)
+        {
+            try
+            {
 
+                var count = db.Alerts.Where(al => al.active == true && al.alertFor == doctorID && al.read == null).Count();
+                response = Request.CreateResponse(HttpStatusCode.OK, count);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetPatientAlerts in AlertsController");
+            }
+        }
         [Route("api/getDoctorAlerts")]
         public HttpResponseMessage getDoctorAlerts(long doctorID)
         {
@@ -109,7 +139,7 @@ namespace RestAPIs.Controllers
                
                 var alerts = (from al in db.Alerts
                               where al.active == true && al.alertFor == doctorID
-                              select new AlertModel { alertID = al.alertID, alertText = al.alertText, alertDate = al.cd, isRead = al.read }).ToList();
+                              select new AlertModel { alertID = al.alertID, alertText = al.alertText, alertDate = al.cd, isRead = al.read }).Take(50).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, alerts);
                 return response;
             }

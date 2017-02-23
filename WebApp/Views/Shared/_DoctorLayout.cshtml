@@ -46,7 +46,7 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/dataTables.responsive.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-wysiwyg.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.hotkeys.js")"></script>
-
+    <script type="text/javascript" src="@Url.Content("~/Scripts/eModal.min.js")"></script>
     <!--  If this is an MVC project then use the following -->
     <!--  <script src="~/signalr/hubs" type="text/javascript"></script> -->
     <script src="@Url.Content("~/signalr/hubs")"></script>
@@ -559,6 +559,48 @@
                 styling: 'bootstrap3'
             });
         }
+    </script>
+    <script>
+        $(document).ready(function () {
+            if ('@SessionHandler.UserInfo.timeZone' != '') {
+                var localtimezone = new Date().toString().match(/\(([A-Za-z\s].*)\)/)[1];
+                if ('@SessionHandler.UserInfo.timeZone' != localtimezone) {
+                    $.ajax({
+                        url: '@Url.Action("UpdateTimezone", "DoctorAppointment")',
+                        type: "POST",
+                        data: { 'localtimezone': localtimezone },
+                        dataType: 'json',
+                        success: function (result) {
+                            //Reload container
+                            if (result.Message != undefined) {
+                                new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                                hideLoader();
+                            }
+                            else {
+
+                                if (result.ApiResultModel.message == "") {
+                                    new PNotify({ title: 'Success', text: "Timezone is updated successfully.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
+                                    hideLoader();
+                                }
+                                else {
+                                    new PNotify({ title: 'Error', text: result.ApiResultModel.message, type: 'error', styling: 'bootstrap3' });
+                                    hideLoader();
+                                }
+
+
+                            }
+
+                        },
+                        error: function (err) {
+                            //alert(err.statusText);
+                            new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                            //Stop displaying loader
+                            hideLoader();
+                        }
+                    });
+                }
+            }
+        });
     </script>
 
     @RenderSection("scripts", required: false)

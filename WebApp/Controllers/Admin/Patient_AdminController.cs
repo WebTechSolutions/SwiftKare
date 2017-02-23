@@ -260,7 +260,7 @@ namespace SwiftKare.Controllers
         }
 
         [HttpPost]
-        [CustomAuthorizationAttribute]
+      
         public ActionResult Report(FormCollection form)
         {
            
