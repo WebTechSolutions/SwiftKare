@@ -78,9 +78,11 @@ else
             var cUrl = "@Url.Action("GetRefillUrl", "Doctor")";
             $.get(cUrl, function (resp) {
                 var result = JSON.parse(resp);
-                
-                $("#iframeUrl").attr('src', result.url);
-                $("#mdlIframe").modal('show');
+                eModal
+               .iframe(result.url, "ePrescription")
+               .then(function () { console.log('iframe loaded'); });
+                //$("#iframeUrl").attr('src', result.url);
+                //$("#mdlIframe").modal('show');
             });
         });
     });

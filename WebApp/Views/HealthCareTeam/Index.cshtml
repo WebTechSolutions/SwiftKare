@@ -1,7 +1,7 @@
 ﻿@using System.Globalization
 @using WebApp.Helper;
 @{
-    ViewBag.Title = "Health Care Team";
+    ViewBag.Title = "SeeDoctor";
     Layout = "~/Views/Shared/_PatientLayout.cshtml";
     string publisherKey = Convert.ToString(ViewBag.PublisherKey);
     int amount = Convert.ToInt32(ViewBag.Amount);
@@ -31,9 +31,11 @@
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <script src="@Url.Content("~/Scripts/SeeDoctor/SearchDoctor.js")"></script>
 <script src="@Url.Content("~/Scripts/icheck.min.js")"></script>
+<script src="@Url.Content("~/Scripts/general.js")"></script>
+
 
 @*<script src="~/Scripts/jquery.blockUI.js"></script>*@
- 
+
 <script src="@Url.Content("~/Scripts/StripePay.js")"></script>
 <!--Added for autocomplete-->
 
@@ -93,7 +95,7 @@
         <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
                 <div class="x_title">
-                    <h2>Health Care Team</h2>
+                    <h2>See a Doctor</h2>
                     <ul class="nav navbar-right panel_toolbox">
                         <li>
                             <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -159,11 +161,11 @@
                                         }
 
                                     </div>
-                                   
+
 
                                 </div>
                             </div>
-                            <div style="display:none" class="x_panel">
+                            <div style="display:none"class="x_panel">
                                 <div class="x_title">
                                     <h2>Search Doctor</h2>
                                     <ul class="nav navbar-right panel_toolbox">
@@ -190,8 +192,13 @@
                                                 <label class="control-label">Perferred Time:</label>
                                                 <div class="form-group">
 
-                                                    <input type="text" id="time" class="form-control floating-label" placeholder="Time">
-
+                                                    @*<input style:display:"none" type="text" id="time" class="form-control floating-label" placeholder="Time">*@
+                                                    <select class="form-control" name="Shift">
+                                                        <option value="A">ALL</option>
+                                                        <option value="M">Morning (8:00am-4:00pm)</option>
+                                                        <option value="E">Evening (4:00pm-12:00am)</option>
+                                                        <option value="N">Night(12:00am-8:00am)</option>
+                                                    </select>
                                                 </div>
                                             </form>
 
@@ -239,7 +246,7 @@
 
                                     </div>
                                     <div class="ln_solid"></div>
-                                    <button type="button" class="btn btn-primary pull-right" id="search-click" onclick="searchDoctor();">Search</button>
+                                    <button type="button" class="btn btn-primary pull-right" id="search-click" onclick="SearchDoctor(@SessionHandler.UserInfo.Id);">Search</button>
 
                                 </div>
 
@@ -264,6 +271,8 @@
                                 </div>
                             </div>
                         </div>@*step1*@
+
+                        <input type="text" style="display:none" id="pvdocid" value="0">
                         <div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8">
                             <div class="modal-dialog" role="document" style="border-bottom: 0;">
                                 <div id='DoctorProfileContent' class="modal-content" style="overflow:auto; border-radius: 0;">
@@ -273,13 +282,11 @@
 
                             </div>
                         </div><!-- col4 -->
-
-                        
                         <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -10px;color: #0035ff;"><span aria-hidden="true">&times;</span></button>
                                         <h4 class="modal-title" id="timingsmodaltitle"></h4>
                                     </div><!--/.modal header-->
 
@@ -496,7 +503,7 @@
                                                     <td width="50%">
                                                         <div class="form-group">
                                                             <div style="color:red; display:none;float:right" id="divmedicine">Medicine is required.</div>
-                                                            <input maxlength="50" style="display:block" type="text" name="country" placeholder="Search Medicine" id="myMedicine" class="form-control"/>
+                                                            <input maxlength="50" style="display:block" type="text" name="country" placeholder="Search Medicine" id="myMedicine" class="form-control" />
                                                         </div>
                                                     </td>
                                                     <td width="25%">
@@ -692,33 +699,33 @@
                                     </div>
                                 </div>
                                 @*<div class="col-md-6">
-                     <div id="map" style="height: 330px; width: 100%;"></div>
-                    <script>
-                      function initMap() {
-                        var uluru = {lat: 40.723523, lng: -73.9960463};
-                        var map = new google.maps.Map(document.getElementById('map'), {
-                          zoom: 16,
-                          center: uluru
-                        });
-                        var marker = new google.maps.Marker({
-                          position: uluru,
-                          map: map
-                        });
-                      }
-                    </script>
-                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&callback=initMap" async defer></script>
-                    <img class="gray-bdr-1 img-responsive" src="../Content/images/us_map.jpg" style="height: 330px;" />
-                </div>*@
+                                         <div id="map" style="height: 330px; width: 100%;"></div>
+                                        <script>
+                                          function initMap() {
+                                            var uluru = {lat: 40.723523, lng: -73.9960463};
+                                            var map = new google.maps.Map(document.getElementById('map'), {
+                                              zoom: 16,
+                                              center: uluru
+                                            });
+                                            var marker = new google.maps.Marker({
+                                              position: uluru,
+                                              map: map
+                                            });
+                                          }
+                                        </script>
+                                        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&callback=initMap" async defer></script>
+                                        <img class="gray-bdr-1 img-responsive" src="../Content/images/us_map.jpg" style="height: 330px;" />
+                                    </div>*@
                             </div>
 
 
                         </div>
 
                         <div id="step-5" style="margin-bottom: 70px;">
-                            <h2>You Appointment has been Scheduled Successfully</h2>
+                            <h2>You Appointment Summary. You appointment will be confirmed after payment.</h2>
                             <div class="row">
                                 <div class="col-md-6 col-sm-12 col-xs-12">
-                                    <div class="x_panel">
+                                    <div class="x_panel" style="height:262px;">
                                         <div class="x_title">
                                             <h2>Doctor Information</h2>
                                             <ul class="nav navbar-right panel_toolbox">
@@ -737,7 +744,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12 col-xs-12">
-                                    <div class="x_panel">
+                                    <div class="x_panel" style="height:262px;">
                                         <div class="x_title">
                                             <h2>Appointment Information</h2>
                                             <ul class="nav navbar-right panel_toolbox">
@@ -757,19 +764,21 @@
                                     </div>
                                 </div>
                             </div>
-                            <button class="btn btn-primary" id="btnProceedWithPayment" type="button">Proceed with payment</button>
+                            <center>  <button class="btn btn-primary" id="btnProceedWithPayment" type="button">Proceed with payment</button></center>
 
                         </div>
-                    </div>
-                </div>
-                <!-- End SmartWizard Content -->
 
+                    </div>
+
+                </div>
             </div>
+            <!-- End SmartWizard Content -->
+
         </div>
     </div>
-    <br><br><br>
-</div> @*end class="right_col"*@
+</div>
 <br><br><br>
+
 <div id="mdlPharmacy" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -789,7 +798,802 @@
         <!-- /.modal-content -->
     </div>
 </div>
-<!--Pharmacy Load and Save-->
+
+<script>
+    var doctorId;
+    function reloadContainer(callback) {
+        $("#mycareteam").load('@Url.Action("MyCareTeam", "SeeDoctor")', function () {
+            callback();
+        });
+    }
+
+    var reader1  = new FileReader();
+    var reader2  = new FileReader();
+    var reader3  = new FileReader();
+    function showProfile(docid) {
+
+        var did=docid;//$("#pvdocid").val();
+
+        $("#DoctorProfileContent").load('@Url.Action("DoctorProfile", "SeeDoctor")?doctorID='+did, function () {
+
+        });
+
+    };
+
+    function showDoctorInfo()
+    {
+        var tableHtml = "";
+        $.ajax({
+            type: 'POST',
+
+            url: '/SeeDoctor/FetchDoctoInfo',
+            data:{'doctorID': _selecteddoctorID},
+            dataType: 'json',
+            success: function (response) {
+                if (response.Object != null || response.Object != undefined)
+                {
+
+                    var spec = "";
+                    var lang = "";
+                    for (var i = 0; i < response.Object.specialities.length; i++)
+                    {
+                        spec = spec + response.Object.specialities[i].specialityName + ",";
+                    }
+                    for (var i = 0; i < response.Object.languages.length; i++) {
+                        lang = lang + response.Object.languages[i].languageName + ",";
+                    }
+
+                    spec = spec.slice(0, -1);
+                    lang = lang.slice(0, -1);
+
+                    if (response.Object.specialities.length == 0) { spec = "N.A"; }
+                    if (response.Object.languages.length == 0) { lang = "N.A"; }
+                    var doccell = "N.A";
+                    var docemail = "N.A";
+                    var cc = "N.A";
+                    var docstate = "N.A";
+                    var gender = "";
+
+                    if (response.Object.cellPhone != null) { doccell = response.Object.cellPhone; }
+                    if (response.Object.email != null) { docemail = response.Object.email; }
+                    if (response.Object.consultCharges != null) { cc = response.Object.consultCharges; }
+                    if (response.Object.state != null) { docstate = response.Object.state; }
+                    if (response.Object.gender != null) { gender = " (" + response.Object.gender + ")"; }
+                    tableHtml = "<address>" +
+                             "<strong>Dr. " + response.Object.doctorName + gender + "</strong>" +
+                             "<br><strong>Specaility: </strong>&nbsp;" + spec +
+                             "<br><strong>Languages: </strong>&nbsp;" + lang +
+                             "<br><strong>State: </strong>&nbsp;" + docstate +
+                             "<br><strong>Phone: </strong>&nbsp;" + doccell +
+                             "<br><strong>Email: </strong>&nbsp; " + docemail +
+                             "<br><strong>Consult Charges: </strong>&nbsp; " + cc +
+                              "</address>";
+                    document.getElementById("docInfo").innerHTML = tableHtml;
+                }
+                var oDocInfo = null;
+                for (var i = 0; i < availableDoctors.doctor.length; i++) {
+                    if (availableDoctors.doctor[i].docId == _selecteddoctorID) {
+                        oDocInfo = availableDoctors.doctor[i];
+                        break;
+                    }
+                }
+                debugger;
+                if(oDocInfo==null){
+
+                    new PNotify({
+                        title: 'Oops, Doctor is Offline!!!',
+                        text: "Sorry, the doctor is offline now. Please select any other doctor before making payment.",
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                    $('#wizard').smartWizard('goToStep', 1);
+
+
+
+                }
+
+                else{
+                //Stripe Initialization after getting consultCharges of selected doctor
+                var amount=response.Object.consultCharges*100;
+                var oStripePayCheckout = new StripePayCheckout({
+                    publisherKey: '@publisherKey',
+                    amount: amount,
+                    targetButton: "#btnProceedWithPayment",
+                    actionUrl: '@Url.Action("ProceedWithPay", "seedoctor")',
+                    handleSuccess: function () {
+                        console.log('Payment Done...');
+                        new PNotify({
+                            title: 'Success',
+                            text: "$"+amount/100+" has been  charged successfull.",
+                            type: 'info', addclass: 'dark',
+                            styling: 'bootstrap3'
+                        });
+                         var cCallLogUrl = '@Url.Action("PaymentSuccessLog", "UserChat")?doctorId=' +  $("#doctorid").val();
+                         $.post(cCallLogUrl);
+                        showLoader();
+                        CreateAppointment(@ViewBag.PatienID,@amount);
+                    },
+                    handleFailure: function () {
+                        var cUrl = '/UserChat/PaymentFailLog?doctorId=' + $("#doctorid").val();
+                        $.post(cUrl);
+                        showAlert("Alert","Stripe Payment Failed!!!");
+                        return;
+                        //alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
+                    }
+                });
+
+                oStripePayCheckout.initialize();
+            }
+
+            },
+            error: errorRes
+
+        });
+
+    }
+    $(document).ready(function () {
+        if('@SessionHandler.UserInfo.timeZone'=='')
+        {
+            new PNotify({
+                title: 'Info',
+                text: "Please update your timezone.",
+                type: 'info',
+                styling: 'bootstrap3'
+            });
+            window.location = '@Url.Action("Index","PatientProfile")';
+
+        }
+        GetAllLanguages();
+        GetAllSpecialities();
+        GetROV('@SessionHandler.UserInfo.Id');
+        if($("#wizard").smartWizard('currentStep','1'))
+        {
+
+            $('.buttonNext').hide();
+            $('.buttonPrevious').hide();
+        }
+
+        if($("#wizard").smartWizard('currentStep','2'))
+        {
+
+            $('.buttonNext').hide();
+            $('.buttonPrevious').hide();
+        }
+
+        //Get Files in ROV - Starts
+        reader1.addEventListener("load", function () {
+            $("#hdnFileID1").val(reader1.result);
+        }, false);
+
+        reader2.addEventListener("load", function () {
+            $("#hdnFileID2").val(reader2.result);
+        }, false);
+
+        reader3.addEventListener("load", function () {
+            $("#hdnFileID3").val(reader3.result);
+        }, false);
+
+    });
+
+   function CreateAppointment(patientID,amount)
+   {
+         _objAppointment["appDate"] = $("#fetchdate").val();
+        _objAppointment["doctorID"] = $("#doctorid").val();
+        _objAppointment["patientID"] = patientID;
+        _objAppointment["paymentAmt"] = amount;
+        _objAppointment["rov"] = $("#ROV option:selected").text();
+        _objAppointment["chiefComplaints"] = $("#chiefcomplaints").val();
+
+        _objAppointment["rovFile1Base64"] = $("#hdnFileID1").val();
+        _objAppointment["rovFile1Name"] = $("#hdnFileID1Name").val();
+
+        _objAppointment["rovFile2Base64"] = $("#hdnFileID2").val();
+        _objAppointment["rovFile2Name"] = $("#hdnFileID2Name").val();
+
+        _objAppointment["rovFile3Base64"] = $("#hdnFileID3").val();
+        _objAppointment["rovFile3Name"] = $("#hdnFileID3Name").val();
+
+
+
+        $.ajax({
+            type: 'POST',
+            url: '/SeeDoctor/SaveAppointment',
+            dataType: 'text',
+            data: 'inputModel='+ JSON.stringify(_objAppointment),
+            success: function (response) {
+
+                if(response.Message!=undefined)
+                {
+                    hideLoader();
+                    new PNotify({
+                        title: 'Error',
+                        text: response.Message.ReasonPhrase,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                }
+                var result=JSON.parse(response);
+                if (result.Success == true) {
+
+                    if (result.ApiResultModel.message != "") {
+                        hideLoader();
+                        new PNotify({
+                            title: 'Error',
+                            text: result.ApiResultModel.message,
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                    }
+                    else if (result.ApiResultModel.message == "") {
+                        if (appType == "S")
+                        hideLoader();
+                        new PNotify({
+                            title: 'Success',
+                            text: "Appointment has been scheduled successfully. Reference #:"+result.ApiResultModel.ID,
+                            type: 'info',addclass: 'dark',
+                            styling: 'bootstrap3'
+                        });
+
+
+                        if (appType == "S")
+                        {
+                            window.location.href = '/Appointment/Index/';
+                        }
+                        if (appType == "L")
+                        {
+                            console.log('Live Appointment');
+                            localStorage.setItem("livecall","1");
+                            localStorage.setItem("doctorid",$("#doctorid").val());
+                            localStorage.setItem("patientid",patientID);
+                            localStorage.setItem("apptime",new Date());
+
+
+                        createConsultFromPatient($("#doctorid").val(), patientID, result.ApiResultModel.ID);}
+
+
+
+
+                    }
+                }
+
+            },
+            error: errorRes
+
+        });
+
+    }
+    var _objConsult = {};
+    function createConsultFromPatient(doctorID, patientID, appID) {
+        debugger;
+        _objConsult["doctorId"] = doctorID;
+        _objConsult["patientId"] = patientID;
+        _objConsult["appID"] = appID;
+        _objConsult["sessionID"] = "0";
+        _objConsult["token"] = "0";
+        _objConsult["userID"] = '0'
+
+        $.ajax({
+            type: 'POST',
+            url: '/SeeDoctor/CreateConsult',
+            data: JSON.stringify(_objConsult),
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (response) {
+
+                if (response.Success == true) {
+                    if (response.ApiResultModel.message != "") {
+                        hideLoader();
+                        new PNotify({
+                            title: 'Error',
+                            text: response.ApiResultModel.message,
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                        //Log consult creation error
+
+                        var cCallLogUrl = '@Url.Action("ConsultCreationFailedbyPatient", "UserChat")?doctorId=' + doctorId;
+                        $.post(cCallLogUrl);
+                        showAlert('Consult Creation Error', 'Appointment schedule with app ID:'+appID+', but Unable to create consult');
+                    }
+                    else if (response.ApiResultModel.message == "") {
+                        console.log('consult created');
+                      /*  new PNotify({
+                            title: 'Success',
+                            text: "Consultation is created successfully.",
+                            type: 'info', addclass: 'dark',
+                            styling: 'bootstrap3'
+                        });*/
+
+                        //Log consultion creation sucess
+                        var cCallLogUrl = '@Url.Action("ConsultCreatedbyPatient", "UserChat")?doctorId=' + doctorID;
+                        $.post(cCallLogUrl);
+
+                        if(appType="L")
+                        {
+                            debugger;
+                            localStorage.setItem('consultationKey', response.ApiResultModel.ID);
+
+                            var consultID=response.ApiResultModel.ID;
+                            //send consultID to doctor incase of live appointment
+                            var docId = doctorID;
+
+                            var oDocInfo = null;
+                            for (var i = 0; i < availableDoctors.doctor.length; i++) {
+                                if (availableDoctors.doctor[i].docId == docId) {
+                                    oDocInfo = availableDoctors.doctor[i];
+                                    break;
+                                }
+                            }
+                            debugger;
+                            if(oDocInfo!=null){
+                                chat.server.sendMessageToDoctor(
+                                {
+                                    SenderId: '@SessionHandler.UserInfo.Id',
+                                    UserName: '@SessionHandler.UserInfo.Email',
+                                    ReceiverConnectionId: oDocInfo.connectionId,
+                                    ReceiverId: docId,
+                                    DoctorName: oDocInfo.firstName + ' ' + oDocInfo.lastName,
+                                    PatientName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
+                                    SenderType: 'Patient',
+                                    Message: JSON.stringify({ status: 'consultID', name: consultID }),
+                                    UserGroup: 'doctors'
+                                });
+                                hideLoader();
+                                new PNotify({
+                                    title: 'Success',
+                                    text: "Your Live consultation consultation will be started soon.",
+                                    type: 'info', addclass: 'dark',
+                                    styling: 'bootstrap3'
+                                });
+                            }
+                            else {
+                                new PNotify({ title: 'Error', text: "Doctor is offline. Please try later", type: 'error', styling: 'bootstrap3' });
+                                return false;
+                            }
+                            debugger;
+
+
+                            var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
+                            var tokboxInfo=localStorage.getItem('tokbox');
+                            //check for apptype if l then go here
+                            //create consult here
+                          //  var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
+
+                          //  $.post(cUrlReadyForCall, function (oResp) {
+                                if (tokboxInfo!="0")
+                                {
+                                    //Redirect patient to call
+                                    window.location = '@Url.Action("Index","UserChat")?tokboxInfo='+tokboxInfo;
+
+                                }
+                                else
+                                { new PNotify({ title: 'Error', text: "Error in getting tokbox info.", type: 'error', styling: 'bootstrap3' });}
+                          // });
+
+                            //Redirect User for video chat
+                           // showAlert("Payment Alert","Payment successful. Your consultation will be started soon.");
+                            //alert("Payment successful. Your consultation will be started soon.");
+                            //location.reload();
+                        }
+
+                    }
+                }
+
+            },
+            error: errorRes
+
+        });
+    }
+
+    $('#searchdate').bootstrapMaterialDatePicker
+            ({
+                time: false,
+                clearButton: true,
+                format: 'DD/MM/YYYY ',
+
+            });
+
+
+    $("#fetchdate").daterangepicker({
+        singleDatePicker: true,
+        calender_style: "picker_2",
+        format: 'DD/MM/YYYY ',
+        minDate: new Date()
+    });
+    $('#fetchdate').data('daterangepicker').setStartDate();
+
+    //$("#appdate").on('input', function () {
+    //    alert("Selected date: " + this.value);
+    //});
+    //$('#appdate').on("input change", function (e) {
+    //// alert(e.target.value);
+    // //console.log("Date changed: ", e.target.value);
+    // fetchTimings(e.target)
+    //});
+
+    $('#time').bootstrapMaterialDatePicker
+    ({
+        date: false,
+        shortTime: false,
+        format: 'HH:mm'
+    });
+    //$('#time').bootstrapMaterialDatePicker('setTime', moment());// update check in sp for null time
+    $("#myModal1").on('show.bs.modal', function (e) {
+        var $modal = $(this);
+
+        mydocid = e.relatedTarget.id;
+
+        $("#doctorid").val(mydocid);
+        //alert($('#' + mydocid).data('todo').id+' '+$('#' + mydocid).data('todo').doctorName);
+        var todoId = $('#' + mydocid).data('todo').id;
+        var docName = $('#' + mydocid).data('todo').doctorName;
+        var cap=docName.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        $("#timingsmodaltitle").text("Dr. "+cap + " Timings");
+    });
+    $("#myModal8").on('show.bs.modal', function (e) {
+        var $modal = $(this);
+        mydocid = e.relatedTarget.id;
+        //alert(mydocid);
+        $("#docscheduleid").val(mydocid);
+
+    });
+
+
+
+
+</script>
+
+@*For Health Conditions*@
+<script>
+    $(document).ready(function () {
+        GetHealthConditions(@ViewBag.PatienID);
+        $('#conditionstable').DataTable({
+            'order': [[0, 'asc']],
+            'columnDefs': [
+               { visible: false, targets: [0] }
+
+            ],
+            "bAutoWidth": false, // Disable the auto width calculation
+            "aoColumns": [
+             { "sWidth": "5%" },
+             { "sWidth": "30%" },
+             { "sWidth": "20%" },
+            { "sWidth": "8%" }
+
+            ]
+        });
+    });
+    //For health conditions//
+    $('#addcondition').on('click', function () {
+        if ($("#myCondition").val() == "") {
+            //$("#myCondition").val("Condition name is required.");
+            document.getElementById("divcondition").style.display = "block";
+            document.getElementById("btncondition").style.display = "block";
+        }
+        else {
+            document.getElementById("divcondition").style.display = "none";
+            document.getElementById("btncondition").style.display = "none";
+            addupdateCondition(@ViewBag.PatienID);
+        }
+
+
+    });
+    $('#reset').on('click', function () {
+        resetCondition();
+
+    });
+    $('#conditionCheckbox').on('click', function () {
+        if ($('#conditionCheckbox')[0].checked) {
+
+            document.getElementById("myCondition").style.display = "block";
+            document.getElementById("addcondition").style.display = "block";
+            document.getElementById("reset").style.display = "block";
+        }
+        else {
+
+            //document.getElementById("healthconditions").style.display = "none";
+            document.getElementById("myCondition").style.display = "none";
+            document.getElementById("addcondition").style.display = "none";
+            document.getElementById("reset").style.display = "none";
+            document.getElementById("divcondition").style.display = "none";
+            document.getElementById("btncondition").style.display = "none";
+
+        }
+
+    });
+
+    //For health conditions//
+</script>
+
+@*For Medicine*@
+<script>
+
+    $(document).ready(function () {
+
+        GetMedications(@ViewBag.PatienID);
+        GetFrequency();
+        $('#medicinestable').DataTable({
+            'order': [[0, 'asc']],
+            'columnDefs': [
+               { visible: false, targets: [0] }
+
+            ],
+            "bAutoWidth": false, // Disable the auto width calculation
+            "aoColumns": [
+             { "sWidth": "5%" },
+             { "sWidth": "30%" },
+             { "sWidth": "20%" },
+            { "sWidth": "15%" },
+             { "sWidth": "15%" }
+
+            ]
+        });
+
+
+    });
+    $('#addmedicine').on('click', function () {
+        if ($("#myMedicine").val() == "") {
+            document.getElementById("divmedicine").style.display = "block";
+            document.getElementById("btnmedicine").style.display = "block";
+            document.getElementById("divfrequency").style.display = "block";
+
+        }
+        else
+        {
+            document.getElementById("divmedicine").style.display = "none";
+            document.getElementById("btnmedicine").style.display = "none";
+            document.getElementById("divfrequency").style.display = "none";
+            addupdateMedicine(@ViewBag.PatienID);
+        }
+
+
+    });
+    $('#resetmedicine').on('click', function () {
+        resetMedicine();
+
+    });
+    $('#medicineCheckbox').on('click', function () {
+        if ($('#medicineCheckbox')[0].checked) {
+            document.getElementById("myMedicine").style.display = "block";
+            document.getElementById("myFrequency").style.display = "block";
+            document.getElementById("resetmedicine").style.display = "block";
+            document.getElementById("addmedicine").style.display = "block";
+        }
+        else {
+
+            document.getElementById("myMedicine").style.display = "none";
+            document.getElementById("myFrequency").style.display = "none";
+            document.getElementById("resetmedicine").style.display = "none";
+            document.getElementById("addmedicine").style.display = "none";
+            document.getElementById("divmedicine").style.display = "none";
+            document.getElementById("divfrequency").style.display = "none";
+            document.getElementById("btnmedicine").style.display = "none";
+
+        }
+
+    });
+</script>
+
+@*For Allergies*@
+<script>
+    $(document).ready(function () {
+        //GetAllergies();
+
+        GetSensitivities();
+        GetReactions();
+        GetPatientAllergies(@ViewBag.PatienID);
+        $('#allergiestable').DataTable({
+            'order': [[0, 'asc']],
+            'columnDefs': [
+               { visible: false, targets: [0] }
+
+            ],
+            "bAutoWidth": false, // Disable the auto width calculation
+            "aoColumns": [
+             { "sWidth": "5%" },
+             { "sWidth": "20%" },
+             { "sWidth": "15%" },
+            { "sWidth": "15%" },
+            { "sWidth": "20%" },
+            { "sWidth": "15%" }
+            ]
+
+
+        });
+    });
+    $('#addallergy').on('click', function () {
+        if ($("#myAllergy").val() == "") {
+            document.getElementById("divallergy").style.display = "block";
+            document.getElementById("btnallergy").style.display = "block";
+            document.getElementById("divsensitivity").style.display = "block";
+            document.getElementById("divreaction").style.display = "block";
+        }
+        else {
+            document.getElementById("divallergy").style.display = "none";
+            document.getElementById("btnallergy").style.display = "none";
+            document.getElementById("divsensitivity").style.display = "none";
+            document.getElementById("divreaction").style.display = "none";
+            addupdateAllergies(@ViewBag.PatienID);
+        }
+
+    });
+    $('#resetallergy').on('click', function () {
+        resetAllergies();
+
+    });
+    $('#allergyCheckbox').on('click', function () {
+        if ($('#allergyCheckbox')[0].checked) {
+
+            document.getElementById("myAllergy").style.display = "block";
+            document.getElementById("Sensitivity").style.display = "block";
+            document.getElementById("Reaction").style.display = "block";
+            document.getElementById("resetallergy").style.display = "block";
+            document.getElementById("addallergy").style.display = "block";
+        }
+        else {
+
+            document.getElementById("myAllergy").style.display = "none";
+            document.getElementById("Sensitivity").style.display = "none";
+            document.getElementById("Reaction").style.display = "none";
+            document.getElementById("resetallergy").style.display = "none";
+            document.getElementById("addallergy").style.display = "none";
+            document.getElementById("divallergy").style.display = "none";
+            document.getElementById("divsensitivity").style.display = "none";
+            document.getElementById("divreaction").style.display = "none";
+            document.getElementById("btnallergy").style.display = "none";
+        }
+
+    });
+</script>
+
+
+<!-- /jQuery Smart Wizard -->
+<script>
+    $(document).ready(function () {
+
+        //  $('#wizard').smartWizard('onShowStep', 2);
+        $('#wizard_verticle').smartWizard({
+            transitionEffect: 'slide'
+
+        });
+
+
+        //showApppointmentSummary();
+        $('.buttonNext').addClass('btn btn-primary');
+        $('.buttonPrevious').addClass('btn btn-primary');
+        $('.buttonFinish').addClass('btn btn-default');
+    });
+
+    $('#wizard').smartWizard({
+        onLeaveStep:leaveAStepCallback
+
+    });
+
+    function leaveAStepCallback(obj, context){
+        //alert("Leaving step " + context.fromStep + " to go to step " + context.toStep);
+        return validateSteps(context.toStep); // return false to stay on step and true to continue navigation
+    }
+
+
+
+    // Your Step validation logic
+    function validateSteps(stepnumber){
+        var isStepValid = true;
+        //alert(stepnumber);
+        // validate step 1
+        if( stepnumber== 2){
+            GetPatientChiefComplaints(@SessionHandler.UserInfo.Id);
+        }
+        if( stepnumber== 5){
+            //alert('load appointment detaul');
+            // Your step validation logic
+            // set isStepValid = false if has errors
+            showDoctorInfo();
+            showApppointmentSummary();
+
+
+        }
+        if( stepnumber== 4){
+            loadPatientPharmacy('@SessionHandler.UserInfo.Id');
+        }
+        return true;
+        // ...
+    }
+
+
+    $('#fetchdate').on('apply.daterangepicker', function (ev, picker) {
+        //do something, like clearing an input
+        fetchTimings( $('#fetchdate').val());
+
+    });
+</script>
+
+<script>
+    $('#compose, .compose-close').click(function () {
+        $('.compose').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose1, .compose1-close').click(function () {
+        $('.compose1').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose2, .compose2-close').click(function () {
+        $('.compose2').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose3, .compose3-close').click(function () {
+        $('.compose3').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose4, .compose4-close').click(function () {
+        $('.compose4').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose5, .compose5-close').click(function () {
+        $('.compose5').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose6, .compose6-close').click(function () {
+        $('.compose6').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose7, .compose7-close').click(function () {
+        $('.compose7').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose8, .compose8-close').click(function () {
+        $('.compose8').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose9, .compose9-close').click(function () {
+        $('.compose9').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose10, .compose10-close').click(function () {
+        $('.compose10').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose11, .compose11-close').click(function () {
+        $('.compose11').slideToggle();
+    });
+</script>
+
+<script>
+    $('#compose12, .compose12-close').click(function () {
+        $('.compose12').slideToggle();
+    });
+</script>
+
+
+
+<script>
+    $('#search-click').click(function () {
+        $('.according-defalut-close').show();
+    });
+</script>
+
 <script>
     $(document).ready(function () {
 
@@ -939,655 +1743,6 @@
             $("#spnSelFileName3").html('');
         }
         //Upload files binding - Ends
-    });
-    </script>
-<script>
-    function reloadContainer(callback) {
-
-        $("#mycareteam").load('@Url.Action("MyCareTeam", "SeeDoctor")', function () {
-            callback();
-
-        });
-
-    }
-    function showProfile(docid) {
-
-        var did=docid;//$("#pvdocid").val();
-
-        $("#DoctorProfileContent").load('@Url.Action("DoctorProfile", "SeeDoctor")?doctorID='+did, function () {
-
-        });
-
-    };
-    var reader1  = new FileReader();
-    var reader2  = new FileReader();
-    var reader3  = new FileReader();
-    $(document).ready(function () {
-        if($("#wizard").smartWizard('currentStep','1'))
-        {
-            $('.buttonNext').hide();
-            $('.buttonPrevious').hide();
-
-        }
-
-        GetAllLanguages();
-        GetAllSpecialities();
-        GetROV(@ViewBag.PatienID);
-
-
-        //initialize autocomplete with custom appendTo
-        //$('#pharmacy').autocomplete({
-        //    lookup: pharmacyArray
-        //});
-
-
-        var oStripePayCheckout = new StripePayCheckout({
-            publisherKey: '@publisherKey',
-            amount: @amount,
-            targetButton: "#btnProceedWithPayment",
-            actionUrl: '@Url.Action("ProceedWithPay", "seedoctor")',
-            handleSuccess: function () {
-
-                CreateAppointment(@ViewBag.PatienID,@amount);
-                var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
-
-                var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
-
-                $.post(cUrlReadyForCall, function (oResp) {
-                    if (oResp) {
-                        localStorage.setItem('consultationKey', oResp);
-
-                        //Redirect doctor to call
-                        window.location = '@Url.Action("Index","UserChat")';
-                    }
-                });
-
-                //Redirect User for video chat
-                alert("Payment successful! Now user can be redirected to video chat page with doctor.");
-                //location.reload();
-            },
-            handleFailure: function () {
-                alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
-            }
-        });
-
-        oStripePayCheckout.initialize();
-        //Get Files in ROV - Starts
-        reader1.addEventListener("load", function () {
-            $("#hdnFileID1").val(reader1.result);
-        }, false);
-
-        reader2.addEventListener("load", function () {
-            $("#hdnFileID2").val(reader2.result);
-        }, false);
-
-        reader3.addEventListener("load", function () {
-            $("#hdnFileID3").val(reader3.result);
-        }, false);
-
-    });
-
-
-    function CreateAppointment(patientID,amount)
-    {
-        _objAppointment["appDate"] = $("#fetchdate").val();
-        _objAppointment["doctorID"] = $("#doctorid").val();
-        _objAppointment["patientID"] = patientID;
-        _objAppointment["paymentAmt"] = amount;
-        _objAppointment["rov"] = $("#ROV option:selected").text();
-        _objAppointment["chiefComplaints"] = $("#chiefcomplaints").val();
-
-        _objAppointment["rovFile1Base64"] = $("#hdnFileID1").val();
-        _objAppointment["rovFile1Name"] = $("#hdnFileID1Name").val();
-
-        _objAppointment["rovFile2Base64"] = $("#hdnFileID2").val();
-        _objAppointment["rovFile2Name"] = $("#hdnFileID2Name").val();
-
-        _objAppointment["rovFile3Base64"] = $("#hdnFileID3").val();
-        _objAppointment["rovFile3Name"] = $("#hdnFileID3Name").val();
-
-
-        $.ajax({
-            type: 'POST',
-            url: '/SeeDoctor/SaveAppointment',
-            dataType: 'text',
-            data: 'inputModel='+ JSON.stringify(_objAppointment),
-            success: function (response) {
-
-                if(response.Message!=undefined)
-                {
-                    new PNotify({
-                        title: 'Error',
-                        text: response.Message.ReasonPhrase,
-                        type: 'error',
-                        styling: 'bootstrap3'
-                    });
-                }
-                var result=JSON.parse(response);
-                if (result.Success == true) {
-
-                    if (result.ApiResultModel.message != "") {
-                        new PNotify({
-                            title: 'Error',
-                            text: result.ApiResultModel.message,
-                            type: 'error',
-                            styling: 'bootstrap3'
-                        });
-                    }
-                    else if (result.ApiResultModel.message == "") {
-
-                        new PNotify({
-                            title: 'Success',
-                            text: "Appointment is scheduled successfully.",
-                            type: 'info',addclass: 'dark',
-                            styling: 'bootstrap3'
-                        });
-
-
-                        if (appType == "S")
-                        {
-                            window.location.href = '/Appointment/Index/';
-                        }
-                        if (appType == "L")
-                        { createConsultFromPatient($("#doctorid").val(), patientID, response.ApiResultModel.ID);}
-
-
-
-
-                    }
-                }
-
-            },
-            error: errorRes
-
-        });
-
-    }
-    var _objConsult = {};
-    function createConsultFromPatient(doctorID, patientID, appID) {
-        debugger;
-        _objConsult["doctorId"] = doctorID;
-        _objConsult["patientId"] = patientID;
-        _objConsult["appID"] = appID;
-        _objConsult["sessionID"] = "0";
-        _objConsult["token"] = "0";
-        _objConsult["userID"] = '0'
-
-        $.ajax({
-            type: 'POST',
-            url: '/Doctor/CreateConsult',
-            data: JSON.stringify(_objConsult),
-            contentType: "application/json",
-            dataType: 'json',
-            success: function (response) {
-
-                if (response.Success == true) {
-                    if (response.ApiResultModel.message != "") {
-                        new PNotify({
-                            title: 'Error',
-                            text: response.ApiResultModel.message,
-                            type: 'error',
-                            styling: 'bootstrap3'
-                        });
-                    }
-                    else if (response.ApiResultModel.message == "") {
-                        new PNotify({
-                            title: 'Success',
-                            text: "Consultation is created successfully.",
-                            type: 'info', addclass: 'dark',
-                            styling: 'bootstrap3'
-                        });
-
-                        if(appType="L")
-                        {
-
-
-                            var signalRInfo = JSON.parse(localStorage.getItem('signalRInfo'));
-                            //check for apptype if l then go here
-                            //create consult here
-                            var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId="+ signalRInfo.SenderId +"&userType=Patient&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + signalRInfo.RecipientName;
-
-                            $.post(cUrlReadyForCall, function (oResp) {
-                                // if (oResp)
-                                {
-                                    localStorage.setItem('consultationKey', response.ApiResultModel.ID);
-
-                                    //Redirect doctor to call
-                                    window.location = '@Url.Action("Index","UserChat")';
-                                }
-                            });
-
-                            //Redirect User for video chat
-                            alert("Payment successful. Your consultation will be started soon.");
-                            //location.reload();
-                        }
-
-                    }
-                }
-
-            },
-            error: errorRes
-
-        });
-    }
-
-    $('#searchdate').bootstrapMaterialDatePicker
-            ({
-                time: false,
-                clearButton: true,
-                format: 'DD/MM/YYYY ',
-
-            });
-
-
-    $("#fetchdate").daterangepicker({
-        singleDatePicker: true,
-        calender_style: "picker_2",
-        format: 'DD/MM/YYYY ',
-        minDate: new Date()
-    });
-    $('#fetchdate').data('daterangepicker').setStartDate();
-
-    //$("#appdate").on('input', function () {
-    //    alert("Selected date: " + this.value);
-    //});
-    //$('#appdate').on("input change", function (e) {
-    //// alert(e.target.value);
-    // //console.log("Date changed: ", e.target.value);
-    // fetchTimings(e.target)
-    //});
-
-    $('#time').bootstrapMaterialDatePicker
-    ({
-        date: false,
-        shortTime: false,
-        format: 'HH:mm'
-    });
-    //$('#time').bootstrapMaterialDatePicker('setTime', moment());// update check in sp for null time
-    $("#myModal1").on('show.bs.modal', function (e) {
-        var $modal = $(this);
-
-        mydocid = e.relatedTarget.id;
-
-        $("#doctorid").val(mydocid);
-        //alert($('#' + mydocid).data('todo').id+' '+$('#' + mydocid).data('todo').doctorName);
-        var todoId = $('#' + mydocid).data('todo').id;
-        var docName = $('#' + mydocid).data('todo').doctorName;
-        var cap=docName.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-        $("#timingsmodaltitle").text("Dr. "+cap + " Timings");
-    });
-    $("#myModal8").on('show.bs.modal', function (e) {
-        var $modal = $(this);
-        mydocid = e.relatedTarget.id;
-        //alert(mydocid);
-        $("#docscheduleid").val(mydocid);
-
-    });
-
-
-
-
-</script>
-
-@*For Health Conditions*@
-<script>
-    $(document).ready(function () {
-        GetHealthConditions(@ViewBag.PatienID);
-        $('#conditionstable').DataTable({
-            'order': [[0, 'asc']],
-            'columnDefs': [
-               { visible: false, targets: [0] }
-             
-            ],
-            "bAutoWidth": false, // Disable the auto width calculation 
-            "aoColumns": [
-             { "sWidth": "5%" },  
-             { "sWidth": "30%" }, 
-             { "sWidth": "20%" }, 
-            { "sWidth": "8%" }
-           
-            ]
-        });
-    });
-    //For health conditions//
-    $('#addcondition').on('click', function () {
-        if ($("#myCondition").val() == "") {
-            //$("#myCondition").val("Condition name is required.");
-            document.getElementById("divcondition").style.display = "block";
-            document.getElementById("btncondition").style.display = "block";
-        }
-        else {
-            document.getElementById("divcondition").style.display = "none";
-            document.getElementById("btncondition").style.display = "none";
-            addupdateCondition(@ViewBag.PatienID);
-        }
-
-
-    });
-    $('#reset').on('click', function () {
-        resetCondition();
-
-    });
-    $('#conditionCheckbox').on('click', function () {
-        if ($('#conditionCheckbox')[0].checked) {
-
-            document.getElementById("myCondition").style.display = "block";
-            document.getElementById("addcondition").style.display = "block";
-            document.getElementById("reset").style.display = "block";
-        }
-        else {
-
-            //document.getElementById("healthconditions").style.display = "none";
-            document.getElementById("myCondition").style.display = "none";
-            document.getElementById("addcondition").style.display = "none";
-            document.getElementById("reset").style.display = "none";
-            document.getElementById("divcondition").style.display = "none";
-            document.getElementById("btncondition").style.display = "none";
-
-        }
-
-    });
-
-    //For health conditions//
-</script>
-
-@*For Medicine*@
-<script>
-    //jQuery('#myMedicine').on('input', function() {
-        //alert($("#myMedicine").val());
-        //GetMedicines($("#myMedicine").val());
-    //});
-    $(document).ready(function () {
-       
-        //GetMedicines($("#myMedicine").val());
-        GetMedications(@ViewBag.PatienID);
-        GetFrequency();
-        $('#medicinestable').DataTable({
-            'order': [[0, 'asc']],
-            'columnDefs': [
-               { visible: false, targets: [0] }
-               
-            ],
-            "bAutoWidth": false, // Disable the auto width calculation 
-            "aoColumns": [
-             { "sWidth": "5%" },  
-             { "sWidth": "30%" }, 
-             { "sWidth": "20%" }, 
-             { "sWidth": "15%" },
-             { "sWidth": "15%" }
-           
-            ]
-        });
-
-        
-    });
-    $('#addmedicine').on('click', function () {
-        if ($("#myMedicine").val() == "") {
-            document.getElementById("divmedicine").style.display = "block";
-            document.getElementById("btnmedicine").style.display = "block";
-            document.getElementById("divfrequency").style.display = "block";
-
-        }
-        else
-        {
-            document.getElementById("divmedicine").style.display = "none";
-            document.getElementById("btnmedicine").style.display = "none";
-            document.getElementById("divfrequency").style.display = "none";
-            addupdateMedicine(@ViewBag.PatienID);
-        }
-
-
-    });
-    $('#resetmedicine').on('click', function () {
-        resetMedicine();
-
-    });
-    $('#medicineCheckbox').on('click', function () {
-        if ($('#medicineCheckbox')[0].checked) {
-            document.getElementById("myMedicine").style.display = "block";
-            document.getElementById("myFrequency").style.display = "block";
-            document.getElementById("resetmedicine").style.display = "block";
-            document.getElementById("addmedicine").style.display = "block";
-        }
-        else {
-
-            document.getElementById("myMedicine").style.display = "none";
-            document.getElementById("myFrequency").style.display = "none";
-            document.getElementById("resetmedicine").style.display = "none";
-            document.getElementById("addmedicine").style.display = "none";
-            document.getElementById("divmedicine").style.display = "none";
-            document.getElementById("divfrequency").style.display = "none";
-            document.getElementById("btnmedicine").style.display = "none";
-
-        }
-
-    });
-</script>
-
-@*For Allergies*@
-<script>
-    $(document).ready(function () {
-        //GetAllergies();
-        
-        GetSensitivities();
-        GetReactions();
-        GetPatientAllergies(@ViewBag.PatienID);
-        $('#allergiestable').DataTable({
-            'order': [[0, 'asc']],
-            'columnDefs': [
-               { visible: false, targets: [0] }
-            
-            ],
-            "bAutoWidth": false, // Disable the auto width calculation 
-            "aoColumns": [
-             { "sWidth": "5%" },  
-             { "sWidth": "20%" }, 
-             { "sWidth": "15%" }, 
-            { "sWidth": "15%" }, 
-            { "sWidth": "20%" }, 
-            { "sWidth": "15%" }
-            ]
-
-
-        });
-    });
-    $('#addallergy').on('click', function () {
-        if ($("#myAllergy").val() == "") {
-            document.getElementById("divallergy").style.display = "block";
-            document.getElementById("btnallergy").style.display = "block";
-            document.getElementById("divsensitivity").style.display = "block";
-            document.getElementById("divreaction").style.display = "block";
-        }
-        else {
-            document.getElementById("divallergy").style.display = "none";
-            document.getElementById("btnallergy").style.display = "none";
-            document.getElementById("divsensitivity").style.display = "none";
-            document.getElementById("divreaction").style.display = "none";
-            addupdateAllergies(@ViewBag.PatienID);
-        }
-
-    });
-    $('#resetallergy').on('click', function () {
-        resetAllergies();
-
-    });
-    $('#allergyCheckbox').on('click', function () {
-        if ($('#allergyCheckbox')[0].checked) {
-
-            document.getElementById("myAllergy").style.display = "block";
-            document.getElementById("Sensitivity").style.display = "block";
-            document.getElementById("Reaction").style.display = "block";
-            document.getElementById("resetallergy").style.display = "block";
-            document.getElementById("addallergy").style.display = "block";
-        }
-        else {
-
-            document.getElementById("myAllergy").style.display = "none";
-            document.getElementById("Sensitivity").style.display = "none";
-            document.getElementById("Reaction").style.display = "none";
-            document.getElementById("resetallergy").style.display = "none";
-            document.getElementById("addallergy").style.display = "none";
-            document.getElementById("divallergy").style.display = "none";
-            document.getElementById("divsensitivity").style.display = "none";
-            document.getElementById("divreaction").style.display = "none";
-            document.getElementById("btnallergy").style.display = "none";
-        }
-
-    });
-</script>
-
-
-<!-- /jQuery Smart Wizard -->
-<script>
-    $(document).ready(function () {
-
-        //  $('#wizard').smartWizard('onShowStep', 2);
-        $('#wizard_verticle').smartWizard({
-            transitionEffect: 'slide'
-
-        });
-
-
-        //showApppointmentSummary();
-        $('.buttonNext').addClass('btn btn-primary');
-        $('.buttonPrevious').addClass('btn btn-primary');
-        $('.buttonFinish').addClass('btn btn-default');
-    });
-
-    $('#wizard').smartWizard({
-        onLeaveStep:leaveAStepCallback
-
-    });
-
-    function leaveAStepCallback(obj, context){
-        //alert("Leaving step " + context.fromStep + " to go to step " + context.toStep);
-        return validateSteps(context.toStep); // return false to stay on step and true to continue navigation
-    }
-
-
-
-    // Your Step validation logic
-    function validateSteps(stepnumber){
-        var isStepValid = true;
-        //alert(stepnumber);
-        // validate step 1
-        if( stepnumber== 2){
-            GetPatientChiefComplaints(@SessionHandler.UserInfo.Id);
-        }
-        if( stepnumber== 5){
-            //alert('load appointment detaul');
-            // Your step validation logic
-            // set isStepValid = false if has errors
-            showLoader();
-            showDoctorInfo();
-            showApppointmentSummary();
-            hideLoader();
-          
-
-        }
-        if( stepnumber== 4){
-            loadPatientPharmacy('@SessionHandler.UserInfo.Id');
-        }
-        return true;
-        // ...
-    }
-
-
-    $('#fetchdate').on('apply.daterangepicker', function (ev, picker) {
-        //do something, like clearing an input
-        fetchTimings( $('#fetchdate').val());
-
-    });
-</script>
-
-<script>
-    $('#compose, .compose-close').click(function () {
-        $('.compose').slideToggle();
-    });
-</script>
-
-<script>
-    $('#compose1, .compose1-close').click(function () {
-        $('.compose1').slideToggle();
-    });
-</script>
-
-<script>
-    $('#compose2, .compose2-close').click(function () {
-        $('.compose2').slideToggle();
-    });
-</script>
-
-<script>
-    $('#compose3, .compose3-close').click(function () {
-        $('.compose3').slideToggle();
-    });
-</script>
-
-<script>
-    $('#compose4, .compose4-close').click(function () {
-        $('.compose4').slideToggle();
-    });
-</script>
-
-<script>
-    $('#compose5, .compose5-close').click(function () {
-        $('.compose5').slideToggle();
-    });
-</script>
-
-<script>
-    $('#compose6, .compose6-close').click(function () {
-        $('.compose6').slideToggle();
-    });
-</script>
-
-<script>
-    $('#compose7, .compose7-close').click(function () {
-        $('.compose7').slideToggle();
-    });
-</script>
-
-<script>
-    $('#compose8, .compose8-close').click(function () {
-        $('.compose8').slideToggle();
-    });
-</script>
-
-<script>
-    $('#compose9, .compose9-close').click(function () {
-        $('.compose9').slideToggle();
-    });
-</script>
-
-<script>
-    $('#compose10, .compose10-close').click(function () {
-        $('.compose10').slideToggle();
-    });
-</script>
-
-<script>
-    $('#compose11, .compose11-close').click(function () {
-        $('.compose11').slideToggle();
-    });
-</script>
-
-<script>
-    $('#compose12, .compose12-close').click(function () {
-        $('.compose12').slideToggle();
-    });
-</script>
-
-
-
-<script>
-    $('#search-click').click(function () {
-        $('.according-defalut-close').show();
-    });
-</script>
-
-<script>
-    $(document).ready(function () {
 
 
         $('#single_cal1').daterangepicker({
@@ -1598,254 +1753,201 @@
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal2').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_2"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal3').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_3"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal4').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_4"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal5').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_5"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal6').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_6"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal7').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_7"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal8').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_8"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal9').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_9"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal10').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_10"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal11').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_11"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal12').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_12"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
         $('#single_cal13,#single_cal14,#single_cal15,#single_cal16,#single_cal17,#single_cal18,#single_cal19,#single_cal20,#single_cal21,#single_cal22,#single_cal23,#single_cal24,#single_cal25,#single_cal26,#single_cal27,#single_cal28,#single_cal29,#single_cal30,#single_cal31,#single_cal32,#single_cal33,#single_cal34,#single_cal35,#single_cal36').daterangepicker({
             singleDatePicker: true,
             calender_style: "picker_13,picker_14,picker_15,picker_16,picker_17,picker_18,picker_19,picker_20,picker_21,picker_22,picker_23,picker_24,picker_25,picker_26,picker_27,picker_28,picker_29,picker_30,picker_31,picker_32,picker_33,picker_34,picker_35,picker_36"
         }, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
-    });
-</script>
 
-<script>
+    });
+
     $('#toggle1').on(function () {
 
         $('#toggle_1').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_1').on(function () {
 
         $('#toggle_1').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle2').click(function () {
         $('#toggle_2').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_2').click(function () {
         $('#toggle_2').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle3').click(function () {
         $('#toggle_3').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_3').click(function () {
         $('#toggle_3').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle4').click(function () {
         $('#toggle_4').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_4').click(function () {
         $('#toggle_4').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle5').click(function () {
         $('#toggle_5').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_5').click(function () {
         $('#toggle_5').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle6').click(function () {
         $('#toggle_6').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_6').click(function () {
         $('#toggle_6').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle7').click(function () {
         $('#toggle_7').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_7').click(function () {
         $('#toggle_7').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle8').click(function () {
         $('#toggle_8').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_8').click(function () {
         $('#toggle_8').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle9').click(function () {
         $('#toggle_9').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_9').click(function () {
         $('#toggle_9').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle10').click(function () {
         $('#toggle_10').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_10').click(function () {
         $('#toggle_10').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle11').click(function () {
         $('#toggle_11').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_11').click(function () {
         $('#toggle_11').hide();
         return false;
     });
-</script>
-
-<script>
     $('#toggle12').click(function () {
         $('#toggle_12').show();
         return false;
     });
-</script>
-<script>
     $('#toggle_12').click(function () {
         $('#toggle_12').hide();
         return false;
     });
-</script>
 
-
-<script>
-    function showdiv() {
-        document.getElementById("mainpanel").style.display = "block";
-        //$("#maindiv").appendTo("#mainpanel");
-    }
-</script>
-
-
-
-<script>
     $('#next').click(function () {
         alert('next');
         $('#step-2').show();
     });
+
+    function showdiv() {
+        document.getElementById("mainpanel").style.display = "block";
+        //$("#maindiv").appendTo("#mainpanel");
+    }
 </script>
 
 

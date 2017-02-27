@@ -238,13 +238,25 @@
 
     };
     function downloadFile(fileId,patID) {
-
-        if (confirm("Are you sure you want to downlod file?")) {
+        var options = {
+            message: 'Are you sure you want to downlod file?',
+            title: 'Download File',
+            size: eModal.size.lg
+        };
+        eModal.confirm(options)
+        .then(function () {
             var cUrl = "@Url.Action("Download", "DoctorConsultation")?fileId=" + fileId+"&patID="+patID;
 
             $('#iframeDownload').attr('src', cUrl);
             $('#iframeDownload').load();
-        }
+        },
+        function () { return;});
+        @*if (confirm("Are you sure you want to downlod file?")) {
+            var cUrl = "@Url.Action("Download", "DoctorConsultation")?fileId=" + fileId+"&patID="+patID;
+
+            $('#iframeDownload').attr('src', cUrl);
+            $('#iframeDownload').load();
+        }*@
     }
     function showConsult(consultID) {
         cID = consultID;

@@ -265,10 +265,10 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                var dateTime = DateTime.Parse(searchModel.appDate);
+                //var dateTime = DateTime.Parse(searchModel.appDate);
+                string[] formats = { "dd/MM/yyyy" };
+                var dateTime = DateTime.ParseExact(searchModel.appDate.Trim(), formats, new CultureInfo("en-US"), DateTimeStyles.None);
                 string appday = dateTime.ToString("dddd");
-                //string[] formats = { "dd/MM/yyyy" };
-                //var dateTime = DateTime.ParseExact(searchModel.appDate.Trim(), formats, new CultureInfo("en-US"), DateTimeStyles.None);
                 //var result = db.SP_FetchDoctorTimings(searchModel.doctorID, dateTime).ToList();
                 var timings = (from t in db.DoctorTimings where t.doctorID == searchModel.doctorID
                               && t.day == appday && t.active==true
@@ -514,10 +514,10 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                var dateTime = DateTime.Parse(searchModel.appDate);
+                //var dateTime = DateTime.Parse(searchModel.appDate);
+                 string[] formats = { "dd/MM/yyyy" };
+                var dateTime = DateTime.ParseExact(searchModel.appDate.Trim(), formats, new CultureInfo("en-US"), DateTimeStyles.None);
                 string appday = dateTime.ToString("dddd");
-                //string[] formats = { "dd/MM/yyyy" };
-                //var dateTime = DateTime.ParseExact(searchModel.appDate.Trim(), formats, new CultureInfo("en-US"), DateTimeStyles.None);
                 //List<SP_FetchDoctorTimings_Result> appList = new List<SP_FetchDoctorTimings_Result>();
                 //appList= db.SP_FetchDoctorTimings(searchModel.doctorID, dateTime).ToList();
                 var doctimings = (from t in db.DoctorTimings

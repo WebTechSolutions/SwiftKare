@@ -160,7 +160,9 @@
                 }
                 else {
                     new PNotify({ title: 'Success', text: "Email is sent successfully.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
-                     }
+                    $("#subject").val('');
+                    $("#editor").html('');
+                   }
 
             },
             error: function (err) {

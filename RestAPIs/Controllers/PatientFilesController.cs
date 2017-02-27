@@ -50,8 +50,14 @@ namespace RestAPIs.Controllers
                                  FileName = l.FileName.Trim(),
                                  fileContent = null,
                                  documentType =l.documentType,
-                                 createdDate = l.md
+                                 cd =l.md
                              }).ToList();
+                foreach (var item in files)
+                {
+                    if(item.cd!=null)
+                    item.createdDate = item.cd.GetValueOrDefault().ToString("dd/MM/yyyy hh:mm tt");
+                }
+
                 response = Request.CreateResponse(HttpStatusCode.OK, files);
                 return response;
             }
@@ -77,8 +83,12 @@ namespace RestAPIs.Controllers
                                  FileName = l.FileName.Trim(),
                                  fileContent = l.fileContent,
                                  documentType = l.documentType,
-                                 createdDate = l.md
+                                 cd = l.md
                              }).FirstOrDefault();
+                
+                    if (files.cd != null)
+                    files.createdDate = files.cd.GetValueOrDefault().ToString("dd/MM/yyyy hh:mm tt");
+                
                 response = Request.CreateResponse(HttpStatusCode.OK, files);
                 return response;
             }

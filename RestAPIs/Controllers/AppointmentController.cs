@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -46,7 +47,7 @@ namespace RestAPIs.Controllers
                 //var result = db.SP_GetAppDetail(appID).ToList();
                 var result = (from cn in db.Appointments
                               where cn.appID == appID && cn.active == true
-                              select new
+                              select new 
                               {
                                   appID = cn.appID,
                                   rov = cn.rov,
@@ -102,6 +103,9 @@ namespace RestAPIs.Controllers
                                                  documentType = l.documentType
                                              }).ToList()
                               }).FirstOrDefault();
+                
+                //result.appDate = result.appDate.GetValueOrDefault().ToString("dd/MM/yyy tt");
+                //aappTime = cn.appTime.GetValueOrDefault().ToString("hh:mm tt"),
                 response = Request.CreateResponse(HttpStatusCode.OK, result);
                 return response;
 

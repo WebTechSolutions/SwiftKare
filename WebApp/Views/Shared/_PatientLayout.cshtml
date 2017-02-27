@@ -55,7 +55,7 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-material-datetimepicker.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-wysiwyg.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.hotkeys.js")"></script>
-
+    <script type="text/javascript" src="@Url.Content("~/Scripts/eModal.min.js")"></script>
    
     
 
@@ -280,6 +280,20 @@
         </div>
     </div><!-- mymodal1 -->
     <script>
+        //setInterval(function () { console.log("Hello"); }, 1000);
+        @*setInterval(function () {
+            console.log('function called');
+            $("#divAlerts").html("");
+            $.ajax({
+                url: "@Url.Action("AlertView", "Alert")",
+                type: 'POST',
+            dataType: 'html',
+            cache: false,
+            success: function (html) {
+                $("#divAlerts").html(html);
+            }
+            });
+        }, 2000);*@
         var mymodal = $('#playoutModal');
     function showAlert(heading,body)
     {
@@ -477,9 +491,14 @@
                 debugger;
                 var msgJson = JSON.parse(msg);
 
-                var isPatientAcceptedCall = confirm('Doctor ' + msgJson.name + ' want to have consultation with you. Press OK to proceed.');
-
-                if (isPatientAcceptedCall) {
+                //var isPatientAcceptedCall = confirm('Doctor ' + msgJson.name + ' want to have consultation with you. Press OK to proceed.');
+                var options = {
+                    message: 'Doctor ' + msgJson.name + ' want to have consultation with you. Press OK to proceed.',
+                    title: 'Doctor is Calling',
+                    size: eModal.size.lg
+                    };
+                eModal.confirm(options)
+                .then(function () {
                     var cCallLogUrl = '@Url.Action("PatientAcceptedCall", "UserChat")?doctorId=' + senderid;
                     //  $.post(cCallLogUrl);
                    
@@ -526,21 +545,27 @@
                             });
                             return;
                         }
+                    });},
+                    function () {
+                        var cCallLogUrl = '@Url.Action("PatientDeclinedCall", "UserChat")?doctorId=' + senderid;
+                        //   $.post(cCallLogUrl);
+                        chat.server.patientRejectedCall({
+                            SenderId: '@SessionHandler.UserInfo.Id',
+                            UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
+                            ReceiverConnectionId: senderConnId,
+                            consultID: consultID
+                        });
+                        return;
                     });
+                
+                //if (isPatientAcceptedCall) {
+                    
 
 
-                }
-                else {
-                    var cCallLogUrl = '@Url.Action("PatientDeclinedCall", "UserChat")?doctorId=' + senderid;
-                    //   $.post(cCallLogUrl);
-                    chat.server.patientRejectedCall({
-                        SenderId: '@SessionHandler.UserInfo.Id',
-                        UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
-                        ReceiverConnectionId: senderConnId,
-                        consultID: consultID
-                    });
-                    return;
-                }
+                //}
+                //else {
+                    
+                //}
 
                 
 
@@ -632,6 +657,8 @@
                 });
             });
         });
+
+        
     </script>
     <script>
         $(document).ajaxSuccess(function (evt, request, settings) {
@@ -695,7 +722,10 @@
                     });
                 }
             }
+            
+           
         });
+        
     </script>
 
     @RenderSection("scripts", required: false)

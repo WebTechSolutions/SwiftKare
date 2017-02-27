@@ -133,9 +133,13 @@ else
                
                 var o=$.parseJSON(resp)
                 console.log(o);
-                $("#iframeUrl").attr('src', o.url);
-                $("#mdlIframe").modal('show');
+                eModal
+                .iframe(o.url, "ePrescription")
+                .then(function () { console.log('iframe loaded'); });
+                //$("#iframeUrl").attr('src', o.url);
+                //$("#mdlIframe").modal('show');
             });
+            
         });
 
         var handleDataTableButtons = function () {
