@@ -213,13 +213,13 @@
                             </li>
                            
                            
-                            <li id="alertview">
-                                
-                                    @{
-                                        Html.RenderAction("DoctorAlertView", "DoctorAlert");
-                                    }
-                               
+                            <li id="alertview" role="presentation" class="dropdown">
+                                @{
+                                    Html.RenderAction("DoctorAlertView", "DoctorAlert");
+                                }
+
                             </li>
+
                             <li id="refillerror">
 
                                 @{
@@ -272,22 +272,32 @@
 
     
     <script>
-        @*setInterval(function () {
-            console.log('function called');
-            @*$("#alertview").html('@{Html.RenderAction("DoctorAlertView", "DoctorAlert");}');*@
-        @*$.ajax({
+        setInterval(function () {
+           
+           $.ajax({
                 url: "@Url.Action("DoctorAlertView", "DoctorAlert")",
                 type: 'POST',
             dataType: 'html',
             cache: false,
             success: function (html) {
+                //console.log($("#alertview").html());
                 $("#alertview").html(html);
             }
             });
-        }, 3000);*@
-        @*setInterval(function () {
-            $("#refillerror").html('@{Html.RenderAction("DoctorRefillErrorCountView", "Doctor");}');
-        }, 60 * 1000 * 15);*@
+        }, 60*1000);
+        setInterval(function () {
+            $.ajax({
+                url: "@Url.Action("DoctorRefillErrorCountView", "Doctor")",
+                type: 'POST',
+            dataType: 'html',
+            cache: false,
+            success: function (html) {
+                console.log($("#refillerror").html());
+                $("#refillerror").html(html);
+            }
+        });
+        }, 15*60*1000);
+           
 
         var mymodal = $('#myModal1');
         function showAlert(heading, body) {

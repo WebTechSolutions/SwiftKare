@@ -106,10 +106,12 @@ else
 <!-- /Datatables -->
 <script>
 
-    function setTab(cTab) {
+    @*function setTab(cTab) {
         currentTab = cTab;
-
-    }
+        $("#divPending").load('@Url.Action("PartialDoctorPending", "DoctorAppointment")', function () {
+            //callback();
+        });
+    }*@
     function callConsult(consultID,appID)
     {
         var objCRR={};

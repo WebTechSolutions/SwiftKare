@@ -174,7 +174,7 @@ function getTimeZoneOffset()
 function compareTime(time) {
     var localDate = new Date();
    
-    var dbDate = localDate.getFullYear() + '/' + localDate.getMonth()+1 + '/' + localDate.getDate() +' ' + time;
+    var dbDate = localDate.getFullYear() + '/' + (localDate.getMonth()+1) + '/' + localDate.getDate() +' ' + time;
     var dbDateTime = new Date(dbDate);
     //var dbtime = dbDate+compareDate.getHours() + ':' + compareDate.getMinutes() + ' ' + time.slice(-2);
 
@@ -187,7 +187,7 @@ function compareTime(time) {
         hours = hours % 12;
         mid = 'pm';
     }
-    var localtime = localDate.getFullYear() + '/' + localDate.getMonth() +1+ '/' + localDate.getDate() + ' ' + localDate.getHours() + ':' + localDate.getMinutes();
+    var localtime = localDate.getFullYear() + '/' + (localDate.getMonth() +1)+ '/' + localDate.getDate() + ' ' + localDate.getHours() + ':' + localDate.getMinutes();
     var localDateTime = new Date(localtime);
     if (dbDateTime > localDateTime) {
         console.log(dbDateTime + ' is later than ' + localDateTime);
@@ -207,10 +207,10 @@ function compareDateTime(fdate,time)
     var dateString = fdate;// in format "17/01/2017"
     var dateParts = dateString.split("/");
     var dateObject = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
-    var dbDate = dateObject.getFullYear() + '/' + dateObject.getMonth() + 1 + '/' + dateObject.getDate() + ' ' + time ;
+    var dbDate = dateObject.getFullYear() + '/' + (dateObject.getMonth() + 1) + '/' + dateObject.getDate() + ' ' + time ;
     var dbDateTime = new Date(dbDate);
     var localDate = new Date();
-    var localtime = localDate.getFullYear() + '/' + localDate.getMonth() + 1 + '/' + localDate.getDate() + ' ' + localDate.getHours() + ':' + localDate.getMinutes();
+    var localtime = localDate.getFullYear() + '/' + (localDate.getMonth() + 1) + '/' + localDate.getDate() + ' ' + localDate.getHours() + ':' + localDate.getMinutes();
     var localDateTime = new Date(localtime);
     if (dbDateTime > localDateTime) {
         console.log(dbDateTime + ' is later than ' + localDateTime);

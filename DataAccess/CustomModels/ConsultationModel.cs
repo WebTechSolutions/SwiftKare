@@ -6,6 +6,16 @@ using System.Threading.Tasks;
 
 namespace DataAccess.CustomModels
 {
+    public class ConsultationSOAPModel
+    {
+        public long consultID { get; set; }
+        public string subjective { get; set; }
+        public string objective { get; set; }
+        public string assessment { get; set; }
+        public string plans { get; set; }
+        public List<ChatLogModel> chat { get; set; }
+        public List<ROSVM> rosItems { get; set; }
+    }
     public class ConsultationModel
     {
         public long consultID { get; set; }
@@ -25,6 +35,7 @@ namespace DataAccess.CustomModels
         public string sender { get; set; }
         public string reciever { get; set; }
         public string message { get; set; }
+        public DateTime? cd { get; set; }
     }
     public class ROSVM
     {

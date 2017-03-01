@@ -230,12 +230,12 @@
                             </li>
 
                             
-                            <li>
-                                <div id="divAlerts">
+                            <li id="alertview" role="presentation" class="dropdown">
+                                
                                     @{
                                         Html.RenderAction("AlertView", "Alert");
                                     }
-                                </div>
+                                
                             </li>
                             
                         </ul>
@@ -280,20 +280,20 @@
         </div>
     </div><!-- mymodal1 -->
     <script>
-        //setInterval(function () { console.log("Hello"); }, 1000);
-        @*setInterval(function () {
-            console.log('function called');
-            $("#divAlerts").html("");
+        setInterval(function () {
+           
             $.ajax({
                 url: "@Url.Action("AlertView", "Alert")",
                 type: 'POST',
             dataType: 'html',
             cache: false,
             success: function (html) {
-                $("#divAlerts").html(html);
+                //console.log($("#alertview").html());
+                $("#alertview").html(html);
             }
-            });
-        }, 2000);*@
+        });
+        }, 60*1000);
+       
         var mymodal = $('#playoutModal');
     function showAlert(heading,body)
     {

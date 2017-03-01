@@ -248,10 +248,12 @@ else
 <!-- /Datatables -->
 
 <script>
-    function setTab(cTab) {
+    @*function setTab(cTab) {
         currentTab = cTab;
-
-    }
+        $("#divUpcoming").load('@Url.Action("PartialDoctorUpcoming", "DoctorAppointment")', function () {
+            //callback();
+        });
+    }*@
     function reschedulefromViewDetail(appType, editappid, elem) {
         var objCRR = {};
         showLoader();

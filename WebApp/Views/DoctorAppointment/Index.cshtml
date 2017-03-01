@@ -84,9 +84,9 @@
 
                     <div class="x_content">
                         <div id="divReschedule" class="table table-striped dataTable no-footer">
-                            @{
+                            @*@{
                                 Html.RenderAction("PartialDoctorReschedule", "DoctorAppointment");
-                            }
+                            }*@
 
 
                         </div>
@@ -100,9 +100,9 @@
                     <div class="x_content">
                         <div id="divPending" class="table table-striped dataTable no-footer">
 
-                            @{
+                            @*@{
                                 Html.RenderAction("PartialDoctorPending", "DoctorAppointment");
-                            }
+                            }*@
 
 
                         </div>
@@ -160,7 +160,25 @@
 <!-- /page content -->
 <!-- Load View App Detail Popup -->
 <script>
+    function setTab(cTab) {
+        currentTab = cTab;
+        if (cTab == 'U') {
+            $("#divUpcoming").load('@Url.Action("PartialDoctorUpcoming", "DoctorAppointment")', function () {
+                callback();
+            });
 
+        }
+        if (cTab == 'R') {
+            $("#divReschedule").load('@Url.Action("PartialDoctorReschedule", "DoctorAppointment")', function () {
+                callback();
+            });
+        }
+        if (cTab == 'P') {
+            $("#divPending").load('@Url.Action("PartialDoctorPending", "DoctorAppointment")', function () {
+                callback();
+            });
+        }
+    }
     
 
     function downloadFile(fileId) {
@@ -175,7 +193,7 @@
     var currentTab = "";
     $(document).ready(function () {
         currentTab = "U";
-
+        
     });
 
     function showProfile(patientid) {

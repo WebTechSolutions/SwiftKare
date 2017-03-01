@@ -18,7 +18,7 @@
     }
     else
     {
-        <li role="presentation" class="dropdown">
+        @*<li role="presentation" class="dropdown">*@
             <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                 <i class="fa fa-bell"></i>
 
@@ -40,7 +40,7 @@
                     </div>
                 </li>
             </ul>
-        </li>
+        @*</li>*@
     }
 
 }
@@ -55,7 +55,7 @@ else
         }
     }
 
-    <li role="presentation" class="dropdown">
+    @*<li role="presentation" class="dropdown">*@
         <a id="notify" style="display:block" href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false" onclick="readAllAlerts()">
             <i class="fa fa-bell"></i>
             @if (count > 0)
@@ -97,7 +97,7 @@ else
             </li>
 
         </ul>
-    </li>
+    @*</li>*@
 }
 <script>
     function readAllAlerts()

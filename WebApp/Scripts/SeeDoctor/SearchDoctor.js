@@ -364,7 +364,7 @@ function SearchDoctor(patientID) {
                                       "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
                                       "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
                                       "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
-                                      "&nbsp;<i class='fa fa-phone clsNotMakePhone' aria-hidden='true'></i><a  class='clsMakeCall' title='Call doctor " + response.DoctorModel.doctor[item].firstName + "&nbsp;" + response.DoctorModel.doctor[item].lastName + "' onclick='makeCallToDoctor(this)' data-doctorid='" + response.DoctorModel.doctor[item].doctorID + "' style='display:none;' href='javascript:'>" +
+                                      "&nbsp;<i class='fa fa-phone clsNotMakePhone' aria-hidden='true'></i><a  class='clsMakeCall' title='Call doctor " + response.DoctorModel.doctor[item].firstName + "&nbsp;" + response.DoctorModel.doctor[item].lastName + "' onclick='makeCallToDoctor(this)' data-doctorid='" + response.DoctorModel.doctor[item].doctorID + "' style='display:none;' href=''>" +
                                       " <i class='fa fa-phone' aria-hidden='true'></i>" +
                             "</a>" +
                             "</p>" +

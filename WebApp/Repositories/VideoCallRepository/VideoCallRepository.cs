@@ -356,7 +356,22 @@ namespace WebApp.Repositories.VideoCallRepository
                 throw new HttpResponseException(httpResponseMessage);
             }
         }
+        public ConsultationSOAPModel LoadSOAP(long cID)
+        {
 
+            try
+            {
+
+                var response = ApiConsumerHelper.GetResponseString("api/getConsultationSOAP?consultID=" + cID);
+                var result = JsonConvert.DeserializeObject<ConsultationSOAPModel>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+
+        }
 
     }
 }
