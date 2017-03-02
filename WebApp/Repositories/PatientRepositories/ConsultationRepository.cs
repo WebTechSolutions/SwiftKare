@@ -62,6 +62,39 @@ namespace WebApp.Repositories.PatientRepositories
             }
 
         }
+        public List<DoctorReviewodel> GetDoctorReviews(long dID)
+        {
+
+            try
+            {
+
+                var response = ApiConsumerHelper.GetResponseString("api/getDoctorReviews?doctorID=" + dID);
+                var result = JsonConvert.DeserializeObject<List<DoctorReviewodel>>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+
+        }
+        public List<SP_GetPatientAllConsultations_Result> GetAllConsultations(long pID)
+        {
+
+            try
+            {
+
+                var response = ApiConsumerHelper.GetResponseString("api/getPatientAllConsultations?patientID=" + pID);
+                var result = JsonConvert.DeserializeObject<List<SP_GetPatientAllConsultations_Result>>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+
+        }
+        
         public ApiResultModel WriteReview(AddConsultReviewodel model)
         {
 

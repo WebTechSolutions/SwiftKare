@@ -37,8 +37,8 @@ namespace WebApp.Controllers
             try
             {
                 var oData = oConsultationRepository.GetDoctorConsultations(SessionHandler.UserInfo.Id);
-               
-                return PartialView("PartialViewDoctorConsultation", oData);
+                ViewBag.oData = oData;
+                return PartialView("PartialViewDoctorConsultation");
 
             }
 
@@ -50,6 +50,33 @@ namespace WebApp.Controllers
             return PartialView("PartialViewDoctorConsultation");
         }
 
+        [HttpPost]
+        public PartialViewResult showAllConsultations(int flag)
+        {
+            try
+            {
+                if (flag == 0)
+                {
+                    var oData = oConsultationRepository.GetDoctorConsultations(SessionHandler.UserInfo.Id);
+                    ViewBag.oData = oData;
+                    return PartialView("PartialViewDoctorConsultation");
+                }
+                if (flag == 1)
+                {
+                    var oData = oConsultationRepository.GetDoctorAllConsultations(SessionHandler.UserInfo.Id);
+                    ViewBag.oData = oData;
+                    return PartialView("PartialViewDoctorConsultation");
+                }
+
+            }
+
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                ViewBag.Error = ex.Response.ReasonPhrase.ToString();
+                ViewBag.Success = "";
+            }
+            return PartialView("PartialViewDoctorConsultation");
+        }
         public ActionResult ViewDetail(long? consultID)
         {
             try

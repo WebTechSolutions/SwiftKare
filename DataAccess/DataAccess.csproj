@@ -309,10 +309,16 @@
     <Compile Include="SP_GetConsultationDetails_Result.cs">
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="SP_GetDcotorAllConsultations_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="SP_GetDcotorConsultations_Result.cs">
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="SP_GetDoctorInfoforAppointment_Result.cs">
+      <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetPatientAllConsultations_Result.cs">
       <DependentUpon>SwiftKareDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="SP_GetPatientAllergies_Result.cs">

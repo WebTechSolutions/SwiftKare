@@ -79,6 +79,23 @@ namespace WebApp.Repositories.DoctorRepositories
 
         }
 
+        public List<SP_GetDcotorAllConsultations_Result> GetDoctorAllConsultations(long dID)
+        {
+
+            try
+            {
+
+                var response = ApiConsumerHelper.GetResponseString("api/getDcotorAllConsultations?doctorID=" + dID);
+                var result = JsonConvert.DeserializeObject<List<SP_GetDcotorAllConsultations_Result>>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+
+        }
+
         public ApiResultModel CompleteConsult(CompleteConsultDoctor model)
         {
 

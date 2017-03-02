@@ -268,6 +268,22 @@ namespace RestAPIs.Controllers
 
 
         }
+        [Route("api/getPatientAllConsultations")]
+        public HttpResponseMessage GetPatientAllConsultations(long patientID)
+        {
+            try
+            {
+                var result = db.SP_GetPatientAllConsultations(patientID);
+                response = Request.CreateResponse(HttpStatusCode.OK, result);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetPatientAllConsultations in ConsultationController");
+            }
+
+
+        }
 
         [Route("api/getDcotorConsultations")]
         public HttpResponseMessage GetDcotorConsultations(long doctorID)
@@ -281,6 +297,23 @@ namespace RestAPIs.Controllers
             catch (Exception ex)
             {
                 return ThrowError(ex, "DcotorConsultations in ConsultationController");
+            }
+
+
+        }
+
+        [Route("api/getDcotorAllConsultations")]
+        public HttpResponseMessage GetDcotorAllConsultations(long doctorID)
+        {
+            try
+            {
+                var result = db.SP_GetDcotorAllConsultations(doctorID);
+                response = Request.CreateResponse(HttpStatusCode.OK, result);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "DcotorAllConsultations in ConsultationController");
             }
 
 
@@ -511,6 +544,33 @@ namespace RestAPIs.Controllers
                                       reviewText = cn.review
 
                                   }).FirstOrDefault();
+
+                response = Request.CreateResponse(HttpStatusCode.OK, consReview);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "getConsultationReview in ConsultationController");
+            }
+        }
+
+        [Route("api/getDoctorReviews")]
+        public HttpResponseMessage GetDoctorReviews(long doctorID)
+        {
+
+            try
+            {
+                var consReview = (from cn in db.Consultations
+                                  where cn.doctorID == doctorID && cn.reviewStar!=null &&
+                                  cn.review!=null
+                                  select new
+                                  {
+                                      consultID = cn.consultID,
+                                      doctorID = cn.doctorID,
+                                      star = cn.reviewStar,
+                                      reviewText = cn.review
+
+                                  }).ToList();
 
                 response = Request.CreateResponse(HttpStatusCode.OK, consReview);
                 return response;

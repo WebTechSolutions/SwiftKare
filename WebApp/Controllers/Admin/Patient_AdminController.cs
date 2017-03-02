@@ -137,7 +137,7 @@ namespace SwiftKare.Controllers
                             //patient.active = true;
                             //db.Patients.Add(patient);
                             //db.SaveChanges();
-                            db.SP_AddPatient(firstName, lastName, email, Session["LogedUserID"].ToString(), user.Id);
+                            db.SP_AddPatient(firstName, lastName, email, user.Id,Session["LogedUserID"].ToString());
                             db.SaveChanges();
 
                             var userAssignRole = new UserAssignRoleModel();

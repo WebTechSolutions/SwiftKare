@@ -231,6 +231,11 @@ namespace WebApp.Controllers
 
                         var objRepo = new PatientRepository();
                         var patient = objRepo.GetByUserId(userId);
+                        if(patient==null)
+                        {
+                            ModelState.AddModelError("", "Invalid login attempt.");
+                            return View(model);
+                        }
                         var userModel = new UserInfoModel();
                         userModel.Id = patient.patientID;
                         userModel.Email = patient.email;
@@ -289,6 +294,11 @@ namespace WebApp.Controllers
 
                         var objRepo = new AdminRepository();
                         var admin = objRepo.GetByUserId(userId);
+                        if (admin == null)
+                        {
+                            ModelState.AddModelError("", "Invalid login attempt.");
+                            return View(model);
+                        }
                         var userModel = new UserInfoModel();
                         userModel.Id = admin.adminID;
                         userModel.Email = admin.email;

@@ -1,6 +1,6 @@
-﻿@model IEnumerable<DataAccess.SP_GetPatientConsultations_Result>
+﻿@*@model IEnumerable<DataAccess.SP_GetPatientConsultations_Result>*@
 
-   @if (Model == null || Model.Count() == 0)
+   @if (ViewBag.oData == null)
    {
     <div class="well">
         There is no consultation.
@@ -21,10 +21,10 @@
         </thead>
 
         <tbody>
-            @if (Model != null)
+            @if (ViewBag.oData != null)
             {
                 var j = 1;
-                foreach (var item in Model)
+                foreach (var item in ViewBag.oData)
                 {
                     <tr class="even pointer">
                         <td style="text-align:center">

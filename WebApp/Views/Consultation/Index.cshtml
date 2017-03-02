@@ -46,9 +46,16 @@
                 </li>
             </ul>
             <div class="clearfix"></div>
+            
         </div>
+        <div id="divshowAll" class="checkbox" style="display: inline-block;">
+        <label style="margin-top: 0px;margin-bottom: 10px;margin-left: -15px;width: 210px;">
+            <input name="showAll" id="chekshowAll" type="checkbox" class="flat">&nbsp; Show All Consultations
 
+        </label>
+        </div>
         <div class="x_content">
+            
             <div class="table-responsive" id="divConsultation">
                 @{
                     Html.RenderAction("PartialViewConsultation", "Consultation");
@@ -121,10 +128,50 @@
 
         </div>
     </div>
+    
 </div>
 <iframe id="iframeDownload" style="display:none;"></iframe>
 <!-- /page content -->
 <script>
+    $(document).ready(function(){
+        $('#divshowAll').on('ifChecked', 'input', function (event) {
+            showLoader();
+            var cUrl = "@Url.Action("showAllConsultations", "Consultation")?flag=1";
+            $.ajax({
+                url: cUrl,
+                type: 'POST',
+                dataType: 'html',
+                cache: false,
+                success: function (html) {
+                    $("#divConsultation").html(html);
+                   
+                },
+                error: function(){
+                    new PNotify({ title: 'Error', text: ViewBag.Error , type: 'error', styling: 'bootstrap3' });
+                }
+            });
+            hideLoader();
+        });
+
+        $('#divshowAll').on('ifUnchecked', 'input', function (event) {
+            showLoader();
+            var cUrl = "@Url.Action("showAllConsultations", "Consultation")?flag=0";
+            $.ajax({
+                url: cUrl,
+                type: 'POST',
+                dataType: 'html',
+                cache: false,
+                success: function (html) {
+                    $("#divConsultation").html(html);
+                   
+                },
+                error: function(){
+                    new PNotify({ title: 'Error', text: ViewBag.Error , type: 'error', styling: 'bootstrap3' });
+                }
+            });
+            hideLoader();
+        });
+    });
     var star=0;
     var cID = 0;
     function writeReview(consultID)
@@ -133,24 +180,24 @@
         $("span").css("pointer-events", "auto");
         $("#ss5").removeClass('fa fa-star');
         $("#ss5").addClass('fa fa-star-o');
-       
+
         $("#s4").removeClass('fa fa-star');
         $("#s4").addClass('fa fa-star-o');
-        
+
         $("#s3").removeClass('fa fa-star');
         $("#s3").addClass('fa fa-star-o');
-       
+
         $("#s2").removeClass('fa fa-star');
         $("#s2").addClass('fa fa-star-o');
-       
+
         $("#s1").removeClass('fa fa-star');
         $("#s1").addClass('fa fa-star-o');
-       
+
         mymodal.find('#message').val("");
         mymodal.find('#message').removeAttr("disabled");
         mymodal.find('#apply').show();
         mymodal.find('#ok').hide();
-       
+
         mymodal.modal('show');
         $("#pvappid").val(consultID);
     }
@@ -190,7 +237,7 @@
 
                         $("span#s1").removeClass('fa fa-star-o');
                         $("span#s1").addClass('fa fa-star');
-                        
+
                     }
                     if( result.Object.star==2)
                     {
@@ -199,7 +246,7 @@
                         $("span#s1").addClass('fa fa-star');
                         $("span#s2").removeClass('fa fa-star-o');
                         $("span#s2").addClass('fa fa-star');
-                        
+
                     }
                     if( result.Object.star==3)
                     {
@@ -210,7 +257,7 @@
                         $("span#s2").addClass('fa fa-star');
                         $("span#s3").removeClass('fa fa-star-o');
                         $("span#s3").addClass('fa fa-star');
-                       
+
                     }
                     if( result.Object.star==4)
                     {
@@ -223,7 +270,7 @@
                         $("span#s3").addClass('fa fa-star');
                         $("span#s4").removeClass('fa fa-star-o');
                         $("span#s4").addClass('fa fa-star');
-                       
+
                     }
                     if( result.Object.star==5)
                     {
@@ -238,10 +285,10 @@
                         $("span#s4").addClass('fa fa-star');
                         $("span#ss5").removeClass('fa fa-star-o');
                         $("span#ss5").addClass('fa fa-star');
-                        
+
                     }
                     mymodal.find('#message').val(result.Object.reviewText);
-                    mymodal.find('#message').attr("disabled", "disabled"); 
+                    mymodal.find('#message').attr("disabled", "disabled");
                     mymodal.find('#apply').hide();
                     mymodal.find('#ok').show();
                     mymodal.modal('show');

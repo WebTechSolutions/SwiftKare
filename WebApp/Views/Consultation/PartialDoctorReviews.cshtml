@@ -1,0 +1,40 @@
+﻿
+                
+      @if (ViewBag.oData != null)
+      {
+          foreach (var item in ViewBag.oData)
+          {
+            <div class="col-sm-12 text-center">
+                <p class="ratings m-t-0 m-b-5" style="text-align: center;">
+
+
+                    @if (item.star > 0)
+                    {
+                        for (var i = 0; i < item.star; i++)
+                        {
+                            <a href='javascript:void(0);' class="thumbnail-col-inner"><span class='fa fa-star'></span></a>
+                        }
+                        for (var i = 0; i < 5 - item.star; i++)
+                        {
+                            <a href='javascript:void(0);'><span class='fa fa-star-o'></span></a>
+
+                        }
+                    }
+                </p>
+
+
+
+            </div>
+            <div class="col-sm-12 text-center" style="margin-top: 20px;">
+                <textarea id="message" class="form-control" name="message" data-parsley-maxlength="1000"
+                          data-parsley-validation-threshold="10" disabled>@item.reviewText</textarea>
+            </div>
+          }
+
+      }
+                        
+                       
+                        
+
+ 
+
