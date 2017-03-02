@@ -153,13 +153,13 @@ namespace WebApp.Controllers
             try
             {
                 SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
-                DocTimingsAndAppointment appList = new DocTimingsAndAppointment();
-                appList = objSeeDoctorRepo.FetchDoctorTimes(model);
+                //DocTimingsAndAppointment appList = new DocTimingsAndAppointment();
+                List<FetchDoctorTimingModel> appList = objSeeDoctorRepo.FetchDoctorTimes(model);
                 List<string> timings = new List<string>();
                 if (appList != null)
                 {
                     //calculate time slots
-                    timings = createTimeSlots(appList);
+                    timings = displayTimeSlots(appList);// createTimeSlots(appList);
                 }
 
                 return Json(new { Success = true, Object = timings });
@@ -311,6 +311,7 @@ namespace WebApp.Controllers
             {
 
                 TimeSpan startTime = (TimeSpan)item.from;
+                TimeSpan endTime = (TimeSpan)item.to;
                 if (startTime.Minutes % 15 != 0)
                 {
                     TimeSpan tempp = TimeSpan.FromMinutes(15- (startTime.Minutes % 15));
@@ -324,8 +325,8 @@ namespace WebApp.Controllers
                     }
                 }
                
-                TimeSpan itemstartTime = (TimeSpan)item.from;
-                TimeSpan endTime = (TimeSpan)item.to;
+                //TimeSpan itemstartTime = (TimeSpan)item.from;
+                
                 if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
                 {
                     timeSlots.Add(startTime.ToString(@"hh\:mm"));
@@ -419,16 +420,11 @@ namespace WebApp.Controllers
                 var formattedTime = dateTime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
                 timeSlots.RemoveAt(i);
                 timeSlots.Insert(i, formattedTime);
-                // if (doctimings.Hours<12)
-                // {
-                //     timeSlots.RemoveAt(i);
-                //     timeSlots.Insert(i, doctimings.ToString(@"hh\:mm") + " AM");
-                // }
-                //else if(doctimings.Hours >= 12)
-                // {
-                //     timeSlots.RemoveAt(i);
-                //     timeSlots.Insert(i, doctimings.ToString(@"hh\:mm") + " PM");
-                // }
+                
+            }
+            if (timeSlots.Count > 0)
+            {
+                timeSlots.RemoveAt(timeSlots.Count - 1);
             }
             return timeSlots;
         }

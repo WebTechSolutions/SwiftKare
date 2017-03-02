@@ -265,20 +265,20 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                var dateTime = DateTime.Parse(searchModel.appDate);
-                string appday = dateTime.ToString("dddd");
-                //string[] formats = { "dd/MM/yyyy" };
-                //var dateTime = DateTime.ParseExact(searchModel.appDate.Trim(), formats, new CultureInfo("en-US"), DateTimeStyles.None);
-                //var result = db.SP_FetchDoctorTimings(searchModel.doctorID, dateTime).ToList();
-                var timings = (from t in db.DoctorTimings where t.doctorID == searchModel.doctorID
-                              && t.day == appday && t.active==true
-                               select new TimingsVM { doctorID = t.doctorID, fromtime = t.@from, totime = t.to }).ToList();
-                var appointments = (from app in db.Appointments where app.doctorID == searchModel.doctorID &&
-                                    app.appDate == dateTime
-                                    select new AppointmentsVM { appTime=app.appTime}).ToList();
-                DocTimingsAndAppointment result = new DocTimingsAndAppointment();
-                result.timingsVM = timings;
-                result.appointmentVM = appointments;
+                //var dateTime = DateTime.Parse(searchModel.appDate);
+                //string appday = dateTime.ToString("dddd");
+                string[] formats = { "dd/MM/yyyy" };
+                var dateTime = DateTime.ParseExact(searchModel.appDate.Trim(), formats, new CultureInfo("en-US"), DateTimeStyles.None);
+                var result = db.SP_FetchDoctorTimings(searchModel.doctorID, dateTime).ToList();
+                //var timings = (from t in db.DoctorTimings where t.doctorID == searchModel.doctorID
+                //              && t.day == appday && t.active==true
+                //               select new TimingsVM { doctorID = t.doctorID, fromtime = t.@from, totime = t.to }).ToList();
+                //var appointments = (from app in db.Appointments where app.doctorID == searchModel.doctorID &&
+                //                    app.appDate == dateTime
+                //                    select new AppointmentsVM { appTime=app.appTime}).ToList();
+                //DocTimingsAndAppointment result = new DocTimingsAndAppointment();
+                //result.timingsVM = timings;
+                //result.appointmentVM = appointments;
 
                 response = Request.CreateResponse(HttpStatusCode.OK, result);
                
@@ -416,6 +416,7 @@ namespace RestAPIs.Controllers
             {
 
                 TimeSpan startTime = (TimeSpan)item.from;
+                TimeSpan endTime = (TimeSpan)item.to;
                 if (startTime.Minutes % 15 != 0)
                 {
                     TimeSpan tempp = TimeSpan.FromMinutes(15 - (startTime.Minutes % 15));
@@ -429,8 +430,8 @@ namespace RestAPIs.Controllers
                     }
                 }
 
-                TimeSpan itemstartTime = (TimeSpan)item.from;
-                TimeSpan endTime = (TimeSpan)item.to;
+                //TimeSpan itemstartTime = startTime;//(TimeSpan)item.from;
+                //TimeSpan endTime = (TimeSpan)item.to;
                 if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
                 {
                     timeSlots.Add(startTime.ToString(@"hh\:mm"));
@@ -507,6 +508,10 @@ namespace RestAPIs.Controllers
                 timeSlots.Insert(i, formattedTime);
                 
             }
+            if (timeSlots.Count > 0)
+            {
+                timeSlots.RemoveAt(timeSlots.Count - 1);
+            }
             return timeSlots;
         }
         [Route("api/fetchDoctorTimeNew")]
@@ -514,30 +519,30 @@ namespace RestAPIs.Controllers
         {
             try
             {
-                var dateTime = DateTime.Parse(searchModel.appDate);
-                string appday = dateTime.ToString("dddd");
-                //string[] formats = { "dd/MM/yyyy" };
-                //var dateTime = DateTime.ParseExact(searchModel.appDate.Trim(), formats, new CultureInfo("en-US"), DateTimeStyles.None);
-                //List<SP_FetchDoctorTimings_Result> appList = new List<SP_FetchDoctorTimings_Result>();
-                //appList= db.SP_FetchDoctorTimings(searchModel.doctorID, dateTime).ToList();
-                var doctimings = (from t in db.DoctorTimings
-                               where t.doctorID == searchModel.doctorID
-                               && t.day == appday && t.active == true
-                               select new TimingsVM { doctorID = t.doctorID, fromtime = t.@from,
-                                   totime = t.to }).ToList();
-                var appointments = (from app in db.Appointments
-                                    where app.doctorID == searchModel.doctorID &&
-                                    app.appDate == dateTime
-                                    select new AppointmentsVM { appTime = app.appTime }).ToList();
-                DocTimingsAndAppointment appList = new DocTimingsAndAppointment();
-                appList.timingsVM = doctimings;
-                appList.appointmentVM = appointments;
+                //var dateTime = DateTime.Parse(searchModel.appDate);
+                //string appday = dateTime.ToString("dddd");
+                string[] formats = { "dd/MM/yyyy" };
+                var dateTime = DateTime.ParseExact(searchModel.appDate.Trim(), formats, new CultureInfo("en-US"), DateTimeStyles.None);
+                List<SP_FetchDoctorTimings_Result> appList = new List<SP_FetchDoctorTimings_Result>();
+                appList = db.SP_FetchDoctorTimings(searchModel.doctorID, dateTime).ToList();
+                //var doctimings = (from t in db.DoctorTimings
+                //               where t.doctorID == searchModel.doctorID
+                //               && t.day == appday && t.active == true
+                //               select new TimingsVM { doctorID = t.doctorID, fromtime = t.@from,
+                //                   totime = t.to }).ToList();
+                //var appointments = (from app in db.Appointments
+                //                    where app.doctorID == searchModel.doctorID &&
+                //                    app.appDate == dateTime
+                //                    select new AppointmentsVM { appTime = app.appTime }).ToList();
+                //DocTimingsAndAppointment appList = new DocTimingsAndAppointment();
+                //appList.timingsVM = doctimings;
+                //appList.appointmentVM = appointments;
                 List<string> timings = new List<string>();
                 
                 if (appList != null)
                 {
                     //calculate time slots
-                    timings = createTimeSlots(appList);//displayTimeSlots(appList);
+                    timings = displayTimeSlots(appList);//createTimeSlots(appList);
                 }
                 response = Request.CreateResponse(HttpStatusCode.OK, timings);
                 return response;

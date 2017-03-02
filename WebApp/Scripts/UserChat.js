@@ -315,20 +315,25 @@ var UserChat = function (apiKey, sessionId, token) {
     }
 
     function SaveSessionEnd(sessionId) {
+        debugger;
         //Get Consult Id From localStorage
         var consultationId = localStorage.getItem('consultationKey');
        
-        var cUrl = '/UserChat/StopConsultation?consultId=' + consultationId;
+       
         
-        $.post(cUrl);
+       
 
         localStorage.removeItem('consultationKey');
       //  alert("Consult is completed successfully by End call button.");
         new PNotify({ title: 'Success', text: "Consult Completed Successfully..", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
         //cEndCallUrl is defined in page
-       // alert(cEndCallUrl)
+        // alert(cEndCallUrl)
+        var cUrl = '/UserChat/StopConsultation?consultId=' + consultationId;
+        $.post(cUrl, function () {
+            //Redirect patient to call
+            window.location = cEndCallUrl;
+        });
 
-        window.location = cEndCallUrl;
     }
 
     function SaveChatMessage(sessionId, senderId, receiverId, message) {

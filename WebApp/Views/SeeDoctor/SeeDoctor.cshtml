@@ -871,14 +871,16 @@
                     document.getElementById("docInfo").innerHTML = tableHtml;
                 }
                 var oDocInfo = null;
+                if (appType == "L"){
                 for (var i = 0; i < availableDoctors.doctor.length; i++) {
                     if (availableDoctors.doctor[i].docId == _selecteddoctorID) {
                         oDocInfo = availableDoctors.doctor[i];
                         break;
                     }
                 }
+            }
                 debugger;
-                if(oDocInfo==null){
+                if((oDocInfo==null) && (appType=="L")){
                     var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + _selecteddoctorID + '&message=Doctor-is-offline-for-live-call';
                     $.post(cCallLogUrl);
                     new PNotify({
@@ -887,51 +889,50 @@
                         type: 'error',
                         styling: 'bootstrap3'
                     });
-                  //  $('#wizard').smartWizard('goToStep', 1);
+                    //  $('#wizard').smartWizard('goToStep', 1);
 
 
 
                 }
-
                 else{
-                //Stripe Initialization after getting consultCharges of selected doctor
-                var amount=response.Object.consultCharges*100;
-                var oStripePayCheckout = new StripePayCheckout({
-                    publisherKey: '@publisherKey',
-                    amount: amount,
-                    targetButton: "#btnProceedWithPayment",
-                    actionUrl: '@Url.Action("ProceedWithPay", "seedoctor")',
-                    handleSuccess: function () {
-                        console.log('Payment Done...');
-                        new PNotify({
-                            title: 'Success',
-                            text: "$"+amount/100+" has been  charged successfull.",
-                            type: 'info', addclass: 'dark',
-                            styling: 'bootstrap3'
-                        });
+                    //Stripe Initialization after getting consultCharges of selected doctor
+                    var amount=response.Object.consultCharges*100;
+                    var oStripePayCheckout = new StripePayCheckout({
+                        publisherKey: '@publisherKey',
+                        amount: amount,
+                        targetButton: "#btnProceedWithPayment",
+                        actionUrl: '@Url.Action("ProceedWithPay", "seedoctor")',
+                        handleSuccess: function () {
+                            console.log('Payment Done...');
+                            new PNotify({
+                                title: 'Success',
+                                text: "$"+amount/100+" has been  charged successfull.",
+                                type: 'info', addclass: 'dark',
+                                styling: 'bootstrap3'
+                            });
 
-                        var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + $("#doctorid").val() + '&message=Patient-paid-successfully';
-                        $.post(cCallLogUrl);
-                        showLoader();
-                        CreateAppointment(@ViewBag.PatienID,@amount);
-                    },
-                    handleFailure: function () {
-                        var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + $("#doctorid").val() + '&message=Patient-payment-failed';
-                        $.post(cCallLogUrl);
-                        showAlert("Alert","Stripe Payment Failed!!!");
-                        new PNotify({
-                            title: 'Payment Failed',
-                            text: "Stripe Payment Failed!!!",
-                            type: 'error',
-                            styling: 'bootstrap3'
-                        });
-                        return;
-                        //alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
-                    }
-                });
+                            var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + $("#doctorid").val() + '&message=Patient-paid-successfully';
+                            $.post(cCallLogUrl);
+                            showLoader();
+                            CreateAppointment(@ViewBag.PatienID,@amount);
+                        },
+                        handleFailure: function () {
+                            var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + $("#doctorid").val() + '&message=Patient-payment-failed';
+                            $.post(cCallLogUrl);
+                            showAlert("Alert","Stripe Payment Failed!!!");
+                            new PNotify({
+                                title: 'Payment Failed',
+                                text: "Stripe Payment Failed!!!",
+                                type: 'error',
+                                styling: 'bootstrap3'
+                            });
+                            return;
+                            //alert("OOPS! Some thing goes wrong. User can be redirected to appropriate page.");
+                        }
+                    });
 
-                oStripePayCheckout.initialize();
-            }
+                    oStripePayCheckout.initialize();
+                }
 
             },
             error: errorRes

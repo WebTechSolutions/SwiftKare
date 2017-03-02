@@ -195,13 +195,13 @@ namespace WebApp.Controllers
             try
             {
                 SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
-                DocTimingsAndAppointment appList = new DocTimingsAndAppointment();
-                appList = objSeeDoctorRepo.FetchDoctorTimes(model);
+                //DocTimingsAndAppointment appList = new DocTimingsAndAppointment();
+                List<FetchDoctorTimingModel> appList = objSeeDoctorRepo.FetchDoctorTimes(model);
                 List<string> timings = new List<string>();
                 if (appList != null)
                 {
                     //calculate time slots
-                    timings = createTimeSlots(appList);
+                    timings = displayTimeSlots(appList);// createTimeSlots(appList);
                 }
 
                 return Json(new { Success = true, Object = timings });
@@ -352,6 +352,7 @@ namespace WebApp.Controllers
             foreach (var item in appList)
             {
                 TimeSpan startTime = (TimeSpan)item.from;
+                TimeSpan endTime = (TimeSpan)item.to;
                 if (startTime.Minutes % 15 != 0)
                 {
                     TimeSpan tempp = TimeSpan.FromMinutes(15- (startTime.Minutes % 15));
@@ -364,7 +365,7 @@ namespace WebApp.Controllers
 
                     }
                 }
-                TimeSpan endTime = (TimeSpan)item.to;
+                
                 if (endTime.Minutes % 15 != 0)
                 {
                     TimeSpan tempp = TimeSpan.FromMinutes(15 - (endTime.Minutes % 15));
@@ -372,7 +373,7 @@ namespace WebApp.Controllers
                     
                 }
 
-                TimeSpan itemstartTime = startTime;//(TimeSpan)item.from;
+                //TimeSpan itemstartTime = startTime;//(TimeSpan)item.from;
                 
                 if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
                 {

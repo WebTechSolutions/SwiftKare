@@ -83,6 +83,8 @@ namespace RestAPIs.Controllers
                                                   dcellPhone = doc.cellPhone,
                                                   city = doc.city,
                                                   state = doc.state,
+                                                  consultCharges=doc.consultCharges,
+                                                  rating=doc.reviewStar,
                                                   languages = (from l in db.DoctorLanguages
                                                                where l.doctorID == cn.doctorID && l.active == true
                                                                select new { languageName = l.languageName }).ToList(),

@@ -715,6 +715,7 @@ namespace RestAPIs.Controllers
 
                                              Latitude = l.lat,
                                              Longitude = l.lon,
+                                             PharmacyName = l.pharmacy,
 
                                              SectetQuestion1 = l.secretQuestion1,
                                              SectetQuestion2 = l.secretQuestion2,
@@ -895,6 +896,7 @@ namespace RestAPIs.Controllers
                     patient.active = true;
 
                     //patient.picture = model.ProfilePhoto;
+                    if (model.ProfilePhoto!=null)
                     patient.ProfilePhotoBase64 = Encoding.ASCII.GetString(model.ProfilePhoto);
                     patient.title = model.TitleName;
                     patient.firstName = model.FirstName;
@@ -929,25 +931,28 @@ namespace RestAPIs.Controllers
 
                     //Save Doctor Language
                     var allPrevLanguages = db.PatientLanguages.Where(x => x.patientID == patientID).ToList();
-                    foreach (var itemNewLang in model.Languages)
+                    if (model.Languages != null)
                     {
-                        if (allPrevLanguages.Count(x => x.languageName == itemNewLang) == 0)
+                        foreach (var itemNewLang in model.Languages)
                         {
-                            db.PatientLanguages.Add(new PatientLanguage
+                            if (allPrevLanguages.Count(x => x.languageName == itemNewLang) == 0)
                             {
-                                patientID = patientID,
-                                languageName = itemNewLang,
-                                active = true,
-                                cd = System.DateTime.Now,
-                                cb = patientID.ToString()
-                            });
+                                db.PatientLanguages.Add(new PatientLanguage
+                                {
+                                    patientID = patientID,
+                                    languageName = itemNewLang,
+                                    active = true,
+                                    cd = System.DateTime.Now,
+                                    cb = patientID.ToString()
+                                });
+                            }
                         }
-                    }
-                    foreach (var itemPrvLang in allPrevLanguages)
-                    {
-                        if (!model.Languages.Contains(itemPrvLang.languageName))
+                        foreach (var itemPrvLang in allPrevLanguages)
                         {
-                            db.PatientLanguages.Remove(itemPrvLang);
+                            if (!model.Languages.Contains(itemPrvLang.languageName))
+                            {
+                                db.PatientLanguages.Remove(itemPrvLang);
+                            }
                         }
                     }
                     await db.SaveChangesAsync();
@@ -1484,11 +1489,11 @@ namespace RestAPIs.Controllers
                                           surgery = (from pl in db.PatientSurgeries
                                                         where pl.patientID == l.patientID && pl.active == true
                                                         select new {surgeryeName = pl.bodyPart}).ToList(),
-
-                                          
                                           title = l.title,
                                           suffix = l.suffix,
-                                          zip = l.zip
+                                          zip = l.zip,
+                                          timezone=l.timezone,
+                                          pharmacyName=l.pharmacy
                                       }).FirstOrDefault();
                     
                     response = Request.CreateResponse(HttpStatusCode.OK, patprofile);
@@ -2078,7 +2083,7 @@ namespace RestAPIs.Controllers
 
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
-            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Following Error occurred at method: " + Action + "\n" + ex.Message });
+            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Following Error occurred at method: " + Action + ":" + ex.Message });
             response.ReasonPhrase = ex.Message;
             return response;
         }
