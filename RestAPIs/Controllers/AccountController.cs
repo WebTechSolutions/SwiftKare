@@ -235,26 +235,38 @@ namespace RestAPIs.Controllers
                         string androidToken = model.andriodToken;
                        
                         //update doctor table with  Tokens 
-                        Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
-                        if(iOSToken.Trim() != "") doctor.iOSToken = iOSToken;
-                        if (androidToken.Trim() != "") doctor.AndroidToken = androidToken;
-                        db.Entry(doctor).State = EntityState.Modified;
-                        await db.SaveChangesAsync();
+                        Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId );
+                        if (doctor != null)
+                        {
+                            if (iOSToken.Trim() != "") doctor.iOSToken = iOSToken;
+                            if (androidToken.Trim() != "") doctor.AndroidToken = androidToken;
+                            db.Entry(doctor).State = EntityState.Modified;
+                            await db.SaveChangesAsync();
+                        }
                        // var doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
 
                         if (doctor != null)
                         {
-                            userModel.Id = doctor.doctorID;
-                            userModel.FirstName = doctor.firstName;
-                            userModel.LastName = doctor.lastName;
-                            userModel.Email = doctor.email;
-                            userModel.userId = doctor.userId;
-                            userModel.title = doctor.title;
-                            userModel.timeZone = doctor.timezone;
-                            userModel.userId = doctor.userId;
-                            userModel.role = roleFromDb.ToString();
-                            userModel.iOSToken = doctor.iOSToken;
-                            userModel.AndroidToken = doctor.AndroidToken;
+                            if(doctor.status == null || doctor.status == false)
+                            {
+                                userModel.Errors = new List<string>();
+                                userModel.Errors.Add("Account review is in progress. You can login after approval.");
+                            }
+                            else
+                            {
+                                userModel.Id = doctor.doctorID;
+                                userModel.FirstName = doctor.firstName;
+                                userModel.LastName = doctor.lastName;
+                                userModel.Email = doctor.email;
+                                userModel.userId = doctor.userId;
+                                userModel.title = doctor.title;
+                                userModel.timeZone = doctor.timezone;
+                                userModel.userId = doctor.userId;
+                                userModel.role = roleFromDb.ToString();
+                                userModel.iOSToken = doctor.iOSToken;
+                                userModel.AndroidToken = doctor.AndroidToken;
+                            }
+                            
                         }
                         else
                         {

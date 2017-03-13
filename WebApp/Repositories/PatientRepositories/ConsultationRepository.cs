@@ -112,6 +112,22 @@ namespace WebApp.Repositories.PatientRepositories
             }
 
         }
+        public ApiResultModel WaiveBilling(long consultID)
+        {
+
+            try
+            {
+
+                var response = ApiConsumerHelper.PostData("api/WaiveBillingRequest/?consultID=" + consultID, "");
+                var result = JsonConvert.DeserializeObject<ApiResultModel>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+
+        }
 
         public AddConsultReviewodel GetConsultationReview(long consultID)
         {

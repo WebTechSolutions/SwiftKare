@@ -234,6 +234,7 @@ namespace WebApp.Controllers
                         if(patient==null)
                         {
                             ModelState.AddModelError("", "Invalid login attempt.");
+                            ViewBag.ModelError = "Invalid login attempt.";
                             return View(model);
                         }
                         var userModel = new UserInfoModel();
@@ -266,6 +267,7 @@ namespace WebApp.Controllers
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
+                    ViewBag.ModelError = "Invalid login attempt.";
                     return View(model);
             }
         }
@@ -297,6 +299,7 @@ namespace WebApp.Controllers
                         if (admin == null)
                         {
                             ModelState.AddModelError("", "Invalid login attempt.");
+                            ViewBag.ModelError = "Invalid login attempt.";
                             return View(model);
                         }
                         var userModel = new UserInfoModel();
@@ -317,6 +320,7 @@ namespace WebApp.Controllers
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
+                    ViewBag.ModelError = "Invalid login attempt.";
                     return View(model);
             }
         }
@@ -348,11 +352,13 @@ namespace WebApp.Controllers
                         if (doctor == null)
                         {
                             ModelState.AddModelError("", "Invalid login attempt.");
+                            ViewBag.ModelError = "Invalid login attempt.";
                             return View(model);
                         }
                         if (doctor.status == null || !((bool)doctor.status))
                         {
                             ModelState.AddModelError("", "Account review is in progress. You can login after approval.");
+                            ViewBag.ModelError = "Account review is in progress. You can login after approval.";
                             return View(model);
                         }
 
@@ -389,6 +395,7 @@ namespace WebApp.Controllers
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
+                    ViewBag.ModelError = "Invalid login attempt.";
                     return View(model);
             }
         }
@@ -512,7 +519,8 @@ namespace WebApp.Controllers
                    
                     if (addedResult != null)
                     {
-                        ViewBag.SuccessMessage = "Your Account has been created, please login";
+                        //ViewBag.SuccessMessage = "Your Account has been created, please login";
+                        ViewBag.error = "Your Account has been created, please login";
                         return View("PatientLogin", model);
                     }
                 }
@@ -528,6 +536,7 @@ namespace WebApp.Controllers
             // If we got this far, something failed, redisplay form
             //return View("PatientLogin", model);
             TempData["error"] = error;
+            ViewBag.ModelError += "\n" + error;
             return Redirect(Url.Action("PatientLogin", "Account") + "#signup");
         }
 
@@ -573,7 +582,7 @@ namespace WebApp.Controllers
                    
                     if (addedResult != null)
                     {
-                        ViewBag.SuccessMessage = "Your Account has been created, You can login after approval of your account.";
+                        ViewBag.error = "Your Account has been created, You can login after approval of your account.";
                         //Send Simple Email
 
                         var sampleEmailBody = @"
@@ -843,9 +852,13 @@ namespace WebApp.Controllers
 
         private void AddErrors(IdentityResult result)
         {
+            ViewBag.ModelError = "";
             foreach (var error in result.Errors)
             {
+               
                 ModelState.AddModelError("", error);
+                ViewBag.ModelError += error;
+                break;
             }
         }
 

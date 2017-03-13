@@ -87,10 +87,23 @@
                         <td style="text-align:center">@item.rov</td>
 
                         <td style="text-align:center">
-                            <button data-toggle="modal" data-id="@item.consultID" id="@item.consultID" data-target="#myModal4"
+                            @*<button data-toggle="modal" data-id="@item.consultID" id="@item.consultID" data-target="#myModal4"
                                     class="btn btn-primary btn-sm m-b-0 " type="button" onclick=showConsult(@item.consultID);>
                                 View
-                            </button>
+                            </button>*@
+                            <div class="btn-group" role="group">
+
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Action
+                                    <span class="caret"></span>
+                                </button>
+
+                                <ul class="dropdown-menu dropdown-menu-left" style="margin-left:-55px">
+                                    <li><a href="#" data-toggle="modal" class="thumbnail-col-inner" data-id="@item.consultID" id="@item.consultID" data-target="#myModal4" onclick=showConsult(@item.consultID);>View</a></li>
+                                    <li><a href="#" class="waivebilling"  onclick=waivebilling(@item.consultID) id="@item.consultID">Waive Billing</a></li>
+                                    
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                     j = j + 1;
@@ -103,6 +116,48 @@
     </table>
 
    }
+
+<script>
+    function waivebilling(consultID)
+    {
+        $.ajax({
+            url: '@Url.Action("WaiveBilling", "Consultation")',
+            type: "POST",
+            data: {'consultID':consultID},
+            dataType: 'json',
+            success: function (result) {
+                //Reload container
+                if (result.Message != undefined) {
+                    new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                    hideLoader();
+                }
+                else {
+
+                    if(result.ApiResultModel.message=="")
+                    {
+                        new PNotify({ title: 'Success', text: "Weive Billing Request is sent successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
+                        hideLoader();
+                    }
+                    else
+                    {
+                        new PNotify({ title: 'Error', text: result.ApiResultModel.message, type: 'error', styling: 'bootstrap3' });
+                        hideLoader();
+                    }
+
+
+                }
+
+            },
+            error: function (err) {
+                //alert(err.statusText);
+                new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                //Stop displaying loader
+                hideLoader();
+            }
+        });
+
+    }
+    </script>
 <!-- Datatables -->
 <script>
       $(document).ready(function() {

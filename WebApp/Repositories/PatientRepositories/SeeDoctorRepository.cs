@@ -69,13 +69,29 @@ namespace WebApp.Repositories.DoctorRepositories
             }
 
         }
-        public DocTimingsAndAppointment FetchDoctorTimes(FetchTimingsModel searchModel)
+        public List<FetchDoctorTimingModel> FetchDoctorTimes(FetchTimingsModel searchModel)
         {
 
             try
             {
                 var strContent = JsonConvert.SerializeObject(searchModel);
                 var response = ApiConsumerHelper.PostData("api/fetchDoctorTime/?searchModel", strContent);
+                var result = JsonConvert.DeserializeObject<List<FetchDoctorTimingModel>>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+
+        }
+        public DocTimingsAndAppointment FetchDoctorTimesNew(FetchTimingsModel searchModel)
+        {
+
+            try
+            {
+                var strContent = JsonConvert.SerializeObject(searchModel);
+                var response = ApiConsumerHelper.PostData("api/fetchDoctorTimeNeww/?searchModel", strContent);
                 var result = JsonConvert.DeserializeObject<DocTimingsAndAppointment>(response);
                 return result;
             }

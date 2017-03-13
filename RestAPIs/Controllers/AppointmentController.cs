@@ -228,6 +228,7 @@ namespace RestAPIs.Controllers
                 if (timezoneid.Trim() == "")
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "User Timezone is missing." });
+                    response.ReasonPhrase = "User Timezone is missing.";
                     return response;
                 }
                 TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
@@ -418,14 +419,14 @@ namespace RestAPIs.Controllers
 
                 var patient = (from p in db.Patients
                                where p.userId == model.userID
-                               select new { patemail = p.email, patientID = p.patientID }).FirstOrDefault();
+                               select new { patemail = p.email, patientID = p.patientID,timezone=p.timezone }).FirstOrDefault();
                 var App= ((from a in db.Appointments
                             where a.appID == model.appID
                             select new { doctorID = a.doctorID}).FirstOrDefault());
 
                 var doctor = (from d in db.Doctors
                               where d.doctorID == App.doctorID
-                              select new { docemail = d.email, doctorID = d.doctorID }).FirstOrDefault();
+                              select new { docemail = d.email, doctorID = d.doctorID,timezone=d.timezone }).FirstOrDefault();
                 if (model.appType=="U")
                 {
                     if (timediff.TotalHours < Convert.ToInt32(RescheduleLimit))
@@ -439,14 +440,18 @@ namespace RestAPIs.Controllers
                         var formattedDate = string.Format("{0:dd/MM/yyyy}", tempappdate);
                         tempapptime = result.appTime;
                         var formattedTime = DateTime.Now.Date.Add(tempapptime.Value).ToString(@"hh\:mm\:tt");
-                        
+                       
                         DateTime mydateTime = DateTime.ParseExact(model.appTime,
                                              "hh:mm tt", CultureInfo.InvariantCulture);
                         var timezoneid = db.Patients.Where(d => d.userId == model.userID).Select(d => d.timezone).FirstOrDefault();
                         TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
                         result.appTime = TimeZoneInfo.ConvertTimeToUtc(mydateTime, zoneInfo).TimeOfDay;
+                        //DateTime localdateTime = DateTime.ParseExact(result.appTime.ToString(),
+                        //                     "hh:mm tt", CultureInfo.InvariantCulture);
+                        //var plocalapptime= TimeZoneInfo.ConvertTimeToUtc(localdateTime, zoneInfo).TimeOfDay;
+                        //TimeZoneInfo dzoneInfo = TimeZoneInfo.FindSystemTimeZoneById(doctor.timezone);
+                        //var dlocalapptime = TimeZoneInfo.ConvertTimeToUtc(localdateTime, dzoneInfo).TimeOfDay;
                         
-                        //result.appTime = mydateTime.ToUniversalTime().TimeOfDay;//To24HrTime(model.appTime);
                         //date format start
                         string dateString = model.appDate.Trim();
                         string dateformat = "dd/MM/yyyy";
@@ -473,7 +478,7 @@ namespace RestAPIs.Controllers
                         await db.SaveChangesAsync();
                         Alert alert = new Alert();
                         alert.alertFor = result.doctorID;
-                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + formattedDate  + " at " + formattedTime + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
+                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + formattedDate  + " on " + formattedTime + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " on " + model.appTime;
                         alert.cd = System.DateTime.Now;
                         alert.cb = model.userID;
                         alert.active = true;

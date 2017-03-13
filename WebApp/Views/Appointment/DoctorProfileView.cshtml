@@ -22,8 +22,18 @@
                                         <div class="box-inner">
                                             <img src="@Model.ProfilePhotoBase64" alt="" class="m-b-10 img-circle img-responsive">
                                         </div>
-                                        <a class="hrt" href="#" style="color: #5A738E; left: 10px;"><span class="fa fa-heart-o" aria-hidden="true"></span></a>
-                                        <a class="hrt1" href="#" style="color: #5A738E; left: 10px;"><span class="fa fa-heart" aria-hidden="true"></span></a>
+                                            @if(Model.fav==1)
+                                                {
+                                                    <a class="hrt" href="#" style="color: #5A738E; left: 10px;"><span id="fav" class="fa fa-heart" aria-hidden="true"></span></a>
+                                                }
+                                                else if(Model.fav==0)
+                                                {
+                                                
+                                                <a class="hrt1" href="#" style="color: #5A738E; left: 10px;"><span id="nofav" class="fa fa-heart-o" aria-hidden="true"></span></a>
+                                                }
+                                            
+                                            
+                                           
                                         @*<i class="popup-circle fa fa-circle" aria-hidden="true" style="color: red;"></i>*@
                                         <h2 class="text-center">@Model.FirstName @Model.LastName <br> <small style="color: #73879C;">(@Model.GetAge())</small></h2>
                                         @*<p class="text-center m-0" style="color: green;">Available for Call</p>*@

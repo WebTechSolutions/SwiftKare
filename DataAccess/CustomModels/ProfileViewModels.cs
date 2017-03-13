@@ -59,6 +59,8 @@ namespace DataAccess.CustomModels
         public string SectetAnswer3 { get; set; }
 
         public int? reviewStar { get; set; }
+
+        public int? fav { get; set; }
         #region Methods
 
         public void ConvertBase64ToByteArray()

@@ -260,8 +260,8 @@ namespace RestAPIs.Controllers
 
         //}
 
-        [Route("api/fetchDoctorTime")]
-        public HttpResponseMessage FetchDoctorTime(FetchTimingsModel searchModel)
+        [Route("api/fetchDoctorTimeNeww")]
+        public HttpResponseMessage FetchDoctorTimeNeww(FetchTimingsModel searchModel)
         {
             try
             {
@@ -288,7 +288,7 @@ namespace RestAPIs.Controllers
             catch (Exception ex)
             {
 
-                return ThrowError(ex, "FetchDoctorTime in SearchDoctorController");
+                return ThrowError(ex, "FetchDoctorTimeNeww in SearchDoctorController");
             }
 
 
@@ -408,6 +408,30 @@ namespace RestAPIs.Controllers
 
             return timeSlots;
         }
+
+        [Route("api/fetchDoctorTime")]
+        public HttpResponseMessage FetchDoctorTime(FetchTimingsModel searchModel)
+        {
+            try
+            {
+                //var dateTime = DateTime.Parse(searchModel.appDate);
+                string[] formats = { "dd/MM/yyyy" };
+                var dateTime = DateTime.ParseExact(searchModel.appDate.Trim(), formats, new CultureInfo("en-US"), DateTimeStyles.None);
+                string appday = dateTime.ToString("dddd");
+                var result = db.SP_FetchDoctorTimings(searchModel.doctorID, dateTime).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, result);
+
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+
+                return ThrowError(ex, "FetchDoctorTime in SearchDoctorController");
+            }
+
+
+        }
         private List<string> displayTimeSlots(IEnumerable<SP_FetchDoctorTimings_Result> appList)
         {
             List<string> timeSlots = new List<string> { };
@@ -518,26 +542,27 @@ namespace RestAPIs.Controllers
                  string[] formats = { "dd/MM/yyyy" };
                 var dateTime = DateTime.ParseExact(searchModel.appDate.Trim(), formats, new CultureInfo("en-US"), DateTimeStyles.None);
                 string appday = dateTime.ToString("dddd");
-                //List<SP_FetchDoctorTimings_Result> appList = new List<SP_FetchDoctorTimings_Result>();
-                //appList= db.SP_FetchDoctorTimings(searchModel.doctorID, dateTime).ToList();
-                var doctimings = (from t in db.DoctorTimings
-                               where t.doctorID == searchModel.doctorID
-                               && t.day == appday && t.active == true
-                               select new TimingsVM { doctorID = t.doctorID, fromtime = t.@from,
-                                   totime = t.to }).ToList();
-                var appointments = (from app in db.Appointments
-                                    where app.doctorID == searchModel.doctorID &&
-                                    app.appDate == dateTime
-                                    select new AppointmentsVM { appTime = app.appTime }).ToList();
-                DocTimingsAndAppointment appList = new DocTimingsAndAppointment();
-                appList.timingsVM = doctimings;
-                appList.appointmentVM = appointments;
+                List<SP_FetchDoctorTimings_Result> appList = new List<SP_FetchDoctorTimings_Result>();
+                appList = db.SP_FetchDoctorTimings(searchModel.doctorID, dateTime).ToList();
+                //var doctimings = (from t in db.DoctorTimings
+                //               where t.doctorID == searchModel.doctorID
+                //               && t.day == appday && t.active == true
+                //               select new TimingsVM { doctorID = t.doctorID, fromtime = t.@from,
+                //                   totime = t.to }).ToList();
+                //var appointments = (from app in db.Appointments
+                //                    where app.doctorID == searchModel.doctorID &&
+                //                    app.appDate == dateTime
+                //                    select new AppointmentsVM { appTime = app.appTime }).ToList();
+                //DocTimingsAndAppointment appList = new DocTimingsAndAppointment();
+                //appList.timingsVM = doctimings;
+                //appList.appointmentVM = appointments;
                 List<string> timings = new List<string>();
                 
                 if (appList != null)
                 {
                     //calculate time slots
-                    timings = createTimeSlots(appList);//displayTimeSlots(appList);
+                    //timings = createTimeSlots(appList);//displayTimeSlots(appList);
+                    timings = displayTimeSlots(appList);//displayTimeSlots(appList);
                 }
                 response = Request.CreateResponse(HttpStatusCode.OK, timings);
                 return response;

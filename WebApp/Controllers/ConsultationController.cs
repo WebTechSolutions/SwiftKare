@@ -118,7 +118,22 @@ namespace WebApp.Controllers
             }
 
         }
+        [HttpPost]
+        public JsonResult WaiveBilling(long consultID)
+        {
+            try
+            {
+                ApiResultModel apiresult = new ApiResultModel();
+                apiresult = oConsultationRepository.WaiveBilling(consultID);
+                return Json(new { Success = true, ApiResultModel = apiresult });
 
+            }
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                return Json(new { Message = ex.Response.ReasonPhrase });
+            }
+
+        }
         [HttpPost]
         public JsonResult GetConsultationReview(long consultID)
         {

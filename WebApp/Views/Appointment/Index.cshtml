@@ -154,7 +154,7 @@
         var did = docid;//$("#pvdocid").val();
 
         $("#DoctorProfileContent").load('@Url.Action("DoctorProfile", "Appointment")?doctorID=' + did, function () {
-
+           
         });
 
     }
@@ -184,19 +184,19 @@
         currentTab = cTab;
         if (cTab == 'U') {
            $("#divUpcoming").load('@Url.Action("PartialUpcoming", "Appointment")', function () {
-                callback();
+                //callback();
             });
 
         }
         if(cTab=='R')
         {
             $("#divReschedule").load('@Url.Action("PartialReschedule", "Appointment")', function () {
-                callback();
+                //callback();
             });
         }
         if (cTab == 'P') {
              $("#divPending").load('@Url.Action("PartialPending", "Appointment")', function () {
-                callback();
+                //callback();
              });
         }
     }
@@ -339,8 +339,8 @@
         }
 
         $("#doctorid").val(todoId);
-        var cap=docName.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-        $("#timingsmodaltitle").text("Dr. "+cap + " Timings");
+        var caps=docName.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        $("#timingsmodaltitle").text("Dr. "+caps + " Timings");
 
 
 
@@ -360,6 +360,7 @@
     $('#fetchdate').data('daterangepicker').setStartDate();
     function fetchTimings(fetchdate) {
         debugger;
+        showLoader();
         var _objSearch = {};
         _objSearch["appDate"] = fetchdate;//$("#fetchdate").val();
         //alert( _objSearch["appDate"]);
@@ -385,7 +386,14 @@
                     var tablehtml = "";
                     $.each(response.Object, function (item) {
 
-                        tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + fetchdate + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
+                        var tolocalTime = converttoLocal(response.Object[item]);
+
+                        var flag = compareDateTime(fetchdate.trim(), tolocalTime);
+                        if (flag) {
+
+                            tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + fetchdate + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
+                        }
+
 
                     });
 
@@ -396,10 +404,11 @@
             },
 
         });
+        hideLoader();
     }
 
     function showDoctorTimings(doctorID,appID,appDate) {
-
+        showLoader();
         var cappDate = appDate.split("/");
         var f = new Date(cappDate[2], cappDate[1] - 1, cappDate[0]);
         $("#RAppID").val(appID);
@@ -448,9 +457,13 @@
                 else {
                     var tablehtml = "";
                     $.each(response.Object, function (item) {
+                        var tolocalTime = converttoLocal(response.Object[item]);
 
-                        tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
+                        var flag = compareTime(tolocalTime);
+                        if (flag) {
 
+                            tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
+                        }
                     });
 
                     if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
@@ -461,6 +474,7 @@
             },
 
         });
+        hideLoader();
     }
 
     function setDateTime(myappTime, myappDate) {
