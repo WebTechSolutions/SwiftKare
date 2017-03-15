@@ -162,6 +162,21 @@ namespace WebApp.Controllers
             oVideoCallRepository.ConsultCreationFailedLog(patientId, SessionHandler.UserInfo.Id, SessionHandler.UserInfo.Email);
         }
 
+        
+        [HttpPost]
+        public void AddCallLogbyDoctor(long patientId,string message)
+        {
+            oVideoCallRepository.AddCallLog(patientId, SessionHandler.UserInfo.Id, SessionHandler.UserInfo.Email,message);
+        }
+
+        [HttpPost]
+        public void AddCallLogbyPatient(long doctorId, string message)
+        {
+            oVideoCallRepository.AddCallLog(SessionHandler.UserInfo.Id,doctorId, SessionHandler.UserInfo.Email, message);
+        }
+
+
+
         [HttpPost]
         public void TokBoxInfoCreatedbyDoctor(long patientId)
         {
@@ -266,22 +281,6 @@ namespace WebApp.Controllers
         public void RemoveConsultROS(long consultID, long sysitemid, string sysitemname)
         {
             oVideoCallRepository.RemoveConsultROS(new ConsultROSModel { consultID = consultID, sysitemid = sysitemid, sysitemname = sysitemname, userID = SessionHandler.UserInfo.Id.ToString() });
-        }
-
-        [HttpPost]
-        public JsonResult LoadSOAP(long consultID)
-        {
-            
-            try
-            {
-                var objconsultation = oVideoCallRepository.LoadSOAP(consultID);
-                return Json(new { SOAP = objconsultation });
-
-            }
-            catch (System.Web.Http.HttpResponseException ex)
-            {
-                return Json(new { Message = ex.Response.ReasonPhrase });
-            }
         }
 
         #endregion

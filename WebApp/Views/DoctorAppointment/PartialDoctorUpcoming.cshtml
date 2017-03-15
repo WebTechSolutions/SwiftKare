@@ -140,8 +140,8 @@ else
                         });
                         var _consultID=response.ApiResultModel.ID;
                         //Log consultion creation sucess
-                        var cCallLogUrl = '@Url.Action("ConsultCreatedbyDoctor", "UserChat")?patientId=' + patientID;
-                        $.post(cCallLogUrl);
+                       // var cCallLogUrl = '@Url.Action("ConsultCreatedbyDoctor", "UserChat")?patientId=' + patientID;
+                       // $.post(cCallLogUrl);
                         debugger;
                         makeCallToPatient(patientID, appID,_consultID,oPatInfo);
 

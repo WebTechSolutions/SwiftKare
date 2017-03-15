@@ -55,7 +55,7 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-material-datetimepicker.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-wysiwyg.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.hotkeys.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/eModal.min.js")"></script>
+
    
     
 
@@ -230,12 +230,12 @@
                             </li>
 
                             
-                            <li id="alertview" role="presentation" class="dropdown">
-                                
+                            <li>
+                                <div id="divAlerts">
                                     @{
                                         Html.RenderAction("AlertView", "Alert");
                                     }
-                                
+                                </div>
                             </li>
                             
                         </ul>
@@ -280,20 +280,6 @@
         </div>
     </div><!-- mymodal1 -->
     <script>
-        setInterval(function () {
-           
-            $.ajax({
-                url: "@Url.Action("AlertView", "Alert")",
-                type: 'POST',
-            dataType: 'html',
-            cache: false,
-            success: function (html) {
-                //console.log($("#alertview").html());
-                $("#alertview").html(html);
-            }
-        });
-        }, 60*1000);
-       
         var mymodal = $('#playoutModal');
     function showAlert(heading,body)
     {
@@ -454,18 +440,24 @@
                     if (msgJson.status == 'tokbox') {
                       //  alert('tokbox info recieved:' + msgJson.name);
                         localStorage.setItem('tokbox', msgJson.name);
+                        var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Tokbox-Info-Received-By-Patient';
+                        $.post(cCallLogUrl);
                         return;
                     }
                     if (msgJson.status == 'consultID') {
                       //  alert('consultID recieved:' + msgJson.name);
                         localStorage.setItem('consultationKey', msgJson.name);
                         localStorage.setItem('otherUser', msgFrom);
+                        var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=ConsultID-Received-By-Patient';
+                        $.post(cCallLogUrl);
                         return;
                     }
                     if (msgJson.status == 'Accepted') {
                         localStorage.setItem('otherUser', msgFrom);
                         showAlert('Alert', "Doctor " + msgJson.name + " accepted your request please continue with payment process.");
                         //alert("Doctor " + msgJson.name + " accepted your request please continue with payment process.");
+                        var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Patient-moved-to-Step2';
+                        $.post(cCallLogUrl);
                         $('#wizard').smartWizard('goToStep', 2);
                         $('.buttonNext').show();
                         $('.buttonPrevious').show();
@@ -491,17 +483,14 @@
                 debugger;
                 var msgJson = JSON.parse(msg);
 
-                //var isPatientAcceptedCall = confirm('Doctor ' + msgJson.name + ' want to have consultation with you. Press OK to proceed.');
-                var options = {
-                    message: 'Doctor ' + msgJson.name + ' want to have consultation with you. Press OK to proceed.',
-                    title: 'Doctor is Calling',
-                    size: eModal.size.lg
-                    };
-                eModal.confirm(options)
-                .then(function () {
-                    var cCallLogUrl = '@Url.Action("PatientAcceptedCall", "UserChat")?doctorId=' + senderid;
+                var isPatientAcceptedCall = confirm('Doctor ' + msgJson.name + ' want to have consultation with you. Press OK to proceed.');
+
+                if (isPatientAcceptedCall) {
+                   // var cCallLogUrl = '@Url.Action("PatientAcceptedCall", "UserChat")?doctorId=' + senderid;
                     //  $.post(cCallLogUrl);
-                   
+                    var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Patient-accepted-schedle-call';
+                    $.post(cCallLogUrl);
+
                     var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Patient&receiverId=" + senderid + "&doctorName=" + docName + "&patientName=@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)&ConsultID=" + consultID;
 
                     $.post(cUrlReadyForCall, function (oResp) {
@@ -517,17 +506,23 @@
                                 UserName: '@SessionHandler.UserInfo.Email'
                             });
                             //Log Tokbox info generated event
-                            var cCallLogUrl = '@Url.Action("TokBoxInfoCreatedbyPatient", "UserChat")?doctorId=' + senderid;
+                            var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Tokbox-info-created-and-sent-to-doctor';
                             $.post(cCallLogUrl);
 
                             var tokboxInfo = oResp;
                             localStorage.setItem('tokbox', tokboxInfo);
 
+                           
                             chat.server.patientRedirectedToCall
                                 (senderConnId, tokboxInfo, '@SessionHandler.UserInfo.Id', '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)');
 
+                            var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Patient-readyFor-VC';
                             //Redirect doctor to call
-                            window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + tokboxInfo;
+                            $.post(cCallLogUrl, function () {
+                                //Redirect patient to call
+                                window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + tokboxInfo;
+                            });
+
 
                         }
                         else {
@@ -545,29 +540,24 @@
                             });
                             return;
                         }
-                    });},
-                    function () {
-                        var cCallLogUrl = '@Url.Action("PatientDeclinedCall", "UserChat")?doctorId=' + senderid;
-                        //   $.post(cCallLogUrl);
-                        chat.server.patientRejectedCall({
-                            SenderId: '@SessionHandler.UserInfo.Id',
-                            UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
-                            ReceiverConnectionId: senderConnId,
-                            consultID: consultID
-                        });
-                        return;
                     });
-                
-                //if (isPatientAcceptedCall) {
-                    
 
 
-                //}
-                //else {
-                    
-                //}
+                }
+                else {
+                    var cCallLogUrl = '@Url.Action("PatientDeclinedCall", "UserChat")?doctorId=' + senderid;
+                    //   $.post(cCallLogUrl);
+                    chat.server.patientRejectedCall({
+                        SenderId: '@SessionHandler.UserInfo.Id',
+                        PatientName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
+                        UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
+                        ReceiverConnectionId: senderConnId,
+                        consultID: consultID
+                    });
+                    return;
+                }
 
-                
+
 
             };
 
@@ -657,8 +647,6 @@
                 });
             });
         });
-
-        
     </script>
     <script>
         $(document).ajaxSuccess(function (evt, request, settings) {
@@ -722,10 +710,7 @@
                     });
                 }
             }
-            
-           
         });
-        
     </script>
 
     @RenderSection("scripts", required: false)

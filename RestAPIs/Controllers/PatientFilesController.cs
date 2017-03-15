@@ -117,11 +117,11 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid patient ID." });
                     return response;
                 }
-                if (model.doctorID == null || model.doctorID == 0)
+              /*  if (model.doctorID == null || model.doctorID == 0)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
                     return response;
-                }
+                }*/
                 if (model.fileContent == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "File is empty. " });
@@ -142,7 +142,7 @@ namespace RestAPIs.Controllers
                     patfile.patientID = model.patientID;
                     patfile.cd = System.DateTime.Now;
                     patfile.md= System.DateTime.Now;
-                    patfile.doctorID = model.doctorID == -1 ? null : model.doctorID;
+                  //  patfile.doctorID = model.doctorID == -1 ? null : model.doctorID;
                     patfile.fileContent = model.fileContent;
                     patfile.documentType = model.documentType;
                     patfile.cb = model.patientID.ToString();

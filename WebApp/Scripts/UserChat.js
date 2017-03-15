@@ -315,20 +315,25 @@ var UserChat = function (apiKey, sessionId, token) {
     }
 
     function SaveSessionEnd(sessionId) {
+        debugger;
         //Get Consult Id From localStorage
         var consultationId = localStorage.getItem('consultationKey');
        
-        var cUrl = '/UserChat/StopConsultation?consultId=' + consultationId;
+       
         
-        $.post(cUrl);
+       
 
         localStorage.removeItem('consultationKey');
       //  alert("Consult is completed successfully by End call button.");
         new PNotify({ title: 'Success', text: "Consult Completed Successfully..", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
         //cEndCallUrl is defined in page
-       // alert(cEndCallUrl)
+        // alert(cEndCallUrl)
+        var cUrl = '/UserChat/StopConsultation?consultId=' + consultationId;
+        $.post(cUrl, function () {
+            //Redirect patient to call
+            window.location = cEndCallUrl;
+        });
 
-        window.location = cEndCallUrl;
     }
 
     function SaveChatMessage(sessionId, senderId, receiverId, message) {
@@ -349,8 +354,7 @@ var UserChat = function (apiKey, sessionId, token) {
         .on('streamCreated', function (event) {
             try {
                 alert('consultationId @ Stream Created:' + localStorage.getItem('consultationKey'))
-
-                var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=VC Started&callDuration=0';
+                var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=VC Started ';
                 $.post(cUrl);
                 curStream = event.stream;
                 //streamCreateTime = new Date(curStream.creationTime);
@@ -398,7 +402,7 @@ var UserChat = function (apiKey, sessionId, token) {
                                         }*/
                 }
                 else {
-                    var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Consult compelted by other user&callDuration=0';
+                    var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Consult compelted by other user ';
                     $.post(cUrl);
                     new PNotify({ title: 'Success', text: "Other user completed the consult.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
                     window.location = cEndCallUrl;
@@ -459,17 +463,17 @@ var UserChat = function (apiKey, sessionId, token) {
 
             if (audioInputDevices.length == 0 && videoInputDevices.length == 0) {
                 new PNotify({ title: 'Error', text: "Your computer is not connected to any audio or video device. Please connect these devices.", type: 'error', styling: 'bootstrap3' });
-                var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Your computer is not connected to any audio or video device&callDuration=0';
+                var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Your computer is not connected to any audio or video device ';
                 $.post(cUrl);
             }
             else if (audioInputDevices.length == 0) {
                 new PNotify({ title: 'Error', text: "Your computer is not connected to any audio device.", type: 'error', styling: 'bootstrap3' });
-                var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Your computer is not connected to any audio&callDuration=0';
+                var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Your computer is not connected to any audio  ';
                 $.post(cUrl);
             }
             else if (videoInputDevices.length == 0) {
                 new PNotify({ title: 'Error', text: "Your computer is not connected to any video device.", type: 'error', styling: 'bootstrap3' });
-                var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Your computer is not connected to any  video device&callDuration=0';
+                var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Your computer is not connected to any  video device ';
                 $.post(cUrl);
             }
         });

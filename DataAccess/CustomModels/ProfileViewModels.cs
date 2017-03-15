@@ -165,6 +165,7 @@ namespace DataAccess.CustomModels
         public string ProfilePhotoBase64 { get; set; }
         public byte[] ProfilePhoto { get; set; }
 
+
         public string TitleName { get; set; }
         public string Prefix { get; set; }
         public string FirstName { get; set; }
@@ -186,6 +187,7 @@ namespace DataAccess.CustomModels
         public string ZipCode { get; set; }
         public string HomePhone { get; set; }
         public string CellPhone { get; set; }
+        public string PharmacyName { get; set; }
 
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
