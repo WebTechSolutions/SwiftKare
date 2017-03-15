@@ -1032,14 +1032,14 @@ namespace RestAPIs.Controllers
        
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
-            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.Message, Encoding.Unicode);
-            response.ReasonPhrase = ex.Message;
-            return response;
-            //response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = ex.Message+" at "+Action });
+            //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
+            //response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.Message, Encoding.Unicode);
             //response.ReasonPhrase = ex.Message;
             //return response;
-          
+            response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = ex.Message + " at " + Action });
+            response.ReasonPhrase = ex.Message;
+            return response;
+
         }
         protected override void Dispose(bool disposing)
         {
