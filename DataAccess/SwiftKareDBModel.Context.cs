@@ -2019,5 +2019,23 @@ namespace DataAccess
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetDcotorConsultations_Result>("SP_GetDcotorConsultations", doctorIDParameter);
         }
+    
+        public virtual ObjectResult<SP_GetDcotorAllConsultations_Result> SP_GetDcotorAllConsultations(Nullable<long> doctorID)
+        {
+            var doctorIDParameter = doctorID.HasValue ?
+                new ObjectParameter("doctorID", doctorID) :
+                new ObjectParameter("doctorID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetDcotorAllConsultations_Result>("SP_GetDcotorAllConsultations", doctorIDParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetPatientAllConsultations_Result> SP_GetPatientAllConsultations(Nullable<long> patientID)
+        {
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientAllConsultations_Result>("SP_GetPatientAllConsultations", patientIDParameter);
+        }
     }
 }
