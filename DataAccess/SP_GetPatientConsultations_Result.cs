@@ -15,7 +15,6 @@ namespace DataAccess
     {
         public long consultID { get; set; }
         public string DoctorName { get; set; }
-        public string gender { get; set; }
         public int duration { get; set; }
         public string review { get; set; }
         public int reviewStar { get; set; }

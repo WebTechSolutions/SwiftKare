@@ -1,4 +1,4 @@
-﻿ @using WebApp.Helper;
+﻿@using WebApp.Helper;
 
 <!DOCTYPE html>
 <html>
@@ -24,10 +24,10 @@
     <link href="@Url.Content("/Content/css/green.css")" rel="stylesheet" />
     <link href="@Url.Content("/Content/css/switchery.min.css")" rel="stylesheet" />
     <link href="@Url.Content("/Content/css/dataTables.bootstrap.min.css")" rel="stylesheet" />
-    
+
     <link href="@Url.Content("/Content/css/bootstrap-material-datetimepicker.css")" rel="stylesheet" />
-    
-    
+
+
     <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     @*<script type="text/javascript" src="https://rawgit.com/FezVrasta/bootstrap-material-design/master/dist/js/material.min.js"></script>*@
@@ -55,9 +55,9 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-material-datetimepicker.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-wysiwyg.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.hotkeys.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/eModal.min.js")"></script>
 
-   
-    
+
 
     <style type="text/css">
         .redBorder, .redBorder:focus, .redBorder:active {
@@ -177,19 +177,19 @@
                                     </a>
                                 </li>
 
-                        </ul>
+                            </ul>
                         </div>
                     </div>
                     <div class="sidebar-footer hidden-small" style="background: #172D44;">
-                        <a data-toggle="tooltip" data-placement="top" title="My Profile"  href="@Url.Action("Index","PatientProfile")">
+                        <a data-toggle="tooltip" data-placement="top" title="My Profile" href="@Url.Action("Index","PatientProfile")">
                             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                         </a>
 
                         <a data-toggle="tooltip" data-placement="top" title="FullScreen" onclick="toggleFullScreen();">
-                           
+
                         </a>
-                        <a  data-toggle="tooltip" data-placement="top" title="Create Help Ticket">
-                           
+                        <a data-toggle="tooltip" data-placement="top" title="Create Help Ticket">
+
                         </a>
                         @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
                         {
@@ -229,15 +229,17 @@
                                 </ul>
                             </li>
 
-                            
-                            <li>
-                                <div id="divAlerts">
-                                    @{
-                                        Html.RenderAction("AlertView", "Alert");
-                                    }
-                                </div>
+
+                            <li id="alertview" role="presentation" class="dropdown">
+
+                                @{
+                                    Html.RenderAction("AlertView", "Alert");
+                                }
+
                             </li>
-                            
+
+
+
                         </ul>
                     </nav>
                 </div>
@@ -280,6 +282,20 @@
         </div>
     </div><!-- mymodal1 -->
     <script>
+        setInterval(function () {
+
+            $.ajax({
+                url: "@Url.Action("AlertView", "Alert")",
+                type: 'POST',
+            dataType: 'html',
+            cache: false,
+            success: function (html) {
+                //console.log($("#alertview").html());
+                $("#alertview").html(html);
+            }
+        });
+        }, 60*1000);
+
         var mymodal = $('#playoutModal');
     function showAlert(heading,body)
     {
@@ -289,10 +305,10 @@
         mymodal.modal('show');
     }
     </script>
-    
+
     @* <script src="~/Scripts/jquery.cookie.js"></script>
-    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
-    <script src="@Url.Content(" ~/signalr/hubs")"></script>*@
+        <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
+        <script src="@Url.Content(" ~/signalr/hubs")"></script>*@
 
     <script type="text/javascript">
 
@@ -440,24 +456,18 @@
                     if (msgJson.status == 'tokbox') {
                       //  alert('tokbox info recieved:' + msgJson.name);
                         localStorage.setItem('tokbox', msgJson.name);
-                        var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Tokbox-Info-Received-By-Patient';
-                        $.post(cCallLogUrl);
                         return;
                     }
                     if (msgJson.status == 'consultID') {
                       //  alert('consultID recieved:' + msgJson.name);
                         localStorage.setItem('consultationKey', msgJson.name);
                         localStorage.setItem('otherUser', msgFrom);
-                        var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=ConsultID-Received-By-Patient';
-                        $.post(cCallLogUrl);
                         return;
                     }
                     if (msgJson.status == 'Accepted') {
                         localStorage.setItem('otherUser', msgFrom);
                         showAlert('Alert', "Doctor " + msgJson.name + " accepted your request please continue with payment process.");
                         //alert("Doctor " + msgJson.name + " accepted your request please continue with payment process.");
-                        var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Patient-moved-to-Step2';
-                        $.post(cCallLogUrl);
                         $('#wizard').smartWizard('goToStep', 2);
                         $('.buttonNext').show();
                         $('.buttonPrevious').show();
@@ -483,13 +493,16 @@
                 debugger;
                 var msgJson = JSON.parse(msg);
 
-                var isPatientAcceptedCall = confirm('Doctor ' + msgJson.name + ' want to have consultation with you. Press OK to proceed.');
-
-                if (isPatientAcceptedCall) {
-                   // var cCallLogUrl = '@Url.Action("PatientAcceptedCall", "UserChat")?doctorId=' + senderid;
+                //var isPatientAcceptedCall = confirm('Doctor ' + msgJson.name + ' want to have consultation with you. Press OK to proceed.');
+                var options = {
+                    message: 'Doctor ' + msgJson.name + ' want to have consultation with you. Press OK to proceed.',
+                    title: 'Doctor is Calling',
+                    size: eModal.size.lg
+                    };
+                eModal.confirm(options)
+                .then(function () {
+                    var cCallLogUrl = '@Url.Action("PatientAcceptedCall", "UserChat")?doctorId=' + senderid;
                     //  $.post(cCallLogUrl);
-                    var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Patient-accepted-schedle-call';
-                    $.post(cCallLogUrl);
 
                     var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Patient&receiverId=" + senderid + "&doctorName=" + docName + "&patientName=@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)&ConsultID=" + consultID;
 
@@ -506,23 +519,17 @@
                                 UserName: '@SessionHandler.UserInfo.Email'
                             });
                             //Log Tokbox info generated event
-                            var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Tokbox-info-created-and-sent-to-doctor';
+                            var cCallLogUrl = '@Url.Action("TokBoxInfoCreatedbyPatient", "UserChat")?doctorId=' + senderid;
                             $.post(cCallLogUrl);
 
                             var tokboxInfo = oResp;
                             localStorage.setItem('tokbox', tokboxInfo);
 
-                           
                             chat.server.patientRedirectedToCall
                                 (senderConnId, tokboxInfo, '@SessionHandler.UserInfo.Id', '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)');
 
-                            var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + senderid + '&message=Patient-readyFor-VC';
                             //Redirect doctor to call
-                            $.post(cCallLogUrl, function () {
-                                //Redirect patient to call
-                                window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + tokboxInfo;
-                            });
-
+                            window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + tokboxInfo;
 
                         }
                         else {
@@ -540,22 +547,27 @@
                             });
                             return;
                         }
+                    });},
+                    function () {
+                        var cCallLogUrl = '@Url.Action("PatientDeclinedCall", "UserChat")?doctorId=' + senderid;
+                        //   $.post(cCallLogUrl);
+                        chat.server.patientRejectedCall({
+                            SenderId: '@SessionHandler.UserInfo.Id',
+                            UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
+                            ReceiverConnectionId: senderConnId,
+                            consultID: consultID
+                        });
+                        return;
                     });
 
+                //if (isPatientAcceptedCall) {
 
-                }
-                else {
-                    var cCallLogUrl = '@Url.Action("PatientDeclinedCall", "UserChat")?doctorId=' + senderid;
-                    //   $.post(cCallLogUrl);
-                    chat.server.patientRejectedCall({
-                        SenderId: '@SessionHandler.UserInfo.Id',
-                        PatientName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
-                        UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
-                        ReceiverConnectionId: senderConnId,
-                        consultID: consultID
-                    });
-                    return;
-                }
+
+
+                //}
+                //else {
+
+                //}
 
 
 
@@ -647,6 +659,8 @@
                 });
             });
         });
+
+
     </script>
     <script>
         $(document).ajaxSuccess(function (evt, request, settings) {
@@ -710,7 +724,10 @@
                     });
                 }
             }
+
+
         });
+
     </script>
 
     @RenderSection("scripts", required: false)

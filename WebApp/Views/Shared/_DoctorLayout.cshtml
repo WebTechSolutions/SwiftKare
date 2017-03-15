@@ -213,14 +213,14 @@
                             </li>
                            
                            
-                            <li>
-                                
-                                    @{
-                                        Html.RenderAction("DoctorAlertView", "DoctorAlert");
-                                    }
-                               
+                            <li id="alertview" role="presentation" class="dropdown">
+                                @{
+                                    Html.RenderAction("DoctorAlertView", "DoctorAlert");
+                                }
+
                             </li>
-                            <li>
+
+                            <li id="refillerror">
 
                                 @{
                                     Html.RenderAction("DoctorRefillErrorCountView", "Doctor");
@@ -272,14 +272,40 @@
 
     
     <script>
-    var mymodal = $('#myModal1');
-    function showAlert(heading,body)
-    {
+        setInterval(function () {
+           
+           $.ajax({
+                url: "@Url.Action("DoctorAlertView", "DoctorAlert")",
+                type: 'POST',
+            dataType: 'html',
+            cache: false,
+            success: function (html) {
+                //console.log($("#alertview").html());
+                $("#alertview").html(html);
+            }
+            });
+        }, 60*1000);
+        setInterval(function () {
+            $.ajax({
+                url: "@Url.Action("DoctorRefillErrorCountView", "Doctor")",
+                type: 'POST',
+            dataType: 'html',
+            cache: false,
+            success: function (html) {
+                console.log($("#refillerror").html());
+                $("#refillerror").html(html);
+            }
+        });
+        }, 15*60*1000);
+           
 
-        mymodal.find('#heading').text(heading);
-        mymodal.find('#bodytext').text(body);
-        mymodal.modal('show');
-    }
+        var mymodal = $('#myModal1');
+        function showAlert(heading, body) {
+
+            mymodal.find('#heading').text(heading);
+            mymodal.find('#bodytext').text(body);
+            mymodal.modal('show');
+        }
 
     </script>
     <script type="text/javascript">
@@ -304,8 +330,6 @@
         function makeCallToPatient(patId, appId, consultID, oPat) {
             var oPatInfo = oPat;
             localStorage.setItem('consultationKey', consultID);
-            var cCallLogUrl = '@Url.Action("AddCallLogbyDoctor", "UserChat")?patientId=' + patId + '&message=ConsultID-sent-to-Patient';
-            $.post(cCallLogUrl);
             chat.server.sendMessageToPatient({
                 SenderId: '@SessionHandler.UserInfo.Id',
                 UserName: '@SessionHandler.UserInfo.Email',
@@ -331,11 +355,8 @@
             var PatientName = oPatInfo.firstName + ' ' + oPatInfo.lastName;
 
             //Log Call Info - Starts
-           // var cCallLogUrl = '@Url.Action("DoctorCallPatient", "UserChat")?patientId=' + patId;
-            //  $.post(cCallLogUrl);
-
-              var cCallLogUrl = '@Url.Action("AddCallLogbyDoctor", "UserChat")?patientId=' + patId + '&message=Doctor-call-patient';
-            $.post(cCallLogUrl);
+            var cCallLogUrl = '@Url.Action("DoctorCallPatient", "UserChat")?patientId=' + patId;
+          //  $.post(cCallLogUrl);
             //Log Call Info- Ends
 
             chat.server.callPatient(
@@ -356,6 +377,7 @@
         $(function () {
 
             // Start the connection
+            
             $.connection.hub.logging = true;
             $.connection.hub.start().done(function () {
                 var sid = $.cookie('sid');
@@ -403,7 +425,7 @@
 
             chat.client.patientAcceptedCall = function (patientName, patId, appId, patUserName) {
                 localStorage.setItem('otherUser', patUserName);
-
+                
                 new PNotify({ title: 'Success', text: 'Patient ' + patientName + ' accepted call. ', type: 'info', addclass: 'dark', styling: 'bootstrap3' });
                 //alert('Patient ' + patUserName + ' accepted call. this alert is in _DoctorLayout. NEed to redirect to page');
             }
@@ -419,19 +441,12 @@
                 debugger;
                 //
                 localStorage.setItem('tokbox', tokboxInfo);
+                 // var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=@SessionHandler.UserInfo.Id&userType=Doctor&receiverId=" + patId + "&doctorName=@(SessionHandler.UserInfo.FirstName + " "+ SessionHandler.UserInfo.LastName)&patientName=" + patName;
+
                 //  $.post(cUrlReadyForCall, function (oResp) {
-                if (tokboxInfo != '0') {
-                    var cCallLogUrl = '@Url.Action("AddCallLogbyDoctor", "UserChat")?patientId=' + patId + '&message=Tokbox-info-received-and-Doctor-ready-for-vc';
-                    $.post(cCallLogUrl, function () {
-                        //Redirect patient to call
-                        window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + tokboxInfo;  //Redirected doctor to call
-                    });
-                }
-                else {
-                    var cCallLogUrl = '@Url.Action("AddCallLogbyDoctor", "UserChat")?patientId=' + patId + '&message=Err-in-tokbox-info';
-                    $.post(cCallLogUrl);
-                    alert('Err in tokbox connection');
-                }
+                if (tokboxInfo != '0')
+                    window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + tokboxInfo;  //Redirected doctor to call
+                else alert('Err in tokbox connection');
                 //localStorage.setItem('consultationKey', consultId);
 
 
@@ -443,7 +458,7 @@
                 $('#messages').empty();
                 debugger;
                 if (msgFrom != 'ChatHub') {
-
+                   
                     //alert(msg);
                     var fromJson = JSON.parse(msg);
                     // alert(fromJson.status);
@@ -451,35 +466,101 @@
                     if (fromJson.status == 'consultID') {
                      //   alert('consultID recieved:' + fromJson.name);
                         localStorage.setItem('consultationKey', fromJson.name);
-                        var cCallLogUrl = '@Url.Action("AddCallLogbyDoctor", "UserChat")?patientId=' + senderid + '&message=ConsultID-receieved-from-patient';
-                        $.post(cCallLogUrl, function () {
                             //Show pnotify alert "Patient is ready for consultation.We are taking you to conference page."
                             window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + _tokboxinfo;
-                        });
                     }
-
+                    var confirmCall;
                     if (fromJson.status == 'call') {
-                        var confirmCall = confirm(fromJson.name + " want to have a video consultation, Please press OK to accept!");
+                        var options = {
+                            message: fromJson.name + " want to have a video consultation, Please press OK to accept!",
+                            title: 'Patient is Calling',
+                            size: eModal.size.lg
+                        };
 
-                        if (confirmCall == true) {
-                            localStorage.setItem('otherUser', msgFrom);
-                            txt = "Accepted";
+                        eModal.confirm(options)
+                            .then(function () {
+                                localStorage.setItem('otherUser', msgFrom);
+                                txt = "Accepted";
 
-                            //Log Call Accepted - Starts
-                            var cCallLogUrl = '@Url.Action("DoctorAcceptedCall", "UserChat")?patientId=' + senderid;
-                            $.post(cCallLogUrl);
-                            //Log Call Accepted - Ends
-                        } else {
-                            txt = "Declined";
+                                //Log Call Accepted - Starts
+                                var cCallLogUrl = '@Url.Action("DoctorAcceptedCall", "UserChat")?patientId=' + senderid;
+                                $.post(cCallLogUrl);
+                                //Log Call Accepted - Ends
+                                //Save SignalR Information to local storage so that it can be used whenever needed.
+                                var signalRInfo = {
+                                    SenderId: '@SessionHandler.UserInfo.Id',
+                                    UserName: '@SessionHandler.UserInfo.Email',
+                                    ReceiverConnectionId: receiverId,
+                                    ReceiverId: senderid
+                                }
+                                var strSignalRInfo = window.JSON.stringify(signalRInfo);
+                                localStorage.setItem('signalRInfo', strSignalRInfo);
 
-                            //Log Call Declined - Starts
-                            var cCallLogUrl = '@Url.Action("DoctorDeclinedCall", "UserChat")?patientId=' + senderid;
-                            $.post(cCallLogUrl);
-                            //Log Call Declined - Ends
+                                var doctorName = '@string.Format("{0} {1}", SessionHandler.UserInfo.FirstName, SessionHandler.UserInfo.LastName)';
 
-                        }
+                                chat.server.sendMessageToPatient({
+                                    SenderId: '@SessionHandler.UserInfo.Id',
+                                    UserName: '@SessionHandler.UserInfo.Email',
+                                    ReceiverConnectionId: receiverId,
+                                    ReceiverId: '20',
+                                    SenderType: 'Doctor',
+                                    Message: JSON.stringify({ status: txt, name: doctorName })
+                                });
 
-                        //Save SignalR Information to local storage so that it can be used whenever needed.
+                                //Create tokbox info, and save in local storage
+                                debugger;
+                               
+                                var cUrlReadyForCall = "@Url.Action("ReadyForCall","UserChat")?senderId=" + signalRInfo.SenderId + "&userType=Doctor&receiverId=" + signalRInfo.ReceiverId + "&recipientName=" + fromJson.name + "&consultID=" + fromJson.name + "&tokbox=" + fromJson.name;
+
+                                $.post(cUrlReadyForCall, function (oResp) {
+                                    if (oResp != "0") {
+                                        //Log Tokbox info generated event
+                                        var cCallLogUrl = '@Url.Action("TokBoxInfoCreatedbyDoctor", "UserChat")?patientId=' + senderid;
+                                        $.post(cCallLogUrl);
+                                        localStorage.setItem('tokbox', oResp);
+                                        _tokboxinfo = oResp;
+                                        chat.server.sendMessageToPatient({
+                                            SenderId: '@SessionHandler.UserInfo.Id',
+                                            UserName: '@SessionHandler.UserInfo.Email',
+                                            ReceiverConnectionId: receiverId,
+                                            ReceiverId: '20',
+                                            SenderType: 'Doctor',
+                                            Message: JSON.stringify({ status: 'tokbox', name: oResp })
+                                        });
+                                        //Redirect doctor to call
+                                        // window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + oResp;
+                                    }
+
+                                    else {
+                                        var cCallLogUrl = '@Url.Action("TokBoxInfoCreationFailedbyDoctor", "UserChat")?patientId=' + senderid;
+                                        $.post(cCallLogUrl);
+                                        alert('Err in generating tokbox info');
+                                    }
+                                });
+                            },
+                            function () {
+                                txt = "Declined";
+
+                                //Log Call Declined - Starts
+                                var cCallLogUrl = '@Url.Action("DoctorDeclinedCall", "UserChat")?patientId=' + senderid;
+                                $.post(cCallLogUrl);
+                                //Log Call Declined - Ends
+                                var doctorName = '@string.Format("{0} {1}", SessionHandler.UserInfo.FirstName, SessionHandler.UserInfo.LastName)';
+                                chat.server.sendMessageToPatient({
+                                    SenderId: '@SessionHandler.UserInfo.Id',
+                                    UserName: '@SessionHandler.UserInfo.Email',
+                                    ReceiverConnectionId: receiverId,
+                                    ReceiverId: '20',
+                                    SenderType: 'Doctor',
+                                    Message: JSON.stringify({ status: txt, name: doctorName })
+                                });
+                                //if (txt == 'Declined') return; //if doctor decline then stop here
+                            });
+                        //var confirmCall = confirm(fromJson.name + " want to have a video consultation, Please press OK to accept!");
+
+                        
+
+                        @*//Save SignalR Information to local storage so that it can be used whenever needed.
                         var signalRInfo = {
                             SenderId: '@SessionHandler.UserInfo.Id',
                             UserName: '@SessionHandler.UserInfo.Email',
@@ -529,7 +610,7 @@
                                   $.post(cCallLogUrl);
                                 alert('Err in generating tokbox info');
                             }
-                        });
+                        });*@
                     }
                 }
             }
@@ -600,6 +681,9 @@
                     });
                 }
             }
+
+           
+            
         });
     </script>
 

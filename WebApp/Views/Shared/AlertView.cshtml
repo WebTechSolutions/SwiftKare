@@ -19,15 +19,15 @@
     else
     {
         @*<li role="presentation" class="dropdown">*@
-            <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-bell"></i>
-                
-            </a>
+        <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-bell"></i>
+
+        </a>
             <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
                 <li>
                     <a>
                         <span class="message">
-                           There is no alert.
+                            There is no alert.
                         </span>
                     </a>
                 </li>
@@ -40,30 +40,30 @@
                     </div>
                 </li>
             </ul>
-        @*</li>*@
+            @*</li>*@
     }
 
 }
 else
 {
     var count = 0;
-    foreach(var i in Model)
+    foreach (var i in Model)
     {
-        if(i.isRead==false|| i.isRead==null)
+        if (i.isRead == false || i.isRead == null)
         {
             count++;
         }
     }
-   
+
     @*<li role="presentation" class="dropdown">*@
-        <a id="notify" style="display:block" href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false" onclick="readAllAlerts()">
-            <i class="fa fa-bell"></i>
-            @if (count > 0)
-            {
-                <span class="badge bg-green">@count</span>
-            }
-                     
-        </a>
+    <a id="notify" style="display:block" href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false" onclick="readAllAlerts()">
+        <i class="fa fa-bell"></i>
+        @if (count > 0)
+        {
+            <span class="badge bg-green">@count</span>
+        }
+
+    </a>
         <a id="nonotify" style="display:none" href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
             <i class="fa fa-bell"></i>
             <span class="badge bg-green"></span>
@@ -73,18 +73,18 @@ else
             {
                 if (item.isRead == false || item.isRead == null)
                 {
-                <li>
-                    <a>
-                        @*<span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>*@
-                        @*<span>
-                                <span>John Smith</span>
-                                <span class="time">3 mins ago</span>
-                            </span>*@
-                        <span class="message">
-                            @item.alertText
-                        </span>
-                    </a>
-                </li>
+                    <li>
+                        <a>
+                            @*<span class="image"><img src="~/Content/images/img.jpg" alt="Profile Image" /></span>*@
+                            @*<span>
+                                    <span>John Smith</span>
+                                    <span class="time">3 mins ago</span>
+                                </span>*@
+                            <span class="message">
+                                @item.alertText
+                            </span>
+                        </a>
+                    </li>
                 }
             }
             <li>
@@ -97,7 +97,7 @@ else
             </li>
 
         </ul>
-    @*</li>*@
+        @*</li>*@
 }
 <script>
     function readAllAlerts()
@@ -110,7 +110,7 @@ else
         data: {"id":'@SessionHandler.UserInfo.Id'},
         dataType: 'json',
         success: function (result) {
-            
+
         },
         error: function (err) {
         //alert(err.statusText);
@@ -120,4 +120,4 @@ else
         }
         });
         }
-    </script>
+</script>
