@@ -51,9 +51,9 @@
                     <div class="x_content">
                         <div id="divReschedule" class="table-responsive">
 
-                            @{
+                            @*@{
                                 Html.RenderAction("PartialReschedule", "Appointment");
-                            }
+                            }*@
 
 
                         </div>
@@ -67,9 +67,9 @@
                     <div class="x_content">
                         <div id="divPending" class="table-responsive">
 
-                            @{
+                            @*@{
                                 Html.RenderAction("PartialPending", "Appointment");
-                            }
+                            }*@
 
 
                         </div>
@@ -154,7 +154,7 @@
         var did = docid;//$("#pvdocid").val();
 
         $("#DoctorProfileContent").load('@Url.Action("DoctorProfile", "Appointment")?doctorID=' + did, function () {
-
+           
         });
 
     }
@@ -170,7 +170,7 @@
     }
 
     var currentTab = "";
-   
+
     var fetchDate="";
     var _objAppointment = {};
     var _doctorName="";
@@ -178,11 +178,27 @@
     var appdate = "";
     $(document).ready(function () {
         currentTab = "U";
-       
+
     });
     function setTab(cTab) {
         currentTab = cTab;
-       
+        if (cTab == 'U') {
+           $("#divUpcoming").load('@Url.Action("PartialUpcoming", "Appointment")', function () {
+                //callback();
+            });
+
+        }
+        if(cTab=='R')
+        {
+            $("#divReschedule").load('@Url.Action("PartialReschedule", "Appointment")', function () {
+                //callback();
+            });
+        }
+        if (cTab == 'P') {
+             $("#divPending").load('@Url.Action("PartialPending", "Appointment")', function () {
+                //callback();
+             });
+        }
     }
 
 
@@ -194,10 +210,10 @@
     }
 
     function completeConsult(editappid,cid) {
-      
+
                //showLoader();
                 var objCRR = {};
-                
+
                 objCRR["userID"] = '@SessionHandler.UserInfo.userId';
                 objCRR["appID"] = editappid;
                 $.ajax({
@@ -206,10 +222,10 @@
                     data: objCRR,
                     dataType: 'json',
                     success: function (result) {
-                        
+
                         //Reload container
                         if (result.Message != undefined) {
-                           
+
                             new PNotify({ title: 'Error', text: "Consultation "+" "+result.Message, type: 'error', styling: 'bootstrap3' });
                             $('#myModal4').modal('hide');
                             //stopLoader();
@@ -217,10 +233,10 @@
                         else {
                             new PNotify({ title: 'Success', text: "Consultation is completed successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
                             $('#myModal4').modal('hide');
-                           
+
                             reloadContainer(function () {
 
-                                
+
                                 //Stop displaying loader
                                 //stopLoader();
                             });
@@ -237,8 +253,8 @@
 
     }
 
-   
-    
+
+
 
     //Reschedule App
 
@@ -247,7 +263,7 @@
 
         _objAppointment["appID"] = appID;// $("#RAppID").val();
         _objAppointment["appType"] = currentTab;
-        
+
         _objAppointment["userID"] = '@SessionHandler.UserInfo.userId';
         $.ajax({
             url: '@Url.Action("RescheduleApp", "Appointment")',
@@ -323,8 +339,8 @@
         }
 
         $("#doctorid").val(todoId);
-        var cap=docName.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-        $("#timingsmodaltitle").text("Dr. "+cap + " Timings");
+        var caps=docName.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        $("#timingsmodaltitle").text("Dr. "+caps + " Timings");
 
 
 
@@ -337,13 +353,14 @@
     });
     $('#fetchdate').on('apply.daterangepicker', function (ev, picker) {
         //do something, like clearing an input
-        
+
         fetchTimings( $('#fetchdate').val());
 
     });
     $('#fetchdate').data('daterangepicker').setStartDate();
     function fetchTimings(fetchdate) {
         debugger;
+        showLoader();
         var _objSearch = {};
         _objSearch["appDate"] = fetchdate;//$("#fetchdate").val();
         //alert( _objSearch["appDate"]);
@@ -369,7 +386,14 @@
                     var tablehtml = "";
                     $.each(response.Object, function (item) {
 
-                        tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + fetchdate + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
+                        var tolocalTime = converttoLocal(response.Object[item]);
+
+                        var flag = compareDateTime(fetchdate.trim(), tolocalTime);
+                        if (flag) {
+
+                            tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + fetchdate + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
+                        }
+
 
                     });
 
@@ -380,10 +404,11 @@
             },
 
         });
+        hideLoader();
     }
 
     function showDoctorTimings(doctorID,appID,appDate) {
-        
+        showLoader();
         var cappDate = appDate.split("/");
         var f = new Date(cappDate[2], cappDate[1] - 1, cappDate[0]);
         $("#RAppID").val(appID);
@@ -401,12 +426,12 @@
         }
 
         today = dd + '/' + mm + '/' + yyyy;
-        
+
         $('#fetchdate').val(today);
         var _objSearch = {};
         //appdate = formatDate(new Date(appDate), "dd/MM/yyyy");
         _objSearch["appDate"] = appDate;
-        
+
         $('#fetchdate').val(appDate);
         debugger;
         //var d1 = new Date(appDate.ToString());
@@ -432,9 +457,13 @@
                 else {
                     var tablehtml = "";
                     $.each(response.Object, function (item) {
+                        var tolocalTime = converttoLocal(response.Object[item]);
 
-                        tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
+                        var flag = compareTime(tolocalTime);
+                        if (flag) {
 
+                            tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
+                        }
                     });
 
                     if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
@@ -445,6 +474,7 @@
             },
 
         });
+        hideLoader();
     }
 
     function setDateTime(myappTime, myappDate) {
@@ -455,7 +485,7 @@
         //alert($('#RAppID').val());
         rescheduleApp($('#RAppID').val());
         return false;
-       
+
     }
 
     function reloadContainer(callback) {
@@ -475,11 +505,11 @@
     function reloadModelContainer(callback) {
         debugger;
         var appid=$("#pvappid").val();
-      
+
         $("#myModalContent").load('@Url.Action("ViewAppDetails", "Appointment")?appID='+appid, function () {
             callback();
         });
-       
+
     }
     $(".scheduler").addClass("current-page");
 </script> 

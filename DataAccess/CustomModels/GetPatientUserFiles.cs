@@ -14,7 +14,8 @@ namespace DataAccess.CustomModels
         public byte[] fileContent { get; set; }
         public Nullable<long> patientID { get; set; }
         public Nullable<long> doctorID { get; set; }
-        public Nullable<DateTime> createdDate { get; set; }
+        public Nullable<DateTime> cd { get; set; }
+        public string createdDate { get; set; }
 
         /// <summary>
         /// Returns file size

@@ -31,8 +31,35 @@ namespace WebApp.Controllers
             try
             {
                 var oData = oConsultationRepository.GetPatientConsultations(SessionHandler.UserInfo.Id);
+                ViewBag.oData = oData;
+                return PartialView("PartialViewConsultation");
 
-                return PartialView("PartialViewConsultation", oData);
+            }
+
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                ViewBag.Error = ex.Response.ReasonPhrase.ToString();
+                ViewBag.Success = "";
+            }
+            return PartialView("PartialViewConsultation");
+        }
+        [HttpPost]
+        public PartialViewResult showAllConsultations(int flag)
+        {
+            try
+            {
+                if(flag==0)
+                {
+                    var oData = oConsultationRepository.GetPatientConsultations(SessionHandler.UserInfo.Id);
+                    ViewBag.oData = oData;
+                    return PartialView("PartialViewConsultation");
+                }
+                if (flag == 1)
+                {
+                    var oData = oConsultationRepository.GetAllConsultations(SessionHandler.UserInfo.Id);
+                    ViewBag.oData = oData;
+                    return PartialView("PartialViewConsultation");
+                }
 
             }
 
@@ -91,7 +118,22 @@ namespace WebApp.Controllers
             }
 
         }
+        [HttpPost]
+        public JsonResult WaiveBilling(long consultID)
+        {
+            try
+            {
+                ApiResultModel apiresult = new ApiResultModel();
+                apiresult = oConsultationRepository.WaiveBilling(consultID);
+                return Json(new { Success = true, ApiResultModel = apiresult });
 
+            }
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                return Json(new { Message = ex.Response.ReasonPhrase });
+            }
+
+        }
         [HttpPost]
         public JsonResult GetConsultationReview(long consultID)
         {
@@ -107,5 +149,23 @@ namespace WebApp.Controllers
             }
         }
 
+        [HttpPost]
+        public PartialViewResult GetDoctorReviews(long doctorID)
+        {
+            try
+            {
+                var oData = oConsultationRepository.GetDoctorReviews(doctorID);
+                ViewBag.oData = oData;
+                return PartialView("PartialDoctorReviews");
+
+            }
+
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                ViewBag.Error = ex.Response.ReasonPhrase.ToString();
+                ViewBag.Success = "";
+            }
+            return PartialView("PartialDoctorReviews");
+        }
     }
 }

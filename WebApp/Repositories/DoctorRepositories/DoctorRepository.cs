@@ -22,6 +22,7 @@ namespace WebApp.Repositories.DoctorRepositories
             //By Default Active
             t.active = true;
             t.status = true;
+            t.cd = System.DateTime.Now;
             var strContent = JsonConvert.SerializeObject(t);
             var response = ApiConsumerHelper.PostData("api/Doctors", strContent,false);
             var result = JsonConvert.DeserializeObject<Doctor>(response);

@@ -50,7 +50,12 @@
             </ul>
             <div class="clearfix"></div>
         </div>
+        <div id="divshowAll" class="checkbox" style="display: inline-block;">
+            <label style="margin-top: 0px;margin-bottom: 10px;margin-left: -15px;width: 210px;">
+                <input name="showAll" id="chekshowAll" type="checkbox" class="flat">&nbsp; Show All Consultations
 
+            </label>
+        </div>
         <div class="x_content">
             <div class="table-responsive" id="divConsultation">
                 @{
@@ -128,6 +133,45 @@
 <!-- /page content -->
 
 <script>
+    $(document).ready(function(){
+        $('#divshowAll').on('ifChecked', 'input', function (event) {
+            showLoader();
+            var cUrl = "@Url.Action("showAllConsultations", "DoctorConsultation")?flag=1";
+            $.ajax({
+                url: cUrl,
+                type: 'POST',
+                dataType: 'html',
+                cache: false,
+                success: function (html) {
+                    $("#divConsultation").html(html);
+
+                },
+                error: function(){
+                    new PNotify({ title: 'Error', text: ViewBag.Error, type: 'error', styling: 'bootstrap3' });
+                }
+            });
+            hideLoader();
+        });
+
+        $('#divshowAll').on('ifUnchecked', 'input', function (event) {
+            showLoader();
+            var cUrl = "@Url.Action("showAllConsultations", "DoctorConsultation")?flag=0";
+            $.ajax({
+                url: cUrl,
+                type: 'POST',
+                dataType: 'html',
+                cache: false,
+                success: function (html) {
+                    $("#divConsultation").html(html);
+
+                },
+                error: function(){
+                    new PNotify({ title: 'Error', text: ViewBag.Error, type: 'error', styling: 'bootstrap3' });
+                }
+            });
+            hideLoader();
+        });
+    });
     var cID = 0;
 
     function showReview(consultID) {
@@ -238,13 +282,25 @@
 
     };
     function downloadFile(fileId,patID) {
-
-        if (confirm("Are you sure you want to downlod file?")) {
+        var options = {
+            message: 'Are you sure you want to downlod file?',
+            title: 'Download File',
+            size: eModal.size.lg
+        };
+        eModal.confirm(options)
+        .then(function () {
             var cUrl = "@Url.Action("Download", "DoctorConsultation")?fileId=" + fileId+"&patID="+patID;
 
             $('#iframeDownload').attr('src', cUrl);
             $('#iframeDownload').load();
-        }
+        },
+        function () { return;});
+        @*if (confirm("Are you sure you want to downlod file?")) {
+            var cUrl = "@Url.Action("Download", "DoctorConsultation")?fileId=" + fileId+"&patID="+patID;
+
+            $('#iframeDownload').attr('src', cUrl);
+            $('#iframeDownload').load();
+        }*@
     }
     function showConsult(consultID) {
         cID = consultID;

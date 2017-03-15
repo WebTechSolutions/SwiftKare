@@ -103,10 +103,10 @@ else
 </script>
 <!-- /Datatables -->
 <script>
-    function setTab(cTab) {
+    @*function setTab(cTab) {
         currentTab = cTab;
-
-    }
+        $("#divReschedule").load('@Url.Action("PartialDoctorReschedule", "DoctorAppointment")');
+    }*@
     function rsendVariables(doctorid, editappid, elem) {
         var objCRR = {};
         //objCRR["doctorID"] = doctorid;

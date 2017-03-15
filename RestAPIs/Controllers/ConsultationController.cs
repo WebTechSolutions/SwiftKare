@@ -3,6 +3,7 @@ using DataAccess.CommonModels;
 using DataAccess.CustomModels;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -268,6 +269,22 @@ namespace RestAPIs.Controllers
 
 
         }
+        [Route("api/getPatientAllConsultations")]
+        public HttpResponseMessage GetPatientAllConsultations(long patientID)
+        {
+            try
+            {
+                var result = db.SP_GetPatientAllConsultations(patientID);
+                response = Request.CreateResponse(HttpStatusCode.OK, result);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetPatientAllConsultations in ConsultationController");
+            }
+
+
+        }
 
         [Route("api/getDcotorConsultations")]
         public HttpResponseMessage GetDcotorConsultations(long doctorID)
@@ -281,6 +298,23 @@ namespace RestAPIs.Controllers
             catch (Exception ex)
             {
                 return ThrowError(ex, "DcotorConsultations in ConsultationController");
+            }
+
+
+        }
+
+        [Route("api/getDcotorAllConsultations")]
+        public HttpResponseMessage GetDcotorAllConsultations(long doctorID)
+        {
+            try
+            {
+                var result = db.SP_GetDcotorAllConsultations(doctorID);
+                response = Request.CreateResponse(HttpStatusCode.OK, result);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "DcotorAllConsultations in ConsultationController");
             }
 
 
@@ -310,6 +344,96 @@ namespace RestAPIs.Controllers
             }
 
 
+        }
+        [HttpPost]
+        [Route("api/WaiveBillingRequest")]
+        public HttpResponseMessage WaiveBillingRequest(long consultID)
+        {
+            try
+            {
+                if (consultID == 0)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid consultation ID." });
+                    response.ReasonPhrase = "Provide consult id.";
+                    return response;
+                }
+                var appt = (from d in db.Consultations
+                           where d.consultID == consultID
+                           select new { appDate = d.Appointment.appDate, appTime = d.Appointment.appTime }
+                                    ).FirstOrDefault();
+                var objdoc = (from d in db.Consultations
+                                where d.consultID == consultID
+                              select new { email = d.Doctor.email, timezone = d.Doctor.timezone }
+                                    ).FirstOrDefault();
+                
+
+                var objpat = (from d in db.Consultations
+                                where d.consultID == consultID
+                              select new { email = d.Patient.email, timezone = d.Patient.timezone }
+                                    ).FirstOrDefault();
+                
+                Helper.TimeZoneHelper tz =new Helper.TimeZoneHelper();
+                try
+                {
+                    DateTime ad;
+                    ad = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", appt.appDate.Value.ToShortDateString()));
+                    TimeSpan at = TimeSpan.Parse(appt.appTime.ToString());
+                    DateTime appDateTime = ad + at;
+                    
+                    #region sendEmail
+                    var sampledocEmailBody = @"
+                    <h3> Waive Billing Request</h3>
+                    <p>Request of paymenERT=-0987YU.**954
+';Gt weiver for " + tz.convertTimeZone(appDateTime,objdoc.timezone).ToString("dd-MM-yyyy hh:mm:ss tt") +
+                        @" has been sent to SwiftKAre Support. You will be notified soon from support</p>
+                    <p>&nbsp;</p>
+                    <p><strong>Best Regards,<br/>SwiftKare</strong></p>
+                    ";
+                    var samplepatEmailBody = @"
+                    <h3> Waive Billing Request</h3>
+                    <p>Request of payment weiver for " + tz.convertTimeZone(appDateTime, objpat.timezone).ToString("dd-MM-yyyy hh:mm:ss tt") +
+                        @" has been sent to SwiftKAre Support. You will be notified soon from support</p>
+                    <p>&nbsp;</p>
+                    <p><strong>Best Regards,<br/>SwiftKare</strong></p>
+                    ";
+                    var sampleEmailBody = @"
+                    <h3> Waive Billing Request</h3>
+                    <p>Request of payment weiver for " + appDateTime+
+                       @" has been sent to SwiftKAre Support. You will be notified soon from support</p>
+                    <p>&nbsp;</p>
+                    <p><strong>Best Regards,<br/>SwiftKare</strong></p>
+                    ";
+
+                    var oSimpleEmail = new Helper.EmailHelper(objdoc.email.ToString(), "Waive Billing Request", sampledocEmailBody);
+                    oSimpleEmail.SendMessage();
+
+
+
+                    oSimpleEmail = new Helper.EmailHelper(objpat.email.ToString(), "Waive Billing Request", samplepatEmailBody);
+                    oSimpleEmail.SendMessage();
+
+                    string sksupport = ConfigurationManager.AppSettings["SendGridFromEmailAddress"].ToString();
+                    oSimpleEmail = new Helper.EmailHelper(sksupport, "Waive Billing Request", sampleEmailBody);
+                    oSimpleEmail.SendMessage();
+                    #endregion
+
+                }
+                catch (Exception ex)
+                {
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = ex.Message });
+                    response.ReasonPhrase = ex.Message;
+                    return response;
+                }
+                
+
+               
+                response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = consultID, message = "" });
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "WaiveBillingRequest in ConsultationController");
+            }
         }
         [HttpPost]
         [Route("api/addConsultReview")]
@@ -511,6 +635,33 @@ namespace RestAPIs.Controllers
                                       reviewText = cn.review
 
                                   }).FirstOrDefault();
+
+                response = Request.CreateResponse(HttpStatusCode.OK, consReview);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "getConsultationReview in ConsultationController");
+            }
+        }
+
+        [Route("api/getDoctorReviews")]
+        public HttpResponseMessage GetDoctorReviews(long doctorID)
+        {
+
+            try
+            {
+                var consReview = (from cn in db.Consultations
+                                  where cn.doctorID == doctorID && cn.reviewStar!=null &&
+                                  cn.review!=null
+                                  select new
+                                  {
+                                      consultID = cn.consultID,
+                                      doctorID = cn.doctorID,
+                                      star = cn.reviewStar,
+                                      reviewText = cn.review
+
+                                  }).ToList();
 
                 response = Request.CreateResponse(HttpStatusCode.OK, consReview);
                 return response;

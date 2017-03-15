@@ -13,4 +13,11 @@ namespace DataAccess.CustomModels
         public int star { get; set; }
         public string reviewText { get; set; }
     }
+    public class DoctorReviewodel
+    {
+        public long consultID { get; set; }
+        public long doctorID { get; set; }
+        public int star { get; set; }
+        public string reviewText { get; set; }
+    }
 }

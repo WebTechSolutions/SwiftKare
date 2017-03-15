@@ -295,6 +295,7 @@
     <Compile Include="Helper\DoseSpotHelper.cs" />
     <Compile Include="Helper\EmailHelper.cs" />
     <Compile Include="Helper\StripePayHelper.cs" />
+    <Compile Include="Helper\TimeZoneHelper.cs" />
     <Compile Include="Helper\UserChatHelper.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Models\APNSNotification.cs" />

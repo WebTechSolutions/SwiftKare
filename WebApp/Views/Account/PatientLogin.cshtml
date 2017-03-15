@@ -1,13 +1,19 @@
 ﻿@model WebApp.Models.LoginRegisterViewModel
 <link href="~/Content/css/pnotify.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
 <script src="~/Scripts/pnotify.js"></script>
 @{
     ViewBag.Title = "Log in";
     Layout = "~/Views/Shared/_AccountsLayout.cshtml";
     ViewBag.IsPatient = false;
 }
-
- <a class="hiddenanchor" id="signup"></a>
+<script>
+    @if (ViewBag.ModelError != null)
+{
+         @: new PNotify({ title: 'Error', text: "@ViewBag.ModelError", type: 'error', styling: 'bootstrap3' });
+    }
+</script>
+<a class="hiddenanchor" id="signup"></a>
 <a class="hiddenanchor" id="signin"></a>
 <div class="login_wrapper">
 
@@ -22,21 +28,27 @@
                 @Html.AntiForgeryToken()
 
                 <h1>Login</h1>
-                <p>@ViewBag.SuccessMessage</p>
+                
                 <br />
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
                 <div>
-                    @Html.TextBoxFor(m => m.LoginViewModel.Email, new { @class = "form-control", @placeholder = "Email Address" })
                     @Html.ValidationMessageFor(m => m.LoginViewModel.Email, "", new { @class = "text-danger" })
                 </div>
                 <div>
-                    @Html.PasswordFor(m => m.LoginViewModel.Password, new { @class = "form-control", @placeholder = "Password" })
+                    @Html.TextBoxFor(m => m.LoginViewModel.Email, new { @class = "form-control", @placeholder = "Email Address" })
+                    
+                </div>
+                <div>
                     @Html.ValidationMessageFor(m => m.LoginViewModel.Password, "", new { @class = "text-danger" })
                 </div>
+                <div>
+                    @Html.PasswordFor(m => m.LoginViewModel.Password, new { @class = "form-control", @placeholder = "Password" })
+                    
+                </div>
                 @*<div>
-                    @Html.CheckBoxFor(m => m.LoginViewModel.RememberMe)
-                    @Html.LabelFor(m => m.LoginViewModel.RememberMe)
-                </div>*@
+                        @Html.CheckBoxFor(m => m.LoginViewModel.RememberMe)
+                        @Html.LabelFor(m => m.LoginViewModel.RememberMe)
+                    </div>*@
 
 
                 <div>
@@ -49,7 +61,7 @@
                 <div class="clearfix"></div>
                 <div class="separator">
                     <p class="change_link">
-                        <a href="#signup" class="to_register"> Create Account </a>
+                        <a href="#signup" class="to_register" onclick="resetvalidation()"> Create Account </a>
                     </p>
                     <div class="clearfix"></div>
                 </div>
@@ -62,27 +74,48 @@
 
     <div id="register" class="animate form registration_form">
         <section class="login_content">
+
             <img src="~/Content/images/Logos.png" />
             @using (Html.BeginForm("Signup", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 <h1>Create Account</h1>
-                @Html.ValidationSummary("", new { @class = "text-danger" })
+                @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
+                <script>
+                      @if (ViewBag.error != null)
+                      {
+                        @: new PNotify({ title: 'Error', text: "@ViewBag.error", type: 'error', styling: 'bootstrap3' });
+                     }
+                </script>
+                @*<div>
+                       <span class = "text-danger">@ViewBag.error</span>
+                    </div>*@
                 <div>
-                   <span class = "text-danger">@ViewBag.error</span>
+                    @Html.ValidationMessageFor(m => m.RegisterViewModel.FirstName, "", new { @class = "text-danger" })
                 </div>
                 <div>
                     @Html.TextBoxFor(m => m.RegisterViewModel.FirstName, new { @class = "form-control", @placeholder = "First Name" })
                 </div>
                 <div>
+                    @Html.ValidationMessageFor(m => m.RegisterViewModel.LastName, "", new { @class = "text-danger" })
+                </div>
+                <div>
                     @Html.TextBoxFor(m => m.RegisterViewModel.LastName, new { @class = "form-control", @placeholder = "Last Name" })
                 </div>
-
+                <div>
+                    @Html.ValidationMessageFor(m => m.RegisterViewModel.Email, "", new { @class = "text-danger" })
+                </div>
                 <div>
                     @Html.TextBoxFor(m => m.RegisterViewModel.Email, new { @class = "form-control", @placeholder = "Email Address" })
                 </div>
                 <div>
+                    @Html.ValidationMessageFor(m => m.RegisterViewModel.Password, "", new { @class = "text-danger" })
+                </div>
+                <div>
                     @Html.PasswordFor(m => m.RegisterViewModel.Password, new { @class = "form-control", @placeholder = "Password" })
+                </div>
+                <div>
+                    @Html.ValidationMessageFor(m => m.RegisterViewModel.ConfirmPassword, "", new { @class = "text-danger" })
                 </div>
                 <div>
                     @Html.PasswordFor(m => m.RegisterViewModel.ConfirmPassword, new { @class = "form-control", @placeholder = "Confirm Password" })
@@ -91,14 +124,14 @@
                     <input type="submit" class="btn btn-primary submit" value="Submit" />
                 </div>
                 @*<div>
-                    @Html.CheckBoxFor(m => m.IsPatient, new { @onChange = "chkChange()", @id = "chkIsPatient" })
-                    <label for="chkIsPatient" id="lblIsPatient">Register as a Patient</label>
-                </div>*@
+                        @Html.CheckBoxFor(m => m.IsPatient, new { @onChange = "chkChange()", @id = "chkIsPatient" })
+                        <label for="chkIsPatient" id="lblIsPatient">Register as a Patient</label>
+                    </div>*@
 
                 <div class="clearfix"></div>
                 <div class="separator">
                     <p class="change_link">
-                        <a href="#signin" class="to_register"> Log in </a>
+                        <a href="#signin" class="to_register" onclick="resetvalidation()"> Log in </a>
                     </p>
                     <div class="clearfix"></div>
                 </div>
@@ -115,6 +148,12 @@
     @Scripts.Render("~/bundles/jqueryval")
 }
 <script language="javascript">
+
+    function resetvalidation() {
+
+        $('.validation-summary-errors li').remove();
+
+    }
     function chkChange() {
         if ($("#chkIsPatient").prop("checked")) {
             $("label[id$='lblIsPatient']").html("Register as a Patient");

@@ -85,6 +85,22 @@ namespace WebApp.Repositories.DoctorRepositories
             }
 
         }
+        public DocTimingsAndAppointment FetchDoctorTimesNew(FetchTimingsModel searchModel)
+        {
+
+            try
+            {
+                var strContent = JsonConvert.SerializeObject(searchModel);
+                var response = ApiConsumerHelper.PostData("api/fetchDoctorTimeNeww/?searchModel", strContent);
+                var result = JsonConvert.DeserializeObject<DocTimingsAndAppointment>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+                throw ex;
+            }
+
+        }
         public GetDoctorINFOVM GetDoctorInfo(long doctorID)
         {
 

@@ -81,9 +81,51 @@ namespace RestAPIs.Controllers
             }
         }
 
+        [Route("api/getConsultationSOAP")]
+        public HttpResponseMessage getConsultationSOAP(long consultID)
+        {
+            try
+            {
+                //var result = db.SP_GetConsultationDetails(consultID).ToList();
+                var result = (from cn in db.Consultations
+                              where cn.consultID == consultID && cn.active == true
+                              select new
+                              {
+                                  consultID = cn.consultID,
+                                  subjective = cn.subjective,
+                                  objective = cn.objective,
+                                  assessment = cn.assessment,
+                                  plans = cn.plans,
+                                  rosItems = (from ros in db.ConsultationROS
+                                              where ros.consultationID == cn.consultID && ros.active == true
+                                              select new { systemItemName = ros.systemItemName }).ToList(),
+                                  chat = (from l in db.ChatLogs
+                                         where l.consultID == cn.consultID
+                                         orderby l.chatID ascending
+                                         select new
+                                         {
+                                             sender = l.sender,
+                                             reciever = l.reciever,
+                                             message = l.message,
+                                             cd=l.cd
+                                         }).ToList()
+                              }).FirstOrDefault();
+                response = Request.CreateResponse(HttpStatusCode.OK, result);
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "getConsultationSOAP in VideoConferenceController");
+            }
+
+
+        }
+
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
             response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = "Internal server error at" + Action });
+            response.ReasonPhrase = ex.InnerException.Message;
             return response;
 
         }

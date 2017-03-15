@@ -1,5 +1,5 @@
-﻿@model IEnumerable<DataAccess.SP_GetDcotorConsultations_Result>
-@if (Model == null || Model.Count() == 0)
+﻿@*@model IEnumerable<DataAccess.SP_GetDcotorConsultations_Result>*@
+@if (ViewBag.oData == null)
 {
     <div class="well">
         There is no consultation.
@@ -20,10 +20,10 @@ else
         </thead>
 
         <tbody>
-            @if (Model != null)
+            @if (ViewBag.oData != null)
             {
                 var j = 1;
-                foreach (var item in Model)
+                foreach (var item in ViewBag.oData)
                 {
                     <tr class="even pointer">
                         <td style="text-align:center;width:20%"><a href='' onclick='showProfile(@item.patientID)' id="viewprofile" data-toggle="modal" data-target='#myModal8'>
@@ -133,9 +133,13 @@ else
                
                 var o=$.parseJSON(resp)
                 console.log(o);
-                $("#iframeUrl").attr('src', o.url);
-                $("#mdlIframe").modal('show');
+                eModal
+                .iframe(o.url, "ePrescription")
+                .then(function () { console.log('iframe loaded'); });
+                //$("#iframeUrl").attr('src', o.url);
+                //$("#mdlIframe").modal('show');
             });
+            
         });
 
         var handleDataTableButtons = function () {
