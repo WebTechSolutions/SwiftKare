@@ -411,6 +411,7 @@ function SearchDoctor(patientID) {
 }
 function fetchTimings(fetchdate) {
     showLoader();
+    
     var _objSearch = {};
     _objSearch["appDate"] = fetchdate.trim();//$("#fetchdate").val();
     _objSearch["doctorID"] = $("#doctorid").val();
@@ -462,6 +463,7 @@ function fetchTimings(fetchdate) {
 
 function showDoctorTimings(doctorID) {
     showLoader();
+    
     setAppType("S");
     var today = new Date();
     var dd = today.getDate();
