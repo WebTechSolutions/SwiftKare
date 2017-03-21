@@ -283,6 +283,21 @@ namespace WebApp.Controllers
             oVideoCallRepository.RemoveConsultROS(new ConsultROSModel { consultID = consultID, sysitemid = sysitemid, sysitemname = sysitemname, userID = SessionHandler.UserInfo.Id.ToString() });
         }
 
+        [HttpPost]
+        public JsonResult LoadSOAP(long consultID)
+        {
+
+            try
+            {
+                var objconsultation = oVideoCallRepository.LoadSOAP(consultID);
+                return Json(new { SOAP = objconsultation });
+
+            }
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                return Json(new { Message = ex.Response.ReasonPhrase });
+            }
+        }
         #endregion
 
     }

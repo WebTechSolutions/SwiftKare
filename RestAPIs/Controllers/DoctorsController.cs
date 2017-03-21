@@ -122,7 +122,7 @@ namespace RestAPIs.Controllers
                 objModel.role = (from r in db.AspNetRoles
                                  where r.Id == doctor.userId
                                  select r.Name).FirstOrDefault();
-                objModel.timeZone = doctor.timezone;
+                objModel.timeZoneoffset = doctor.timezoneoffset;
                 objModel.title = doctor.title;
                 objModel.iOSToken = doctor.iOSToken;
                 objModel.AndroidToken = doctor.AndroidToken;

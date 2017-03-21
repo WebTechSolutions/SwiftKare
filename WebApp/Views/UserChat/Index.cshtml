@@ -313,7 +313,50 @@
             </div>
         </div>
     </div><!-- mymodal1 -->
-   
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width: 500px;margin-left: 280px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="timingsmodaltitle">Consultation Review</h4>
+                </div><!--/.modal header-->
+
+                <div class="modal-body text-left">
+                    <div class="row" id="docrow">
+                        <input type="text" style="display:none" id="consultID">
+
+                        <form class="form-horizontal form-label-left" style="margin-top: -20px;">
+                            <div class="col-sm-offset-4 col-sm-4">
+                                <div class="xdisplay_inputx form-group has-feedback">
+
+                                    <span id="inputSuccess2Status" class="sr-only">(success)</span>
+                                </div>
+                            </div>
+                        </form>
+                        <form class="form-horizontal form-label-left">
+                            <div class="col-sm-12 text-center" id="rdiv">
+                                @*style="margin-left:97px"*@
+
+                                <a href="javascript:void(0);" onclick="toggle(this);"><span id="s1" class="fa fa-star-o"></span></a>
+                                <a href="javascript:void(0);"><span id="s2" class="fa-star-o"></span></a>
+                                <a href="javascript:void(0);"><span id="s3" class="fa-star-o"></span></a>
+                                <a href="javascript:void(0);"><span id="s4" class="fa-star-o"></span></a>
+                                <a href="javascript:void(0);"><span id="ss5" class="fa-star-o"></span></a>
+
+                            </div>
+                            <div class="col-sm-12 text-center" style="margin-top: 20px;">
+                                <textarea id="message" class="form-control" name="message" data-parsley-maxlength="1000"
+                                          data-parsley-validation-threshold="10"></textarea>
+                            </div>
+                            <button style="margin-right: 210px;margin-top: 6px;" type="button" class="btn btn-primary btn-sm pull-right" id="apply" onclick=WriteReview($("#message").val())>Submit</button>
+                            <button style="margin-right: 210px;margin-top: 6px; display:none" type="button" class="btn btn-primary btn-sm pull-right" id="ok" onclick="$('#myModal1').modal('hide')">OK</button>
+                        </form>
+
+                    </div><!--/.modal body-->
+                </div>
+            </div>
+        </div>
+    </div><!-- review -->
     <!-- Bootstrap -->
     <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
     <!-- iCheck -->
@@ -572,500 +615,102 @@
             }
         }, false);
     </script>
-</body>
-</html>
-@using WebApp.Helper;
-@{
-    Layout = null;
-
-    string userType = Convert.ToString(ViewBag.UserType);
-    string recipientName = Convert.ToString(ViewBag.RecipientName);
-    //localStorage.getItem('tokbox');
-    //localStorage.getItem('consultationKey');
-    string openTokApi = Convert.ToString(ViewBag.OpenTokApiKey);
-    string openTokSession = Convert.ToString(ViewBag.OpenTokSession);
-    string openTokToken = Convert.ToString(ViewBag.OpenTokToken);
-
-
-    var lstRosItems = (List<DataAccess.CustomModels.ROSItem>)ViewBag.RosItems;
-
-    string cEndCallUrl = "";
-    if (userType.ToLower() == "patient")
-    {
-        cEndCallUrl = Url.Action("Index", "Appointment");
-    }
-    else
-    {
-        cEndCallUrl = Url.Action("Index", "DoctorAppointment");
-    }
-
-}
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Meta, title, CSS, favicons, etc. -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Video</title>
-
-    <link href="@Url.Content("~/Content/css/bootstrap.min.css")" rel="stylesheet">
-    <!-- Font Awesome -->
-    @*
-        <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet" type='text/css'>*@
-    <link href="@Url.Content("~/Content/css/font-awesome.min.css")" rel="stylesheet">
-    <!-- NProgress -->
-    <!-- iCheck -->
-    <link href="@Url.Content("~/Content/css/green.css")" rel="stylesheet">
-    <!-- bootstrap-progressbar -->
-
-    <link href="@Url.Content("~/Content/css/bootstrap-progressbar-3.3.4.min.css")" rel="stylesheet">
-    <link href="@Url.Content("~/Content/css/green.css")" rel="stylesheet">
-
-    <link href="@Url.Content("~/Content/css/scroller.bootstrap.min.css")" rel="stylesheet">
-
-    <!-- Custom Theme Style -->
-    <link href="@Url.Content("~/Content/css/custom.min.css")" rel="stylesheet">
-    <link href="@Url.Content("~/Content/css/style_tokbox.css")" rel="stylesheet">
-    <link href="@Url.Content("~/Content/css/pnotify.css")" rel="stylesheet">
-
-    <!-- SignalR js files -->
-    <!-- SignalR js files -->
-    <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
-
-    <script src="@Url.Content("~/Scripts/jquery.cookie.js")"></script>
-    <script src="@Url.Content("~/Scripts/jquery.signalR-2.2.1.min.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/pnotify.js")"></script>
-    <script src="@Url.Content("~/signalr/hubs")"></script>
-
-    <style type="text/css">
-        #divPrimaryVideo {
-            position: absolute;
-            top: 5%;
-            right: 5%;
-            max-width: 200px;
-            height: 160px;
-            min-width: 160px;
-        }
-
-        #divSecondaryVideo {
-            width: 100% !important;
-            height: 100% !important;
-            position: absolute;
-            min-height: 695px;
-        }
-
-        .video_icon_bg {
-            z-index: 1;
-        }
-
-        .clsHide {
-            display: none !important;
-        }
-    </style>
-</head>
-<body id="video">
-    <!-- <div class="video_head"></div> -->
-    <div class="video_sec">
-        <div id="divSecondaryVideo"></div>
-        <div id="imgSecondaryVideo" style="display:block; max-width:100%">
-            <img style="margin-top:30%; margin-left:40%;" class="img-responsive" src="@Url.Content("~/Content/images/loaderImage.gif")" alt="">
-        </div>
-
-
-        @*<img id="imgSecondaryVideo" class="img-responsive" src="@Url.Content("~/Content/images/123.jpg")" alt="">*@
-        <h1 id="h1Name" data-name="@recipientName" class="video_title"> @(userType.ToLower() == "patient" ? ("Please wait , while " + recipientName + " will join you  !") : ("Please wait , while " + recipientName + " will join you "))</h1>
-        <div class="small_img">
-            <a href="#" id="aHideMyCamera" style="display:none;">
-                <div id="divPrimaryVideo" class="xs-video-img img-responsive" style="display:block;"></div>
-                <img id="imgPrimaryVideo" class="xs-video-img img-responsive" src="@Url.Content("~/Content/images/img.jpg")" alt="">
-                <img class="video_small_icons" src="@WebApp.Helper.SessionHandler.ProfilePhoto" alt="">
-            </a>
-            <a href="#">
-                <img id="aShowMyCamera" class="small_video_icon video_small_icons" src="@Url.Content("~/Content/images/video.png")" alt="">
-            </a>
-        </div>
-
-        <div class="video_icon_bg">
-            <ul class="video_icon">
-
-                @if (userType.ToLower() != "patient")
-                {
-                    <li><a href="#" class="video_pos" id="edit"><i class="fa fa-list-alt list-alt" aria-hidden="true">SOAP</i><!-- <img src="images/list_h.png" alt=""> --></a></li>
-                    <li><a href="#" class="video_pos_h"></a></li>
-                }
-
-                <li><a href="#" id="aStrtCall" class="video_pos"><img src="@Url.Content("~/Content/images/phone.png")" alt=""></a></li>
-                <li><a href="#" id="aStopCall" class="video_pos_h"><img src="@Url.Content("~/Content/images/phone_h.png")" alt=""></a></li>
-
-                <li class="clsCallActive clsHide"><a href="#" id="aStopAudioPublish" class="video_pos"><img src="@Url.Content("~/Content/images/mic.png")" alt=""></a></li>
-                <li class="clsCallActive clsHide"><a href="#" id="aStartAudioPublish" class="video_pos_h"><img src="@Url.Content("~/Content/images/mic_h.png")" alt=""></a></li>
-
-                <li class="clsCallActive clsHide"><a href="#" id="aStopVideoPublish" class="video_pos"><img src="@Url.Content("~/Content/images/video.png")" alt=""></a></li>
-                <li class="clsCallActive clsHide"><a href="#" id="aStartVideoPublish" class="video_pos_h"><img src="@Url.Content("~/Content/images/video_h.png")" alt=""></a></li>
-
-                <li class="clsCallActive clsHide"><a href="#" id="aMudeAudio" class="video_pos"><img src="@Url.Content("~/Content/images/sound.png")" alt=""></a></li>
-                <li class="clsCallActive clsHide"><a href="#" id="aUnMudeAudio" class="video_pos_h"><img src="@Url.Content("~/Content/images/sound_h.png")" alt=""></a></li>
-
-                <li class="clsCallActive clsHide"><a href="#" id="aExpandVideo" class="video_pos"><img src="@Url.Content("~/Content/images/half_screen.png")" alt=""></a></li>
-                <li class="clsCallActive clsHide"><a href="#" id="aShrinkExpandVideo" class="video_pos_h"><img src="@Url.Content("~/Content/images/full_screen.png")" alt=""></a></li>
-
-                <li class="clsCallActive clsHide"><a href="#" class="video_pos" id="video-message"><i class="fa fa-comments comments" aria-hidden="true"></i></a></li>
-                <li class="clsCallActive clsHide"><a href="#" class="video_pos_h"></a></li>
-            </ul>
-            <div class="time_salat clsCallActive clsHide">
-                <p id="pTimeCounter"></p>
-            </div>
-        </div>
-    </div>
-    <div class="video_his">
-        @if (userType.ToLower() != "patient")
-        {
-            <div id="edit-sec">
-                <div class="edit-sec">
-                    <div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="true">
-                        <div class="panel panel-default penal-style">
-                            <div class="panel-heading" role="tab" id="headingOne">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        <b style="color: #337AB7">Subjective</b>
-                                        <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
-                                        <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                                <div class="panel-body">
-                                    <textarea id="txtDoctorNoteSubjective" class="form-control" rows="2"></textarea>
-                                </div>
-                                <div class="panel-footer text-center">
-                                    <button class="btn btn-primary" onclick="saveDoctorNoteSubjective();" type="button">Save Subjective</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="panel panel-default penal-style">
-                            <div class="panel-heading" role="tab" id="headingTwo">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                        <b style="color: #337AB7">Objective</b>
-                                        <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
-                                        <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
-                                <div class="panel-body">
-                                    <textarea id="txtDoctorNoteObjective" class="form-control" rows="2"></textarea>
-                                </div>
-                                <div class="panel-footer text-center">
-                                    <button class="btn btn-primary" onclick="saveDoctorNoteObjective();" type="button">Save Objective</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="panel panel-default penal-style">
-                            <div class="panel-heading" role="tab" id="headingThree">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                        <b style="color: #337AB7">Assessment</b>
-                                        <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
-                                        <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
-                                <div class="panel-body">
-                                    <textarea id="txtDoctorNoteAssessment" class="form-control" rows="2"></textarea>
-                                </div>
-                                <div class="panel-footer text-center">
-                                    <button class="btn btn-primary" onclick="saveDoctorNoteAssessment();" type="button">Save Assessment</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="panel panel-default penal-style">
-                            <div class="panel-heading" role="tab" id="headingFour">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                        <b style="color: #337AB7">Plan</b>
-                                        <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
-                                        <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour">
-                                <div class="panel-body">
-                                    <textarea id="txtDoctorNotePlans" class="form-control" rows="2"></textarea>
-                                </div>
-                                <div class="panel-footer text-center">
-                                    <button class="btn btn-primary" onclick="saveDoctorNotePlans();" type="button">Save Plan</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="panel panel-default penal-style">
-                            <div class="panel-heading" role="tab" id="headingFive">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                                        <b style="color: #337AB7">Review of Systems</b>
-                                        <span class="glyphicon glyphicon-chevron-right icons-pos"></span>
-                                        <span class="glyphicon glyphicon-chevron-down icons-pos"></span>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseFive" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFive">
-                                <div class="panel-body">
-
-
-                                    @if (lstRosItems != null && lstRosItems.Count > 0)
-                                    {
-
-                                        <table id="tblROS" class="table">
-                                            <tbody>
-                                                @foreach (var itmRos in lstRosItems)
-                                                {
-                                                    if (itmRos.systemItems != null && itmRos.systemItems.Count > 0)
-                                                    {
-
-                                                        <tr>
-                                                            <td data-systemid="@itmRos.systemID" style="border-top: 0">
-                                                                <h4 class="m-0">@itmRos.systemName</h4>
-
-                                                                @if (itmRos.systemItems != null && itmRos.systemItems.Count > 0)
-                                                                {
-                                                                    foreach (var itmRosDtl in itmRos.systemItems)
-                                                                    {
-                                                                        <div class="checkbox" style="display: inline-block; width: 150px;">
-                                                                            <label>
-                                                                                <input data-id="@itmRosDtl.systemItemID" data-val="@itmRosDtl.systemItemName"
-                                                                                       class="flat clsCheckbox" type="checkbox" />  @itmRosDtl.systemItemName
-                                                                                </label>
-                                                                            </div>
-                                                                    }
-                                                                }
-                                                            </td>
-                                                        </tr>
-
-                                                    }
-                                                }
-
-                                            </tbody>
-                                        </table>
-                                    }
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-        <div id="messages-sec" @(userType.ToLower() == "patient" ? "style=display:block;" : "") class="">
-            <!-- messages-sec -->
-            <div id="divMessageContainer" class="msg-sec">
-            </div>
-            <div class="message-textarea">
-                <textarea id="txtMsg" name="" placeholder="Type your messages"></textarea>
-                <i id="btnSendMsg" class="messages-send fa fa-paper-plane" aria-hidden="true"></i>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
-        <div class="modal-dialog" role="document" style="width: 350px;">
-            <div class="modal-content" style="border-radius: 0;">
-                <div class="modal-header text-center" style="background: #E4F1FE; border-bottom-color: #c3bebe;">
-                    <h2 style="margin: 0; color: #337ab7" id="heading"><b></b></h2>
-                </div><!--/.modal header-->
-                <div class="modal-body text-left" style="text-align:center;">
-                    <p class="text-center" style="color: #375781;" id="bodytext"></p>
-                    <button style="width: 29%; border-radius: 0; padding: 15px -15px; font-size: 20px;" onclick="$('#myModal1').modal('hide');" type="button" class="btn btn-primary">OK</button>
-                </div><!--/.modal body-->
-            </div>
-        </div>
-    </div><!-- mymodal1 -->
-   
-    <!-- Bootstrap -->
-    <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
-    <!-- iCheck -->
-    <script src="@Url.Content("~/Scripts/icheck.min.js")"></script>
-
-    <script src="@Url.Content("~/Scripts/select2.full.min.js")"></script>
-
-    <script src="@Url.Content("~/Scripts/switchery.min.js")"></script>
-
-    <!-- Custom Theme Scripts -->
-    <script src="@Url.Content("~/Scripts/custom.min.js")"></script>
-    <script src="~/Scripts/jquery.cookie.js"></script>
-    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
-    <script src="~/signalr/hubs"></script>
-
-
-    <script src="https://static.opentok.com/v2/js/opentok.js" charset="utf-8"></script>
-
-    <script src="@Url.Content("~/Scripts/UserChat.js")"></script>
     <script>
-        new PNotify({ title: 'Video Consult setup', text: "Please wait, System is initiating the consult for you.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
-        if ('@(userType.ToLower())' == "doctor")
+        function showReviewPopup()
         {
-            
-            var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Doctor-join-VC ';
-            $.post(cUrl);
-        }
-        else
-        {
-            var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Patient-join-VC ';
-            $.post(cUrl);
-            
-        }
+            var mymodal = $('#myModal2');
+            $("span").css("pointer-events", "auto");
+            $("#ss5").removeClass('fa fa-star');
+            $("#ss5").addClass('fa fa-star-o');
 
-        var mymodal = $('#myModal1');
-        var isConsultComplete = false;
-        function showAlert(heading, body) {
+            $("#s4").removeClass('fa fa-star');
+            $("#s4").addClass('fa fa-star-o');
 
-            mymodal.find('#heading').text(heading);
-            mymodal.find('#bodytext').text(body);
+            $("#s3").removeClass('fa fa-star');
+            $("#s3").addClass('fa fa-star-o');
+
+            $("#s2").removeClass('fa fa-star');
+            $("#s2").addClass('fa fa-star-o');
+
+            $("#s1").removeClass('fa fa-star');
+            $("#s1").addClass('fa fa-star-o');
+
+            mymodal.find('#message').val("");
+            mymodal.find('#message').removeAttr("disabled");
+            mymodal.find('#apply').show();
+            mymodal.find('#ok').hide();
+
             mymodal.modal('show');
-        }
-        var cEndCallUrl = '@cEndCallUrl';
-        var tokboxSessionAndToken = localStorage.getItem('tokbox');//session*token
-
-      //  alert('Token Session And Token , Seperate by * :' + tokboxSessionAndToken);
-        var openTokSession = 0;
-        var openTokToken = 0;
-        if (tokboxSessionAndToken != "0")
-        {
-            var tokboxArr = tokboxSessionAndToken.split('*');
-            openTokSession = tokboxArr[0];
-            openTokToken = tokboxArr[1];
-        }
-        else {
-
-            new PNotify({ title: 'Error', text: 'Error in getting tokbox info.', type: 'error', styling: 'bootstrap3' });
-        }
-        console.log('openTokSession:' + openTokSession + ' -> openTokToken:' + openTokToken);
-
-        var oUserChat = new UserChat('@openTokApi', openTokSession, openTokToken);
-        oUserChat.initialize();
-
-        var consultId = localStorage.getItem('consultationKey');
-
-        function saveDoctorNoteSubjective() {
-            var cUrl = '@Url.Action("AddDoctorNotesSubjective","UserChat")';
-            $.post(cUrl, { consultId: consultId, cValues: $("#txtDoctorNoteSubjective").val() }, function (data) {
-                console.log(data);
-                new PNotify({ title: 'Success', text: "Consult Updated.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
-            });
-        }
-
-        function saveDoctorNoteObjective() {
-            var cUrl = '@Url.Action("AddDoctorNotesObjective", "UserChat")';
-            $.post(cUrl, { consultId: consultId, cValues: $("#txtDoctorNoteObjective").val() }, function () {
-                //alert("Saved successfully.");
-                new PNotify({ title: 'Success', text: "Consult Updated.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
-            });
-        }
-
-        function saveDoctorNoteAssessment() {
-            var cUrl = '@Url.Action("AddDoctorNotesAssessment", "UserChat")';
-            $.post(cUrl, { consultId: consultId, cValues: $("#txtDoctorNoteAssessment").val() }, function () {
-                //alert("Saved successfully.");
-                new PNotify({ title: 'Success', text: "Consult Updated.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
-            });
-        }
-
-        function saveDoctorNotePlans() {
-            var cUrl = '@Url.Action("AddDoctorNotesPlans", "UserChat")';
-            $.post(cUrl, { consultId: consultId, cValues: $("#txtDoctorNotePlans").val() }, function () {
-                //alert("Saved successfully.");
-                new PNotify({ title: 'Success', text: "Consult Updated.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
-            });
-        }
-
-        $(document).ready(function () {
-            $(document.body).on("keydown", this, function (event) {
-                if (event.keyCode == 116) {
-                     return false;
-                }
-            });
-
-            $('#tblROS').on('ifChecked', 'input', function (event) {
-                var curElem = $(this);
-
-                var sysItemId = curElem.attr("data-id");
-                var sysName = curElem.attr("data-val");
-                var sysId = curElem.closest("td").attr("data-systemid");
-
-                $.post('@Url.Action("AddConsultROS","UserChat")', { consultID: consultId, sysitemid: sysId, sysitemname: sysName });
-            });
-
-            $('#tblROS').on('ifUnchecked', 'input', function (event) {
-                var curElem = $(this);
-
-                var sysItemId = curElem.attr("data-id");
-                var sysName = curElem.attr("data-val");
-                var sysId = curElem.closest("td").attr("data-systemid");
-
-                $.post('@Url.Action("RemoveConsultROS", "UserChat")', { consultID: consultId, sysitemid: sysId, sysitemname: sysName });
-            });
-        });
-
-        var chat = $.connection.chatHub;
-
-        $.connection.hub.logging = true;
-        $.connection.hub.start().done(function () {
-            debugger;
-            var sid = $.cookie('sid');
-            var userRole;
-            if   ('@(userType.ToLower())' == "doctor") 
-                userRole="Doctor";
-            else userRole="Patient";
-
-            chat.server.join(
-                {
-                    Id: '@SessionHandler.UserInfo.Id',
-                    UserName: '@SessionHandler.UserInfo.Email',
-                    FirstName: '@SessionHandler.UserInfo.FirstName',
-                    LastName: '@SessionHandler.UserInfo.LastName',
-                    UserType: userRole,
-                    UserID: -1
-                    //UserID -1 is the indication that user is busy
-                });
-
-            chat.server.adminJoin().done(function () {
-                //alert("New doctor has joined... Refresh list;");
-               // if   ('@(userType.ToLower())' == "doctor")
-                chat.server.getUsersPatient();
-              //  else
-                chat.server.getUsersDoctor();
-            });
             
-
-        });
-
-        $(function () {
-            chat.client.receiveMessage = function (msgFrom, msg, receiverId, senderid) {
-                debugger;
-                if (msgFrom != 'ChatHub') {
-                    var fromJson = JSON.parse(msg);
-                  //  alert(fromJson.status);
-
-                    if (fromJson.status == 'consultID') {
-                        //'consultID recieved:' + fromJson.name);
-                        localStorage.setItem('consultID', fromJson.name);
-                        consultId = fromJson.name;
-                        return;
-                    }
-                }
+        }
+        //Save Review given by patient
+        function WriteReview(message)
+        {
+            showLoader();
+            if(star==0)
+            {
+                showAlert("Error","Please give stars.");
+                hideLoader();
+                return;
             }
-        });
+            if(message=="")
+            {
+                showAlert("Error","Please write review.");
+                hideLoader();
+                return;
+            }
+            var _objReview = {};
+            _objReview["consultID"] =  localStorage.getItem('consultationKey');
+            _objReview["patientID"] = @SessionHandler.UserInfo.Id;
+            _objReview["star"] =star;
+            _objReview["reviewText"] =message;
+            $.ajax({
+                url: '@Url.Action("WriteReview", "Consultation")',
+                type: "POST",
+                data: _objReview,
+                dataType: 'json',
+                success: function (result) {
+                    //Reload container
+                    if (result.Message != undefined) {
+                        new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                        $('#myModal1').modal('hide');
+                       
+                        hideLoader();
+                    }
+                    else {
 
+                        if(result.ApiResultModel.message=="")
+                        {
+                            new PNotify({ title: 'Success', text: "Consultation is reviewed successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
+                            $('#myModal1').modal('hide');
+                            
+                            reloadConsultation(function ()
+                            {
+                                //Stop displaying loader
+                                hideLoader();
+
+                            });
+                        }
+                        else
+                        {
+                            new PNotify({ title: 'Error', text: result.ApiResultModel.message, type: 'error', styling: 'bootstrap3' });
+                            $('#myModal1').modal('hide');
+                            
+                            hideLoader();
+                        }
+
+
+                    }
+
+                },
+                error: function (err) {
+                    //alert(err.statusText);
+                    new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                    //Stop displaying loader
+                    hideLoader();
+                }
+            });
+        }
     </script>
-
-    <script src="@Url.Content("~/Scripts/custom.min.js")"></script>
-
 </body>
 </html>

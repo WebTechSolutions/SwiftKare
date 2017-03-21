@@ -31,14 +31,14 @@ namespace RestAPIs.Controllers
 
             try
             {
-                if (model.timezone == null)
+                if (model.timezoneoffset == null|| model.timezoneoffset.Trim()=="")
                 {
 
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Timezone is not provided." });
                     response.ReasonPhrase = "Timezone is not provided.";
                     return response;
                 }
-                if (model.userid == null)
+                if (model.userid == null|| model.timezoneoffset.Trim() == "")
                 {
 
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "UserId is not provided." });
@@ -50,7 +50,7 @@ namespace RestAPIs.Controllers
                 long id = 0;
                 if (pat!=null)
                 {
-                    pat.timezone = model.timezone;
+                    pat.timezoneoffset = model.timezoneoffset;
                     id = pat.patientID;
                     db.Entry(pat).State = EntityState.Modified;
                     await db.SaveChangesAsync();
@@ -59,7 +59,7 @@ namespace RestAPIs.Controllers
                 if (doc!= null)
                 {
 
-                    doc.timezone = model.timezone;
+                    doc.timezoneoffset = model.timezoneoffset;
                     id = doc.doctorID;
                     db.Entry(doc).State = EntityState.Modified;
                     await db.SaveChangesAsync();
@@ -73,6 +73,31 @@ namespace RestAPIs.Controllers
             }
 
         }
+       
+        [Route("api/GetTimezonesList")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public HttpResponseMessage GetTimezones()
+        {
+
+            try
+            {
+                var timezone = (from l in db.TimeZones
+                                where l.active == true
+                                select new
+                                {
+                                    zoneOffset = l.zoneOffset,
+                                    timeZonee = l.timeZonee
+                                }).ToList();
+                response = Request.CreateResponse(HttpStatusCode.OK, timezone);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetTimezones in ProfilesController");
+            }
+
+        }
+
         #region Doctor APIs 
 
         [HttpGet]
@@ -412,7 +437,7 @@ namespace RestAPIs.Controllers
                                 where l.userId == userid
                                 select new
                                 {
-                                    zonename = l.timezone,
+                                    zonename = l.timezoneoffset,
                                 }).FirstOrDefault();
                 response = Request.CreateResponse(HttpStatusCode.OK, timezone);
                 return response;
@@ -435,7 +460,7 @@ namespace RestAPIs.Controllers
                                 where l.userId == userid
                                 select new
                                 {
-                                    zonename = l.timezone,
+                                    zonename = l.timezoneoffset,
                                 }).FirstOrDefault();
                 response = Request.CreateResponse(HttpStatusCode.OK, timezone);
                 return response;
