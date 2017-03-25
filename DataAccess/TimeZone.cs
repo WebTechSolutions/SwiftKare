@@ -22,5 +22,6 @@ namespace DataAccess
         public Nullable<System.DateTime> md { get; set; }
         public Nullable<bool> active { get; set; }
         public string zoneName { get; set; }
+        public string zoneOffset { get; set; }
     }
 }
