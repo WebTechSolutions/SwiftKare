@@ -12,7 +12,7 @@ namespace WebApp
             var hubConfiguration = new HubConfiguration();
             hubConfiguration.EnableDetailedErrors = true;
             app.MapSignalR(hubConfiguration);
-           // RouteTable.Routes.MapHubs("/myhubs", new HubConfiguration());
+            // RouteTable.Routes.MapHubs("/myhubs", new HubConfiguration());
             ConfigureAuth(app);
         }
     }

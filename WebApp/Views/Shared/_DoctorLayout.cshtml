@@ -642,7 +642,7 @@
         }
     </script>
     <script>
-        $(document).ready(function () {
+        @*$(document).ready(function () {
             if ('@SessionHandler.UserInfo.timeZone' != '') {
                 var localtimezone = new Date().toString().match(/\(([A-Za-z\s].*)\)/)[1];
                 if ('@SessionHandler.UserInfo.timeZone' != localtimezone) {
@@ -684,7 +684,7 @@
 
            
             
-        });
+        });*@
     </script>
 
     @RenderSection("scripts", required: false)

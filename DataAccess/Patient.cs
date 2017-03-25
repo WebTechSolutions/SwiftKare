@@ -70,7 +70,6 @@ namespace DataAccess
         public string pharmacyaddress { get; set; }
         public string pharmacycitystatezip { get; set; }
         public string ProfilePhotoBase64 { get; set; }
-        public string timezoneoffset { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }

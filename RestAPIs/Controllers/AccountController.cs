@@ -503,9 +503,10 @@ namespace RestAPIs.Controllers
                             var patient = new Patient
                             {
                                 userId = user.Id,
-                                lastName = user.LastName,
-                                firstName = user.FirstName,
-                                email = user.Email
+                                lastName = model.LastName,
+                                firstName = model.FirstName,
+                                email = user.Email,
+                                active=true
                             };
                             db.Patients.Add(patient);
                             await db.SaveChangesAsync();
@@ -519,9 +520,10 @@ namespace RestAPIs.Controllers
                             var doctor = new Doctor
                             {
                                 userId = user.Id,
-                                lastName = user.LastName,
-                                firstName = user.FirstName,
-                                email = user.Email
+                                lastName = model.LastName,
+                                firstName = model.FirstName,
+                                email = user.Email,
+                                active=true
                             };
                             db.Doctors.Add(doctor);
                             await db.SaveChangesAsync();

@@ -17,6 +17,7 @@ namespace WebApp.Hub
     public class SmartHub
     {
     }
+
     public class ChatHub : Microsoft.AspNet.SignalR.Hub
     {
         public static ConcurrentDictionary<string, UserInfo> AllUserList =
