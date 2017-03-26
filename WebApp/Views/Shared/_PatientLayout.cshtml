@@ -313,9 +313,9 @@
         setInterval(function () {
             //alert('@SessionHandler.IsExpired');
             //alert('@HttpContext.Current.Session["UserName"]');
-            if ('@SessionHandler.IsExpired'=='False')
+            if ('@SessionHandler.IsExpired'=='True')
             {
-                alert('@SessionHandler.IsExpired');
+                //alert('@SessionHandler.IsExpired');
                 window.location.href = '@Url.Action("PatientLogin","Account")';
             }
             $.ajax({
