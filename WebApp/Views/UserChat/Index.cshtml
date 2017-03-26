@@ -617,27 +617,8 @@
         }, false);
     </script>
     <script>
-
-            setInterval(function () {
-
-                if ('@ViewBag.UserType'.ToLower() == "patient")
-                {
-
-                    //cEndCallUrl = Url.Action("Index", "Appointment");
-                     if ('@SessionHandler.IsExpired') {
-                        window.location.href = '@Url.Action("PatientLogin","Account")';
-                    }
-                }
-                else  if ('@ViewBag.UserType'.ToLower() == "doctor")
-                {
-                     if ('@SessionHandler.IsExpired') {
-                        window.location.href = '@Url.Action("DoctortLogin","Account")';
-                    }
-                }
-            }, 60*1000);
-
-
-
+        
+        
         //Save Review given by patient
         function WriteReview(message)
         {

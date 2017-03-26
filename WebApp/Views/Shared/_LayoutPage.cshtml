@@ -213,15 +213,7 @@
     <script src="~/Scripts/build/js/custom.min.js"></script>
     <!-- Bootstrap -->
     <script src="~/Scripts/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script>
-        setInterval(function () {
-             if ('@SessionHandler.IsExpired') {
-                window.location.href = '@Url.Action("AdminLogin","Account")';
-            }
-        }, 60*1000);
-    </script>
     
-
-   
+    
   </body>
 </html>

@@ -298,12 +298,8 @@
     </div><!-- mymodal2 -->
     
     <script>
-
         setInterval(function () {
-            if ('@SessionHandler.IsExpired')
-            {
-                window.location.href = '@Url.Action("DoctorLogin","Account")';
-            }
+
            $.ajax({
                 url: "@Url.Action("DoctorAlertView", "DoctorAlert")",
                 type: 'POST',
@@ -313,8 +309,13 @@
                 //console.log($("#alertview").html());
                 $("#alertview").html(html);
             }
-            });
-        }, 60*1000);
+           });
+           
+        }, 60 * 1000);
+
+        @*function checkSession() {
+            window.location.href = '@Url.Action("DoctorLogin", "Account")';
+        }*@
         setInterval(function () {
             $.ajax({
                 url: "@Url.Action("DoctorRefillErrorCountView", "Doctor")",
@@ -680,31 +681,36 @@
                 }
             });
 
-            if ('@SessionHandler.UserInfo.timeZoneOffset' == '' ||
-                '@SessionHandler.UserInfo.timeZoneOffset' != new Date().getTimezoneOffset().toString())
-            {
-                var param = "{}";
-                var listitems;
-                var $select = $('#myModal2').find('#Timezone');
-                $.ajax({
-                    type: 'POST',
-                    url: '/DoctorAppointment/GetTimeZones',
-                    data: param,
-                    dataType: 'json',
-                    success: function (response) {
-                        $.each(response.Object, function (item) {
-                            listitems += '<option value=' + response.Object[item].zoneid + '>' + response.Object[item].timeZonee + '</option>';
-
-                        });
-                        $select.append(listitems);
-                    },
-                    error: errorRes
-
-                });
-                $('#myModal2').modal({ backdrop: 'static', keyboard: false });
+            if ('@SessionHandler.ProfilePhoto' == '') {
+                if (!parent.location.href.toLowerCase().includes('profile')) {
+                    window.location.href = '@Url.Action("Index", "DoctorProfile")';
+                }
             }
+            if ('@SessionHandler.ProfilePhoto' != '') {
+                if ('@SessionHandler.UserInfo.timeZoneOffset' == '' ||
+                    '@SessionHandler.UserInfo.timeZoneOffset' != new Date().getTimezoneOffset().toString()) {
+                    var param = "{}";
+                    var listitems;
+                    var $select = $('#myModal2').find('#Timezone');
+                    $.ajax({
+                        type: 'POST',
+                        url: '/DoctorAppointment/GetTimeZones',
+                        data: param,
+                        dataType: 'json',
+                        success: function (response) {
+                            $.each(response.Object, function (item) {
+                                listitems += '<option value=' + response.Object[item].zoneid + '>' + response.Object[item].timeZonee + '</option>';
 
+                            });
+                            $select.append(listitems);
+                        },
+                        error: errorRes
 
+                    });
+                    $('#myModal2').modal({ backdrop: 'static', keyboard: false });
+                }
+
+            }
 
         });
         function errorRes(httpObj) {

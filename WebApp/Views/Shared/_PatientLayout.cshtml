@@ -310,25 +310,29 @@
         </div>
     </div><!-- mymodal2 -->
     <script>
+        
         setInterval(function () {
-           
-            if ('@SessionHandler.IsExpired')
-            {
-               
-                window.location.href = '@Url.Action("PatientLogin","Account")';
-            }
+
             $.ajax({
-                url: "@Url.Action("AlertView", "Alert")",
-                type: 'POST',
+            url: "@Url.Action("AlertView", "Alert")",
+            type: 'POST',
             dataType: 'html',
             cache: false,
             success: function (html) {
                 //console.log($("#alertview").html());
                 $("#alertview").html(html);
             }
-        });
+
+
+            });
+           
         }, 60*1000);
 
+        @*function checkSession()
+        {
+          window.location.href = '@Url.Action("PatientLogin","Account")';
+           
+        }*@
         var mymodal = $('#playoutModal');
     function showAlert(heading,body)
     {
@@ -719,7 +723,7 @@
     </script>
    
     <script>
-      
+
         $('#myModal2').find('#Timezone').change(function () {
             if ($('#myModal2').find("#spnErrorTimeZone").is(":visible") && $('#myModal2').find("#Timezone").val() != "") {
                 $('#myModal2').find("#Timezone").removeClass("redBorder");
@@ -728,35 +732,44 @@
         });
         $(document).ready(function () {
             
-           
-            
-            if ('@SessionHandler.UserInfo.timeZoneOffset' == '' ||
-                '@SessionHandler.UserInfo.timeZoneOffset' != new Date().getTimezoneOffset().toString())
+            if ('@SessionHandler.ProfilePhoto' == '')
             {
-
-                var param = "{}";
-                var listitems;
-                var $select = $('#myModal2').find('#Timezone');
-                $.ajax({
-                    type: 'POST',
-                    url: '/Appointment/GetTimeZones',
-                    data: param,
-                    dataType: 'json',
-                    success: function (response) {
-                        $.each(response.Object, function (item) {
-                            listitems += '<option value=' + response.Object[item].zoneid + '>' + response.Object[item].timeZonee + '</option>';
-
-                        });
-                        $select.append(listitems);
-                    },
-                    error: errorRes
-
-                });
-                //$('#myModal2').modal('show');
-                $('#myModal2').modal({ backdrop: 'static', keyboard: false });
+                if(!parent.location.href.toLowerCase().includes('profile'))
+                {
+                    window.location.href = '@Url.Action("Index", "PatientProfile")';
+                }
             }
 
+            if ('@SessionHandler.ProfilePhoto' != '')
+            {
+            
+                if ('@SessionHandler.UserInfo.timeZoneOffset' == '' ||
+                    '@SessionHandler.UserInfo.timeZoneOffset' != new Date().getTimezoneOffset().toString())
+                {
 
+                    var param = "{}";
+                    var listitems;
+                    var $select = $('#myModal2').find('#Timezone');
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Appointment/GetTimeZones',
+                        data: param,
+                        dataType: 'json',
+                        success: function (response) {
+                            $.each(response.Object, function (item) {
+                                listitems += '<option value=' + response.Object[item].zoneid + '>' + response.Object[item].timeZonee + '</option>';
+
+                            });
+                            $select.append(listitems);
+                        },
+                        error: errorRes
+
+                    });
+                    //$('#myModal2').modal('show');
+                    $('#myModal2').modal({ backdrop: 'static', keyboard: false });
+                }
+
+            }
 
         });
         function errorRes(httpObj) {
@@ -794,7 +807,7 @@
                 return;
             }
             var tz = $('#myModal2').find('#Timezone');
-           
+
             $.ajax({
                 url: '@Url.Action("UpdateTimezone", "Appointment")',
                 type: "POST",
