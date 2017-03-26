@@ -315,9 +315,7 @@
 
         }, 60 * 1000);
 
-        @*function checkSession() {
-            window.location.href = '@Url.Action("DoctorLogin", "Account")';
-        }*@
+       
         setInterval(function () {
             $.ajax({
                 url: "@Url.Action("DoctorRefillErrorCountView", "Doctor")",
