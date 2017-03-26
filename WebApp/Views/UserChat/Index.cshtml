@@ -624,13 +624,13 @@
                 {
 
                     //cEndCallUrl = Url.Action("Index", "Appointment");
-                      if ('@SessionHandler.IsExpired'=='True') {
+                     if ('@SessionHandler.IsExpired') {
                         window.location.href = '@Url.Action("PatientLogin","Account")';
                     }
                 }
                 else  if ('@ViewBag.UserType'.ToLower() == "doctor")
                 {
-                      if ('@SessionHandler.IsExpired'=='True') {
+                     if ('@SessionHandler.IsExpired') {
                         window.location.href = '@Url.Action("DoctortLogin","Account")';
                     }
                 }
