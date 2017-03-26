@@ -155,7 +155,7 @@ namespace WebApp.Controllers
                             userModel.LastName = doctor.lastName;
                             userModel.userId = doctor.userId;
                             userModel.title = doctor.title;
-                            userModel.timeZone = doctor.timeZone;
+                            userModel.timeZoneOffset = doctor.timeZoneoffset;
                             userModel.role = doctor.role;
                             userModel.iOSToken = doctor.iOSToken;
                             userModel.AndroidToken = doctor.AndroidToken;
@@ -179,7 +179,7 @@ namespace WebApp.Controllers
                             userModel.LastName = patient.lastName;
                             userModel.userId = patient.userId;
                             userModel.title = patient.title;
-                            userModel.timeZone = patient.timeZone;
+                            userModel.timeZoneOffset = patient.timeZoneoffset;
                             userModel.role = patient.role;
                             userModel.iOSToken = patient.iOSToken;
                             userModel.AndroidToken = patient.AndroidToken;
@@ -244,7 +244,7 @@ namespace WebApp.Controllers
                         userModel.LastName = patient.lastName;
                         userModel.userId = patient.userId;
                         userModel.title = patient.title;
-                        userModel.timeZone = patient.timeZone;
+                        userModel.timeZoneOffset = patient.timeZoneoffset;
                         userModel.role = patient.role;
                         userModel.iOSToken = patient.iOSToken;
                         userModel.AndroidToken = patient.AndroidToken;
@@ -369,7 +369,7 @@ namespace WebApp.Controllers
                         userModel.LastName = doctor.lastName;
                         userModel.userId = doctor.userId;
                         userModel.title = doctor.title;
-                        userModel.timeZone = doctor.timeZone;
+                        userModel.timeZoneOffset = doctor.timeZoneoffset;
                         userModel.role = doctor.role;
                         userModel.iOSToken = doctor.iOSToken;
                         userModel.AndroidToken = doctor.AndroidToken;

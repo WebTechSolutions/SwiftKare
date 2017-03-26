@@ -313,7 +313,50 @@
             </div>
         </div>
     </div><!-- mymodal1 -->
-   
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width: 500px;margin-left: 280px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="timingsmodaltitle">Consultation Review</h4>
+                </div><!--/.modal header-->
+
+                <div class="modal-body text-left">
+                    <div class="row" id="docrow">
+                        <input type="text" style="display:none" id="consultID">
+
+                        <form class="form-horizontal form-label-left" style="margin-top: -20px;">
+                            <div class="col-sm-offset-4 col-sm-4">
+                                <div class="xdisplay_inputx form-group has-feedback">
+
+                                    <span id="inputSuccess2Status" class="sr-only">(success)</span>
+                                </div>
+                            </div>
+                        </form>
+                        <form class="form-horizontal form-label-left">
+                            <div class="col-sm-12 text-center" id="rdiv">
+                                @*style="margin-left:97px"*@
+
+                                <a href="javascript:void(0);" onclick="toggle(this);"><span id="s1" class="fa fa-star-o"></span></a>
+                                <a href="javascript:void(0);"><span id="s2" class="fa-star-o"></span></a>
+                                <a href="javascript:void(0);"><span id="s3" class="fa-star-o"></span></a>
+                                <a href="javascript:void(0);"><span id="s4" class="fa-star-o"></span></a>
+                                <a href="javascript:void(0);"><span id="ss5" class="fa-star-o"></span></a>
+
+                            </div>
+                            <div class="col-sm-12 text-center" style="margin-top: 20px;">
+                                <textarea id="message" class="form-control" name="message" data-parsley-maxlength="1000"
+                                          data-parsley-validation-threshold="10"></textarea>
+                            </div>
+                            <button style="margin-right: 210px;margin-top: 6px;" type="button" class="btn btn-primary btn-sm pull-right" id="apply" onclick=WriteReview($("#message").val())>Submit</button>
+                            <button style="margin-right: 210px;margin-top: 6px; display:none" type="button" class="btn btn-primary btn-sm pull-right" id="ok" onclick="$('#myModal1').modal('hide')">OK</button>
+                        </form>
+
+                    </div><!--/.modal body-->
+                </div>
+            </div>
+        </div>
+    </div><!-- review -->
     <!-- Bootstrap -->
     <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
     <!-- iCheck -->
@@ -336,18 +379,6 @@
     <script>
         new PNotify({ title: 'Video Consult setup', text: "Please wait, System is initiating the consult for you.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
         var mymodal = $('#myModal1');
-         if ('@(userType.ToLower())' == "doctor")
-        {
-            
-            var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Doctor-join-VC ';
-            $.post(cUrl);
-        }
-        else
-        {
-            var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Patient-join-VC ';
-            $.post(cUrl);
-            
-        }
         var isConsultComplete = false;
         function showAlert(heading, body) {
 
@@ -583,6 +614,103 @@
                 toggleFullScreen();
             }
         }, false);
+    </script>
+    <script>
+        function showReviewPopup()
+        {
+            var mymodal = $('#myModal2');
+            $("span").css("pointer-events", "auto");
+            $("#ss5").removeClass('fa fa-star');
+            $("#ss5").addClass('fa fa-star-o');
+
+            $("#s4").removeClass('fa fa-star');
+            $("#s4").addClass('fa fa-star-o');
+
+            $("#s3").removeClass('fa fa-star');
+            $("#s3").addClass('fa fa-star-o');
+
+            $("#s2").removeClass('fa fa-star');
+            $("#s2").addClass('fa fa-star-o');
+
+            $("#s1").removeClass('fa fa-star');
+            $("#s1").addClass('fa fa-star-o');
+
+            mymodal.find('#message').val("");
+            mymodal.find('#message').removeAttr("disabled");
+            mymodal.find('#apply').show();
+            mymodal.find('#ok').hide();
+
+            mymodal.modal('show');
+            
+        }
+        //Save Review given by patient
+        function WriteReview(message)
+        {
+            showLoader();
+            if(star==0)
+            {
+                showAlert("Error","Please give stars.");
+                hideLoader();
+                return;
+            }
+            if(message=="")
+            {
+                showAlert("Error","Please write review.");
+                hideLoader();
+                return;
+            }
+            var _objReview = {};
+            _objReview["consultID"] =  localStorage.getItem('consultationKey');
+            _objReview["patientID"] = @SessionHandler.UserInfo.Id;
+            _objReview["star"] =star;
+            _objReview["reviewText"] =message;
+            $.ajax({
+                url: '@Url.Action("WriteReview", "Consultation")',
+                type: "POST",
+                data: _objReview,
+                dataType: 'json',
+                success: function (result) {
+                    //Reload container
+                    if (result.Message != undefined) {
+                        new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                        $('#myModal1').modal('hide');
+                       
+                        hideLoader();
+                    }
+                    else {
+
+                        if(result.ApiResultModel.message=="")
+                        {
+                            new PNotify({ title: 'Success', text: "Consultation is reviewed successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
+                            $('#myModal1').modal('hide');
+                            
+                            reloadConsultation(function ()
+                            {
+                                //Stop displaying loader
+                                hideLoader();
+
+                            });
+                        }
+                        else
+                        {
+                            new PNotify({ title: 'Error', text: result.ApiResultModel.message, type: 'error', styling: 'bootstrap3' });
+                            $('#myModal1').modal('hide');
+                            
+                            hideLoader();
+                        }
+
+
+                    }
+
+                },
+                error: function (err) {
+                    //alert(err.statusText);
+                    new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                    //Stop displaying loader
+                    hideLoader();
+                }
+            });
+        }
     </script>
 </body>
 </html>

@@ -295,10 +295,18 @@ namespace RestAPIs.Controllers
         }
         private List<string> createTimeSlots(DocTimingsAndAppointment appList)
         {
+            //foreach (var item in appList.timingsVM)
+            //{
+            //    DateTime myDateTime = DateTime.Today.Add((TimeSpan)item.fromtime);
+            //    DateTimeOffset localTime = new DateTimeOffset(myDateTime, TimeSpan.FromMinutes(-300));
+            //    Console.Write(localTime.TimeOfDay);
+            //}
             List<string> timeSlots = new List<string> { };
 
+          
             foreach (var item in appList.timingsVM)
             {
+               
                 TimeSpan startTime = (TimeSpan)item.fromtime;
                 TimeSpan endTime = (TimeSpan)item.totime;
                 if (startTime.Minutes % 15 != 0)
@@ -434,6 +442,14 @@ namespace RestAPIs.Controllers
         }
         private List<string> displayTimeSlots(IEnumerable<SP_FetchDoctorTimings_Result> appList)
         {
+            
+            //foreach (var item in appList)
+            //{
+            //    DateTimeOffset targetTime, sourceTime;
+            //    sourceTime = new DateTimeOffset(new DateTime(),(TimeSpan)item.from);
+            //    targetTime = sourceTime.ToOffset(new TimeSpan(5, 0, 0));
+            //    Console.Write("Target Time "+targetTime+"Source Time "+sourceTime);
+            //}
             List<string> timeSlots = new List<string> { };
 
             foreach (var item in appList)

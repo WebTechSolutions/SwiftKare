@@ -281,6 +281,34 @@
             </div>
         </div>
     </div><!-- mymodal1 -->
+
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+        <div class="modal-dialog" role="document" style="width: 500px;">
+            <div class="modal-content" style="border-radius: 0;">
+                <div class="modal-header text-center" style="background: #E4F1FE; border-bottom-color: #c3bebe;">
+                    <h2 style="margin: 0; color: #337ab7" id="heading"><b>Update your timezone</b></h2>
+                </div><!--/.modal header-->
+                <div class="modal-body text-left" style="text-align:center;">
+                    <div class="row">
+                        <label class="control-label" style="margin-left:-361px;margin-bottom:5px">
+                            Select Time Zone<span class="required">*</span>
+                        </label>
+                        <div>
+                            <span id="spnErrorTimeZone" style="display:none; color:red; float:right;margin-bottom:5px">TimeZone is required</span>
+
+                        </div>
+                        <select class="form-control" id="Timezone" style="margin-bottom:5px">
+                            <option value="">ALL</option>
+
+                        </select>
+
+
+                    </div>
+                    <button style="width: 29%; border-radius: 0; padding: 15px -15px; font-size: 20px;" onclick="updateTimeZone();" type="button" class="btn btn-primary">Save</button>
+                </div><!--/.modal body-->
+            </div>
+        </div>
+    </div><!-- mymodal2 -->
     <script>
         setInterval(function () {
 
@@ -684,53 +712,154 @@
        function () { $(this).addClass('current-page') },
        function () { $(this).removeClass('current-page') })
     </script>
+   
     <script>
-        @*$(document).ready(function () {
-            if ('@SessionHandler.UserInfo.timeZone' != '') {
-                var localtimezone = new Date().toString().match(/\(([A-Za-z\s].*)\)/)[1];
-                //alert('@SessionHandler.UserInfo.timeZone');
-                if ('@SessionHandler.UserInfo.timeZone' != localtimezone) {
-                    $.ajax({
-                        url: '@Url.Action("UpdateTimezone", "Appointment")',
-                        type: "POST",
-                        data: { 'localtimezone': localtimezone },
-                        dataType: 'json',
-                        success: function (result) {
-                            //Reload container
-                            if (result.Message != undefined) {
-                                new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
-                                hideLoader();
-                            }
-                            else {
+      
+        $('#myModal2').find('#Timezone').change(function () {
+            if ($('#myModal2').find("#spnErrorTimeZone").is(":visible") && $('#myModal2').find("#Timezone").val() != "") {
+                $('#myModal2').find("#Timezone").removeClass("redBorder");
+                $('#myModal2').find("#spnErrorTimeZone").hide();
+            }
+        });
+        $(document).ready(function () {
+            
+           
+            if ('@SessionHandler.UserInfo.timeZoneOffset' != '') {
+                //var localtimezone = new Date().toString().match(/\(([A-Za-z\s].*)\)/)[1];
+                if ('@SessionHandler.UserInfo.timeZoneOffset' != new Date().getTimezoneOffset().toString())
+                {
+                    var options = {
+                        message: 'Do you want to update your Time Zone?',
+                        title: 'Time Zone updation',
+                        size: eModal.size.lg
+                    };
+                    eModal.confirm(options)
+                    .then(function () {
+                        var param = "{}";
+                        var listitems;
+                        var $select = $('#myModal2').find('#Timezone');
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Appointment/GetTimeZones',
+                            data: param,
+                            dataType: 'json',
+                            success: function (response) {
+                                $.each(response.Object, function (item) {
+                                    listitems += '<option value=' + response.Object[item].zoneOffset + '>' + response.Object[item].timeZonee + '</option>';
 
-                                if (result.ApiResultModel.message == "") {
-                                    new PNotify({ title: 'Success', text: "Timezone is updated successfully.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
-                                    hideLoader();
-                                }
-                                else {
-                                    new PNotify({ title: 'Error', text: result.ApiResultModel.message, type: 'error', styling: 'bootstrap3' });
-                                    hideLoader();
-                                }
+                                });
+                                $select.append(listitems);
+                            },
+                            error: errorRes
 
+                        });
+                        $('#myModal2').modal('show');
+                    }, function () {
 
-                            }
-
-                        },
-                        error: function (err) {
-                            //alert(err.statusText);
-                            new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
-                            //Stop displaying loader
-                            hideLoader();
-                        }
                     });
                 }
             }
+            else if ('@SessionHandler.UserInfo.timeZoneOffset' == '')
+            {
+
+                var param = "{}";
+                var listitems;
+                var $select = $('#myModal2').find('#Timezone');
+                $.ajax({
+                    type: 'POST',
+                    url: '/Appointment/GetTimeZones',
+                    data: param,
+                    dataType: 'json',
+                    success: function (response) {
+                        $.each(response.Object, function (item) {
+                            listitems += '<option value=' + response.Object[item].zoneOffset + '>' + response.Object[item].timeZonee + '</option>';
+
+                        });
+                        $select.append(listitems);
+                    },
+                    error: errorRes
+
+                });
+                //$('#myModal2').modal('show');
+                $('#myModal2').modal({ backdrop: 'static', keyboard: false });
+            }
 
 
-        });*@
 
+        });
+        function errorRes(httpObj) {
+            //function (httpObj, textStatus) {
+            var messages = $.parseJSON(httpObj.getResponseHeader('X-Responded-JSON'));
+            if (messages != undefined && messages != null) {
+                if (messages.status == 401) {
+                    //window.location.href = "/Account/PatientLogin";
+                    new PNotify({
+                        title: 'Error',
+                        text: "Unauthorize access",
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                }
+            }
+            else {
+
+                new PNotify({
+                    title: 'Error',
+                    text: messages.statusText,
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+            }
+
+
+        }
+        function updateTimeZone()
+        {
+            if ($('#myModal2').find('#Timezone').val() == "") {
+
+                $("#Timezone").addClass("redBorder").focus();
+                $("#spnErrorTimeZone").show();
+                return;
+            }
+            var tz = $('#myModal2').find('#Timezone');
+            $.ajax({
+                url: '@Url.Action("UpdateTimezone", "Appointment")',
+                type: "POST",
+                data: { 'tzoffset': $('#myModal2').find('#Timezone').val() },
+                dataType: 'json',
+                success: function (result) {
+                    //Reload container
+                    if (result.Message != undefined) {
+                        new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                        hideLoader();
+                    }
+                    else {
+
+                        if (result.ApiResultModel.message == "") {
+                            new PNotify({ title: 'Success', text: "Timezone is updated successfully.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
+                            hideLoader();
+
+                        }
+                        else {
+                            new PNotify({ title: 'Error', text: result.ApiResultModel.message, type: 'error', styling: 'bootstrap3' });
+                            hideLoader();
+
+                        }
+
+
+                    }
+
+                },
+                error: function (err) {
+                    //alert(err.statusText);
+                    new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                    //Stop displaying loader
+                    hideLoader();
+                }
+            });
+            $('#myModal2').modal('hide');
+        }
     </script>
-
     @RenderSection("scripts", required: false)
 
 </body>

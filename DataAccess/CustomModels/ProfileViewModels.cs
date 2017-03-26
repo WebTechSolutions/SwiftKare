@@ -275,7 +275,14 @@ namespace DataAccess.CustomModels
     public class TimezoneModel
     {
         public string userid { get; set; }
-        public string timezone { get; set; }
+       
+        public string timezoneoffset { get; set; }
+    }
+    public class TimeZones
+    {
+        public string zoneOffset { get; set; }
+        public string timeZonee { get; set; }
+        
     }
 
     public class PatientProfileWithExtraInfoVM

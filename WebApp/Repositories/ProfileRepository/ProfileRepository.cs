@@ -202,6 +202,20 @@ namespace WebApp.Repositories.ProfileRepositories
             var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
             return result;
         }
+        public List<TimeZones> GetTimeZones()
+        {
+            try
+            {
+                var request = ApiConsumerHelper.GetResponseString("api/GetTimezonesList");
+                var result = JsonConvert.DeserializeObject<List<TimeZones>>(request);
+                return result;
+                
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         #endregion
 
     }
