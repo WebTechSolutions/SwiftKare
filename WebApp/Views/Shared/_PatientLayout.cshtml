@@ -312,8 +312,10 @@
     <script>
         setInterval(function () {
             //alert('@SessionHandler.IsExpired');
-            if ('@SessionHandler.IsExpired')
+            //alert('@HttpContext.Current.Session["UserName"]');
+            if ('@SessionHandler.IsExpired'=='False')
             {
+                alert('@SessionHandler.IsExpired');
                 window.location.href = '@Url.Action("PatientLogin","Account")';
             }
             $.ajax({
