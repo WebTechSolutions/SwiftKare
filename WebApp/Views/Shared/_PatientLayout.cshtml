@@ -312,13 +312,16 @@
     <script>
         
         setInterval(function () {
-
+            if ('@SessionHandler.IsExpired' == 'True') {
+                window.location.href = '@Url.Action("PatientLogin","Account")';
+            }
             $.ajax({
             url: "@Url.Action("AlertView", "Alert")",
             type: 'POST',
             dataType: 'html',
             cache: false,
             success: function (html) {
+                
                 //console.log($("#alertview").html());
                 $("#alertview").html(html);
             }

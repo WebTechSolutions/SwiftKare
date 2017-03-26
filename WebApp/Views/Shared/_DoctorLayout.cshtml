@@ -299,7 +299,9 @@
     
     <script>
         setInterval(function () {
-
+            if ('@SessionHandler.IsExpired' == 'True') {
+                window.location.href = '@Url.Action("PatientLogin","Account")';
+            }
            $.ajax({
                 url: "@Url.Action("DoctorAlertView", "DoctorAlert")",
                 type: 'POST',
@@ -310,7 +312,7 @@
                 $("#alertview").html(html);
             }
            });
-           
+
         }, 60 * 1000);
 
         @*function checkSession() {
