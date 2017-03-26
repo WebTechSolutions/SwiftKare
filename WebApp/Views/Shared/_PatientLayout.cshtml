@@ -311,11 +311,10 @@
     </div><!-- mymodal2 -->
     <script>
         setInterval(function () {
-            //alert('@SessionHandler.IsExpired');
-            //alert('@HttpContext.Current.Session["UserName"]');
-            if ('@SessionHandler.IsExpired'=='True')
+           
+            if ('@SessionHandler.IsExpired')
             {
-                //alert('@SessionHandler.IsExpired');
+               
                 window.location.href = '@Url.Action("PatientLogin","Account")';
             }
             $.ajax({

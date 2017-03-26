@@ -11,8 +11,9 @@ namespace WebApp.Helper
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             HttpContext ctx = HttpContext.Current;
+           
             // check  sessions here
-            if (HttpContext.Current.Session["username"] == null)
+            if (SessionHandler.IsExpired )
             {
                 filterContext.Result = new RedirectResult("~/Account/PatientLogin");
                 return;

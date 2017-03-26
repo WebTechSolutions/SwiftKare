@@ -12,7 +12,7 @@ namespace WebApp.Helper
         {
             HttpContext ctx = HttpContext.Current;
             // check  sessions here
-            if (HttpContext.Current.Session["UserName"] == null)
+            if (SessionHandler.IsExpired)
             {
                 filterContext.Result = new RedirectResult("~/Account/DoctorLogin");
                 return;

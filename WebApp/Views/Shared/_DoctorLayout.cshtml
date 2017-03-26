@@ -300,7 +300,8 @@
     <script>
 
         setInterval(function () {
-             if ('@SessionHandler.IsExpired'=='True')
+            if ('@SessionHandler.IsExpired')
+            {
                 window.location.href = '@Url.Action("DoctorLogin","Account")';
             }
            $.ajax({
