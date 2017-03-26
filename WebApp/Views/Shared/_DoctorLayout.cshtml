@@ -298,9 +298,9 @@
     </div><!-- mymodal2 -->
     
     <script>
-       
+
         setInterval(function () {
-            if ('@SessionHandler.IsExpired') {
+             if ('@SessionHandler.IsExpired'=='False')
                 window.location.href = '@Url.Action("DoctorLogin","Account")';
             }
            $.ajax({
@@ -326,7 +326,7 @@
             }
         });
         }, 15*60*1000);
-           
+
 
         var mymodal = $('#myModal1');
         function showAlert(heading, body) {
