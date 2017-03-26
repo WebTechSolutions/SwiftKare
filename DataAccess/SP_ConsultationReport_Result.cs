@@ -16,7 +16,7 @@ namespace DataAccess
         public string DName { get; set; }
         public string PName { get; set; }
         public string conDate { get; set; }
-        public Nullable<System.TimeSpan> conTime { get; set; }
+        public string conTime { get; set; }
         public string duration { get; set; }
         public string consultationStatus { get; set; }
         public string cd { get; set; }

@@ -41,7 +41,7 @@ namespace DataAccess
     
         public virtual ConsultationRO ConsultationRO { get; set; }
         public virtual Appointment Appointment { get; set; }
-        public virtual Patient Patient { get; set; }
         public virtual Doctor Doctor { get; set; }
+        public virtual Patient Patient { get; set; }
     }
 }

@@ -82,10 +82,10 @@ namespace DataAccess
         public virtual DbSet<SuffixMaster> SuffixMasters { get; set; }
         public virtual DbSet<TitleMaster> TitleMasters { get; set; }
         public virtual DbSet<TimeZone> TimeZones { get; set; }
-        public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<VCLog> VCLogs { get; set; }
         public virtual DbSet<DoctorSpeciality> DoctorSpecialities { get; set; }
         public virtual DbSet<Doctor> Doctors { get; set; }
+        public virtual DbSet<Patient> Patients { get; set; }
     
         public virtual int SP_AddAdmin(string lastName, string firstName, string email, string userId, string cB)
         {
@@ -475,19 +475,6 @@ namespace DataAccess
                 new ObjectParameter("lastname", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_CheckForDuplicatePatient_Result>("SP_CheckForDuplicatePatient", firstnameParameter, lastnameParameter);
-        }
-    
-        public virtual ObjectResult<SP_ConsultationReport_Result> SP_ConsultationReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto)
-        {
-            var datefromParameter = datefrom.HasValue ?
-                new ObjectParameter("datefrom", datefrom) :
-                new ObjectParameter("datefrom", typeof(System.DateTime));
-    
-            var datetoParameter = dateto.HasValue ?
-                new ObjectParameter("dateto", dateto) :
-                new ObjectParameter("dateto", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ConsultationReport_Result>("SP_ConsultationReport", datefromParameter, datetoParameter);
         }
     
         public virtual int sp_creatediagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
@@ -954,14 +941,9 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<News>("SP_SelectNewss", mergeOption);
         }
     
-        public virtual ObjectResult<Patient> SP_SelectPatient()
+        public virtual int SP_SelectPatient()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Patient>("SP_SelectPatient");
-        }
-    
-        public virtual ObjectResult<Patient> SP_SelectPatient(MergeOption mergeOption)
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Patient>("SP_SelectPatient", mergeOption);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectPatient");
         }
     
         public virtual ObjectResult<AspNetRole> SP_SelectRole()
@@ -1007,11 +989,6 @@ namespace DataAccess
         public virtual ObjectResult<PatientSystem> SP_SelectSystems(MergeOption mergeOption)
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<PatientSystem>("SP_SelectSystems", mergeOption);
-        }
-    
-        public virtual ObjectResult<SP_selectTransactionHistory_Result> SP_selectTransactionHistory()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_selectTransactionHistory_Result>("SP_selectTransactionHistory");
         }
     
         public virtual ObjectResult<Zip> SP_SelectZipCode()
@@ -2036,6 +2013,48 @@ namespace DataAccess
         public virtual ObjectResult<SP_SelectConsultation_Result> SP_SelectConsultation()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectConsultation_Result>("SP_SelectConsultation");
+        }
+    
+        public virtual ObjectResult<SP_ConsultationReport_Result> SP_ConsultationReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto, Nullable<long> patientID, Nullable<long> docID)
+        {
+            var datefromParameter = datefrom.HasValue ?
+                new ObjectParameter("datefrom", datefrom) :
+                new ObjectParameter("datefrom", typeof(System.DateTime));
+    
+            var datetoParameter = dateto.HasValue ?
+                new ObjectParameter("dateto", dateto) :
+                new ObjectParameter("dateto", typeof(System.DateTime));
+    
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
+    
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("docID", docID) :
+                new ObjectParameter("docID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ConsultationReport_Result>("SP_ConsultationReport", datefromParameter, datetoParameter, patientIDParameter, docIDParameter);
+        }
+    
+        public virtual ObjectResult<SP_selectTransactionHistory_Result> SP_selectTransactionHistory(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto, Nullable<long> patientID, Nullable<long> docID)
+        {
+            var datefromParameter = datefrom.HasValue ?
+                new ObjectParameter("datefrom", datefrom) :
+                new ObjectParameter("datefrom", typeof(System.DateTime));
+    
+            var datetoParameter = dateto.HasValue ?
+                new ObjectParameter("dateto", dateto) :
+                new ObjectParameter("dateto", typeof(System.DateTime));
+    
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
+    
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("docID", docID) :
+                new ObjectParameter("docID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_selectTransactionHistory_Result>("SP_selectTransactionHistory", datefromParameter, datetoParameter, patientIDParameter, docIDParameter);
         }
     }
 }
