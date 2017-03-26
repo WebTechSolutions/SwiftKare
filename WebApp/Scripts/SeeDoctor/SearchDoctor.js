@@ -394,7 +394,7 @@ function SearchDoctor(patientID) {
                         favDoctors(favDoctorsList[i]);
                     }
                 }
-                else { document.getElementById("docList").innerHTML = "No record found"; }
+                else { document.getElementById("docList").innerHTML = "<center>Sorry, Doctor is not found.</center>"; }
 
                 document.getElementById("mainpanel").style.display = "block";
 
@@ -420,7 +420,7 @@ function fetchTimings(fetchdate) {
     $.ajax({
         type: 'POST',
         //url: '@Url.Action("GetAllLanguages", "SeeDoctor")',
-        url: '/SeeDoctor/FetchDoctorTimings',
+        url: '/SeeDoctor/FetchDoctorTimingsNew',
         data: _objSearch,
         dataType: 'json',
         success: function (response) {
@@ -449,8 +449,8 @@ function fetchTimings(fetchdate) {
                         
 
                 });
-
-                if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
+               
+                if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "<center>Sorry, Doctor is not available on this day.</center>"; }
                 else { document.getElementById("TimingsData").innerHTML = tablehtml; }
             }
             
@@ -463,7 +463,7 @@ function fetchTimings(fetchdate) {
 
 function showDoctorTimings(doctorID) {
     showLoader();
-    
+   
     setAppType("S");
     var today = new Date();
     var dd = today.getDate();
@@ -489,7 +489,7 @@ function showDoctorTimings(doctorID) {
     $.ajax({
         type: 'POST',
         //url: '@Url.Action("GetAllLanguages", "SeeDoctor")',
-        url: '/SeeDoctor/FetchDoctorTimings',
+        url: '/SeeDoctor/FetchDoctorTimingsNew',
         data: _objSearch,
         dataType: 'json',
         success: function (response) {
@@ -505,8 +505,8 @@ function showDoctorTimings(doctorID) {
                     tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
                  }
             });
-
-            if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
+           
+            if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "<center>Sorry, Doctor is not available on this day.</center>"; }
             else { document.getElementById("TimingsData").innerHTML = tablehtml; }
         },
         error: errorRes

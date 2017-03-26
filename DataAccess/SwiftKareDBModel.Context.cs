@@ -477,19 +477,6 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_CheckForDuplicatePatient_Result>("SP_CheckForDuplicatePatient", firstnameParameter, lastnameParameter);
         }
     
-        public virtual ObjectResult<SP_ConsultationReport_Result> SP_ConsultationReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto)
-        {
-            var datefromParameter = datefrom.HasValue ?
-                new ObjectParameter("datefrom", datefrom) :
-                new ObjectParameter("datefrom", typeof(System.DateTime));
-    
-            var datetoParameter = dateto.HasValue ?
-                new ObjectParameter("dateto", dateto) :
-                new ObjectParameter("dateto", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ConsultationReport_Result>("SP_ConsultationReport", datefromParameter, datetoParameter);
-        }
-    
         public virtual int sp_creatediagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
             var diagramnameParameter = diagramname != null ?
@@ -1012,11 +999,6 @@ namespace DataAccess
         public virtual ObjectResult<PatientSystem> SP_SelectSystems(MergeOption mergeOption)
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<PatientSystem>("SP_SelectSystems", mergeOption);
-        }
-    
-        public virtual ObjectResult<SP_selectTransactionHistory_Result> SP_selectTransactionHistory()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_selectTransactionHistory_Result>("SP_selectTransactionHistory");
         }
     
         public virtual ObjectResult<Zip> SP_SelectZipCode()
@@ -2023,6 +2005,48 @@ namespace DataAccess
                 new ObjectParameter("patientID", typeof(long));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientAllConsultations_Result>("SP_GetPatientAllConsultations", patientIDParameter);
+        }
+    
+        public virtual ObjectResult<SP_ConsultationReport_Result> SP_ConsultationReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto, Nullable<long> patientID, Nullable<long> docID)
+        {
+            var datefromParameter = datefrom.HasValue ?
+                new ObjectParameter("datefrom", datefrom) :
+                new ObjectParameter("datefrom", typeof(System.DateTime));
+    
+            var datetoParameter = dateto.HasValue ?
+                new ObjectParameter("dateto", dateto) :
+                new ObjectParameter("dateto", typeof(System.DateTime));
+    
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
+    
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("docID", docID) :
+                new ObjectParameter("docID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ConsultationReport_Result>("SP_ConsultationReport", datefromParameter, datetoParameter, patientIDParameter, docIDParameter);
+        }
+    
+        public virtual ObjectResult<SP_selectTransactionHistory_Result> SP_selectTransactionHistory(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto, Nullable<long> patientID, Nullable<long> docID)
+        {
+            var datefromParameter = datefrom.HasValue ?
+                new ObjectParameter("datefrom", datefrom) :
+                new ObjectParameter("datefrom", typeof(System.DateTime));
+    
+            var datetoParameter = dateto.HasValue ?
+                new ObjectParameter("dateto", dateto) :
+                new ObjectParameter("dateto", typeof(System.DateTime));
+    
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
+    
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("docID", docID) :
+                new ObjectParameter("docID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_selectTransactionHistory_Result>("SP_selectTransactionHistory", datefromParameter, datetoParameter, patientIDParameter, docIDParameter);
         }
     }
 }

@@ -323,7 +323,7 @@ namespace WebApp.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
-            return RedirectToAction("AdminLogin", "AdminLogin");
+            return RedirectToAction("AdminLogin", "Account");
         }
        
         #region Helpers

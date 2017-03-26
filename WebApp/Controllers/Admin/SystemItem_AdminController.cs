@@ -30,6 +30,7 @@ namespace SwiftKare.Controllers
                     var systems = db.PatientSystems
                     .Where(a => a.active == true).ToList();
                     ViewBag.Systems = systems;
+                    ViewBag.systemid = 0;
                     return View(systemitem);
 
                 }
@@ -42,7 +43,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                return RedirectToAction("AdminLogin", "Account");
             }
 
 
@@ -121,6 +122,7 @@ namespace SwiftKare.Controllers
                     var systems = db.PatientSystems
                     .Where(a => a.active == true).ToList();
                     ViewBag.Systems = systems;
+                    ViewBag.systemid = systemid;
                     return View(__existingitemList);
 
                 }
@@ -135,9 +137,35 @@ namespace SwiftKare.Controllers
             }
             else
             {
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                return RedirectToAction("AdminLogin", "Account");
             }
         }
 
+        public PartialViewResult LoadSystemItems(long id)
+        {
+            try
+            {
+               
+                var oData = (from sys in db.SystemItemsses
+                             where sys.systemID == id
+                             select new DataAccess.CustomModels.SystemItemsModel
+                             {
+                                 systemItemID = sys.systemItemID,
+                                 systemItemName = sys.systemItemName,
+                                 systemID = sys.systemID,
+                                 systemName = db.PatientSystems.Where(s => s.systemID == id).Select(s => s.systemName).FirstOrDefault()
+                             }).ToList();
+                 
+                return PartialView("SystemItemGrid", oData);
+
+            }
+
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message.ToString();
+                ViewBag.Success = "";
+            }
+            return PartialView("SystemItemGrid");
+        }
     }
 }

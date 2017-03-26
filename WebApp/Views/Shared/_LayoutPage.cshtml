@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using WebApp.Helper;
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -53,8 +54,8 @@
   <body class="nav-md">
    <div class="container body">
         <div class="main_container">
-            <div class="col-md-3 left_col">
-                <div class="left_col scroll-view">
+            <div class="col-md-3 left_col menu_fixed">
+                <div class="left_col scroll-view" style="height:1000px;" id="divMenu">
                     <div class="navbar nav_title" style="border: 0;">
                         <a href="index.html" class="site_title"><span>SwiftKare</span></a>
                     </div>
@@ -122,6 +123,7 @@
                                                                                 
                                     </ul>
                                 </li>
+
                                 <li><a href="@Url.Action("TransactionHistory", "Transaction_Admin")"><i class="fa fa-clock-o"></i>Transaction History</a></li>
                                
                                 <li><a href="@Url.Action("AppReport", "Consultation_Admin")"><i class="fa fa-clock-o"></i>Appointments</a></li>
@@ -189,19 +191,21 @@
             </div>
             <!-- /top navigation -->
               <!-- /page content -->
-            <div class="right_col" role="main">
+            <div class="right_col" role="main" id="div_content">
                 @RenderBody()
             </div>
             <!-- /page content -->
             <!-- footer content -->
+           
             <footer>
-                <div class="pull-right">
-                    <a href="#">SwiftKare</a>
-                </div>
+                <div>
+                    <center><a href="#">SwiftKare</a></center>
+</div>
                 <div class="clearfix"></div>
             </footer>
-            <!-- /footer content -->
-        </div>
+               
+                    <!-- /footer content -->
+</div>
     </div>
  
     <!-- Custom Theme Scripts -->
@@ -209,7 +213,13 @@
     <script src="~/Scripts/build/js/custom.min.js"></script>
     <!-- Bootstrap -->
     <script src="~/Scripts/bootstrap/dist/js/bootstrap.min.js"></script>
-   
+    <script>
+        setInterval(function () {
+            if ('@SessionHandler.IsExpired') {
+                window.location.href = '@Url.Action("AdminLogin","Account")';
+            }
+        }, 60*1000);
+    </script>
     
 
    

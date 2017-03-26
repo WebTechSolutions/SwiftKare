@@ -1,6 +1,8 @@
 ﻿using DataAccess;
+using DataAccess.CustomModels;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -34,7 +36,7 @@ namespace SwiftKare.Controllers.Consultation
             }
             else
             {
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                return RedirectToAction("AdminLogin", "Account");
             }
         }
         [HttpPost]
@@ -56,7 +58,7 @@ namespace SwiftKare.Controllers.Consultation
             }
             else
             {
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                return RedirectToAction("AdminLogin", "Account");
             }
 
         }
@@ -68,7 +70,24 @@ namespace SwiftKare.Controllers.Consultation
 
                 try
                 {
-                   
+                    var doctors = (from d in db.Doctors
+                                   where d.firstName!=null && d.lastName!=null
+                                   select new DocConsultationReport
+                                   {
+                                       doctorid = d.doctorID,
+                                       firstName = d.firstName ,
+                                       lastName=d.lastName
+                                   }).ToList();
+                    var patients = (from d in db.Patients
+                                    where d.firstName != null && d.lastName != null
+                                    select new PatConsultationReport
+                                   {
+                                       patientid = d.patientID,
+                                       firstName = d.firstName,
+                                       lastName = d.lastName
+                                   }).ToList();
+                    ViewBag.Doctors = doctors;
+                    ViewBag.Patients = patients;
                     return View();
                 }
                 catch (Exception ex)
@@ -78,7 +97,7 @@ namespace SwiftKare.Controllers.Consultation
             }
             else
             {
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                return RedirectToAction("AdminLogin", "Account");
             }
         }
 
@@ -91,19 +110,52 @@ namespace SwiftKare.Controllers.Consultation
 
                 try
                 {
-                    var datefrom = Request.Form["datefrom"].ToString();
-                    var dateto = Request.Form["dateto"].ToString();
-                    var doc = db.SP_ConsultationReport(Convert.ToDateTime(datefrom), Convert.ToDateTime(dateto));
-                    return View(doc);
+                    var doctors = (from d in db.Doctors
+                                   where d.firstName != null && d.lastName != null
+                                   select new DocConsultationReport
+                                   {
+                                       doctorid = d.doctorID,
+                                       firstName = d.firstName,
+                                       lastName = d.lastName
+                                   }).ToList();
+                    var patients = (from d in db.Patients
+                                    where d.firstName != null && d.lastName != null
+                                    select new PatConsultationReport
+                                    {
+                                        patientid = d.patientID,
+                                        firstName = d.firstName,
+                                        lastName = d.lastName
+                                    }).ToList();
+                    ViewBag.Doctors = doctors;
+                    ViewBag.Patients = patients;
+                    var datefrom = Request.Form["datefrom"].ToString().Trim();
+                    var dateto = Request.Form["dateto"].ToString().Trim();
+                    var doctorid = Request.Form["sltDoctor"].ToString();
+                    var patientid = Request.Form["sltPatient"].ToString();
+                    
+                   
+                    if (doctorid == "0" && patientid != "0")
+                    {
+                        var doc = db.SP_ConsultationReport(Convert.ToDateTime(datefrom), Convert.ToDateTime(dateto), Convert.ToInt32(patientid), null);
+                        return View(doc);
+                    }
+                    if (doctorid != "0" && patientid == "0")
+                    {
+                        var doc = db.SP_ConsultationReport(Convert.ToDateTime(datefrom), Convert.ToDateTime(dateto), null,Convert.ToInt32(doctorid));
+                        return View(doc);
+                    }
+                    var docc = db.SP_ConsultationReport(Convert.ToDateTime(datefrom), Convert.ToDateTime(dateto), null, null);
+                    return View(docc);
                 }
                 catch (Exception ex)
                 {
+                    ViewBag.errorMessage = ex.Message;
                     return View();
                 }
             }
             else
             {
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                return RedirectToAction("AdminLogin", "Account");
             }
         }
 
@@ -123,7 +175,7 @@ namespace SwiftKare.Controllers.Consultation
             }
             else
             {
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                return RedirectToAction("AdminLogin", "Account");
             }
         }
         [HttpPost]
@@ -155,7 +207,7 @@ namespace SwiftKare.Controllers.Consultation
             }
             else
             {
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                return RedirectToAction("AdminLogin", "Account");
             }
         }
     }

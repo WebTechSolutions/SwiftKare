@@ -45,5 +45,21 @@ namespace DataAccess.CustomModels
     public class TimeZoneModel
     {
         public string zonename { get; set; }
+        public string zoneoffset { get; set; }
+        
+    }
+
+    public class DocConsultationReport
+    {
+        public long doctorid { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+    }
+    public class PatConsultationReport
+    {
+        public long patientid { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+
     }
 }

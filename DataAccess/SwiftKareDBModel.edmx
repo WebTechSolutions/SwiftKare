@@ -1388,6 +1388,8 @@
         <Function Name="SP_ConsultationReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="datefrom" Type="datetime" Mode="In" />
           <Parameter Name="dateto" Type="datetime" Mode="In" />
+          <Parameter Name="patientID" Type="bigint" Mode="In" />
+          <Parameter Name="docID" Type="bigint" Mode="In" />
         </Function>
         <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
@@ -1617,7 +1619,12 @@
         <Function Name="SP_SelectStates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="SP_SelectSystemItems" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="SP_SelectSystems" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
-        <Function Name="SP_selectTransactionHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SP_selectTransactionHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="datefrom" Type="datetime" Mode="In" />
+          <Parameter Name="dateto" Type="datetime" Mode="In" />
+          <Parameter Name="patientID" Type="bigint" Mode="In" />
+          <Parameter Name="docID" Type="bigint" Mode="In" />
+        </Function>
         <Function Name="SP_SelectZipCode" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_UpdateAlerts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="alertID" Type="bigint" Mode="In" />
@@ -2035,10 +2042,6 @@
             <Parameter Name="firstname" Mode="In" Type="String" />
             <Parameter Name="lastname" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="SP_ConsultationReport" ReturnType="Collection(SwiftKareDBModel.SP_ConsultationReport_Result)">
-            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
-            <Parameter Name="dateto" Mode="In" Type="DateTime" />
-          </FunctionImport>
           <FunctionImport Name="sp_creatediagram">
             <Parameter Name="diagramname" Mode="In" Type="String" />
             <Parameter Name="owner_id" Mode="In" Type="Int32" />
@@ -2166,7 +2169,6 @@
           <FunctionImport Name="SP_SelectStates" EntitySet="States" ReturnType="Collection(SwiftKareDBModel.State)" />
           <FunctionImport Name="SP_SelectSystemItems" ReturnType="Collection(SwiftKareDBModel.SP_SelectSystemItems_Result)" />
           <FunctionImport Name="SP_SelectSystems" EntitySet="PatientSystems" ReturnType="Collection(SwiftKareDBModel.PatientSystem)" />
-          <FunctionImport Name="SP_selectTransactionHistory" ReturnType="Collection(SwiftKareDBModel.SP_selectTransactionHistory_Result)" />
           <FunctionImport Name="SP_SelectZipCode" EntitySet="Zips" ReturnType="Collection(SwiftKareDBModel.Zip)" />
           <FunctionImport Name="sp_UpdateAlerts">
             <Parameter Name="alertID" Mode="In" Type="Int64" />
@@ -2623,25 +2625,28 @@
           <Parameter Name="patientID" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="SP_GetDcotorAllConsultations" ReturnType="Collection(SwiftKareDBModel.SP_GetDcotorAllConsultations_Result)">
-            <Parameter Name="doctorID" Mode="In" Type="Int64" />
+          <Parameter Name="doctorID" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="SP_GetPatientAllConsultations" ReturnType="Collection(SwiftKareDBModel.SP_GetPatientAllConsultations_Result)">
+          <Parameter Name="patientID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_ConsultationReport" ReturnType="Collection(SwiftKareDBModel.SP_ConsultationReport_Result)">
+            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateto" Mode="In" Type="DateTime" />
             <Parameter Name="patientID" Mode="In" Type="Int64" />
+            <Parameter Name="docID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_selectTransactionHistory" ReturnType="Collection(SwiftKareDBModel.SP_selectTransactionHistory_Result)">
+            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateto" Mode="In" Type="DateTime" />
+            <Parameter Name="patientID" Mode="In" Type="Int64" />
+            <Parameter Name="docID" Mode="In" Type="Int64" />
           </FunctionImport>
 
         </EntityContainer>
         <ComplexType Name="SP_CheckForDuplicatePatient_Result">
           <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="lastName" Nullable="true" MaxLength="100" />
-        </ComplexType>
-        <ComplexType Name="SP_ConsultationReport_Result">
-          <Property Type="String" Name="DName" Nullable="true" MaxLength="201" />
-          <Property Type="String" Name="PName" Nullable="true" MaxLength="201" />
-          <Property Type="String" Name="conDate" Nullable="true" MaxLength="8" />
-          <Property Type="Time" Name="conTime" Nullable="true" />
-          <Property Type="String" Name="duration" Nullable="false" MaxLength="7" />
-          <Property Type="String" Name="consultationStatus" Nullable="true" MaxLength="10" />
-          <Property Type="String" Name="cd" Nullable="true" MaxLength="8" />
         </ComplexType>
         <ComplexType Name="SP_DoctorReport_Result">
           <Property Type="Int64" Name="doctorID" Nullable="false" />
@@ -2885,17 +2890,6 @@
           <Property Type="String" Name="systemItemName" Nullable="true" MaxLength="50" />
           <Property Type="Int64" Name="systemID" Nullable="true" />
           <Property Type="String" Name="systemName" Nullable="true" MaxLength="50" />
-        </ComplexType>
-        <ComplexType Name="SP_selectTransactionHistory_Result">
-          <Property Type="Int64" Name="appID" Nullable="false" />
-          <Property Type="String" Name="DLastName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="DFirstName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="PFirstName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="PLastName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="duration" Nullable="false" MaxLength="7" />
-          <Property Type="String" Name="appDate" Nullable="true" MaxLength="30" />
-          <Property Type="String" Name="appTime" Nullable="true" MaxLength="30" />
-          <Property Type="Int32" Name="paymentAmt" Nullable="true" />
         </ComplexType>
         <ComplexType Name="SP_SelectZipCode_Result">
           <Property Type="Int64" Name="zipID" Nullable="false" />
@@ -4479,6 +4473,26 @@
           <Property Type="String" Name="utcappDate" Nullable="true" MaxLength="30" />
           <Property Type="Int64" Name="doctorID" Nullable="false" />
         </ComplexType>
+        <ComplexType Name="SP_ConsultationReport_Result">
+          <Property Type="String" Name="DName" Nullable="true" MaxLength="201" />
+          <Property Type="String" Name="PName" Nullable="true" MaxLength="201" />
+          <Property Type="String" Name="conDate" Nullable="true" MaxLength="8" />
+          <Property Type="String" Name="conTime" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="duration" Nullable="false" MaxLength="7" />
+          <Property Type="String" Name="consultationStatus" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="cd" Nullable="true" MaxLength="8" />
+        </ComplexType>
+        <ComplexType Name="SP_selectTransactionHistory_Result">
+          <Property Type="Int64" Name="appID" Nullable="false" />
+          <Property Type="String" Name="DLastName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="DFirstName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="PFirstName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="PLastName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="duration" Nullable="false" MaxLength="7" />
+          <Property Type="String" Name="appDate" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="appTime" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="paymentAmt" Nullable="true" />
+        </ComplexType>
 
       </Schema>
     </edmx:ConceptualModels>
@@ -4512,19 +4526,6 @@
               <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_CheckForDuplicatePatient_Result">
                 <ScalarProperty Name="firstName" ColumnName="firstName" />
                 <ScalarProperty Name="lastName" ColumnName="lastName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_ConsultationReport" FunctionName="SwiftKareDBModel.Store.SP_ConsultationReport">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_ConsultationReport_Result">
-                <ScalarProperty Name="DName" ColumnName="DName" />
-                <ScalarProperty Name="PName" ColumnName="PName" />
-                <ScalarProperty Name="conDate" ColumnName="conDate" />
-                <ScalarProperty Name="conTime" ColumnName="conTime" />
-                <ScalarProperty Name="duration" ColumnName="duration" />
-                <ScalarProperty Name="consultationStatus" ColumnName="consultationStatus" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -4662,21 +4663,6 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectSystems" FunctionName="SwiftKareDBModel.Store.SP_SelectSystems" />
-          <FunctionImportMapping FunctionImportName="SP_selectTransactionHistory" FunctionName="SwiftKareDBModel.Store.SP_selectTransactionHistory">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_selectTransactionHistory_Result">
-                <ScalarProperty Name="appID" ColumnName="appID" />
-                <ScalarProperty Name="DLastName" ColumnName="DLastName" />
-                <ScalarProperty Name="DFirstName" ColumnName="DFirstName" />
-                <ScalarProperty Name="PFirstName" ColumnName="PFirstName" />
-                <ScalarProperty Name="PLastName" ColumnName="PLastName" />
-                <ScalarProperty Name="duration" ColumnName="duration" />
-                <ScalarProperty Name="appDate" ColumnName="appDate" />
-                <ScalarProperty Name="appTime" ColumnName="appTime" />
-                <ScalarProperty Name="paymentAmt" ColumnName="paymentAmt" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_SelectZipCode" FunctionName="SwiftKareDBModel.Store.SP_SelectZipCode">
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_UpdateAlerts" FunctionName="SwiftKareDBModel.Store.sp_UpdateAlerts" />
@@ -6070,6 +6056,34 @@
                 <ScalarProperty Name="languageName" ColumnName="languageName" />
                 <ScalarProperty Name="utcappDate" ColumnName="utcappDate" />
                 <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_ConsultationReport" FunctionName="SwiftKareDBModel.Store.SP_ConsultationReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_ConsultationReport_Result">
+                <ScalarProperty Name="DName" ColumnName="DName" />
+                <ScalarProperty Name="PName" ColumnName="PName" />
+                <ScalarProperty Name="conDate" ColumnName="conDate" />
+                <ScalarProperty Name="conTime" ColumnName="conTime" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="consultationStatus" ColumnName="consultationStatus" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_selectTransactionHistory" FunctionName="SwiftKareDBModel.Store.SP_selectTransactionHistory">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_selectTransactionHistory_Result">
+                <ScalarProperty Name="appID" ColumnName="appID" />
+                <ScalarProperty Name="DLastName" ColumnName="DLastName" />
+                <ScalarProperty Name="DFirstName" ColumnName="DFirstName" />
+                <ScalarProperty Name="PFirstName" ColumnName="PFirstName" />
+                <ScalarProperty Name="PLastName" ColumnName="PLastName" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="appDate" ColumnName="appDate" />
+                <ScalarProperty Name="appTime" ColumnName="appTime" />
+                <ScalarProperty Name="paymentAmt" ColumnName="paymentAmt" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

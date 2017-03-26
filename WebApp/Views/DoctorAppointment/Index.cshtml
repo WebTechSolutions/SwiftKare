@@ -117,9 +117,9 @@
     <div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4">
         <div class="modal-dialog" style="width: 350px;">
             <div id='myModalContent' class="modal-content" style="border-radius: 0;">
-                @{
+                @*@{
                     Html.RenderAction("ViewAppDetails", "DoctorAppointment", new { appID = 0 });
-                }
+                }*@
             </div>
         </div>
     </div><!-- View App Detail -->
@@ -147,9 +147,9 @@
 <div class="modal fade" id="myModal8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8">
     <div class="modal-dialog" role="document" style="border-bottom: 0;">
         <div id='PatientProfileContent' class="modal-content" style="overflow:auto; border-radius: 0;">
-            @{
+            @*@{
                 Html.RenderAction("PatientProfile", "DoctorAppointment", new { patientID = 0 });
-            }
+            }*@
         </div>
 
 
@@ -164,18 +164,18 @@
         currentTab = cTab;
         if (cTab == 'U') {
             $("#divUpcoming").load('@Url.Action("PartialDoctorUpcoming", "DoctorAppointment")', function () {
-                callback();
+                //callback();
             });
 
         }
         if (cTab == 'R') {
             $("#divReschedule").load('@Url.Action("PartialDoctorReschedule", "DoctorAppointment")', function () {
-                callback();
+                //callback();
             });
         }
         if (cTab == 'P') {
             $("#divPending").load('@Url.Action("PartialDoctorPending", "DoctorAppointment")', function () {
-                callback();
+                //callback();
             });
         }
     }
@@ -230,21 +230,6 @@
     }
 </script>
 
-<script type="text/javascript">
-        @*$(document).ready(function () {
-            
-            if('@SessionHandler.UserInfo.timeZone'=='')
-            {
-                new PNotify({
-                    title: 'Info',
-                    text: "Please update your timezone.",
-                    type: 'info',
-                    styling: 'bootstrap3'
-                });
-                window.location = '@Url.Action("Index","DoctorProfile")';
 
-            }
-        });*@
-</script>
 
 

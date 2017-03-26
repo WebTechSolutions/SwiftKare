@@ -60,7 +60,8 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                //return RedirectToAction("AdminLogin", "Account");
+                return RedirectToAction("AdminLogin", "Account");
             }
 
         }
@@ -382,7 +383,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                return RedirectToAction("AdminLogin", "Account");
             }
 
         }

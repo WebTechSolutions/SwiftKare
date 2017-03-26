@@ -298,8 +298,11 @@
     </div><!-- mymodal2 -->
     
     <script>
+       
         setInterval(function () {
-           
+            if ('@SessionHandler.IsExpired') {
+                window.location.href = '@Url.Action("DoctorLogin","Account")';
+            }
            $.ajax({
                 url: "@Url.Action("DoctorAlertView", "DoctorAlert")",
                 type: 'POST',
@@ -318,7 +321,7 @@
             dataType: 'html',
             cache: false,
             success: function (html) {
-                console.log($("#refillerror").html());
+                //console.log($("#refillerror").html());
                 $("#refillerror").html(html);
             }
         });
@@ -676,42 +679,8 @@
                 }
             });
 
-            if ('@SessionHandler.UserInfo.timeZoneOffset' != '') {
-                //var localtimezone = new Date().toString().match(/\(([A-Za-z\s].*)\)/)[1];
-                if ('@SessionHandler.UserInfo.timeZoneOffset' != new Date().getTimezoneOffset().toString())
-                {
-                    var options = {
-                        message: 'Do you want to update your Time Zone?',
-                        title: 'Time Zone updation',
-                        size: eModal.size.lg
-                    };
-                    eModal.confirm(options)
-                    .then(function () {
-                        var param = "{}";
-                        var listitems;
-                        var $select = $('#myModal2').find('#Timezone');
-                        $.ajax({
-                            type: 'POST',
-                            url: '/DoctorAppointment/GetTimeZones',
-                            data: param,
-                            dataType: 'json',
-                            success: function (response) {
-                                $.each(response.Object, function (item) {
-                                    listitems += '<option value=' + response.Object[item].zoneOffset + '>' + response.Object[item].timeZonee + '</option>';
-
-                                });
-                                $select.append(listitems);
-                            },
-                            error: errorRes
-
-                        });
-                        $('#myModal2').modal('show');
-                    }, function () {
-
-                    });
-                }
-            }
-            else if ('@SessionHandler.UserInfo.timeZoneOffset' == '')
+            if ('@SessionHandler.UserInfo.timeZoneOffset' == '' ||
+                '@SessionHandler.UserInfo.timeZoneOffset' != new Date().getTimezoneOffset().toString())
             {
                 var param = "{}";
                 var listitems;
@@ -723,7 +692,7 @@
                     dataType: 'json',
                     success: function (response) {
                         $.each(response.Object, function (item) {
-                            listitems += '<option value=' + response.Object[item].zoneOffset + '>' + response.Object[item].timeZonee + '</option>';
+                            listitems += '<option value=' + response.Object[item].zoneid + '>' + response.Object[item].timeZonee + '</option>';
 
                         });
                         $select.append(listitems);
@@ -775,7 +744,7 @@
             $.ajax({
                 url: '@Url.Action("UpdateTimezone", "DoctorAppointment")',
                 type: "POST",
-                data: { 'tzoffset': $('#myModal2').find('#Timezone').val() },
+                data: { 'zoneid': $('#myModal2').find('#Timezone').val() },
                 dataType: 'json',
                 success: function (result) {
                     //Reload container
@@ -788,12 +757,12 @@
                         if (result.ApiResultModel.message == "") {
                             new PNotify({ title: 'Success', text: "Timezone is updated successfully.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
                             hideLoader();
-                           
+
                         }
                         else {
                             new PNotify({ title: 'Error', text: result.ApiResultModel.message, type: 'error', styling: 'bootstrap3' });
                             hideLoader();
-                           
+
                         }
 
 

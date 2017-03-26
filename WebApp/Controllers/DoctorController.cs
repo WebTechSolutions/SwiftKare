@@ -43,19 +43,26 @@ namespace WebApp.Controllers
             }
             else
             {
-                var Model = new DoctorTimingsViewModel();
-                var objRepo = new DoctorRepository();
-                Model.DoctorId = SessionHandler.UserInfo.Id;
-                Model.DoctorTimingsList = objTimingRepo.GetListByDoctorId(Model.DoctorId).ToList();
+                try
+                {
+                    var Model = new DoctorTimingsViewModel();
+                    var objRepo = new DoctorRepository();
+                    Model.DoctorId = SessionHandler.UserInfo.Id;
+                    Model.DoctorTimingsList = objTimingRepo.GetListByDoctorId(Model.DoctorId).ToList();
 
-                Model.DayWiseTimings = GetList(Model.DoctorTimingsList);
+                    Model.DayWiseTimings = GetList(Model.DoctorTimingsList);
 
 
 
-                Model.DoctorTiming = new DoctorTimingsModel();
-                Model.DoctorTiming.doctorID = Model.DoctorId;
-                Model.DoctorTiming.doctorTimingsID = 0;
-                return Json(Model, JsonRequestBehavior.AllowGet);
+                    Model.DoctorTiming = new DoctorTimingsModel();
+                    Model.DoctorTiming.doctorID = Model.DoctorId;
+                    Model.DoctorTiming.doctorTimingsID = 0;
+                    return Json(Model, JsonRequestBehavior.AllowGet);
+                }
+                catch (System.Web.Http.HttpResponseException ex)
+                {
+                    return Json(new { Message = ex.Response.ReasonPhrase.ToString() });
+                }
             }
         }
 
@@ -110,6 +117,10 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult CreateEditTimings(DoctorTimingsModel model)
         {
+            try
+            {
+
+            
             if (model.from.Length < 8)
                 model.from = "0" + model.from;
 
@@ -200,7 +211,11 @@ namespace WebApp.Controllers
                 return Json("overlapped", JsonRequestBehavior.AllowGet);
             }
 
-
+            }
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                return Json(new { Message = ex.Response.ReasonPhrase.ToString() });
+            }
         }
 
         [HttpPost]
@@ -214,8 +229,16 @@ namespace WebApp.Controllers
                     isRedirect = true
                 });
             }
-            objTimingRepo.Delete(id);
-            return Json(id, JsonRequestBehavior.AllowGet);
+            try
+            {
+                objTimingRepo.Delete(id);
+                return Json(id, JsonRequestBehavior.AllowGet);
+            }
+            
+            catch (System.Web.Http.HttpResponseException ex)
+            {
+                return Json(new { Message = ex.Response.ReasonPhrase.ToString() });
+            }
         }
 
         [HttpPost]
@@ -243,7 +266,7 @@ namespace WebApp.Controllers
             {
                 var oData = objDoctorRepo.GetRefillErrorCount();
                 ViewBag.RefillErrorCount = oData;
-                return PartialView("DoctorRefillErrorCountView");
+                return PartialView("DoctorRefillErrorCountView", oData);
 
             }
 

@@ -16,6 +16,7 @@
     string cEndCallUrl = "";
     if (userType.ToLower() == "patient")
     {
+       
         cEndCallUrl = Url.Action("Index", "Appointment");
     }
     else
@@ -616,33 +617,27 @@
         }, false);
     </script>
     <script>
-        function showReviewPopup()
-        {
-            var mymodal = $('#myModal2');
-            $("span").css("pointer-events", "auto");
-            $("#ss5").removeClass('fa fa-star');
-            $("#ss5").addClass('fa fa-star-o');
 
-            $("#s4").removeClass('fa fa-star');
-            $("#s4").addClass('fa fa-star-o');
+            setInterval(function () {
 
-            $("#s3").removeClass('fa fa-star');
-            $("#s3").addClass('fa fa-star-o');
+                if ('@ViewBag.UserType'.ToLower() == "patient")
+                {
 
-            $("#s2").removeClass('fa fa-star');
-            $("#s2").addClass('fa fa-star-o');
+                    //cEndCallUrl = Url.Action("Index", "Appointment");
+                    if ('@SessionHandler.IsExpired') {
+                        window.location.href = '@Url.Action("PatientLogin","Account")';
+                    }
+                }
+                else  if ('@ViewBag.UserType'.ToLower() == "doctor")
+                {
+                    if ('@SessionHandler.IsExpired') {
+                        window.location.href = '@Url.Action("DoctortLogin","Account")';
+                    }
+                }
+            }, 60*1000);
 
-            $("#s1").removeClass('fa fa-star');
-            $("#s1").addClass('fa fa-star-o');
 
-            mymodal.find('#message').val("");
-            mymodal.find('#message').removeAttr("disabled");
-            mymodal.find('#apply').show();
-            mymodal.find('#ok').hide();
-
-            mymodal.modal('show');
-            
-        }
+       
         //Save Review given by patient
         function WriteReview(message)
         {
@@ -673,8 +668,8 @@
                     //Reload container
                     if (result.Message != undefined) {
                         new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
-                        $('#myModal1').modal('hide');
-                       
+                        $('#myModal2').modal('hide');
+
                         hideLoader();
                     }
                     else {
@@ -682,8 +677,8 @@
                         if(result.ApiResultModel.message=="")
                         {
                             new PNotify({ title: 'Success', text: "Consultation is reviewed successfully.", type: 'info',addclass: 'dark', styling: 'bootstrap3' });
-                            $('#myModal1').modal('hide');
-                            
+                            $('#myModal2').modal('hide');
+
                             reloadConsultation(function ()
                             {
                                 //Stop displaying loader
@@ -694,8 +689,8 @@
                         else
                         {
                             new PNotify({ title: 'Error', text: result.ApiResultModel.message, type: 'error', styling: 'bootstrap3' });
-                            $('#myModal1').modal('hide');
-                            
+                            $('#myModal2').modal('hide');
+
                             hideLoader();
                         }
 

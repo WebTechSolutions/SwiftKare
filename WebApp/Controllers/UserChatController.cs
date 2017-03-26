@@ -79,11 +79,20 @@ namespace WebApp.Controllers
                 userType = roles[0].ToString();
                 if (roles.Contains("Doctor"))
                 {
+                    //check for session expire
+                    if(SessionHandler.IsExpired)
+                    {
+                        return RedirectToAction("DoctorLogin", "Account");
+                    }
                     userType = "Doctor";
                     ViewBag.RecipientName = patientName;// openTokSession.PatientName;
                 }
                 else
                 {
+                    if (SessionHandler.IsExpired)
+                    {
+                        return RedirectToAction("PatientLogin", "Account");
+                    }
                     userType = "Patient";
                     ViewBag.RecipientName = doctorName;// openTokSession.DoctorName;
                 }

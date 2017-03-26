@@ -13,4 +13,11 @@ namespace DataAccess.CustomModels
         //public string chiefcomplaints { get; set; }
         //public long patientId { get; set; }
     }
+    public partial class SystemItemsModel
+    {
+        public long systemItemID { get; set; }
+        public string systemItemName { get; set; }
+        public Nullable<long> systemID { get; set; }
+        public string systemName { get; set; }
+    }
 }

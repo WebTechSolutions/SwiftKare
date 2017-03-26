@@ -13,14 +13,15 @@ using DataAccess.CustomModels;
 using System.Globalization;
 using RestAPIs.Helper;
 using System.Web.WebPages.Html;
+using System.Net.Http;
 
 namespace RestAPIs.Controllers
 {
-    [Authorize(Roles = "Doctor")]
+    [Authorize]
     public class DoctorTimingsController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
-       
+        HttpResponseMessage response;
 
         // GET: api/DoctorTimings/5
         [ResponseType(typeof(DoctorTimingsModel))]
@@ -59,6 +60,7 @@ namespace RestAPIs.Controllers
                 model.to = to.ToString("hh:mm tt");
                 timings.Add(model);
             }
+            
             return timings;
         }
 
@@ -67,9 +69,43 @@ namespace RestAPIs.Controllers
         public async Task<IHttpActionResult> PutDoctorTiming(long id, DoctorTimingsModel doctorTimingModel)
         {
             var doctorTiming = new DoctorTiming();
+            var timingsList = GetDoctorTimingByDoctorId(id);
+            var alreadItems = timingsList
+                .Where(o => o.day == doctorTimingModel.day &&
+                (o.from == doctorTimingModel.from || o.to == doctorTimingModel.to
+                ||
+                (
+                DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
+                DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                &&
+                DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
+                DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
 
+                )
+                ||
+                (
+                DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
+                DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                &&
+                DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
+                DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                )
 
-            if (!ModelState.IsValid)
+                ||
+                (
+                DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
+                DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                &&
+                DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
+                DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                )
+
+                )).ToList();
+            if (alreadItems.Count >= 0)
+            {
+            }
+
+                if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -120,32 +156,77 @@ namespace RestAPIs.Controllers
         {
             
             var doctorTiming = new DoctorTiming();
+            var timingsList = GetDoctorTimingByDoctorId(doctorTimingModel.doctorID);
+            var alreadItems = timingsList
+                .Where(o => o.day == doctorTimingModel.day &&
+                (o.from == doctorTimingModel.from || o.to == doctorTimingModel.to
+                ||
+                (
+                DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
+                DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                &&
+                DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
+                DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+
+                )
+                ||
+                (
+                DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
+                DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                &&
+                DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
+                DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                )
+
+                ||
+                (
+                DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
+                DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                &&
+                DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
+                DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                )
+
+                )).ToList();
+            if (alreadItems.Count > 0)
+            {
+                return BadRequest("Timings can not be overlapped across each other.");
+                //return CreatedAtRoute("DefaultApi", new { message = "Timings can not be overlapped across each other" }, doctorTiming);
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            doctorTiming.doctorID = doctorTimingModel.doctorID;
-            doctorTiming.doctorTimingsID = 0;
-            doctorTiming.day = doctorTimingModel.day;
+            try
+            {
+                doctorTiming.doctorID = doctorTimingModel.doctorID;
+                doctorTiming.doctorTimingsID = 0;
+                doctorTiming.day = doctorTimingModel.day;
 
-            DateTime dateTimeFrom = DateTime.ParseExact(doctorTimingModel.from,
+                DateTime dateTimeFrom = DateTime.ParseExact(doctorTimingModel.from,
+                                        "hh:mm tt", CultureInfo.InvariantCulture);
+                DateTime dateTimeTo = DateTime.ParseExact(doctorTimingModel.to,
                                     "hh:mm tt", CultureInfo.InvariantCulture);
-            DateTime dateTimeTo = DateTime.ParseExact(doctorTimingModel.to,
-                                "hh:mm tt", CultureInfo.InvariantCulture);
 
-            //TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");//need to get zone info from db
-            //get zoneid from db for current doctor
-            var timezoneid = db.Doctors.Where(d => d.doctorID == doctorTimingModel.doctorID).Select(d => d.timezone).FirstOrDefault();
-            TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
-            doctorTiming.from = TimeZoneInfo.ConvertTimeToUtc(dateTimeFrom, zoneInfo).TimeOfDay;
-            doctorTiming.to = TimeZoneInfo.ConvertTimeToUtc(dateTimeTo, zoneInfo).TimeOfDay;
-            doctorTiming.active = true;
-            doctorTiming.cd = DateTime.Now;
-            doctorTiming.md = DateTime.Now;
-            doctorTiming.cb = doctorTimingModel.username;
+                //TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");//need to get zone info from db
+                //get zoneid from db for current doctor
+                var timezoneid = db.Doctors.Where(d => d.doctorID == doctorTimingModel.doctorID).Select(d => d.timezone).FirstOrDefault();
+                TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
+                doctorTiming.from = TimeZoneInfo.ConvertTimeToUtc(dateTimeFrom, zoneInfo).TimeOfDay;
+                doctorTiming.to = TimeZoneInfo.ConvertTimeToUtc(dateTimeTo, zoneInfo).TimeOfDay;
+                doctorTiming.active = true;
+                doctorTiming.cd = DateTime.Now;
+                doctorTiming.md = DateTime.Now;
+                doctorTiming.cb = doctorTimingModel.username;
 
-            db.DoctorTimings.Add(doctorTiming);
-            await db.SaveChangesAsync();
+                db.DoctorTimings.Add(doctorTiming);
+                await db.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
 
             return CreatedAtRoute("DefaultApi", new { id = doctorTiming.doctorTimingsID }, doctorTiming);
         }

@@ -147,10 +147,10 @@
 
                                 </li>
                                 <li class="doctor">
-                                    <a href="@Url.Action("SeeDoctor", "SeeDoctor")"><img src="~/Content/images/icon_doc_search.png" alt="">  &nbsp <span class="menu-txt">See a doctor</span> </a>
+                                    <a href="@Url.Action("SeeDoctor", "SeeDoctor")" onclick="localStorage.setItem('flag', 1);"><img src="~/Content/images/icon_doc_search.png" alt="">  &nbsp <span class="menu-txt">See a doctor</span> </a>
                                 </li>
                                 <li class="call_history">
-                                    <a href="@Url.Action("Index", "HealthCareTeam")"><img src="~/Content/images/my-doctors1.png" alt="">  &nbsp <span class="menu-txt">My Care Team</span> </a>
+                                    <a href="@Url.Action("SeeDoctor", "SeeDoctor")" onclick="localStorage.setItem('flag', 0);"><img src="~/Content/images/my-doctors1.png" alt="">  &nbsp <span class="menu-txt">My Care Team</span> </a>
                                 </li>
                                 <li class="appointment">
                                     <a href="@Url.Action("Index","Consultation")"><img src="~/Content/images/history.png" alt=""> &nbsp <span class="menu-txt"> Consult History</span></a>
@@ -311,7 +311,11 @@
     </div><!-- mymodal2 -->
     <script>
         setInterval(function () {
-
+            //alert('@SessionHandler.IsExpired');
+            if ('@SessionHandler.IsExpired')
+            {
+                window.location.href = '@Url.Action("PatientLogin","Account")';
+            }
             $.ajax({
                 url: "@Url.Action("AlertView", "Alert")",
                 type: 'POST',
@@ -724,42 +728,9 @@
         $(document).ready(function () {
             
            
-            if ('@SessionHandler.UserInfo.timeZoneOffset' != '') {
-                //var localtimezone = new Date().toString().match(/\(([A-Za-z\s].*)\)/)[1];
-                if ('@SessionHandler.UserInfo.timeZoneOffset' != new Date().getTimezoneOffset().toString())
-                {
-                    var options = {
-                        message: 'Do you want to update your Time Zone?',
-                        title: 'Time Zone updation',
-                        size: eModal.size.lg
-                    };
-                    eModal.confirm(options)
-                    .then(function () {
-                        var param = "{}";
-                        var listitems;
-                        var $select = $('#myModal2').find('#Timezone');
-                        $.ajax({
-                            type: 'POST',
-                            url: '/Appointment/GetTimeZones',
-                            data: param,
-                            dataType: 'json',
-                            success: function (response) {
-                                $.each(response.Object, function (item) {
-                                    listitems += '<option value=' + response.Object[item].zoneOffset + '>' + response.Object[item].timeZonee + '</option>';
-
-                                });
-                                $select.append(listitems);
-                            },
-                            error: errorRes
-
-                        });
-                        $('#myModal2').modal('show');
-                    }, function () {
-
-                    });
-                }
-            }
-            else if ('@SessionHandler.UserInfo.timeZoneOffset' == '')
+            
+            if ('@SessionHandler.UserInfo.timeZoneOffset' == '' ||
+                '@SessionHandler.UserInfo.timeZoneOffset' != new Date().getTimezoneOffset().toString())
             {
 
                 var param = "{}";
@@ -772,7 +743,7 @@
                     dataType: 'json',
                     success: function (response) {
                         $.each(response.Object, function (item) {
-                            listitems += '<option value=' + response.Object[item].zoneOffset + '>' + response.Object[item].timeZonee + '</option>';
+                            listitems += '<option value=' + response.Object[item].zoneid + '>' + response.Object[item].timeZonee + '</option>';
 
                         });
                         $select.append(listitems);
@@ -822,10 +793,11 @@
                 return;
             }
             var tz = $('#myModal2').find('#Timezone');
+           
             $.ajax({
                 url: '@Url.Action("UpdateTimezone", "Appointment")',
                 type: "POST",
-                data: { 'tzoffset': $('#myModal2').find('#Timezone').val() },
+                data: { 'zoneid': $('#myModal2').find('#Timezone').val() },
                 dataType: 'json',
                 success: function (result) {
                     //Reload container

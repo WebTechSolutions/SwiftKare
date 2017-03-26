@@ -143,17 +143,19 @@ namespace WebApp.Controllers
             }
 
         }
-        public JsonResult UpdateTimezone(string tzoffset)
+        public JsonResult UpdateTimezone(long zoneid)
         {
             try
             {
                 ApiResultModel apiresult = new ApiResultModel();
                 TimezoneModel model = new TimezoneModel();
-                model.timezoneoffset = tzoffset;
+                model.zoneid = zoneid;
                 model.userid = SessionHandler.UserId;
                 ProfileRepository oProfileRepository = new ProfileRepository();
                 apiresult = oProfileRepository.UpdateTimezone(model);
-                SessionHandler.UserInfo.timeZoneOffset = tzoffset;
+                var tzinfo = oProfileRepository.GetPatientTimeZone(model.userid);
+                SessionHandler.UserInfo.timeZone = tzinfo.zonename;
+                SessionHandler.UserInfo.timeZoneOffset = tzinfo.zoneoffset;
                 return Json(new { Success = true, ApiResultModel = apiresult });
 
             }

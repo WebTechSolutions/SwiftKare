@@ -3,6 +3,22 @@
 @{
     ViewBag.Title = "TransactionHistory";
     Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var doctors = ViewBag.Doctors;
+    var patients = ViewBag.Patients;
+}
+@if (ViewBag.errorMessage != null)
+{
+
+    <script>
+        $(function () {
+            new PNotify({
+                title: 'Error',
+                text: "@ViewBag.errorMessage",
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        });
+    </script>
 }
 
  
@@ -16,6 +32,89 @@
              </div>
 
             <div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+
+            <div class="x_content">
+
+                <div class="DateRange">
+                    @using (Html.BeginForm("TransactionHistoryReport", "Transaction_Admin",
+               FormMethod.Post, new { @class = "form-horizontal form-label-left" }))
+                    {
+                        <input type="text" name="datefrom" id="datefrom" style="display:none" />
+                        <input type="text" name="dateto" id="dateto" style="display:none" />
+                        <div class="form-group">
+                            <label class="control-label col-sm-2, col-md-2, col-lg-2">Select Doctor</label><span class="required">*</span>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+
+                                <select id="csltDoctor" name="sltDoctor" class="form-control" required="required" style="width: 228px;">
+                                    <option value="0">ALL</option>
+
+                                    @if (ViewBag.Doctors != null)
+                                    {
+                                        foreach (var item in ViewBag.Doctors)
+                                        {
+                                            <option value="@item.doctorid">
+                                                @item.firstName @item.lastName
+                                            </option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2, col-md-2, col-lg-2">Select Patient</label><span class="required">*</span>
+
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+
+                                <select id="csltPatient" name="sltPatient" class="form-control" required="required" style="width: 228px;">
+                                    <option value="0">ALL</option>
+
+                                    @if (ViewBag.Patients != null)
+                                    {
+                                        foreach (var item in ViewBag.Patients)
+                                        {
+                                            <option value="@item.patientid">
+                                                @item.firstName @item.lastName
+
+                                            </option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <label class="control-label col-sm-2, col-md-2, col-lg-2">Date Range</label><span class="required">*</span>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+
+                                <input type="text" name="daterange" class="date-picker form-control col-md-6 col-xs-6" required="required" style="width: 228px" />
+                            </div>
+
+                        </div>
+                        <div class="ln_solid"></div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <button id="send" type="submit" class="btn btn-success">Submit</button>
+                                <button type="reset" class="btn btn-primary">Cancel</button>
+
+
+                            </div>
+                        </div>
+                    }
+
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
 
              <!--Datagrid-->
                 <div class="row">
@@ -87,25 +186,44 @@
   
       
 <!-- Data table Scripts -->
-    <script src="~/Scripts/jquery.dataTables.min.js"></script>
-    <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
-    <script src="~/Scripts/dataTables.buttons.min.js"></script>
-    <script src="~/Scripts/buttons.bootstrap.min.js"></script>
-    <script src="~/Scripts/buttons.flash.min.js"></script>
-    <script src="~/Scripts/buttons.html5.min.js"></script>
-    <script src="~/Scripts/buttons.print.min.js"></script>
-    <script src="~/Scripts/dataTables.fixedHeader.min.js"></script>
-    <script src="~/Scripts/dataTables.keyTable.min.js"></script>
-    <script src="~/Scripts/dataTables.responsive.min.js"></script>
-    <script src="~/Scripts/responsive.bootstrap.js"></script>
-    <script src="~/Scripts/dataTables.scroller.min.js"></script>
-    <script src="~/Scripts/validator.js"></script>
+   <script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/buttons.bootstrap.min.js"></script>
+<script src="~/Scripts/buttons.flash.min.js"></script>
+<script src="~/Scripts/buttons.html5.min.js"></script>
+<script src="~/Scripts/buttons.print.min.js"></script>
+<script src="~/Scripts/dataTables.fixedHeader.min.js"></script>
+<script src="~/Scripts/dataTables.keyTable.min.js"></script>
+<script src="~/Scripts/dataTables.responsive.min.js"></script>
+<script src="~/Scripts/responsive.bootstrap.js"></script>
+<script src="~/Scripts/dataTables.scroller.min.js"></script>
+<script src="~/Scripts/validator.js"></script>
+<script src="~/Scripts/daterangepiker/moment.min.js"></script>
+<script src="~/Scripts/daterangepiker/daterangepicker.js"></script> 
     
     <!-- Data table Scripts -->
       <!-- validator -->
     <script>
        
-        
+        $(document).ready(function () {
+            $(function () {
+                $('input[name="daterange"]').daterangepicker({
+                    "showDropdowns": true,
+                    "startDate": new Date(),
+                    "endDate": new Date()
+                }, function (start, end, label) {
+                    console.log("New date range selected: ' + start.format('DD/MM/YYYY') + ' to ' + end.format('DD/MM/YYYY') + ' (predefined range: ' + label + ')");
+                });
+            });
+            $('input[name="daterange"]').on('apply.daterangepicker', function (ev, picker) {
+                $('#datefrom').val(picker.startDate.format('DD/MM/YYYY'));
+                $('#dateto').val(picker.endDate.format('DD/MM/YYYY'));
+
+            });
+
+
+        });
         //<!-- /Datatables -->
         var handleDataTableButtons = function () {
             if ($("#datatable-buttons").length) {

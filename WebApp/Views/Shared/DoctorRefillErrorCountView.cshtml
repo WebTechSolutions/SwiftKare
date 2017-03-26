@@ -19,30 +19,34 @@
     {
         
         
-            <a id="noerrornotify" style="display:block" href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-plus-square"></i>
+            <a id="noerrornotify" style="display:block;" href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-plus-square" style="font-size:19px"></i>
                 
             </a>
 
-        
-       
+
+
     }
 
 }
 else
 {
     var count = 0;
-    foreach (var i in ViewBag.RefillErrorCount.refillRequestsTransmissionErrorsField)
+    if(ViewBag.RefillErrorCount.refillRequestsTransmissionErrorsField!=null)
     {
-        if (i.transactionErrorsCountField>0)
+
+
+        foreach (var i in ViewBag.RefillErrorCount.refillRequestsTransmissionErrorsField)
         {
-            count += i.transactionErrorsCountField;
+            if (i.transactionErrorsCountField > 0)
+            {
+                count += Convert.ToInt16(i.transactionErrorsCountField);
+            }
         }
     }
 
-    
-        <a id="errornotify" style="display:block" href="#" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-            <i class="fa fa-plus-square"></i>
+        <a id="errornotify" style="display:block;font-size: 19px;" href="#" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-plus-square" style="font-size:19px"></i>
             @if (count > 0)
             {
                 <span class="badge bg-green">@count</span>
