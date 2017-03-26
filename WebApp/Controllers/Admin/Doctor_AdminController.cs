@@ -56,7 +56,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                return RedirectToAction("AdminLogin", "Account");
             }
 
 
@@ -231,7 +231,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                return RedirectToAction("AdminLogin", "Account");
             }
 
         }
@@ -260,7 +260,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                return RedirectToAction("AdminLogin", "Account");
     }
 
 
@@ -299,7 +299,9 @@ namespace SwiftKare.Controllers
 
                     var oSimpleEmail = new EmailHelper(email, "SwiftKare Membership", sampleEmailBody);
                     oSimpleEmail.SendMessage();
-                    return RedirectToAction("DoctorsForApproval");
+                    var reloaddoc = db.SP_SelectDoctorsForApproval();
+                    return View("DoctorsForApproval", reloaddoc);
+                    //return RedirectToAction("DoctorsForApproval");
                  }
                  catch (Exception ex)
                  {
@@ -309,7 +311,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                return RedirectToAction("AdminLogin", "Account");
             }
             
 
@@ -333,7 +335,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                return RedirectToAction("AdminLogin", "Account");
             }
          }
          
@@ -360,7 +362,7 @@ namespace SwiftKare.Controllers
             else
             {
 
-                return RedirectToAction("../AdminLogin/AdminLogin");
+                return RedirectToAction("AdminLogin", "Account");
             }
             
          }

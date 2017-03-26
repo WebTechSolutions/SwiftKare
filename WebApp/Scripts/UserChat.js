@@ -318,21 +318,46 @@ var UserChat = function (apiKey, sessionId, token) {
         debugger;
         //Get Consult Id From localStorage
         var consultationId = localStorage.getItem('consultationKey');
-       
-       
-        
-       
-
         localStorage.removeItem('consultationKey');
       //  alert("Consult is completed successfully by End call button.");
         new PNotify({ title: 'Success', text: "Consult Completed Successfully..", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
         //cEndCallUrl is defined in page
-        // alert(cEndCallUrl)
+        //alert(cEndCallUrl);
+        //showReviewPopup();
         var cUrl = '/UserChat/StopConsultation?consultId=' + consultationId;
         $.post(cUrl, function () {
-            //Redirect patient to call
-            window.location = cEndCallUrl;
-        });
+                //Redirect patient to call
+                window.location = cEndCallUrl;
+            });
+       
+       
+        
+
+    }
+    function showReviewPopup() {
+        var mymodal = $('#myModal2');
+        $("span").css("pointer-events", "auto");
+        $("#ss5").removeClass('fa fa-star');
+        $("#ss5").addClass('fa fa-star-o');
+
+        $("#s4").removeClass('fa fa-star');
+        $("#s4").addClass('fa fa-star-o');
+
+        $("#s3").removeClass('fa fa-star');
+        $("#s3").addClass('fa fa-star-o');
+
+        $("#s2").removeClass('fa fa-star');
+        $("#s2").addClass('fa fa-star-o');
+
+        $("#s1").removeClass('fa fa-star');
+        $("#s1").addClass('fa fa-star-o');
+
+        mymodal.find('#message').val("");
+        mymodal.find('#message').removeAttr("disabled");
+        mymodal.find('#apply').show();
+        mymodal.find('#ok').hide();
+
+        mymodal.modal('show');
 
     }
 

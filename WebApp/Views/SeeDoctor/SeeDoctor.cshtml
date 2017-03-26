@@ -166,7 +166,7 @@
                                 </div>
                             </div>
                             <div class="x_panel">
-                                <div class="x_title">
+                                <div class="x_title" id="divsearchtitle">
                                     <h2>Search Doctor</h2>
                                     <ul class="nav navbar-right panel_toolbox">
                                         <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
@@ -174,7 +174,7 @@
                                     <div class="clearfix"></div>
                                 </div>
 
-                                <div class="x_content">
+                                <div class="x_content" id="divsearchdoctor">
                                     <div class="row">
 
                                         <div class="col-md-4 col-sm-6 col-xs-12">
@@ -941,17 +941,7 @@
 
     }
     $(document).ready(function () {
-        @*if('@SessionHandler.UserInfo.timeZone'=='')
-        {
-            new PNotify({
-                title: 'Info',
-                text: "Please update your timezone.",
-                type: 'info',
-                styling: 'bootstrap3'
-            });
-            window.location = '@Url.Action("Index","PatientProfile")';
-
-        }*@
+        
         GetAllLanguages();
         GetAllSpecialities();
         GetROV('@SessionHandler.UserInfo.Id');
@@ -1275,6 +1265,16 @@
 @*For Health Conditions*@
 <script>
     $(document).ready(function () {
+        if(localStorage.getItem('flag')==0)
+        {
+            $('#divsearchtitle').css('display', 'none');
+            $('#divsearchdoctor').css('display', 'none');
+        }
+        if(localStorage.getItem('flag')==1)
+        {
+            $('#divsearchtitle').css('display', 'block');
+            //$('#divsearchdoctor').css('display', 'none');
+        }
         GetHealthConditions(@ViewBag.PatienID);
         $('#conditionstable').DataTable({
             'order': [[0, 'asc']],
@@ -1338,7 +1338,7 @@
 <script>
 
     $(document).ready(function () {
-
+        
         GetMedications(@ViewBag.PatienID);
         GetFrequency();
         $('#medicinestable').DataTable({

@@ -753,6 +753,7 @@
     <Content Include="Views\DoctorConsultation\PatientProfileView.cshtml" />
     <Content Include="Views\Shared\DoctorRefillErrorCountView.cshtml" />
     <Content Include="Views\Consultation\PartialDoctorReviews.cshtml" />
+    <Content Include="Views\SystemItem_Admin\SystemItemGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

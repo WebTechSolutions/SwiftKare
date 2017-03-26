@@ -51,13 +51,12 @@
                                 <div class="col-md-4"></div>
                                 <div class="col-md-8">
                                     <div class="border-left"></div>
-                                    @if (Model.lstPatientFamilyHistoryVM != null && Model.lstPatientFamilyHistoryVM.Count > 0)
-                                    {
-                                        var lastFamilyHist = Model.lstPatientFamilyHistoryVM.LastOrDefault();
-
-                                        <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Family History</b></h4>
-                                        <p style="margin-left: 25px;">
-                                            @foreach (var item in Model.lstPatientFamilyHistoryVM)
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Family History</b></h4>
+                                    <p style="margin-left: 25px;">
+                                        @if (Model.lstPatientFamilyHistoryVM != null && Model.lstPatientFamilyHistoryVM.Count > 0)
+                                        {
+                                            var lastFamilyHist = Model.lstPatientFamilyHistoryVM.LastOrDefault();
+                                            foreach (var item in Model.lstPatientFamilyHistoryVM)
                                             {
                                                 if (item == lastFamilyHist)
                                                 {
@@ -68,16 +67,15 @@
                                                     <spam>@string.Format("{0} {1},", item.DeasesName, (!string.IsNullOrEmpty(item.Relation) ? "(" + item.Relation + ")" : ""))</spam>
                                                 }
                                             }
-                                        </p>
-                                    }
+                                        }
+                                    </p>
 
-                                    @if (Model.lstPatientHealthConditionsVM != null && Model.lstPatientHealthConditionsVM.Count > 0)
-                                    {
-                                        var lastHealthCondition = Model.lstPatientHealthConditionsVM.LastOrDefault();
-
-                                        <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Health Conditions</b></h4>
-                                        <p style="margin-left: 25px;">
-                                            @foreach (var item in Model.lstPatientHealthConditionsVM)
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Health Conditions</b></h4>
+                                    <p style="padding-left: 25px;">
+                                        @if (Model.lstPatientHealthConditionsVM != null && Model.lstPatientHealthConditionsVM.Count > 0)
+                                        {
+                                            var lastHealthCondition = Model.lstPatientHealthConditionsVM.LastOrDefault();
+                                            foreach (var item in Model.lstPatientHealthConditionsVM)
                                             {
                                                 if (item == lastHealthCondition)
                                                 {
@@ -88,15 +86,15 @@
                                                     <spam>@item,</spam>
                                                 }
                                             }
-                                        </p>
-                                    }
-                                    @if (Model.lstPatientMedicationVM != null && Model.lstPatientMedicationVM.Count > 0)
-                                    {
-                                        var lastMedication = Model.lstPatientMedicationVM.LastOrDefault();
+                                        }
+                                    </p>
 
-                                        <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Medications</b></h4>
-                                        <p style="padding-left: 25px;">
-                                            @foreach (var item in Model.lstPatientMedicationVM)
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Medications</b></h4>
+                                    <p style="padding-left: 25px;">
+                                        @if (Model.lstPatientMedicationVM != null && Model.lstPatientMedicationVM.Count > 0)
+                                        {
+                                            var lastMedication = Model.lstPatientMedicationVM.LastOrDefault();
+                                            foreach (var item in Model.lstPatientMedicationVM)
                                             {
                                                 if (item == lastMedication)
                                                 {
@@ -107,14 +105,15 @@
                                                     <span>@item.MedicineName,</span>
                                                 }
                                             }
-                                        </p>
-                                    }
-                                    @if (Model.lstPatientAllergiesVM != null && Model.lstPatientAllergiesVM.Count > 0)
-                                    {
-                                        var lastAllergies = Model.lstPatientAllergiesVM.LastOrDefault();
-                                        <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Allergies</b></h4>
-                                        <p style="padding-left: 25px;">
-                                            @foreach (var item in Model.lstPatientAllergiesVM)
+                                        }
+                                    </p>
+
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Allergies</b></h4>
+                                    <p style="padding-left: 25px;">
+                                        @if (Model.lstPatientAllergiesVM != null && Model.lstPatientAllergiesVM.Count > 0)
+                                        {
+                                            var lastAllergies = Model.lstPatientAllergiesVM.LastOrDefault();
+                                            foreach (var item in Model.lstPatientAllergiesVM)
                                             {
                                                 if (item == lastAllergies)
                                                 {
@@ -125,14 +124,15 @@
                                                     <span>@item.AllergyName,</span>
                                                 }
                                             }
-                                        </p>
-                                    }
-                                    @if (Model.lstPatientSurgeryVM != null && Model.lstPatientSurgeryVM.Count > 0)
-                                    {
-                                        var lastSurgery = Model.lstPatientSurgeryVM.LastOrDefault();
-                                        <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Surgeries and Procedures</b></h4>
-                                        <p style="padding-left: 25px;">
-                                            @foreach (var item in Model.lstPatientSurgeryVM)
+                                        }
+                                    </p>
+
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Surgeries</b></h4>
+                                    <p style="padding-left: 25px;">
+                                        @if (Model.lstPatientSurgeryVM != null && Model.lstPatientSurgeryVM.Count > 0)
+                                        {
+                                            var lastSurgery = Model.lstPatientSurgeryVM.LastOrDefault();
+                                            foreach (var item in Model.lstPatientSurgeryVM)
                                             {
                                                 if (item == lastSurgery)
                                                 {
@@ -143,15 +143,23 @@
                                                     <span>@item.BodyPartName,</span>
                                                 }
                                             }
-                                        </p>
-                                    }
+                                        }
+                                    </p>
+
+                                    <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Pharmacy</b></h4>
+                                    <p style="padding-left: 25px;" class="m-b-0">
                                     @if (!string.IsNullOrEmpty(Model.oPharmacy))
                                     {
-                                        <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Pharmacy</b></h4>
-                                        <p style="padding-left: 25px;">
-                                            @Model.oPharmacy
-                                        </p>
-                                    }
+                                        @Model.oPharmacy
+                                    } 
+                                    </p>
+                                    <p style="padding-left: 25px;" class="m-b-0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                    <p style="padding-left: 25px;">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                       
+                                    </p>
+                                   
                                 </div>
                             </div>
                         </div><!--/.modal body-->

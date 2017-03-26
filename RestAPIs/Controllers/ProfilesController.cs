@@ -31,14 +31,14 @@ namespace RestAPIs.Controllers
 
             try
             {
-                if (model.timezoneoffset == null|| model.timezoneoffset.Trim()=="")
+                if (model.zoneid ==0)
                 {
 
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Timezone is not provided." });
                     response.ReasonPhrase = "Timezone is not provided.";
                     return response;
                 }
-                if (model.userid == null|| model.timezoneoffset.Trim() == "")
+                if (model.userid == null|| model.userid.Trim() == "")
                 {
 
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "UserId is not provided." });
@@ -47,10 +47,14 @@ namespace RestAPIs.Controllers
                 }
                 Patient pat = db.Patients.Where(p=>p.userId==model.userid).FirstOrDefault();
                 Doctor doc = db.Doctors.Where(p => p.userId == model.userid).FirstOrDefault();
+                var objtimezone = db.TimeZones.Where(t => t.zoneID == model.zoneid).FirstOrDefault();
                 long id = 0;
                 if (pat!=null)
                 {
-                    pat.timezoneoffset = model.timezoneoffset;
+                    pat.timezone = objtimezone.zoneName;
+                    pat.timezoneoffset = (from d in db.TimeZones
+                                             where d.zoneName == objtimezone.zoneName
+                                             select d.zoneOffset).FirstOrDefault();
                     id = pat.patientID;
                     db.Entry(pat).State = EntityState.Modified;
                     await db.SaveChangesAsync();
@@ -59,7 +63,10 @@ namespace RestAPIs.Controllers
                 if (doc!= null)
                 {
 
-                    doc.timezoneoffset = model.timezoneoffset;
+                    doc.timezone = objtimezone.zoneName;
+                    doc.timezoneoffset=(from d in db.TimeZones
+                     where d.zoneName == objtimezone.zoneName
+                                        select d.zoneOffset).FirstOrDefault();
                     id = doc.doctorID;
                     db.Entry(doc).State = EntityState.Modified;
                     await db.SaveChangesAsync();
@@ -85,7 +92,7 @@ namespace RestAPIs.Controllers
                                 where l.active == true
                                 select new
                                 {
-                                    zoneOffset = l.zoneOffset,
+                                    zoneid = l.zoneID,
                                     timeZonee = l.timeZonee
                                 }).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, timezone);
@@ -169,6 +176,7 @@ namespace RestAPIs.Controllers
         {
 
             Doctor doctor = new Doctor();
+            
             var oDoctorProfileVM = new DoctorProfileVM();
             try
             {
@@ -203,7 +211,6 @@ namespace RestAPIs.Controllers
 
                                             DOB = l.dob,
                                             TimeZone = l.timezone,
-
                                             AboutMe = l.aboutMe,
                                             Specialization = l.specialization,
                                             Publication = l.publication,
@@ -309,9 +316,11 @@ namespace RestAPIs.Controllers
                     doctor.lastName = model.LastName;
                     doctor.suffix = model.Prefix;
                     doctor.gender = model.Gender;
-
-                    doctor.dob = model.DOB;
                     doctor.timezone = model.TimeZone;
+                    doctor.dob = model.DOB;
+                    doctor.timezoneoffset = (from d in db.TimeZones
+                                       where d.zoneName == model.TimeZone
+                                       select d.zoneOffset).FirstOrDefault();//model.TimeZone;
                     doctor.aboutMe = model.AboutMe;
                     doctor.specialization = model.Specialization;
                     doctor.publication = model.Publication;
@@ -437,7 +446,8 @@ namespace RestAPIs.Controllers
                                 where l.userId == userid
                                 select new
                                 {
-                                    zonename = l.timezoneoffset,
+                                    zonename = l.timezone,
+                                    zoneoffset = l.timezoneoffset
                                 }).FirstOrDefault();
                 response = Request.CreateResponse(HttpStatusCode.OK, timezone);
                 return response;
@@ -460,7 +470,8 @@ namespace RestAPIs.Controllers
                                 where l.userId == userid
                                 select new
                                 {
-                                    zonename = l.timezoneoffset,
+                                    zonename = l.timezone,
+                                    zoneoffset = l.timezoneoffset
                                 }).FirstOrDefault();
                 response = Request.CreateResponse(HttpStatusCode.OK, timezone);
                 return response;
@@ -726,7 +737,6 @@ namespace RestAPIs.Controllers
 
                                              DOB = l.dob,
                                              TimeZone = l.timezone,
-
                                              Height = l.height,
                                              Weight = l.weight,
 
@@ -928,9 +938,11 @@ namespace RestAPIs.Controllers
                     patient.lastName = model.LastName;
                     patient.suffix = model.Prefix;
                     patient.gender = model.Gender;
-
+                    patient.timezone =model.TimeZone;
                     patient.dob = model.DOB;
-                    patient.timezone = model.TimeZone;
+                    patient.timezoneoffset = (from d in db.TimeZones
+                                              where d.zoneName == model.TimeZone
+                                              select d.zoneOffset).FirstOrDefault();
                     patient.height = model.Height;
                     patient.weight = model.Weight;
 

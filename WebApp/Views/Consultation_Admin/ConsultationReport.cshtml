@@ -3,8 +3,23 @@
 @{
     ViewBag.Title = "ConsultationReport";
     Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var doctors =  ViewBag.Doctors;
+    var patients = ViewBag.Patients;
 }
+@if (ViewBag.errorMessage != null)
+{
 
+    <script>
+        $(function () {
+            new PNotify({
+                title: 'Error',
+                text: "@ViewBag.errorMessage",
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        });
+    </script>
+}
   
             <div class="page-title">
               <div class="title_left">
@@ -19,20 +34,61 @@
                 <div class="x_panel">
                  
                   <div class="x_content">
-                   
-                      
+                                          
                 <div class="DateRange">
                     @using (Html.BeginForm("ConsultationReport", "Consultation_Admin",
                        FormMethod.Post, new { @class = "form-horizontal form-label-left" }))
                     {
                          <input type="text" name="datefrom" id="datefrom" style="display:none" />
                          <input type="text" name="dateto" id="dateto" style="display:none" />
+                        <div class="form-group">
+                            <label class="control-label col-sm-2, col-md-2, col-lg-2">Select Doctor</label><span class="required">*</span>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+
+                                <select id="csltDoctor" name="sltDoctor" class="form-control" required="required" style="width: 228px;">
+                                    <option value="0">ALL</option>
+
+                                    @if (ViewBag.Doctors != null)
+                                    {
+                                        foreach (var item in ViewBag.Doctors)
+                                        {
+                                            <option value="@item.doctorid">
+                                                @item.firstName @item.lastName
+                                            </option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2, col-md-2, col-lg-2">Select Patient</label><span class="required">*</span>
+                           
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+
+                                <select id="csltPatient" name="sltPatient" class="form-control" required="required" style="width: 228px;">
+                                    <option value="0">ALL</option>
+
+                                    @if (ViewBag.Patients != null)
+                                    {
+                                        foreach (var item in ViewBag.Patients)
+                                        {
+                                            <option value="@item.patientid">
+                                                @item.firstName @item.lastName
+
+                                            </option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
                        <div class="form-group">
-                        <label class="control-label col-sm-2, col-md-2, col-lg-2">Date Range<span class="required">*</span>
-                        </label>
-                        <div class="col-sm-3, col-md-3 col-lg-3">
+                       
+                           <label class="control-label col-sm-2, col-md-2, col-lg-2">Date Range</label><span class="required">*</span>
+                           <div class="col-md-3 col-sm-3 col-xs-3">
                         
-                          <input type="text" name="daterange" class="date-picker form-control col-md-6 col-xs-6" required="required"/>
+                          <input type="text" name="daterange" class="date-picker form-control col-md-6 col-xs-6" required="required" style="width: 228px"/>
                         </div>
                                           
                        </div>
@@ -69,7 +125,7 @@
                             <th>Doctor</th>
                             <th>Patient</th>
                             <th>Consultation Date</th>
-                            <th>Consultation Time</th>
+                            @*<th>Consultation Time</th>*@
                              <th>Duration</th>
                              <th>Status</th>
                              <th>CD</th>
@@ -89,9 +145,9 @@
                                 <tr>
                                     <td class="DName" style="word-break: break-all; width: 300px">@item.DName</td>
                                     <td class="PName" style="word-break: break-all; width: 300px">@item.PName</td>
-                                    <td class="appDate" style="word-break: break-all; width: 300px">@item.conDate</td>
-                                    <td class="appTime" style="word-break: break-all; width: 300px">@item.conTime</td>
-                                    <td class="appTime" style="word-break: break-all; width: 300px">@item.duration</td>
+                                    <td class="appDate" style="word-break: break-all; width: 200px">@item.conDate @item.conTime</td>
+                                    @*<td class="appTime" style="word-break: break-all; width: 300px">@item.conTime</td>*@
+                                    <td class="appTime" style="word-break: break-all; width: 100px">@item.duration</td>
                                     
                                         
                                             @if(item.consultationStatus==null){<td class="consultationStatus">Not Completed</td>}
@@ -146,15 +202,15 @@
         $(function () {
             $('input[name="daterange"]').daterangepicker({
                 "showDropdowns": true,
-                "startDate": "10/09/2016",
-                "endDate": "10/15/2016"
+                "startDate": new Date(),
+                "endDate": new Date()
             }, function (start, end, label) {
-                console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
+                console.log("New date range selected: ' + start.format('DD/MM/YYYY') + ' to ' + end.format('DD/MM/YYYY') + ' (predefined range: ' + label + ')");
             });
         });
         $('input[name="daterange"]').on('apply.daterangepicker', function (ev, picker) {
-            $('#datefrom').val(picker.startDate.format('MM/DD/YYYY'));
-            $('#dateto').val(picker.endDate.format('MM/DD/YYYY'));
+            $('#datefrom').val(picker.startDate.format('DD/MM/YYYY'));
+            $('#dateto').val(picker.endDate.format('DD/MM/YYYY'));
           
         });
 

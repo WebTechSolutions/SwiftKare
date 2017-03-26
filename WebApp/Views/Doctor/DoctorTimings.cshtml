@@ -80,23 +80,7 @@
 </div>
 
 @section Scripts {
-<script type="text/javascript">
-        $(document).ready(function () {
 
-            if('@SessionHandler.UserInfo.timeZone'=='')
-            {
-                //showAlert('Alert', 'Please update your timezone.');
-                new PNotify({
-                    title: 'Info',
-                    text: "Please update your timezone.",
-                    type: 'info',
-                    styling: 'bootstrap3'
-                });
-                window.location = '@Url.Action("Index","DoctorProfile")';
-
-            }
-        });
-</script>
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
 
 
@@ -147,6 +131,10 @@
                 success: function (response) {
                     if (response.isRedirect) {
                         window.location.href = response.redirectUrl;
+                    }
+                    else if (response.Message != undefined) {
+                        new PNotify({ title: 'Error', text: "Doctor Timings " + " " + response.Message, type: 'error', styling: 'bootstrap3' });
+                        
                     }
                     else {
                         _objUpdate = response.DoctorTiming;
@@ -259,7 +247,10 @@
                         if (response.isRedirect) {
                             window.location.href = response.redirectUrl;
                         }
-
+                        if (response.Message!=undefined) {
+                            new PNotify({ title: 'Error', text: "Doctor Timings " + " " + response.Message, type: 'error', styling: 'bootstrap3' });
+                            $.unblockUI();
+                        }
                         if (response == "overlapped") {
                             showAlert('Alert', 'Timings can not be overlapped across each other');
                             $.unblockUI();
@@ -309,28 +300,41 @@
         }
         var testResp;
         function deleteObj(doctorTimingsID) {
-            var confirmMessage = confirm("Are you sure you want to delete?");
-            if (confirmMessage == false)
-                return false;
-            blockUI();
-            // $("div[id$='divLoader']").show();
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("DeleteDoctorTiming", "Doctor")',
-                data: { 'id': doctorTimingsID },
-                dataType: 'json',
-                success: function (response) {
-                    if (response.isRedirect) {
-                        window.location.href = response.redirectUrl;
-                    }
-                    else {
-                        GetTimings();
-                    }
+            var options = {
+                message: "Are you sure you want to delete?",
+                title: 'Confirmation',
+                size: eModal.size.sm
+            };
+            eModal.confirm(options)
+                            .then(function () {
+                                blockUI();
+                                // $("div[id$='divLoader']").show();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '@Url.Action("DeleteDoctorTiming", "Doctor")',
+                                    data: { 'id': doctorTimingsID },
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        if (response.isRedirect) {
+                                            window.location.href = response.redirectUrl;
+                                        }
+                                        else if (response.Message != undefined) {
+                                            new PNotify({ title: 'Error', text: "Doctor Timings " + " " + response.Message, type: 'error', styling: 'bootstrap3' });
+                                            $.unblockUI();
+                                        }
+                                        else {
+                                            GetTimings();
+                                        }
 
-                },
-                error: errorRes
+                                    },
+                                    error: errorRes
 
-            });
+                                });
+                            },
+                            function (){
+                                return false;
+                            });
+                       
         }
 
 

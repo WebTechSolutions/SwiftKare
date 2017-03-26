@@ -7,6 +7,7 @@
         public string FirstName { get; set; } = "";
         public string Email { get; set; } = "";
         public string title { get; set; } = "";
+        public string timeZone { get; set; } = "";
         public string timeZoneOffset { get; set; } = "";
 
         public string userId { get; set; } = "";

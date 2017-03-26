@@ -59,8 +59,29 @@
                 <div class="Create" id="create">
                     @using (Html.BeginForm("Create", "SystemItem_Admin",
                        FormMethod.Post, new { novalidate = "novalidate", @class = "form-horizontal form-label-left" }))
+                    
                     {
                         <input name="action" type="text" value="create" style="display: none">
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Select System</label><span class="required">*</span>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                
+                                <select id="csltSystem" name="sltSystem" class="form-control" required="required" style="width: 228px;">
+                                    <option value="0">Choose System</option>
+
+                                    @if (systems != null)
+                                    {
+                                        foreach (var item in systems)
+                                        {
+                                            <option value="@item.systemID">
+                                                @item.systemName
+                                            </option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
                         <div class="item form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
                                 System Item  <span class="required">*</span>
@@ -69,26 +90,7 @@
                                 <input class="form-control col-md-7 col-xs-12" data-validate-length-range="6" maxlength="50" name="systemitem" placeholder="System Item" required="required" style="width: 228px;" type="text">
                             </div>
                         </div>
-                        <div class="item form-group">
-                           <label class="control-label col-md-3 col-sm-3 col-xs-12">Select System</label><span class="required">*</span>
-                           <div  class="col-md-3 col-sm-3 col-xs-3">
-                                        @*<select id="csltRole" name="sltRole" class="select2_single form-control" tabindex="-1">*@
-                                           <select id="csltSystem" name="sltSystem" class="form-control" required="required">
-                                            <option value="">Choose System</option>
-                                            
-                                            @if (systems!=null)
-                                            {
-                                             foreach (var item in systems)
-                                                {
-                                                <option value="@item.systemID">
-                                                 @item.systemName
-                                                </option>
-                                             }
-                                           }
-                                            
-                                        </select>
-                                    </div>
-                    </div>
+                        
 
 
                         <div class="ln_solid"></div>
@@ -111,6 +113,26 @@
                         <input name="action" type="text" value="edit" style="display: none">
                         <input id="esystemitemid" name="id" type="number" style="display: none">
                         <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Select System</label><span class="required">*</span>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                @*<select id="csltRole" name="sltRole" class="select2_single form-control" tabindex="-1">*@
+                                <select id="esltSystem" name="sltSystem" class="form-control" required="required" style="width: 228px;">
+                                    <option value="0">Choose system</option>
+
+                                    @if (systems != null)
+                                    {
+                                        foreach (var item in systems)
+                                        {
+                                            <option value="@item.systemID">
+                                                @item.systemName
+                                            </option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
                                 System Item <span class="required">*</span>
                             </label>
@@ -118,26 +140,7 @@
                                 <input maxlength="50" id="esystemitem" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" name="systemitem" placeholder="  System Item" required="required" style="width: 228px;" type="text">
                             </div>
                         </div>
-                         <div class="item form-group">
-                           <label class="control-label col-md-3 col-sm-3 col-xs-12">Select System</label><span class="required">*</span>
-                           <div  class="col-md-3 col-sm-3 col-xs-3">
-                                        @*<select id="csltRole" name="sltRole" class="select2_single form-control" tabindex="-1">*@
-                                           <select id="esltSystem" name="sltSystem" class="form-control" required="required">
-                                            <option value="">Choose system</option>
-                                            
-                                            @if (systems!=null)
-                                            {
-                                             foreach (var item in systems)
-                                                {
-                                                <option value="@item.systemID">
-                                                 @item.systemName
-                                                </option>
-                                             }
-                                           }
-                                            
-                                        </select>
-                                    </div>
-                    </div>
+                         
 
                         <div class="ln_solid"></div>
                         <div class="form-group">
@@ -163,82 +166,16 @@
 <!--Datagrid-->
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
-        @*<div class="x_panel">*@
-        @* <div class="x_title">
-              <h2>Registered Doctors</h2>
-
-              <div class="clearfix"></div>
-            </div>*@
+       
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                @* <div class="x_content">*@
+            <div class="x_panel" id="systemitemgrid">
+                
 
-                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>SystemID</th>
-                            <th>System</th>
-                            <th>System Item</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        @if (Model != null)
-                        {
-
-                            foreach (var item in Model)
-                            {
-
-
-                                <tr>
-                                    <td id="id">@item.systemItemID</td>
-                                    <td id="systemid">@item.systemID</td>
-                                    <td class="system" style="word-break: break-all;">@item.systemName</td>
-                                    <td class="systemitem" style="word-break: break-all;">@item.systemItemName</td>
-
-                                    <td>
-                                        @using (Html.BeginForm("Create", "SystemItem_Admin",
-                       FormMethod.Post, new { novalidate = "novalidate", @class = "form-horizontal form-label-left" }))
-                                        {
-                                            <input name="action" type="text" value="delete" style="display: none">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-primary">Action</button>
-                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                    <span class="caret"></span>
-                                                    <span class="sr-only">Toggle Dropdown</span>
-                                                </button>
-                                                <ul class="dropdown-menu" role="menu">
-                                                    <li>
-                                                        <a class="editbtn">Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <input name="id" type="number" style="display:none" value="@item.systemItemID">
-                                                    </li>
-                                                    <li>
-                                                        <button class="btn btn-link submit" id="delete" type="submit" onclick="return confirm('Are you sure you want to delete this item?');">Delete</button>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        }
-                                    </td>
-
-                                </tr>
-                            }
-                        }
-
-
-
-
-                    </tbody>
-                </table>
-
-                @* </div>*@
+              
             </div>
         </div>
 
-        @* </div>*@
+      
     </div>
 </div>
 
@@ -265,6 +202,37 @@
 <script>
 
     $(document).ready(function () {
+        if ('@ViewBag.systemid' != null)
+        {
+            $("#csltSystem").val('@ViewBag.systemid');
+        }
+       
+        $.ajax({
+            url: "@Url.Action("LoadSystemItems", "SystemItem_Admin")",
+            data:{'id':$("#csltSystem").val()},
+        type: 'POST',
+        dataType: 'html',
+        cache: false,
+        success: function (html) {
+               
+            $("#systemitemgrid").html(html);
+        }
+    });
+        $("#csltSystem").change(function () {
+            
+            $.ajax({
+                url: "@Url.Action("LoadSystemItems", "SystemItem_Admin")",
+                data:{'id':$("#csltSystem").val()},
+                type: 'POST',
+            dataType: 'html',
+            cache: false,
+            success: function (html) {
+               
+                $("#systemitemgrid").html(html);
+            }
+        });
+        });
+
         $('.editbtn').click(function () {
 
             $('.Edit').css('display', 'block');
@@ -274,9 +242,9 @@
                 $("#esystemitemid").val(table.row(this).data()[0]);
                 $("#esystemitem").val(table.row(this).data()[3]);
                 var system = table.row(this).data()[1];
-             
+
                 $("#esltSystem").val(system);
-               
+
 
             });
         });
@@ -405,7 +373,7 @@
 
         if (submit)
             this.submit();
-
+            
         return false;
     });
 </script>

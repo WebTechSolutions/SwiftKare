@@ -260,7 +260,7 @@ namespace RestAPIs.Controllers
                                 userModel.Email = doctor.email;
                                 userModel.userId = doctor.userId;
                                 userModel.title = doctor.title;
-                                userModel.timeZone = doctor.timezone;// timezoneoffset
+                                userModel.timeZone = doctor.timezoneoffset;// timezoneoffset
                                 userModel.userId = doctor.userId;
                                 userModel.role = roleFromDb.ToString();
                                 userModel.iOSToken = doctor.iOSToken;

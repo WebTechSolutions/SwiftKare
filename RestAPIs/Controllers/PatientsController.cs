@@ -81,6 +81,7 @@ namespace RestAPIs.Controllers
                 objModel.role = (from r in db.AspNetRoles
                                  where r.Id == patient.userId
                                  select r.Name).FirstOrDefault();
+                objModel.timeZone = patient.timezone;
                 objModel.timeZoneoffset = patient.timezoneoffset;
                 objModel.title = patient.title;
                 objModel.iOSToken = patient.iOSToken;

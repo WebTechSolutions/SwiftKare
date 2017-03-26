@@ -38,7 +38,7 @@ else
                     }
                     <tr class="even pointer">
                         <td style="text-align:center;width:20%;">
-                            <a href='' onclick='showProfile(@item.patientID)' id="viewprofile" data-toggle="modal" data-target='#myModal8'>
+                            <a href='#' onclick='showProfile(@item.patientID)' id="viewprofile" data-toggle="modal" data-target='#myModal8'>
                                 @item.PatientName
                             </a>
                         </td>
@@ -75,6 +75,7 @@ else
         </tbody>
     </table>
 }
+
 <!-- Datatables -->
 <script>
     $(document).ready(function() {

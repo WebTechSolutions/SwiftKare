@@ -358,7 +358,7 @@
 
     });
     $('#fetchdate').data('daterangepicker').setStartDate();
-    function fetchTimings(fetchdate) {
+    function fetchTimings(fetchdate) { //is called when date is changed from date control
         debugger;
         showLoader();
         var _objSearch = {};
@@ -369,7 +369,7 @@
         var div = "";
         $.ajax({
             type: 'POST',
-            url: '/SeeDoctor/FetchDoctorTimings',
+            url: '/SeeDoctor/FetchDoctorTimingsNew',
             data: _objSearch,
             dataType: 'json',
             success: function (response) {
@@ -397,7 +397,7 @@
 
                     });
 
-                    if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
+                    if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "<center>Sorry, Doctor is not available on this day.</center>"; }
                     else { document.getElementById("TimingsData").innerHTML = tablehtml; }
                 }
 
@@ -407,12 +407,13 @@
         hideLoader();
     }
 
-    function showDoctorTimings(doctorID,appID,appDate) {
+    function showDoctorTimings(doctorID,appID,appDate) { //is called when modal dialog is opened
         showLoader();
         var cappDate = appDate.split("/");
         var f = new Date(cappDate[2], cappDate[1] - 1, cappDate[0]);
         $("#RAppID").val(appID);
         var today = new Date();
+        var currDate = today;
         var dd = today.getDate();
         var mm = today.getMonth() + 1; //January is 0!
         var yyyy = today.getFullYear();
@@ -429,25 +430,32 @@
 
         $('#fetchdate').val(today);
         var _objSearch = {};
-        //appdate = formatDate(new Date(appDate), "dd/MM/yyyy");
-        _objSearch["appDate"] = appDate;
-
-        $('#fetchdate').val(appDate);
-        debugger;
-        //var d1 = new Date(appDate.ToString());
-        //var d2 = new Date(today.ToString());
-        //alert(new Date(today) > new Date(appDate));
-        if (today > appDate)
+        var dtdateParts = today.split("/");
+        var dtoday = new Date(dtdateParts[2], dtdateParts[1] - 1, dtdateParts[0]);
+        var addateParts = appDate.split("/");
+        var dappDate = new Date(addateParts[2], addateParts[1] - 1, addateParts[0]);
+        //alert('today ' + dtoday + ' App Date ' + dappDate);
+        if (dtoday > dappDate)
         {
-            //alert('previous date app reschedule');
+            //alert('today ' + dtoday + ' App Date ' + dappDate);
             $('#fetchdate').val(today);
+            _objSearch["appDate"] = today;
+            _objSearch["doctorID"] = doctorID;
         }
-        _objSearch["doctorID"] = doctorID;
+        else if (dtoday < dappDate)
+        {
+            //alert('today ' + dtoday + ' App Date ' + dappDate);
+           
+            $('#fetchdate').val(today);
+            _objSearch["appDate"] = today;
+            _objSearch["doctorID"] = doctorID;
+        }
+       
 
         var div = "";
         $.ajax({
             type: 'POST',
-            url: '/SeeDoctor/FetchDoctorTimings',
+            url: '/SeeDoctor/FetchDoctorTimingsNew',
             data: _objSearch,
             dataType: 'json',
             success: function (response) {
@@ -466,7 +474,7 @@
                         }
                     });
 
-                    if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "No record found"; }
+                    if (tablehtml == "") { document.getElementById("TimingsData").innerHTML = "<center>Sorry, Doctor is not available on this day.</center>"; }
                     else { document.getElementById("TimingsData").innerHTML = tablehtml; }
 
                 }

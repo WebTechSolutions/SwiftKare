@@ -136,8 +136,8 @@
             $(function () {
                 $('input[name="daterange"]').daterangepicker({
                     "showDropdowns": true,
-                    "startDate": "10/09/2016",
-                    "endDate": "10/15/2016"
+                    "startDate": new Date(),
+                    "endDate": new Date()
                 }, function (start, end, label) {
                     console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
                 });

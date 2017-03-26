@@ -1,6 +1,7 @@
 ﻿using DataAccess;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 
@@ -34,5 +35,58 @@ namespace RestAPIs.Helper
             }
             return null;
        }
+        public TimeSpan? toUTCTimeSpan(TimeSpan? appTime, long id) //convert user local to UTC timespan
+        {
+            DateTimeOffset sourceTime, targetTime;
+            DateTime mydateTime = DateTime.ParseExact(appTime.Value.ToString(),
+                                             "HH:mm:ss", CultureInfo.InvariantCulture);
+           
+            var pattzo = db.Patients.Where(p => p.patientID == id).Select(p => p.timezoneoffset).FirstOrDefault();
+            var doctzo = db.Doctors.Where(p => p.doctorID == id).Select(p => p.timezoneoffset).FirstOrDefault();
+            if (pattzo != null)
+            {
+                var hrs = Convert.ToInt16(pattzo) / 60;
+                var mins = Convert.ToInt16(pattzo) % 60;
+                sourceTime = new DateTimeOffset(mydateTime, new TimeSpan(-(hrs), mins, 0));
+                targetTime = sourceTime.ToOffset(TimeSpan.Zero);
+                return targetTime.TimeOfDay;
+            }
+            else if (doctzo != null)
+            {
+                var hrs = Convert.ToInt16(doctzo.ToString()) / 60;
+                var mins = Convert.ToInt16(doctzo.ToString()) % 60;
+                sourceTime = new DateTimeOffset(mydateTime, new TimeSpan(-(hrs), mins, 0));
+                targetTime = sourceTime.ToOffset(TimeSpan.Zero);
+                return targetTime.TimeOfDay;
+            }
+            return null;
+        }
+        public TimeSpan? toUserTimeSpan(TimeSpan? appTime, long id) //convert UTC to user local timespan
+        {
+            DateTimeOffset sourceTime, targetTime;
+            DateTime mydateTime = DateTime.ParseExact(appTime.Value.ToString(),
+                                             "HH:mm:ss", CultureInfo.InvariantCulture);
+            sourceTime = new DateTimeOffset(mydateTime, new TimeSpan(0,0,0));
+            //sourceTime = sourceTime.ToOffset(TimeSpan.Zero);
+            //targetTime = sourceTime.ToOffset(new TimeSpan(-8, 0, 0));// Convert to 8 hours behind UTC
+            //targetTime = sourceTime.ToOffset(new TimeSpan(3, 0, 0));// Convert to 3 hours ahead of UTC
+            var pattzo = db.Patients.Where(p => p.patientID == id).Select(p => p.timezoneoffset).FirstOrDefault();
+            var doctzo = db.Doctors.Where(p => p.doctorID == id).Select(p => p.timezoneoffset).FirstOrDefault();
+            if (pattzo != null)
+            {
+                var hrs = Convert.ToInt16(pattzo) / 60;
+                var mins = Convert.ToInt16(pattzo) % 60;
+                targetTime = sourceTime.ToOffset(new TimeSpan(-(hrs), mins, 0));
+                return targetTime.TimeOfDay;
+            }
+            else if (doctzo != null)
+            {
+                var hrs = Convert.ToInt16(doctzo.ToString()) / 60;
+                var mins = Convert.ToInt16(doctzo.ToString()) % 60;
+                targetTime = sourceTime.ToOffset(new TimeSpan(-(hrs), mins, 0));
+                return targetTime.TimeOfDay;
+            }
+            return null;
+        }
     }
 }

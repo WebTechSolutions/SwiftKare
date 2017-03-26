@@ -26,7 +26,7 @@ namespace DataAccess.CustomModels
         public Nullable<bool> active { get; set; }
 
         public string title { get; set; }
-        //public string timeZone { get; set; }
+        public string timeZone { get; set; }
         public string timeZoneoffset { get; set; }
         public string role { get; set; }
 

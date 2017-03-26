@@ -12,7 +12,7 @@
 }
 else
 {
-
+    var dateonly = "";
     <table id="datatableupcoming" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
         <thead>
             <tr class="headings">
@@ -40,6 +40,7 @@ else
                         <script type="text/javascript">
                         var fdate = showLocal('@item.utcappDate');
                             $("#replaceme"+@j).html(fdate);
+                           
                         </script></td>
                     <td style="text-align:center">@item.rov</td>
                     <td style="text-align:center">@item.chiefComplaints</td>

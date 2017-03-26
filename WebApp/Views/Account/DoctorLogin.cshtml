@@ -14,6 +14,13 @@
     }
 </script>
 
+<style type="text/css">
+    .redBorder, .redBorder:focus, .redBorder:active {
+        border-color: red;
+        border:2px;
+    }
+</style>
+
 
 
 <a class="hiddenanchor" id="signup"></a>
@@ -26,7 +33,7 @@
 
             <img src="~/Content/images/Logos.png" />
 
-            @using (Html.BeginForm("DoctorLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            @using (Html.BeginForm("DoctorLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { id="loginform", @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
 
@@ -38,15 +45,15 @@
                     @Html.ValidationMessageFor(m => m.LoginViewModel.Email, "", new { @class = "text-danger" })
                 </div>
                 <div>
-                    @Html.TextBoxFor(m => m.LoginViewModel.Email, new { @class = "form-control", @placeholder = "Email Address" })
-                    
+                    @Html.TextBoxFor(m => m.LoginViewModel.Email, new { id = "txtemail" , @required = "required", @class = "form-control", @placeholder = "Email Address" })
+
                 </div>
                 <div>
                     @Html.ValidationMessageFor(m => m.LoginViewModel.Password, "", new { @class = "text-danger" })
                 </div>
                 <div>
-                    @Html.PasswordFor(m => m.LoginViewModel.Password, new { @class = "form-control", @placeholder = "Password" })
-                    
+                    @Html.PasswordFor(m => m.LoginViewModel.Password, new { id="txtpwd", @required = "required", @class = "form-control", @placeholder = "Password" })
+
                 </div>
                 @*<div>
                     @Html.CheckBoxFor(m => m.LoginViewModel.RememberMe)
@@ -55,7 +62,7 @@
 
 
                 <div>
-                    <input type="submit" value="Log in" class="btn btn-primary submit" />
+                    <input type="submit" value="Log in" class="btn btn-primary submit" id="login"/>
 
                     <br />
                     @Html.ActionLink("Lost your password?", "ForgotPassword")
@@ -82,7 +89,7 @@
             {
                 @Html.AntiForgeryToken()
                 <h1>Create Account</h1>
-               
+
                 @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
                 <script>
                       @if (ViewBag.error != null)
@@ -152,8 +159,11 @@
     {
 
         $('.validation-summary-errors li').remove();
-        
+
     }
+   
+    
+    
     function chkChange() {
         if ($("#chkIsPatient").prop("checked")) {
             $("label[id$='lblIsPatient']").html("Register as a Patient");
