@@ -55,7 +55,8 @@ namespace WebApp.Controllers
 
                 SessionHandler.ProfilePhoto = oModel.ProfilePhotoBase64;
                 var timezone = oProfileRepository.GetPatientTimeZone(SessionHandler.UserId);
-                SessionHandler.UserInfo.timeZoneOffset = timezone.zonename;
+                SessionHandler.UserInfo.timeZone = timezone.zonename;
+                SessionHandler.UserInfo.timeZoneOffset = timezone.zoneoffset;
                 return oRetMsg.message;
             }
             catch (Exception ex)

@@ -1365,6 +1365,8 @@
         <Function Name="SP_AppointmentReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="datefrom" Type="datetime" Mode="In" />
           <Parameter Name="dateto" Type="datetime" Mode="In" />
+          <Parameter Name="patientID" Type="bigint" Mode="In" />
+          <Parameter Name="docID" Type="bigint" Mode="In" />
           <Parameter Name="criteria" Type="varchar" Mode="In" />
         </Function>
         <Function Name="sp_ApproveConsultation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -2565,11 +2567,6 @@
             <Parameter Name="gender" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="VCLogs" EntityType="SwiftKareDBModel.VCLog" />
-          <FunctionImport Name="SP_AppointmentReport" ReturnType="Collection(SwiftKareDBModel.SP_AppointmentReport_Result)">
-            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
-            <Parameter Name="dateto" Mode="In" Type="DateTime" />
-            <Parameter Name="criteria" Mode="In" Type="String" />
-          </FunctionImport>
           <EntitySet Name="DoctorSpecialities" EntityType="SwiftKareDBModel.DoctorSpeciality" />
           <EntitySet Name="Doctors" EntityType="SwiftKareDBModel.Doctor" />
           <AssociationSet Name="FK_Appointments_Doctor" Association="SwiftKareDBModel.FK_Appointments_Doctor">
@@ -2641,6 +2638,13 @@
             <Parameter Name="dateto" Mode="In" Type="DateTime" />
             <Parameter Name="patientID" Mode="In" Type="Int64" />
             <Parameter Name="docID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_AppointmentReport" ReturnType="Collection(SwiftKareDBModel.SP_AppointmentReport_Result)">
+            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateto" Mode="In" Type="DateTime" />
+            <Parameter Name="patientID" Mode="In" Type="Int64" />
+            <Parameter Name="docID" Mode="In" Type="Int64" />
+            <Parameter Name="criteria" Mode="In" Type="String" />
           </FunctionImport>
 
         </EntityContainer>
@@ -4159,15 +4163,6 @@
           <Property Name="logBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="cd" Type="DateTime" Precision="3" />
         </EntityType>
-        <ComplexType Name="SP_AppointmentReport_Result">
-          <Property Type="Int64" Name="appID" Nullable="false" />
-          <Property Type="String" Name="DName" Nullable="true" MaxLength="201" />
-          <Property Type="String" Name="PName" Nullable="true" MaxLength="201" />
-          <Property Type="String" Name="appDate" Nullable="true" MaxLength="8" />
-          <Property Type="Time" Name="appTime" Nullable="true" />
-          <Property Type="String" Name="consultationStatus" Nullable="true" MaxLength="10" />
-          <Property Type="String" Name="cd" Nullable="true" MaxLength="8" />
-        </ComplexType>
         <EntityType Name="DoctorSpeciality">
           <Key>
             <PropertyRef Name="doctorSpecialityID" />
@@ -4492,6 +4487,15 @@
           <Property Type="String" Name="appDate" Nullable="true" MaxLength="30" />
           <Property Type="String" Name="appTime" Nullable="true" MaxLength="30" />
           <Property Type="Int32" Name="paymentAmt" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="SP_AppointmentReport_Result">
+          <Property Type="Int64" Name="appID" Nullable="false" />
+          <Property Type="String" Name="DName" Nullable="true" MaxLength="201" />
+          <Property Type="String" Name="PName" Nullable="true" MaxLength="201" />
+          <Property Type="String" Name="appDate" Nullable="true" MaxLength="8" />
+          <Property Type="Time" Name="appTime" Nullable="true" />
+          <Property Type="String" Name="consultationStatus" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="cd" Nullable="true" MaxLength="8" />
         </ComplexType>
 
       </Schema>
@@ -5791,19 +5795,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SP_AppointmentReport" FunctionName="SwiftKareDBModel.Store.SP_AppointmentReport">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_AppointmentReport_Result">
-                <ScalarProperty Name="appID" ColumnName="appID" />
-                <ScalarProperty Name="DName" ColumnName="DName" />
-                <ScalarProperty Name="PName" ColumnName="PName" />
-                <ScalarProperty Name="appDate" ColumnName="appDate" />
-                <ScalarProperty Name="appTime" ColumnName="appTime" />
-                <ScalarProperty Name="consultationStatus" ColumnName="consultationStatus" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="DoctorSpecialities">
             <EntityTypeMapping TypeName="SwiftKareDBModel.DoctorSpeciality">
               <MappingFragment StoreEntitySet="DoctorSpeciality">
@@ -6084,6 +6075,19 @@
                 <ScalarProperty Name="appDate" ColumnName="appDate" />
                 <ScalarProperty Name="appTime" ColumnName="appTime" />
                 <ScalarProperty Name="paymentAmt" ColumnName="paymentAmt" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_AppointmentReport" FunctionName="SwiftKareDBModel.Store.SP_AppointmentReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_AppointmentReport_Result">
+                <ScalarProperty Name="appID" ColumnName="appID" />
+                <ScalarProperty Name="DName" ColumnName="DName" />
+                <ScalarProperty Name="PName" ColumnName="PName" />
+                <ScalarProperty Name="appDate" ColumnName="appDate" />
+                <ScalarProperty Name="appTime" ColumnName="appTime" />
+                <ScalarProperty Name="consultationStatus" ColumnName="consultationStatus" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

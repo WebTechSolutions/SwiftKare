@@ -66,7 +66,11 @@ namespace WebApp.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-            if(returnUrl.Contains("Doctor"))
+            if (returnUrl.Contains("SeeDoctor"))
+            {
+                return RedirectToAction("PatientLogin", "Account");
+            }
+            if (returnUrl.Contains("Doctor"))
             {
                 return RedirectToAction("DoctorLogin", "Account");
             }

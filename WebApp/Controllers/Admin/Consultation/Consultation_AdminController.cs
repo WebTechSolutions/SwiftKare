@@ -136,8 +136,7 @@ namespace SwiftKare.Controllers.Consultation
                     string todateString = dateto.Trim();
                     string format = "dd/MM/yyyy";
                     CultureInfo provider = CultureInfo.InvariantCulture;
-                    try
-                    {
+                    
                         DateTime fd = DateTime.ParseExact(fromdateString, format, provider);
                         DateTime td = DateTime.ParseExact(todateString, format, provider);
                         
@@ -153,15 +152,7 @@ namespace SwiftKare.Controllers.Consultation
                         }
                         var docc = db.SP_ConsultationReport(fd, td, null, null);
                         return View(docc);
-                    }
-                    catch (FormatException ex)
-                    {
-                        ViewBag.errorMessage = ex.Message;
-                        return View();
-                        
-                    }
-
-                    
+                                        
                 }
                 catch (Exception ex)
                 {
@@ -182,7 +173,25 @@ namespace SwiftKare.Controllers.Consultation
 
                 try
                 {
-                   return View();
+                    var doctors = (from d in db.Doctors
+                                   where d.firstName != null && d.lastName != null
+                                   select new DocConsultationReport
+                                   {
+                                       doctorid = d.doctorID,
+                                       firstName = d.firstName,
+                                       lastName = d.lastName
+                                   }).ToList();
+                    var patients = (from d in db.Patients
+                                    where d.firstName != null && d.lastName != null
+                                    select new PatConsultationReport
+                                    {
+                                        patientid = d.patientID,
+                                        firstName = d.firstName,
+                                        lastName = d.lastName
+                                    }).ToList();
+                    ViewBag.Doctors = doctors;
+                    ViewBag.Patients = patients;
+                    return View();
                 }
                 catch (Exception ex)
                 {
@@ -203,18 +212,58 @@ namespace SwiftKare.Controllers.Consultation
 
                 try
                 {
-                    
+                    var doctors = (from d in db.Doctors
+                                   where d.firstName != null && d.lastName != null
+                                   select new DocConsultationReport
+                                   {
+                                       doctorid = d.doctorID,
+                                       firstName = d.firstName,
+                                       lastName = d.lastName
+                                   }).ToList();
+                    var patients = (from d in db.Patients
+                                    where d.firstName != null && d.lastName != null
+                                    select new PatConsultationReport
+                                    {
+                                        patientid = d.patientID,
+                                        firstName = d.firstName,
+                                        lastName = d.lastName
+                                    }).ToList();
+                    ViewBag.Doctors = doctors;
+                    ViewBag.Patients = patients;
                     var datefrom=Request.Form["datefrom"].ToString();
                     var dateto = Request.Form["dateto"].ToString();
                     var criteria = Request.Form["sltCriteria"].ToString();
+                    var doctorid = Request.Form["sltDoctor"].ToString();
+                    var patientid = Request.Form["sltPatient"].ToString();
+                    ViewBag.criteria = criteria;
+                    ViewBag.doctorid = doctorid;
+                    ViewBag.patientid = patientid;
+                    string fromdateString = datefrom.Trim();
+                    string todateString = dateto.Trim();
+                    string format = "dd/MM/yyyy";
+                    CultureInfo provider = CultureInfo.InvariantCulture;
+
+                    DateTime fd = DateTime.ParseExact(fromdateString, format, provider);
+                    DateTime td = DateTime.ParseExact(todateString, format, provider);
                     if (criteria == "")
                     {
                         ViewBag.successMessage = "";
-                        ViewBag.errorMessage = "Select valid Role";
+                        ViewBag.errorMessage = "Select valid Criteria";
                         return View();
                     }
-                    var app = db.SP_AppointmentReport(Convert.ToDateTime(datefrom), Convert.ToDateTime(dateto),criteria);
+                    if (doctorid == "0" && patientid != "0")
+                    {
+                        var doc = db.SP_AppointmentReport(fd, td, Convert.ToInt32(patientid), null, criteria);
+                        return View(doc);
+                    }
+                    if (doctorid != "0" && patientid == "0")
+                    {
+                        var doc = db.SP_AppointmentReport(fd, td, null, Convert.ToInt32(doctorid), criteria);
+                        return View(doc);
+                    }
+                    var app = db.SP_AppointmentReport(fd, td, null, null, criteria);
                     return View(app);
+                    
                 }
                 catch (Exception ex)
                 {
