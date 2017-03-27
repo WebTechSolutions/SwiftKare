@@ -312,9 +312,9 @@
     <script>
         
         setInterval(function () {
-            if ('@SessionHandler.IsExpired' == 'True') {
+            @*if ('@SessionHandler.IsExpired' == 'True') {
                 window.location.href = '@Url.Action("PatientLogin","Account")';
-            }
+            }*@
             $.ajax({
             url: "@Url.Action("AlertView", "Alert")",
             type: 'POST',
@@ -331,7 +331,11 @@
            
         }, 60*1000);
 
-        
+        @*function checkSession()
+        {
+          window.location.href = '@Url.Action("PatientLogin","Account")';
+           
+        }*@
         var mymodal = $('#playoutModal');
     function showAlert(heading,body)
     {

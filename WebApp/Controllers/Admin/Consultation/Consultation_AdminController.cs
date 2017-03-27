@@ -132,20 +132,36 @@ namespace SwiftKare.Controllers.Consultation
                     var dateto = Request.Form["dateto"].ToString().Trim();
                     var doctorid = Request.Form["sltDoctor"].ToString();
                     var patientid = Request.Form["sltPatient"].ToString();
+                    string fromdateString = datefrom.Trim();
+                    string todateString = dateto.Trim();
+                    string format = "dd/MM/yyyy";
+                    CultureInfo provider = CultureInfo.InvariantCulture;
+                    try
+                    {
+                        DateTime fd = DateTime.ParseExact(fromdateString, format, provider);
+                        DateTime td = DateTime.ParseExact(todateString, format, provider);
+                        
+                        if (doctorid == "0" && patientid != "0")
+                        {
+                            var doc = db.SP_ConsultationReport(fd, td, Convert.ToInt32(patientid), null);
+                            return View(doc);
+                        }
+                        if (doctorid != "0" && patientid == "0")
+                        {
+                            var doc = db.SP_ConsultationReport(fd, td, null, Convert.ToInt32(doctorid));
+                            return View(doc);
+                        }
+                        var docc = db.SP_ConsultationReport(fd, td, null, null);
+                        return View(docc);
+                    }
+                    catch (FormatException ex)
+                    {
+                        ViewBag.errorMessage = ex.Message;
+                        return View();
+                        
+                    }
+
                     
-                   
-                    if (doctorid == "0" && patientid != "0")
-                    {
-                        var doc = db.SP_ConsultationReport(Convert.ToDateTime(datefrom), Convert.ToDateTime(dateto), Convert.ToInt32(patientid), null);
-                        return View(doc);
-                    }
-                    if (doctorid != "0" && patientid == "0")
-                    {
-                        var doc = db.SP_ConsultationReport(Convert.ToDateTime(datefrom), Convert.ToDateTime(dateto), null,Convert.ToInt32(doctorid));
-                        return View(doc);
-                    }
-                    var docc = db.SP_ConsultationReport(Convert.ToDateTime(datefrom), Convert.ToDateTime(dateto), null, null);
-                    return View(docc);
                 }
                 catch (Exception ex)
                 {
