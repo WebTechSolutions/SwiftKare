@@ -143,8 +143,8 @@
                 });
             });
             $('input[name="daterange"]').on('apply.daterangepicker', function (ev, picker) {
-                $('#datefrom').val(picker.startDate.format('MM/DD/YYYY'));
-                $('#dateto').val(picker.endDate.format('MM/DD/YYYY'));
+                $('#datefrom').val(picker.startDate.format('DD/MM/YYYY'));
+                $('#dateto').val(picker.endDate.format('DD/MM/YYYY'));
 
             });
       });

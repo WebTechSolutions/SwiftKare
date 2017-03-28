@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System.Linq;
 using WebApp;
 using System.Data.Entity;
+using System.Globalization;
 
 namespace SwiftKare.Controllers
 {
@@ -350,8 +351,14 @@ namespace SwiftKare.Controllers
         {
                      var datefrom=Request.Form["datefrom"].ToString();
                      var dateto = Request.Form["dateto"].ToString();
-                     //var doc=db.SP_DoctorReport(DateTime.ParseExact(datefrom, "dd/MM/yyyy", null), DateTime.ParseExact(dateto, "dd/MM/yyyy", null));
-                     var doc = db.SP_DoctorReport(Convert.ToDateTime(datefrom), Convert.ToDateTime(dateto));
+                    string fromdateString = datefrom.Trim();
+                    string todateString = dateto.Trim();
+                    string format = "dd/MM/yyyy";
+                    CultureInfo provider = CultureInfo.InvariantCulture;
+
+                    DateTime fd = DateTime.ParseExact(fromdateString, format, provider);
+                    DateTime td = DateTime.ParseExact(todateString, format, provider);
+                    var doc = db.SP_DoctorReport(fd, td);
                      return View(doc);
                  }
                  catch (Exception ex)

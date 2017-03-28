@@ -237,7 +237,7 @@ function addupdateAllergies(patientid) {
             _objUpdate.allergyName = $("#myAllergy").val();
             _objUpdate.severity = $("#Sensitivity option:selected").text();
             _objUpdate.reaction = $("#Reaction option:selected").text();
-            if ($("#Sensitivity option:selected").text() == "Choose Sensitivity") {
+            if ($("#Sensitivity option:selected").text() == "Choose Severity") {
                 _objUpdate.severity = "";
 
             }
@@ -404,7 +404,7 @@ function fillObjAllergies(patientid) {
         _objAdd["reaction"] = $("#Reaction option:selected").text();
         _objAdd["patientID"] = patientid;
         allergyID = 0;
-        if ($("#Sensitivity option:selected").text() == "Choose Sensitivity") {
+        if ($("#Sensitivity option:selected").text() == "Choose Severity") {
             _objAdd.severity = "";
 
         }

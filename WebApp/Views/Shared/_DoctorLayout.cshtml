@@ -299,7 +299,9 @@
     
     <script>
         setInterval(function () {
-
+            if ('@SessionHandler.IsExpired' == 'True') {
+                window.location.href = '@Url.Action("DoctorLogin","Account")';
+            }
            $.ajax({
                 url: "@Url.Action("DoctorAlertView", "DoctorAlert")",
                 type: 'POST',
@@ -310,12 +312,10 @@
                 $("#alertview").html(html);
             }
            });
-           
+
         }, 60 * 1000);
 
-        @*function checkSession() {
-            window.location.href = '@Url.Action("DoctorLogin", "Account")';
-        }*@
+       
         setInterval(function () {
             $.ajax({
                 url: "@Url.Action("DoctorRefillErrorCountView", "Doctor")",
@@ -420,17 +420,13 @@
                         FirstName: '@SessionHandler.UserInfo.FirstName',
                         LastName: '@SessionHandler.UserInfo.LastName',
                         UserType: 'Doctor'
-                    }).done(function () {
-                    console.log("New user has joined... invoke all patients event");
-                    chat.server.getUsersPatient();
-                  
-                });
+                    });
 
-             /*   chat.server.adminJoinDoctor().done(function () {
+                chat.server.adminJoinDoctor().done(function () {
                     //alert("New doctor has joined... Refresh list;");
                     chat.server.getUsersPatient();
                     chat.server.getUsersDoctor();
-                });*/
+                });
 
             });
 

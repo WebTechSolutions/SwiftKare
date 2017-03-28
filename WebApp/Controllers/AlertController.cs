@@ -48,7 +48,7 @@ namespace WebApp.Controllers
         {
             try
             {
-                System.Diagnostics.Debug.Write("in alert");
+                //System.Diagnostics.Debug.Write("in alert");
                 var oData = oAlertRepository.LoadPatientAlerts(SessionHandler.UserInfo.Id);
 
                 return PartialView("AlertView", oData);

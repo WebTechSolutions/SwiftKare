@@ -3,8 +3,22 @@
 @{
     ViewBag.Title = "Appointment Report";
     Layout = "~/Views/Shared/_LayoutPage.cshtml";
+   
 }
+@if (ViewBag.errorMessage != null)
+{
 
+    <script>
+        $(function () {
+            new PNotify({
+                title: 'Error',
+                text: "@ViewBag.errorMessage",
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        });
+    </script>
+}
 
 <div class="page-title">
     <div class="title_left">
@@ -28,21 +42,62 @@
                          
                         <input type="text" name="datefrom" id="datefrom" style="display: none" />
                         <input type="text" name="dateto" id="dateto" style="display: none" />
-                       
+                        <div class="form-group">
+                            <label class="control-label col-sm-2, col-md-2, col-lg-2">Select Doctor</label><span class="required">*</span>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+
+                                <select id="csltDoctor" name="sltDoctor" class="form-control" required="required" style="width: 228px;">
+                                    <option value="0">ALL</option>
+
+                                    @if (ViewBag.Doctors != null)
+                                    {
+                                        foreach (var item in ViewBag.Doctors)
+                                        {
+                                            <option value="@item.doctorid">
+                                                @item.firstName @item.lastName
+                                            </option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2, col-md-2, col-lg-2">Select Patient</label><span class="required">*</span>
+
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+
+                                <select id="csltPatient" name="sltPatient" class="form-control" required="required" style="width: 228px;">
+                                    <option value="0">ALL</option>
+
+                                    @if (ViewBag.Patients != null)
+                                    {
+                                        foreach (var item in ViewBag.Patients)
+                                        {
+                                            <option value="@item.patientid">
+                                                @item.firstName @item.lastName
+
+                                            </option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Date Range<span class="required">*</span>
-                        </label>
+                          <label class="control-label col-sm-2, col-md-2, col-lg-2">Date Range</label><span class="required">*</span>
+                        
                         <div class="col-md-3 col-sm-3 col-xs-3">
                         
-                          <input type="text" name="daterange" class="date-picker form-control col-md-6 col-xs-6" required="required"/>
+                          <input style="width: 228px" type="text" name="daterange" class="date-picker form-control col-md-6 col-xs-6" required="required"/>
                         </div>
                                           
                        </div>
                         <div class="item form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Select Criteria</label><span class="required">*</span>
+                            <label class="control-label col-sm-2, col-md-2, col-lg-2">Select Criteria</label><span class="required">*</span>
                             <div class="col-md-3 col-sm-3 col-xs-3">
 
-                                <select id="csltCriteria" name="sltCriteria" class="form-control" required="required">
+                                <select id="csltCriteria" name="sltCriteria" class="form-control" required="required" style="width: 228px">
                                     <option value="">Choose Criteria</option>
                                     <option value="1">ALL</option>
                                     @*<option value="2">Approved</option>*@
@@ -159,6 +214,18 @@
         $('#reservation').daterangepicker(null, function (start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
         });
+
+
+            if ('@ViewBag.doctorid' != '')
+            {
+                $("#csltDoctor").val('@ViewBag.doctorid');
+            }
+            if ('@ViewBag.patientid' != '') {
+                $("#csltPatient").val('@ViewBag.patientid');
+            }
+            if ('@ViewBag.criteria' != '') {
+                $("#csltCriteria").val('@ViewBag.criteria');
+            }
     });
 
 
@@ -173,13 +240,13 @@
             });
         });
         $('input[name="daterange"]').on('apply.daterangepicker', function (ev, picker) {
-            $('#datefrom').val(picker.startDate.format('MM/DD/YYYY'));
-            $('#dateto').val(picker.endDate.format('MM/DD/YYYY'));
+            $('#datefrom').val(picker.startDate.format('DD/MM/YYYY'));
+            $('#dateto').val(picker.endDate.format('DD/MM/YYYY'));
 
         });
     });
 
-    //<!-- /bootstrap-daterangepicker --> 
+    //<!-- /bootstrap-daterangepicker -->
     //<!-- /Datatables -->
     var handleDataTableButtons = function () {
         if ($("#datatable-buttons").length) {
@@ -212,10 +279,10 @@
         }
     };
 
-    
-    
 
-   
+
+
+
     $('#datatable-responsive').DataTable();
     //$('#datatable-responsive').DataTable(
     //    {
@@ -225,13 +292,13 @@
     //        ]
     //    });
 
-    
 
-   
 
-   
-   
-    
+
+
+
+
+
     //<!-- /Datatables -->
     // initialize the validator function
     //validator.message.date = 'not a real date';
