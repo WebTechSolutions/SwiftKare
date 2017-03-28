@@ -132,8 +132,9 @@ namespace WebApp.Hub
 
         public void Join(UserInfo data)
         {
+            string conn= Context.ConnectionId;
             data.Connected = DateTime.Now.ToString("f");
-            data.ConnectionId = Context.ConnectionId;
+            data.ConnectionId = conn;
             data.UserGroup = "doctors";
             
 
@@ -144,13 +145,15 @@ namespace WebApp.Hub
             //data.LastName = SessionHandler.UserInfo.LastName;
 
             data.Ip = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
-            AllUserList.TryAdd(Context.ConnectionId, data);
-          /*  var oRet = AllUserList.Where(x => x.Value.UserType == "Patient");
-            if (data.UserType.Trim().ToLower().Equals("patient"))
-                oRet = AllUserList.Where(x => x.Value.UserType == "Doctor");
+            AllUserList.TryAdd(conn, data);
+           
+            if (data.UserType.ToString().Trim().Equals("Doctor"))
+                Groups.Add(conn, "doctors");
             else
-                oRet = AllUserList.Where(x => x.Value.UserType == "Patient");*/
-           // Clients.Group("doctors").showConnected(oRet);
+                Groups.Add(conn, "patients");
+            /* GetUsersDoctor();
+             GetUsersPatient();   
+            */
 
         }
 

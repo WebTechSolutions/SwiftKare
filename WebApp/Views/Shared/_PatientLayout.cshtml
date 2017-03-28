@@ -673,13 +673,16 @@
                         FirstName: '@SessionHandler.UserInfo.FirstName',
                         LastName: '@SessionHandler.UserInfo.LastName',
                         UserType: 'Patient'
+                    }).done(function () {
+                        console.log("New patient has joined... invoke all doctors event");
+                        chat.server.getUsersDoctor();
                     });
 
-                chat.server.adminJoin().done(function () {
+               /* chat.server.adminJoin().done(function () {
                     //alert("New doctor has joined... Refresh list;");
                     chat.server.getUsersPatient();
                     chat.server.getUsersDoctor();
-                });
+                });*/
 
                 $('#sendmessage').click(function () {
                     // Call the Send method on the hub.
