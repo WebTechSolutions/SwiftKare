@@ -3,8 +3,7 @@
 @{
     ViewBag.Title = "ConsultationReport";
     Layout = "~/Views/Shared/_LayoutPage.cshtml";
-    var doctors =  ViewBag.Doctors;
-    var patients = ViewBag.Patients;
+   
 }
 @if (ViewBag.errorMessage != null)
 {
@@ -199,6 +198,15 @@
 
 
     $(document).ready(function () {
+       
+        if ('@ViewBag.doctorid' != '') {
+            $("#csltDoctor").val('@ViewBag.doctorid');
+        }
+        if ('@ViewBag.patientid' != '') {
+            $("#csltPatient").val('@ViewBag.patientid');
+        }
+       
+
         $(function () {
             $('input[name="daterange"]').daterangepicker({
                 "showDropdowns": true,

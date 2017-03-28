@@ -3,8 +3,7 @@
 @{
     ViewBag.Title = "Appointment Report";
     Layout = "~/Views/Shared/_LayoutPage.cshtml";
-    var doctors = ViewBag.Doctors;
-    var patients = ViewBag.Patients;
+   
 }
 @if (ViewBag.errorMessage != null)
 {
@@ -217,14 +216,14 @@
         });
 
 
-            if ('@ViewBag.doctorid' != null)
+            if ('@ViewBag.doctorid' != '')
             {
                 $("#csltDoctor").val('@ViewBag.doctorid');
             }
-            if ('@ViewBag.patientid' != null) {
+            if ('@ViewBag.patientid' != '') {
                 $("#csltPatient").val('@ViewBag.patientid');
             }
-            if ('@ViewBag.criteria' != null) {
+            if ('@ViewBag.criteria' != '') {
                 $("#csltCriteria").val('@ViewBag.criteria');
             }
     });

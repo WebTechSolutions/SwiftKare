@@ -86,6 +86,8 @@ namespace SwiftKare.Controllers.TransactionHistory
                     var dateto = Request.Form["dateto"].ToString().Trim();
                     var doctorid = Request.Form["sltDoctor"].ToString();
                     var patientid = Request.Form["sltPatient"].ToString();
+                    ViewBag.doctorid = doctorid;
+                    ViewBag.patientid = patientid;
                     string fromdateString = datefrom.Trim();
                     string todateString = dateto.Trim();
                     string format = "dd/MM/yyyy";
@@ -101,6 +103,11 @@ namespace SwiftKare.Controllers.TransactionHistory
                     if (doctorid != "0" && patientid == "0")
                     {
                         var doc = db.SP_selectTransactionHistory(fd, td, null, Convert.ToInt32(doctorid));
+                        return View("TransactionHistory", doc);
+                    }
+                    if (doctorid != "0" && patientid != "0")
+                    {
+                        var doc = db.SP_selectTransactionHistory(fd, td, Convert.ToInt32(patientid), Convert.ToInt32(doctorid));
                         return View("TransactionHistory", doc);
                     }
                     var docc = db.SP_selectTransactionHistory(fd, td, null, null);

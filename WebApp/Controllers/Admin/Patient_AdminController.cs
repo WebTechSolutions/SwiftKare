@@ -8,6 +8,7 @@ using SwiftKare.Models.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -269,7 +270,14 @@ namespace SwiftKare.Controllers
                 {
                     var datefrom = Request.Form["datefrom"].ToString();
                     var dateto = Request.Form["dateto"].ToString();
-                  var pat = db.SP_PatientReport(Convert.ToDateTime(datefrom), Convert.ToDateTime(dateto));
+                string fromdateString = datefrom.Trim();
+                string todateString = dateto.Trim();
+                string format = "dd/MM/yyyy";
+                CultureInfo provider = CultureInfo.InvariantCulture;
+
+                DateTime fd = DateTime.ParseExact(fromdateString, format, provider);
+                DateTime td = DateTime.ParseExact(todateString, format, provider);
+                var pat = db.SP_PatientReport(fd, td);
                     return View(pat);
                 }
                 catch (Exception ex)

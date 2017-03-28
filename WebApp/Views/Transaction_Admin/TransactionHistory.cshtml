@@ -207,6 +207,13 @@
     <script>
        
         $(document).ready(function () {
+            if ('@ViewBag.doctorid' != '') {
+                $("#csltDoctor").val('@ViewBag.doctorid');
+            }
+            if ('@ViewBag.patientid' != '') {
+                $("#csltPatient").val('@ViewBag.patientid');
+            }
+
             $(function () {
                 $('input[name="daterange"]').daterangepicker({
                     "showDropdowns": true,

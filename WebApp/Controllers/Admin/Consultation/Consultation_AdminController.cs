@@ -132,6 +132,8 @@ namespace SwiftKare.Controllers.Consultation
                     var dateto = Request.Form["dateto"].ToString().Trim();
                     var doctorid = Request.Form["sltDoctor"].ToString();
                     var patientid = Request.Form["sltPatient"].ToString();
+                    ViewBag.doctorid = doctorid;
+                    ViewBag.patientid = patientid;
                     string fromdateString = datefrom.Trim();
                     string todateString = dateto.Trim();
                     string format = "dd/MM/yyyy";
@@ -150,7 +152,12 @@ namespace SwiftKare.Controllers.Consultation
                             var doc = db.SP_ConsultationReport(fd, td, null, Convert.ToInt32(doctorid));
                             return View(doc);
                         }
-                        var docc = db.SP_ConsultationReport(fd, td, null, null);
+                    if (doctorid != "0" && patientid != "0")
+                    {
+                        var doc = db.SP_ConsultationReport(fd, td, Convert.ToInt32(patientid), Convert.ToInt32(doctorid));
+                        return View(doc);
+                    }
+                    var docc = db.SP_ConsultationReport(fd, td, null, null);
                         return View(docc);
                                         
                 }
@@ -259,6 +266,11 @@ namespace SwiftKare.Controllers.Consultation
                     if (doctorid != "0" && patientid == "0")
                     {
                         var doc = db.SP_AppointmentReport(fd, td, null, Convert.ToInt32(doctorid), criteria);
+                        return View(doc);
+                    }
+                    if (doctorid != "0" && patientid != "0")
+                    {
+                        var doc = db.SP_AppointmentReport(fd, td, Convert.ToInt32(patientid), Convert.ToInt32(doctorid), criteria);
                         return View(doc);
                     }
                     var app = db.SP_AppointmentReport(fd, td, null, null, criteria);
