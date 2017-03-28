@@ -53,7 +53,7 @@ namespace RestAPIs.Controllers
                                   rov = cn.rov,
                                   chiefcomplaints = cn.chiefComplaints,
                                   paymentAmt = cn.paymentAmt,
-                                  appDate = cn.appDate,
+                                  appDate = cn.appDate.ToString(),
                                   appTime = cn.appTime,
                                   PatientVM = (from r in db.Patients
                                                where r.patientID == cn.patientID

@@ -843,15 +843,35 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+           
+            //if (SessionHandler.IsExpired)
+            //{
+            //    var url = Request.Url.OriginalString;
+            //    if(url.Contains("SeeDoctor"))
+            //    {
+            //        actionName = "PatientLogin";
+            //        AuthenticationManager.SignOut();
+            //        //return RedirectToAction(actionName, "Account");
+            //    }
+            //    if (url.Contains("Doctor"))
+            //    {
+            //        actionName = "DoctorLogin";
+            //        AuthenticationManager.SignOut();
+            //        //return RedirectToAction(actionName, "Account");
+            //    }
+            //}
+            //else
+            //{
             var roles = UserManager.GetRoles(SessionHandler.UserId);
-            var actionName = "";//"Login";
+            var actionName = "";
             if (roles.Contains("Doctor"))
-                actionName = "DoctorLogin";
+                    actionName = "DoctorLogin";
             else if (roles.Contains("Patient"))
-                actionName = "PatientLogin";
-
-            AuthenticationManager.SignOut();
+                    actionName = "PatientLogin";
+                 AuthenticationManager.SignOut();
+           
             return RedirectToAction(actionName, "Account");
+
         }
 
 
