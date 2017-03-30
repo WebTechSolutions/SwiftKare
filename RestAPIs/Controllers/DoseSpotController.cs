@@ -20,6 +20,7 @@ namespace RestAPIs.Controllers
     public class DoseSpotController : ApiController
     {
         private SwiftKareDBEntities db = new SwiftKareDBEntities();
+        HttpResponseMessage response;
 
         [HttpPost]
         [Route("api/SearchPharmacy")]
@@ -52,19 +53,35 @@ namespace RestAPIs.Controllers
         [Route("api/GetRefillErr")]
         public HttpResponseMessage GetRefillReqErr()
         {
-            RefillRequestsTransmissionErrorsMessageResult oResult = DoseSpotHelper.RefillReqErr();
+            try
+            {
+                RefillRequestsTransmissionErrorsMessageResult oResult = DoseSpotHelper.RefillReqErr();
 
-            HttpResponseMessage oResp = Request.CreateResponse(HttpStatusCode.OK, oResult);
-            return oResp;
+                HttpResponseMessage oResp = Request.CreateResponse(HttpStatusCode.OK, oResult);
+                return oResp;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetRefillReqErr in DoseSpotController");
+            }
+           
         }
         //GetRefillReqURL
         
         [Route("api/GetRefillReqURL")]
         public HttpResponseMessage GetRefillReqURL()
         {
-            var oResult = DoseSpotHelper.GetRefillUrl();
-            HttpResponseMessage oResp = Request.CreateResponse(HttpStatusCode.OK, oResult);
-            return oResp;
+            try
+            {
+                var oResult = DoseSpotHelper.GetRefillUrl();
+                HttpResponseMessage oResp = Request.CreateResponse(HttpStatusCode.OK, oResult);
+                return oResp;
+            }
+            catch(Exception ex)
+            {
+                return ThrowError(ex, "GetRefillReqURL in DoseSpotController");
+            }
+            
         }
         [HttpGet]
         [Route("api/GetPatientDoseSpotUrl")]
@@ -124,7 +141,9 @@ namespace RestAPIs.Controllers
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+                //return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+                return ThrowError(ex, "GetPatientDoseSpotUrl in DoseSpotController");
+           
             }
         }
 
@@ -137,6 +156,14 @@ namespace RestAPIs.Controllers
             }
 
             base.Dispose(disposing);
+        }
+
+        private HttpResponseMessage ThrowError(Exception ex, string Action)
+        {
+            response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = "Internal server error at" + Action });
+            response.ReasonPhrase = ex.Message;
+            return response;
+
         }
 
     }

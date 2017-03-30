@@ -188,10 +188,8 @@ namespace RestAPIs.Controllers
         }
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
-            //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
-            //response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.ToString(), Encoding.Unicode);
-            //return response;
-            response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Following Error occurred at method: "+ Action+"\n"+ex.Message });
+            response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = "Internal server error at" + Action });
+            response.ReasonPhrase = ex.Message;
             return response;
         }
         protected override void Dispose(bool disposing)
