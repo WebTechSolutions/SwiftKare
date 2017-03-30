@@ -310,40 +310,39 @@
         </div>
     </div><!-- mymodal2 -->
     <script>
-        
+
         setInterval(function () {
-            @*if ('@SessionHandler.IsExpired' == 'True') {
-                window.location.href = '@Url.Action("PatientLogin","Account")';
-            }*@
             $.ajax({
-            url: "@Url.Action("AlertView", "Alert")",
-            type: 'POST',
-            dataType: 'html',
-            cache: false,
-            success: function (html) {
-                
-                //console.log($("#alertview").html());
-                $("#alertview").html(html);
-            }
+                url: "@Url.Action("SessionExpiry", "Account")",
+                type: 'POST',
+                success: function (response) {
+                    if (response.result == 0) {
+                        $.ajax({
+                            url: "@Url.Action("AlertView", "Alert")",
+                            type: 'POST',
+                            dataType: 'html',
+                            cache: false,
+                            success: function (html) {
+                                $("#alertview").html(html);
+                            }
+                        });
+                    }
+                    else {
+                        window.location.href = '@Url.Action("PatientLogin","Account")';
+                    }
 
-
+                }
             });
-           
-        }, 60*1000);
 
-        @*function checkSession()
-        {
-          window.location.href = '@Url.Action("PatientLogin","Account")';
-           
-        }*@
+        }, 60 * 1000);
+
         var mymodal = $('#playoutModal');
-    function showAlert(heading,body)
-    {
+        function showAlert(heading, body) {
 
-        mymodal.find('#heading').text(heading);
-        mymodal.find('#bodytext').text(body);
-        mymodal.modal('show');
-    }
+            mymodal.find('#heading').text(heading);
+            mymodal.find('#bodytext').text(body);
+            mymodal.modal('show');
+        }
     </script>
 
     @* <script src="~/Scripts/jquery.cookie.js"></script>

@@ -208,6 +208,7 @@
     <Compile Include="Controllers\Admin\Patient_AdminController.cs" />
     <Compile Include="Controllers\Admin\Reports\ReportController.cs" />
     <Compile Include="Controllers\Admin\Role_AdminController.cs" />
+    <Compile Include="Controllers\Admin\ROV_AdminController.cs" />
     <Compile Include="Controllers\Admin\Speciality_AdminController.cs" />
     <Compile Include="Controllers\Admin\States_AdminController.cs" />
     <Compile Include="Controllers\Admin\SystemItem_AdminController.cs" />
@@ -754,6 +755,8 @@
     <Content Include="Views\Shared\DoctorRefillErrorCountView.cshtml" />
     <Content Include="Views\Consultation\PartialDoctorReviews.cshtml" />
     <Content Include="Views\SystemItem_Admin\SystemItemGrid.cshtml" />
+    <Content Include="Views\Account\SKDefault.cshtml" />
+    <Content Include="Views\ROV_Admin\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
