@@ -628,8 +628,7 @@ namespace RestAPIs.Controllers
                     alert.cd = System.DateTime.Now;
                     alert.cb = model.userID;
                     alert.active = true;
-                    alert.active = true;
-                    db.Alerts.Add(alert);
+                   db.Alerts.Add(alert);
                     await db.SaveChangesAsync();
 
                     //Send Email on new appointment

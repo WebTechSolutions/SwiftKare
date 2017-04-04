@@ -410,6 +410,7 @@
             // Start the connection
             
             $.connection.hub.logging = true;
+         //   showLoader();
             $.connection.hub.start().done(function () {
                 var sid = $.cookie('sid');
                 debugger;
@@ -420,13 +421,17 @@
                         FirstName: '@SessionHandler.UserInfo.FirstName',
                         LastName: '@SessionHandler.UserInfo.LastName',
                         UserType: 'Doctor'
+                    }).done(function () {
+                        console.log("New doctor has joined... Notify all connected patients");
+                        chat.server.getUsersPatient();
+                        chat.server.getUsersDoctor();
                     });
 
-                chat.server.adminJoinDoctor().done(function () {
-                    //alert("New doctor has joined... Refresh list;");
-                    chat.server.getUsersPatient();
-                    chat.server.getUsersDoctor();
-                });
+                //chat.server.adminJoinDoctor().done(function () {
+                //    //alert("New doctor has joined... Refresh list;");
+                //    chat.server.getUsersPatient();
+                //    chat.server.getUsersDoctor();
+                //});
 
             });
 
@@ -446,7 +451,7 @@
                         });
                     }
                 }
-
+                hideLoader();
 
                 /*   if (handleOnlinePatientsDisplay) {
                        handleOnlinePatientsDisplay();

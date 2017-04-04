@@ -15,6 +15,7 @@
                 jQuery(this).removeAttr("style");
             });
     };
+
 });
 
 
@@ -272,7 +273,7 @@ var UserChat = function (apiKey, sessionId, token) {
         }
         return false
     }
-
+    /*
     function toggleFullScreen() {
         var elem = document.body; // Make the body go full screen.
         var isInFullScreen = (document.fullScreenElement && document.fullScreenElement !== null) || (document.mozFullScreen || document.webkitIsFullScreen);
@@ -283,7 +284,7 @@ var UserChat = function (apiKey, sessionId, token) {
             requestFullScreen(elem);
         }
         return false;
-    }
+    }*/
 
 
 
@@ -378,7 +379,7 @@ var UserChat = function (apiKey, sessionId, token) {
         session = OT.initSession(apiKey, sessionId)
         .on('streamCreated', function (event) {
             try {
-                alert('consultationId @ Stream Created:' + localStorage.getItem('consultationKey'))
+               // alert('consultationId @ Stream Created:' + localStorage.getItem('consultationKey'))
                 var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=VC Started ';
                 $.post(cUrl);
                 curStream = event.stream;
@@ -520,17 +521,17 @@ var UserChat = function (apiKey, sessionId, token) {
         $('#edit').click(showEditSection);
         $("#btnSendMsg").click(sendChatMessage);
 
-        $('#aExpandVideo').click(function () {
+        $('#aExpandVideo_').click(function () {
             toggleFullScreen();
-            $('#aShrinkExpandVideo').show();
-            $('#aExpandVideo').hide();
+            $('#aShrinkExpandVideo_').show();
+            $('#aExpandVideo_').hide();
             return false;
         });
 
-        $('#aShrinkExpandVideo').click(function () {
+        $('#aShrinkExpandVideo_').click(function () {
             toggleFullScreen();
-            $('#aShrinkExpandVideo').hide();
-            $('#aExpandVideo').show();
+            $('#aShrinkExpandVideo_').hide();
+            $('#aExpandVideo_').show();
             return false;
         });
 

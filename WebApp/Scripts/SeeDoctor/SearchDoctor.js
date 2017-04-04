@@ -275,7 +275,7 @@ function untoggle(docid, patid) {
 
 function SearchDoctor(patientID) {
 
-    showLoader();
+    
     var _objSearch = {};
     var offset=getTimeZoneOffset();
     _objSearch["language"] = $("#Language").find(":selected").text();
@@ -318,7 +318,7 @@ function SearchDoctor(patientID) {
    
     _objSearch["name"] = $("#providerName").val();
     _objSearch["gender"] = $("#Gender").find(":selected").text();
-
+    showLoader();
     $.ajax({
         type: 'POST',
         url: '/SeeDoctor/SearchDoctor',
@@ -364,7 +364,7 @@ function SearchDoctor(patientID) {
                                       "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
                                       "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
                                       "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
-                                      "&nbsp;<i class='fa fa-phone clsNotMakePhone' aria-hidden='true'></i><a  class='clsMakeCall' title='Call doctor " + response.DoctorModel.doctor[item].firstName + "&nbsp;" + response.DoctorModel.doctor[item].lastName + "' onclick='makeCallToDoctor(this)' data-doctorid='" + response.DoctorModel.doctor[item].doctorID + "' style='display:none;' href=''>" +
+                                      "&nbsp;<i class='fa fa-phone clsNotMakePhone' aria-hidden='true'></i><a  class='clsMakeCall' title='Call doctor " + response.DoctorModel.doctor[item].firstName + "&nbsp;" + response.DoctorModel.doctor[item].lastName + "' onclick='makeCallToDoctor(this)' data-doctorid='" + response.DoctorModel.doctor[item].doctorID + "' style='display:none;' href='javascript:'>" +
                                       " <i class='fa fa-phone' aria-hidden='true'></i>" +
                             "</a>" +
                             "</p>" +
@@ -394,9 +394,13 @@ function SearchDoctor(patientID) {
                         favDoctors(favDoctorsList[i]);
                     }
                 }
-                else { document.getElementById("docList").innerHTML = "<center>Sorry, Doctor is not found.</center>"; }
+                else { document.getElementById("docList").innerHTML = "<center>Sorry, Unable tp find any doctor as per the criteria selected.</center>"; }
 
                 document.getElementById("mainpanel").style.display = "block";
+                hideLoader();
+                $('html, body').animate({
+                    scrollTop: $("#mainpanel").offset().top
+                }, 1000);
 
             }
 
@@ -405,7 +409,7 @@ function SearchDoctor(patientID) {
 
     });
     
-    hideLoader();
+    
     
 
 }

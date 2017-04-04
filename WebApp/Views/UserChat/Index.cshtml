@@ -137,8 +137,8 @@
                 <li class="clsCallActive clsHide"><a href="#" id="aMudeAudio" class="video_pos"><img src="@Url.Content("~/Content/images/sound.png")" alt=""></a></li>
                 <li class="clsCallActive clsHide"><a href="#" id="aUnMudeAudio" class="video_pos_h"><img src="@Url.Content("~/Content/images/sound_h.png")" alt=""></a></li>
 
-                <li class="clsCallActive clsHide"><a href="#" id="aExpandVideo" class="video_pos" ><img src="@Url.Content("~/Content/images/half_screen.png")" alt=""></a></li>
-                <li class="clsCallActive clsHide"><a href="#" id="aShrinkExpandVideo" class="video_pos_h" onclick="toggleFullScreen()"><img src="@Url.Content("~/Content/images/full_screen.png")" alt=""></a></li>
+                <li class="clsCallActive clsHide"><a href="#" id="aExpandVideo_" class="video_pos" ><img src="@Url.Content("~/Content/images/half_screen.png")" alt=""></a></li>
+                <li class="clsCallActive clsHide"><a href="#" id="aShrinkExpandVideo_" class="video_pos_h" ><img src="@Url.Content("~/Content/images/full_screen.png")" alt=""></a></li>
 
                 <li class="clsCallActive clsHide"><a href="#" class="video_pos" id="video-message"><i class="fa fa-comments comments" aria-hidden="true"></i></a></li>
                 <li class="clsCallActive clsHide"><a href="#" class="video_pos_h"></a></li>
@@ -610,11 +610,11 @@
         }
 
         // keydown event handler
-        document.addEventListener('keydown', function (e) {
+      /*  document.addEventListener('keydown', function (e) {
             if (e.keyCode == 13 || e.keyCode == 70) { // F or Enter key
                 toggleFullScreen();
             }
-        }, false);
+        }, false);*/
     </script>
     <script>
         

@@ -646,6 +646,7 @@
                             docId: message[i].Value.Id
                         });
                     }
+                    hideLoader();
                 }
 
                 //$.each(message, function (index, value) {
@@ -666,7 +667,9 @@
 
             // Start the connection
             $.connection.hub.logging = true;
+           // showLoader();
             $.connection.hub.start().done(function () {
+               
                 var id = $.cookie('Id');
                 debugger;
                 chat.server.join(
@@ -676,13 +679,17 @@
                         FirstName: '@SessionHandler.UserInfo.FirstName',
                         LastName: '@SessionHandler.UserInfo.LastName',
                         UserType: 'Patient'
+                    }).done(function () {
+                        console.log("New Patient has joined... Notify all connected doctors");
+                        chat.server.getUsersPatient();
+                        chat.server.getUsersDoctor();
                     });
 
-                chat.server.adminJoin().done(function () {
+              /*  chat.server.adminJoin().done(function () {
                     //alert("New doctor has joined... Refresh list;");
                     chat.server.getUsersPatient();
                     chat.server.getUsersDoctor();
-                });
+                });*/
 
                 $('#sendmessage').click(function () {
                     // Call the Send method on the hub.
