@@ -60,7 +60,28 @@ namespace WebApp.Controllers
             }
         }
 
-
+        [AllowAnonymous]
+        public ActionResult SKDefault(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+          
+            return View();
+        }
+        [AllowAnonymous]
+        public JsonResult SessionExpiry()
+        {
+            
+            var flag=0;
+            if(SessionHandler.IsExpired)
+            {
+                flag = 1;
+            }
+           else
+            {
+                flag = 0;
+            }
+            return Json(new { result=flag});
+        }
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -249,8 +270,8 @@ namespace WebApp.Controllers
                         var patient = objRepo.GetByUserId(userId);
                         if(patient==null)
                         {
-                            ModelState.AddModelError("", "Invalid login attempt.");
-                            ViewBag.ModelError = "Invalid login attempt.";
+                            ModelState.AddModelError("", "Invalid Username or Password.");
+                            ViewBag.ModelError = "Invalid Username or Password.";
                             return View(model);
                         }
                         var userModel = new UserInfoModel();
@@ -283,8 +304,8 @@ namespace WebApp.Controllers
                     return View("Lockout");
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    ViewBag.ModelError = "Invalid login attempt.";
+                    ModelState.AddModelError("", "Invalid Username or Password.");
+                    ViewBag.ModelError = "Invalid Username or Password.";
                     return View(model);
             }
         }
@@ -369,7 +390,7 @@ namespace WebApp.Controllers
                         if (doctor == null)
                         {
                             ModelState.AddModelError("", "Invalid login attempt.");
-                            ViewBag.ModelError = "Invalid login attempt.";
+                            ViewBag.ModelError = "Invalid Username or Password.";
                             return View(model);
                         }
                         if (doctor.status == null || !((bool)doctor.status))
@@ -412,8 +433,8 @@ namespace WebApp.Controllers
                     return View("Lockout");
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    ViewBag.ModelError = "Invalid login attempt.";
+                    ModelState.AddModelError("", "Invalid Username or Password.");
+                    ViewBag.ModelError = "Invalid Username or Password.";
                     return View(model);
             }
         }

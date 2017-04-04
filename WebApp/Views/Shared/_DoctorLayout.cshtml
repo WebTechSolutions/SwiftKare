@@ -241,7 +241,7 @@
             <!-- saeed-style-here-end -->
             <!-- footer content -->
             <footer>
-                <div class=" bdr-l">
+                <div class="bdr-l">
                     <div class="row">
                         <div class="col-md-12 text-center">
                             <p>
@@ -298,36 +298,45 @@
     </div><!-- mymodal2 -->
     
     <script>
+
         setInterval(function () {
-            if ('@SessionHandler.IsExpired' == 'True') {
-                window.location.href = '@Url.Action("DoctorLogin","Account")';
-            }
-           $.ajax({
-                url: "@Url.Action("DoctorAlertView", "DoctorAlert")",
+            $.ajax({
+                url: "@Url.Action("SessionExpiry", "Account")",
                 type: 'POST',
-            dataType: 'html',
-            cache: false,
-            success: function (html) {
-                //console.log($("#alertview").html());
-                $("#alertview").html(html);
-            }
-           });
+                success: function (response) {
+                    if (response.result == 0) {
+                        $.ajax({
+                            url: "@Url.Action("DoctorAlertView", "DoctorAlert")",
+                            type: 'POST',
+                            dataType: 'html',
+                            cache: false,
+                            success: function (html) {
+                                $("#alertview").html(html);
+                            }
+                        });
+                    }
+                    else {
+                        window.location.href = '@Url.Action("DoctorLogin","Account")';
+                    }
+
+                }
+            });
 
         }, 60 * 1000);
 
-       
+
         setInterval(function () {
             $.ajax({
                 url: "@Url.Action("DoctorRefillErrorCountView", "Doctor")",
                 type: 'POST',
-            dataType: 'html',
-            cache: false,
-            success: function (html) {
-                //console.log($("#refillerror").html());
-                $("#refillerror").html(html);
-            }
-        });
-        }, 15*60*1000);
+                dataType: 'html',
+                cache: false,
+                success: function (html) {
+                    //console.log($("#refillerror").html());
+                    $("#refillerror").html(html);
+                }
+            });
+        }, 15 * 60 * 1000);
 
 
         var mymodal = $('#myModal1');

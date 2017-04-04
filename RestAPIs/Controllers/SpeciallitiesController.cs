@@ -12,6 +12,7 @@ using System.Web.Http.Description;
 using DataAccess;
 using DataAccess.CommonModels;
 using System.Text;
+using DataAccess.CustomModels;
 
 namespace RestAPIs.Controllers
 {
@@ -137,8 +138,8 @@ namespace RestAPIs.Controllers
 
         private HttpResponseMessage ThrowError(Exception ex, string Action)
         {
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest, "value");
-            response.Content = new StringContent("Following Error occurred at method. " + Action + "\n" + ex.ToString(), Encoding.Unicode);
+            response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = "Internal server error at" + Action });
+            response.ReasonPhrase = ex.Message;
             return response;
         }
     }
