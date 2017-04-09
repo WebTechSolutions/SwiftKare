@@ -27,7 +27,7 @@ namespace RestAPIs.Controllers
             {
                 //var alerts = db.Alerts.Where(al=>al.active==true && al.alertFor==patientID).ToList();
                 var alerts = (from al in db.Alerts
-                              where al.active == true && al.alertFor == patientID
+                              where al.active == true && al.alertFor == patientID orderby al.alertID descending
                               select new AlertModel { alertID = al.alertID, alertText = al.alertText, alertDate = al.cd,isRead=al.read }).Take(50).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, alerts);
                 return response;
@@ -128,7 +128,7 @@ namespace RestAPIs.Controllers
             }
             catch (Exception ex)
             {
-                return ThrowError(ex, "GetPatientAlerts in AlertsController");
+                return ThrowError(ex, "getDoctorAlertsCount in AlertsController");
             }
         }
         [Route("api/getDoctorAlerts")]
@@ -138,7 +138,7 @@ namespace RestAPIs.Controllers
             {
                
                 var alerts = (from al in db.Alerts
-                              where al.active == true && al.alertFor == doctorID
+                              where al.active == true && al.alertFor == doctorID orderby al.alertID descending
                               select new AlertModel { alertID = al.alertID, alertText = al.alertText, alertDate = al.cd, isRead = al.read }).Take(50).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, alerts);
                 return response;

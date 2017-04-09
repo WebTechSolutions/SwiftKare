@@ -32,7 +32,7 @@ namespace WebApp.Controllers
             try
             {
                 var oData = oDoctorAlertRepository.LoadDoctorAlerts(SessionHandler.UserInfo.Id);
-
+               
                 return PartialView("PartialDoctorAlertView", oData);
 
             }
@@ -50,7 +50,6 @@ namespace WebApp.Controllers
             try
             {
                 var oData = oDoctorAlertRepository.LoadDoctorAlerts(SessionHandler.UserInfo.Id);
-
                 return PartialView("DoctorAlertView", oData);
 
             }

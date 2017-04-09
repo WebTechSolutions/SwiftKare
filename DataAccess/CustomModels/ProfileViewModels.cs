@@ -277,6 +277,11 @@ namespace DataAccess.CustomModels
         public string userid { get; set; }
         public long zoneid { get; set; }
     }
+    public class TimezoneModelOffset
+    {
+        public string userid { get; set; }
+        public string offset { get; set; }
+    }
     public class TimeZones //to populate the timezone dd on popup
     {
         public string zoneid { get; set; }

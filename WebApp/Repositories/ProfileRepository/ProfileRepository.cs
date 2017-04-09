@@ -202,6 +202,14 @@ namespace WebApp.Repositories.ProfileRepositories
             var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
             return result;
         }
+        public ApiResultModel UpdateTimezoneOffset(TimezoneModelOffset model)
+        {
+            var strContent = JsonConvert.SerializeObject(model);
+            var request = ApiConsumerHelper.PostData("api/UpdateTimezoneOffset", strContent);
+
+            var result = JsonConvert.DeserializeObject<ApiResultModel>(request);
+            return result;
+        }
         public List<TimeZones> GetTimeZones()
         {
             try

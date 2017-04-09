@@ -702,26 +702,62 @@
             }
             if ('@SessionHandler.ProfilePhoto' != '') {
                 if ('@SessionHandler.UserInfo.timeZoneOffset' == '' ||
-                    '@SessionHandler.UserInfo.timeZoneOffset' != new Date().getTimezoneOffset().toString()) {
-                    var param = "{}";
-                    var listitems;
-                    var $select = $('#myModal2').find('#Timezone');
+                    '@SessionHandler.UserInfo.timeZoneOffset' != new Date().getTimezoneOffset().toString())
+                {
                     $.ajax({
-                        type: 'POST',
-                        url: '/DoctorAppointment/GetTimeZones',
-                        data: param,
+                        url: '@Url.Action("UpdateDoctorTimezone", "DoctorAppointment")',
+                        type: "POST",
+                        data: { 'offset': new Date().getTimezoneOffset().toString() },
                         dataType: 'json',
-                        success: function (response) {
-                            $.each(response.Object, function (item) {
-                                listitems += '<option value=' + response.Object[item].zoneid + '>' + response.Object[item].timeZonee + '</option>';
+                        success: function (result) {
+                            //Reload container
+                            if (result.Message != undefined) {
+                                new PNotify({ title: 'Error', text: result.Message.ReasonPhrase, type: 'error', styling: 'bootstrap3' });
+                                hideLoader();
+                            }
+                            else {
 
-                            });
-                            $select.append(listitems);
+                                if (result.ApiResultModel.message == "") {
+                                    new PNotify({ title: 'Success', text: "Timezone is updated successfully.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
+                                    hideLoader();
+
+                                }
+                                else {
+                                    new PNotify({ title: 'Error', text: result.ApiResultModel.message, type: 'error', styling: 'bootstrap3' });
+                                    hideLoader();
+
+                                }
+
+
+                            }
+
                         },
-                        error: errorRes
-
+                        error: function (err) {
+                            //alert(err.statusText);
+                            new PNotify({ title: 'Error', text: err.statusText, type: 'error', styling: 'bootstrap3' });
+                            //Stop displaying loader
+                            hideLoader();
+                        }
                     });
-                    $('#myModal2').modal({ backdrop: 'static', keyboard: false });
+                    //var param = "{}";
+                    //var listitems;
+                    //var $select = $('#myModal2').find('#Timezone');
+                    //$.ajax({
+                    //    type: 'POST',
+                    //    url: '/DoctorAppointment/GetTimeZones',
+                    //    data: param,
+                    //    dataType: 'json',
+                    //    success: function (response) {
+                    //        $.each(response.Object, function (item) {
+                    //            listitems += '<option value=' + response.Object[item].zoneid + '>' + response.Object[item].timeZonee + '</option>';
+
+                    //        });
+                    //        $select.append(listitems);
+                    //    },
+                    //    error: errorRes
+
+                    //});
+                    //$('#myModal2').modal({ backdrop: 'static', keyboard: false });
                 }
 
             }

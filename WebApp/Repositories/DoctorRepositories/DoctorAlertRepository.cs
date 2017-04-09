@@ -58,5 +58,21 @@ namespace WebApp.Repositories.DoctorRepositories
             }
 
         }
+
+        public int getDoctorAlertsCount(long docid)
+        {
+            try
+            {
+                var response = ApiConsumerHelper.GetResponseString("api/getDoctorAlertsCount/?doctorID=" + docid);
+                var result = JsonConvert.DeserializeObject<Int32>(response);
+                return result;
+            }
+            catch (HttpResponseException ex)
+            {
+
+                throw ex;
+            }
+
+        }
     }
 }
