@@ -265,6 +265,7 @@ namespace RestAPIs.Controllers
                                 userModel.role = roleFromDb.ToString();
                                 userModel.iOSToken = doctor.iOSToken;
                                 userModel.AndroidToken = doctor.AndroidToken;
+                                
                             }
                             
                         }
@@ -294,7 +295,7 @@ namespace RestAPIs.Controllers
                             userModel.LastName = patient.lastName;
                             userModel.userId = patient.userId;
                             userModel.title = patient.title;
-                            userModel.timeZone = patient.timezone;
+                            userModel.timeZone = patient.timezoneoffset;
                             userModel.userId = patient.userId;
                             userModel.role = roleFromDb.ToString();
                             userModel.iOSToken = patient.iOSToken;
