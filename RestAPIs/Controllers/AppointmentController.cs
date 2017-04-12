@@ -274,28 +274,41 @@ namespace RestAPIs.Controllers
                 var docemail = db.Doctors.Where(d => d.doctorID == model.doctorID).Select(d => d.email).FirstOrDefault();
                 var patemail = db.Patients.Where(p => p.patientID == model.patientID).Select(p => p.email).FirstOrDefault();
                 TimeZoneHelper tzh = new TimeZoneHelper();
-                DateTime ad = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate.Trim()));
-                DateTime mydateTime = DateTime.ParseExact(model.appTime.Trim(),
-                                            "hh:mm tt", CultureInfo.InvariantCulture);
-                DateTime newappDateTime = ad + mydateTime.TimeOfDay;
+               
+                try
+                {
+                   
+                    DateTime ad = DateTime.ParseExact(dateString, format, provider);
+                    DateTime newappDateTime = ad + myDateTime.TimeOfDay;
+                    EmailHelper oHelper = new EmailHelper(docemail, "New appointment.", "You have new appointment on " + tzh.convertTimeZone(newappDateTime, 0, model.doctorID, 0) + ".");
+                    oHelper.SendMessage();
+                    oHelper = new EmailHelper(patemail, "New appointment.", "Your appointment has been scheduled successfully on " + tzh.convertTimeZone(newappDateTime, model.patientID, 0, 0) + ".");
+                    oHelper.SendMessage();
+
+                    pushModel pm = new pushModel();
+                    pm.PPushTitle = "New Appointment";
+                    pm.PPushMessage = "Patient has scheduled appointment with you on " + tzh.convertTimeZone(newappDateTime, model.patientID, 0, 0);
+                    pm.DPushTitle = "New Appointment";
+                    pm.DPushMessage = "Patient has scheduled appointment with you on " + tzh.convertTimeZone(newappDateTime, 0, model.doctorID, 0);
+                    pm.sendtoDoctor = true;
+                    pm.sendtoPatient = false;
+                    pm.doctorID = model.doctorID;
+                    pm.patientID = model.patientID;
+
+                    PushHelper ph = new PushHelper();
+                    ph.sendPush(pm);
+
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("{0} is not in the correct format.", dateString);
+                }
+                //DateTime ad = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate.Trim()));
+                //DateTime mydateTime = DateTime.ParseExact(model.appTime.Trim(),
+                //                            "hh:mm tt", CultureInfo.InvariantCulture);
+                //DateTime newappDateTime = ad + mydateTime.TimeOfDay;
                 
-                EmailHelper oHelper = new EmailHelper(docemail, "New appointment.", "You have new appointment on " + tzh.convertTimeZone(newappDateTime, 0, model.doctorID,0) + ".");
-                oHelper.SendMessage();
-                oHelper = new EmailHelper(patemail, "New appointment.", "Your appointment has been scheduled successfully on " + tzh.convertTimeZone(newappDateTime, model.patientID, 0,0) + ".");
-                oHelper.SendMessage();
-
-                pushModel pm = new pushModel();
-                pm.PPushTitle = "New Appointment";
-                pm.PPushMessage = "Patient has scheduled appointment with you on " + tzh.convertTimeZone(newappDateTime, model.patientID, 0,0);
-                pm.DPushTitle = "New Appointment";
-                pm.DPushMessage = "Patient has scheduled appointment with you on " + tzh.convertTimeZone(newappDateTime, 0, model.doctorID,0);
-                pm.sendtoDoctor = true;
-                pm.sendtoPatient = false;
-                pm.doctorID = model.doctorID;
-                pm.patientID = model.patientID;
-
-                PushHelper ph = new PushHelper();
-                ph.sendPush(pm);
+                
 
 
                 //Save Appointment files in database - Starts
@@ -437,8 +450,9 @@ namespace RestAPIs.Controllers
                               where d.doctorID == App.doctorID
                               select new { docemail = d.email, doctorID = d.doctorID,timezone=d.timezone }).FirstOrDefault();
                 //Used for timezone conversion
+               
                 DateTime oldAppDateTime = result.appDate.Value.Date + result.appTime.Value;
-                DateTime newaappDate = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate.Trim()));
+                DateTime newaappDate = DateTime.ParseExact(model.appDate.Trim(), format, provider);//Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate.Trim()));
                 DateTime newappTime = DateTime.ParseExact(model.appTime.Trim(),
                                             "hh:mm tt", CultureInfo.InvariantCulture);
                 DateTime newappDateTime = newaappDate + newappTime.TimeOfDay;
