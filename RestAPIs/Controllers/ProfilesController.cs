@@ -80,7 +80,64 @@ namespace RestAPIs.Controllers
             }
 
         }
-       
+
+        [Route("api/UpdateTimezoneOffset")]
+        [ResponseType(typeof(HttpResponseMessage))]
+        public async Task<HttpResponseMessage> UpdateTimezoneOffset(TimezoneModelOffset model)
+        {
+
+            try
+            {
+                if (model.offset == "0" ||model.offset=="")
+                {
+
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Timezone is not provided." });
+                    response.ReasonPhrase = "Timezone offset is not provided.";
+                    return response;
+                }
+                if (model.userid == null || model.userid.Trim() == "")
+                {
+
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "UserId is not provided." });
+                    response.ReasonPhrase = "UserId is not provided.";
+                    return response;
+                }
+                Patient pat = db.Patients.Where(p => p.userId == model.userid).FirstOrDefault();
+                Doctor doc = db.Doctors.Where(p => p.userId == model.userid).FirstOrDefault();
+                var objtimezone = db.TimeZones.Where(t => t.zoneOffset == model.offset).FirstOrDefault();
+                long id = 0;
+                if (pat != null)
+                {
+                    pat.timezone = objtimezone.zoneName;
+                    pat.timezoneoffset = (from d in db.TimeZones
+                                          where d.zoneName == objtimezone.zoneName
+                                          select d.zoneOffset).FirstOrDefault();
+                    id = pat.patientID;
+                    db.Entry(pat).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                }
+
+                if (doc != null)
+                {
+
+                    doc.timezone = objtimezone.zoneName;
+                    doc.timezoneoffset = (from d in db.TimeZones
+                                          where d.zoneName == objtimezone.zoneName
+                                          select d.zoneOffset).FirstOrDefault();
+                    id = doc.doctorID;
+                    db.Entry(doc).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                }
+                response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = id, message = "" });
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "UpdateTimezoneOffset in ProfilesController.");
+            }
+
+        }
+
         [Route("api/GetTimezonesList")]
         [ResponseType(typeof(HttpResponseMessage))]
         public HttpResponseMessage GetTimezones()

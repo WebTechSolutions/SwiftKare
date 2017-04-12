@@ -17,22 +17,51 @@ namespace RestAPIs.Helper
             DateTime convrtedAppDateTime = TimeZoneInfo.ConvertTimeFromUtc(appDateTime, zoneInfo);
             return convrtedAppDateTime;
         }
-        public DateTime? convertTimeZone(DateTime appDateTime,long id)
+        public DateTime? convertTimeZone(DateTime appDateTime,long? patid,long? docid,int utcflag)
         {
-            var pattz = db.Patients.Where(p => p.patientID == id).Select(p => p.timezone).FirstOrDefault();
-            var doctz = db.Doctors.Where(p => p.doctorID == id).Select(p => p.timezone).FirstOrDefault();
-            if (pattz != null)
+            DateTime? utcdate;
+            if (patid!=0)
             {
-                TimeZoneInfo pzoneInfo = TimeZoneInfo.FindSystemTimeZoneById(pattz.ToString());
-                DateTime pconvrtedAppDateTime = TimeZoneInfo.ConvertTimeFromUtc(appDateTime, pzoneInfo);
-                return pconvrtedAppDateTime;
+                var pattz = db.Patients.Where(p => p.patientID == patid).Select(p => p.timezone).FirstOrDefault();
+                if (pattz != null)
+                {
+                    TimeZoneInfo pzoneInfo = TimeZoneInfo.FindSystemTimeZoneById(pattz.ToString());
+                    if(utcflag==0)
+                    {
+                        utcdate = TimeZoneInfo.ConvertTimeToUtc(appDateTime);
+                        DateTime pconvrtedAppDateTime = TimeZoneInfo.ConvertTimeFromUtc(utcdate.Value, pzoneInfo);
+                        return pconvrtedAppDateTime;
+                    }
+                    if (utcflag == 1)
+                    {
+                        DateTime pconvrtedAppDateTime = TimeZoneInfo.ConvertTimeFromUtc(appDateTime, pzoneInfo);
+                        return pconvrtedAppDateTime;
+                    }
+
+                }
             }
-            else if (doctz != null)
+            
+            
+            if (docid != 0)
             {
-                TimeZoneInfo dzoneInfo = TimeZoneInfo.FindSystemTimeZoneById(doctz.ToString());
-                DateTime dconvrtedAppDateTime = TimeZoneInfo.ConvertTimeFromUtc(appDateTime, dzoneInfo);
-                return dconvrtedAppDateTime;
+                var doctz = db.Doctors.Where(p => p.doctorID == docid).Select(p => p.timezone).FirstOrDefault();
+                if (doctz != null)
+                {
+                    TimeZoneInfo dzoneInfo = TimeZoneInfo.FindSystemTimeZoneById(doctz.ToString());
+                    if (utcflag == 0)
+                    {
+                        utcdate = TimeZoneInfo.ConvertTimeToUtc(appDateTime);
+                        DateTime dconvrtedAppDateTime = TimeZoneInfo.ConvertTimeFromUtc(utcdate.Value, dzoneInfo);
+                        return dconvrtedAppDateTime;
+                    }
+                    if (utcflag == 1)
+                    {
+                        DateTime dconvrtedAppDateTime = TimeZoneInfo.ConvertTimeFromUtc(appDateTime, dzoneInfo);
+                        return dconvrtedAppDateTime;
+                    }
+                }
             }
+                
             return null;
        }
         public TimeSpan? toUTCTimeSpan(TimeSpan? appTime, long id) //convert user local to UTC timespan

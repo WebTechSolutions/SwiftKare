@@ -273,16 +273,22 @@ namespace RestAPIs.Controllers
 
                 var docemail = db.Doctors.Where(d => d.doctorID == model.doctorID).Select(d => d.email).FirstOrDefault();
                 var patemail = db.Patients.Where(p => p.patientID == model.patientID).Select(p => p.email).FirstOrDefault();
-                EmailHelper oHelper = new EmailHelper(docemail, "New appointment.", "You have new appointment on " + model.appDate.Trim() + " at " + model.appTime.Trim() + ".");
+                TimeZoneHelper tzh = new TimeZoneHelper();
+                DateTime ad = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate.Trim()));
+                DateTime mydateTime = DateTime.ParseExact(model.appTime.Trim(),
+                                            "hh:mm tt", CultureInfo.InvariantCulture);
+                DateTime newappDateTime = ad + mydateTime.TimeOfDay;
+                
+                EmailHelper oHelper = new EmailHelper(docemail, "New appointment.", "You have new appointment on " + tzh.convertTimeZone(newappDateTime, 0, model.doctorID,0) + ".");
                 oHelper.SendMessage();
-                oHelper = new EmailHelper(patemail, "New appointment.", "Your appointment has been scheduled successfully on " + model.appDate.Trim() + " at " + model.appTime.Trim() + ".");
+                oHelper = new EmailHelper(patemail, "New appointment.", "Your appointment has been scheduled successfully on " + tzh.convertTimeZone(newappDateTime, model.patientID, 0,0) + ".");
                 oHelper.SendMessage();
 
                 pushModel pm = new pushModel();
                 pm.PPushTitle = "New Appointment";
-                pm.PPushMessage = "Patient has scheduled appointment with you on " + model.appDate;
+                pm.PPushMessage = "Patient has scheduled appointment with you on " + tzh.convertTimeZone(newappDateTime, model.patientID, 0,0);
                 pm.DPushTitle = "New Appointment";
-                pm.DPushMessage = "Patient has scheduled appointment with you on " + model.appDate;
+                pm.DPushMessage = "Patient has scheduled appointment with you on " + tzh.convertTimeZone(newappDateTime, 0, model.doctorID,0);
                 pm.sendtoDoctor = true;
                 pm.sendtoPatient = false;
                 pm.doctorID = model.doctorID;
@@ -369,6 +375,7 @@ namespace RestAPIs.Controllers
         public async Task<HttpResponseMessage> RescheduleAppointments(RescheduleAppointmentModel model)
         {
             Appointment app = new Appointment();
+            TimeZoneHelper tzh = new TimeZoneHelper();
             DateTime? tempappdate;
             TimeSpan? tempapptime;
             try
@@ -429,6 +436,13 @@ namespace RestAPIs.Controllers
                 var doctor = (from d in db.Doctors
                               where d.doctorID == App.doctorID
                               select new { docemail = d.email, doctorID = d.doctorID,timezone=d.timezone }).FirstOrDefault();
+                //Used for timezone conversion
+                DateTime oldAppDateTime = result.appDate.Value.Date + result.appTime.Value;
+                DateTime newaappDate = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate.Trim()));
+                DateTime newappTime = DateTime.ParseExact(model.appTime.Trim(),
+                                            "hh:mm tt", CultureInfo.InvariantCulture);
+                DateTime newappDateTime = newaappDate + newappTime.TimeOfDay;
+                //Used for timezone conversion
                 if (model.appType=="U")
                 {
                     if (timediff.TotalHours < Convert.ToInt32(RescheduleLimit))
@@ -442,7 +456,8 @@ namespace RestAPIs.Controllers
                         var formattedDate = string.Format("{0:dd/MM/yyyy}", tempappdate);
                         tempapptime = result.appTime;
                         var formattedTime = DateTime.Now.Date.Add(tempapptime.Value).ToString(@"hh\:mm\:tt");
-                       
+                        
+
                         DateTime mydateTime = DateTime.ParseExact(model.appTime,
                                              "hh:mm tt", CultureInfo.InvariantCulture);
                         var timezoneid = db.Patients.Where(d => d.userId == model.userID).Select(d => d.timezone).FirstOrDefault();
@@ -480,30 +495,30 @@ namespace RestAPIs.Controllers
                         await db.SaveChangesAsync();
                         Alert alert = new Alert();
                         alert.alertFor = result.doctorID;
-                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + formattedDate  + " on " + formattedTime + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " on " + model.appTime;
+                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + tzh.convertTimeZone(oldAppDateTime,0, result.doctorID,1) + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + tzh.convertTimeZone(newappDateTime, 0, result.doctorID,0);
                         alert.cd = System.DateTime.Now;
                         alert.cb = model.userID;
-                        alert.active = true;
                         alert.active = true;
                         db.Alerts.Add(alert);
                         await db.SaveChangesAsync();
                         //Send Email on new appointment
                        
+                       
                         if (doctor.docemail != null)
                         {
                            
-                            EmailHelper oHelper = new EmailHelper(doctor.docemail, "Reschedule appointment.", "Your appointment on " + formattedDate + " has been rescheduled by patient.");
+                            EmailHelper oHelper = new EmailHelper(doctor.docemail, "Reschedule appointment.", "Your appointment on " + tzh.convertTimeZone(oldAppDateTime, 0, result.doctorID,1) + " has been rescheduled by patient to "+ tzh.convertTimeZone(newappDateTime, 0, result.doctorID,0)+".");
                             oHelper.SendMessage();
                         }
                         if (patient.patemail != null)
                         {
-                            EmailHelper oHelper = new EmailHelper(patient.patemail, "Reschedule appointment.", "Your appointment on " + formattedDate + " is rescheduled successfully.");
+                            EmailHelper oHelper = new EmailHelper(patient.patemail, "Reschedule appointment.", "Your appointment on " + tzh.convertTimeZone(oldAppDateTime, result.patientID, 0,1) + " is rescheduled successfully to " + tzh.convertTimeZone(newappDateTime, result.patientID, 0,0) + ".");
                             oHelper.SendMessage();
                         }
 
                         pushModel pm = new pushModel();
                         pm.DPushTitle = "Reschedule Appointment";
-                        pm.DPushMessage = "Your appointment of " + formattedDate + " has been rescheduled successfully by Patient.";
+                        pm.DPushMessage = "Your appointment on " + tzh.convertTimeZone(oldAppDateTime, 0, result.doctorID,1) + " has been rescheduled by patient to " + tzh.convertTimeZone(newappDateTime, 0, result.doctorID,0) + ".";
                         pm.sendtoDoctor = true;
                         pm.sendtoPatient = false;
                         pm.doctorID = doctor.doctorID;
@@ -553,7 +568,7 @@ namespace RestAPIs.Controllers
                         await db.SaveChangesAsync();
                         Alert alert = new Alert();
                         alert.alertFor = result.doctorID;
-                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + formattedDate + " at " + formattedTime + " "+ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
+                    alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + tzh.convertTimeZone(oldAppDateTime, 0, result.doctorID, 1) + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + tzh.convertTimeZone(newappDateTime, 0, result.doctorID, 0);
                     alert.cd = System.DateTime.Now;
                         alert.cb = model.userID;
                         alert.active = true;
@@ -624,7 +639,7 @@ namespace RestAPIs.Controllers
                     await db.SaveChangesAsync();
                     Alert alert = new Alert();
                     alert.alertFor = result.doctorID;
-                    alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + formattedDate + " at " + formattedTime + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + model.appDate + " at " + model.appTime;
+                    alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + tzh.convertTimeZone(oldAppDateTime, 0, result.doctorID, 1) + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + tzh.convertTimeZone(newappDateTime, 0, result.doctorID, 0);
                     alert.cd = System.DateTime.Now;
                     alert.cb = model.userID;
                     alert.active = true;
