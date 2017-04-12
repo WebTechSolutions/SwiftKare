@@ -394,7 +394,7 @@ function SearchDoctor(patientID) {
                         favDoctors(favDoctorsList[i]);
                     }
                 }
-                else { document.getElementById("docList").innerHTML = "<center>Sorry, Unable tp find any doctor as per the criteria selected.</center>"; }
+                else { document.getElementById("docList").innerHTML = "<center>Sorry, Unable to find any doctor as per the criteria selected.</center>"; }
 
                 document.getElementById("mainpanel").style.display = "block";
                 hideLoader();
