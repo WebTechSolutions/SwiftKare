@@ -383,8 +383,7 @@ namespace RestAPIs.Controllers
                     #region sendEmail
                     var sampledocEmailBody = @"
                     <h3> Waive Billing Request</h3>
-                    <p>Request of paymenERT=-0987YU.**954
-';Gt weiver for " + tz.convertTimeZone(appDateTime,objdoc.timezone).ToString("dd-MM-yyyy hh:mm:ss tt") +
+                    <p> Request of payment weiver for" + tz.convertTimeZone(appDateTime,objdoc.timezone).ToString("dd-MM-yyyy hh:mm:ss tt") +
                         @" has been sent to SwiftKAre Support. You will be notified soon from support</p>
                     <p>&nbsp;</p>
                     <p><strong>Best Regards,<br/>SwiftKare</strong></p>
