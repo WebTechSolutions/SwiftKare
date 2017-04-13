@@ -941,6 +941,7 @@ namespace RestAPIs.Controllers
                 if(result==null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Appointment not found" });
+                    response.ReasonPhrase = "Appointment not found";
                     return response;
                 }
                 else

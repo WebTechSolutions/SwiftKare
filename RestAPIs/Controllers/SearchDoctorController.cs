@@ -170,31 +170,44 @@ namespace RestAPIs.Controllers
 
                 if (searchModel.appDate != null)
                 {
-                    DateTime day = new DateTime();
-                    day = Convert.ToDateTime(searchModel.appDate);
-                    var result = (from l in db.SearchDoctorWithShift(searchModel.language, searchModel.speciality, searchModel.name, null,
+                    try
+                    {
+                       
+                        string dateString = searchModel.appDate.Trim();
+                        string format = "dd/MM/yyyy";
+                        CultureInfo provider = CultureInfo.InvariantCulture;
+                   
+                        DateTime day = DateTime.ParseExact(dateString, format, provider);
+                        var result = (from l in db.SearchDoctorWithShift(searchModel.language, searchModel.speciality, searchModel.name, day.DayOfWeek.ToString(),
                     appFromtimings, appTotimings, searchModel.gender)
-                                  select new SearchDoctorWithShift_Model
-                                  {
-                                      doctorID = l.doctorID,
-                                      title = l.title,
-                                      firstName = l.firstName,
-                                      lastName = l.lastName,
-                                      city = l.city,
-                                      ProfilePhotoBase64 = l.ProfilePhotoBase64,
-                                      state = l.state,
-                                      languageName = l.languageName,
-                                      specialityName = l.specialityName
-                                  }
+                                      select new SearchDoctorWithShift_Model
+                                      {
+                                          doctorID = l.doctorID,
+                                          title = l.title,
+                                          firstName = l.firstName,
+                                          lastName = l.lastName,
+                                          city = l.city,
+                                          ProfilePhotoBase64 = l.ProfilePhotoBase64,
+                                          state = l.state,
+                                          languageName = l.languageName,
+                                          specialityName = l.specialityName
+                                      }
                     ).ToList();
-                    var favdoc = (from l in db.FavouriteDoctors
-                                  where l.patientID == searchModel.patientID && l.active == true
-                                  select new FavouriteDoctorModel { docID = l.doctorID, patID = l.patientID }).ToList();
-                    SearchDoctorResult searchResult = new SearchDoctorResult();
-                    searchResult.doctor = result;
-                    searchResult.favdoctor = favdoc;
+                        var favdoc = (from l in db.FavouriteDoctors
+                                      where l.patientID == searchModel.patientID && l.active == true
+                                      select new FavouriteDoctorModel { docID = l.doctorID, patID = l.patientID }).ToList();
+                        SearchDoctorResult searchResult = new SearchDoctorResult();
+                        searchResult.doctor = result;
+                        searchResult.favdoctor = favdoc;
 
-                    response = Request.CreateResponse(HttpStatusCode.OK, searchResult);
+                        response = Request.CreateResponse(HttpStatusCode.OK, searchResult);
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("{0} is not in the correct format.", searchModel.appDate.Trim());
+                    }
+                   
+                    
 
                 }
                 return response;
