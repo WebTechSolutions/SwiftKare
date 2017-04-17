@@ -78,7 +78,7 @@ namespace RestAPIs.Controllers
                                               {
                                                   docID = doc.doctorID,
                                                   ProfilePhotoBase64 = doc.ProfilePhotoBase64,
-                                                  doctorName = doc.firstName + " " + doc.lastName,
+                                                  doctorName = "Dr. "+doc.firstName + " " + doc.lastName,
                                                   doctorGender = doc.gender,
                                                   doctordob = doc.dob,
                                                   dcellPhone = doc.cellPhone,

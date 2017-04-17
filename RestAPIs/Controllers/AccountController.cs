@@ -238,6 +238,16 @@ namespace RestAPIs.Controllers
                         Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId );
                         if (doctor != null)
                         {
+                            if(model.offset!=null || model.offset.Trim()!="")
+                            {
+                                if(doctor.timezoneoffset!=model.offset)
+                                {
+                                    DataAccess.TimeZone tz = db.TimeZones.FirstOrDefault(t => t.zoneOffset == model.offset);
+                                    doctor.timezone = tz.zoneName;
+                                    doctor.timezoneoffset = tz.zoneOffset;
+                                }
+                               
+                            }
                             if (iOSToken.Trim() != "") doctor.iOSToken = iOSToken;
                             if (androidToken.Trim() != "") doctor.AndroidToken = androidToken;
                             db.Entry(doctor).State = EntityState.Modified;
@@ -282,6 +292,16 @@ namespace RestAPIs.Controllers
                         string androidToken = model.andriodToken;
                         //update patient table with  Tokens 
                         Patient patient = db.Patients.SingleOrDefault(o => o.userId == userId);
+                        if (model.offset != null || model.offset.Trim() != "")
+                        {
+                            if (patient.timezoneoffset != model.offset)
+                            {
+                                DataAccess.TimeZone tz = db.TimeZones.FirstOrDefault(t => t.zoneOffset == model.offset);
+                                patient.timezone = tz.zoneName;
+                                patient.timezoneoffset = tz.zoneOffset;
+                            }
+
+                        }
                         if (iOSToken.Trim()!="")patient.iOSToken = iOSToken;
                         if (androidToken.Trim() != "") patient.AndroidToken = androidToken;
                         db.Entry(patient).State = EntityState.Modified;
@@ -327,12 +347,12 @@ namespace RestAPIs.Controllers
                 }
             }
 
-                catch (Exception)
+                catch (Exception ex)
                 {
                     throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
                     {
                         Content = new StringContent("An error occurred while posting in api/account/login, please try again or contact the administrator."),
-                        ReasonPhrase = "Critical Exception"
+                        ReasonPhrase = ex.Message
                     });
                 }
             //}
@@ -524,7 +544,8 @@ namespace RestAPIs.Controllers
                                 lastName = model.LastName,
                                 firstName = model.FirstName,
                                 email = user.Email,
-                                active=true
+                                active=true,
+                                status = false
                             };
                             db.Doctors.Add(doctor);
                             await db.SaveChangesAsync();
