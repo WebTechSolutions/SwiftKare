@@ -1187,13 +1187,22 @@
         });
     }
 
-    $('#searchdate').bootstrapMaterialDatePicker
-            ({
-                time: false,
-                clearButton: true,
-                format: 'DD/MM/YYYY ',
+    //$('#searchdate').bootstrapMaterialDatePicker
+    //        ({
+    //            time: false,
+    //            clearButton: true,
+    //            format: 'DD/MM/YYYY ',
 
-            });
+    //        });
+    $('#searchdate').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: false,
+        calender_style: "picker_2",
+        format: 'DD/MM/YYYY ',
+        minDate: new Date()
+    }, function (start, end, label) {
+        console.log(start.toISOString(), end.toISOString(), label);
+    });
 
 
     $("#fetchdate").daterangepicker({

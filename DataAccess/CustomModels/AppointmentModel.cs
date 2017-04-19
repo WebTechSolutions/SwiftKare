@@ -16,7 +16,7 @@ namespace DataAccess.CommonModels
         public string notes { get; set; }
         public string paymentID { get; set; }
         public Nullable<int> paymentAmt { get; set; }
-        public string appTypeAV { get; set; }
+        //public string appTypeAV { get; set; }
         public string chiefComplaints { get; set; }
         public string rov { get; set; }
 

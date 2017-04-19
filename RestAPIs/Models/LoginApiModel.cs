@@ -13,6 +13,7 @@
         public string Password { get; set; }
         public string iOSToken { get; set; }
         public string andriodToken { get; set; }
+        public string offset { get; set; }
 
     }
     public class DoctorLoginApiModel
