@@ -238,15 +238,19 @@ namespace RestAPIs.Controllers
                         Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId );
                         if (doctor != null)
                         {
-                            if(model.offset!=null || model.offset.Trim()!="")
+                            if(model.offset!=null )
+                                
                             {
-                                if(doctor.timezoneoffset!=model.offset)
+
+                                if (model.offset.Trim() != "")
                                 {
-                                    DataAccess.TimeZone tz = db.TimeZones.FirstOrDefault(t => t.zoneOffset == model.offset);
-                                    doctor.timezone = tz.zoneName;
-                                    doctor.timezoneoffset = tz.zoneOffset;
+                                    if (doctor.timezoneoffset != model.offset)
+                                    {
+                                        DataAccess.TimeZone tz = db.TimeZones.FirstOrDefault(t => t.zoneOffset == model.offset);
+                                        doctor.timezone = tz.zoneName;
+                                        doctor.timezoneoffset = tz.zoneOffset;
+                                    }
                                 }
-                               
                             }
                             if (iOSToken.Trim() != "") doctor.iOSToken = iOSToken;
                             if (androidToken.Trim() != "") doctor.AndroidToken = androidToken;
@@ -292,14 +296,18 @@ namespace RestAPIs.Controllers
                         string androidToken = model.andriodToken;
                         //update patient table with  Tokens 
                         Patient patient = db.Patients.SingleOrDefault(o => o.userId == userId);
-                        if (model.offset != null || model.offset.Trim() != "")
+                        if (model.offset != null)
                         {
-                            if (patient.timezoneoffset != model.offset)
+                            if(model.offset.Trim() != "")
                             {
-                                DataAccess.TimeZone tz = db.TimeZones.FirstOrDefault(t => t.zoneOffset == model.offset);
-                                patient.timezone = tz.zoneName;
-                                patient.timezoneoffset = tz.zoneOffset;
+                                if (patient.timezoneoffset != model.offset)
+                                {
+                                    DataAccess.TimeZone tz = db.TimeZones.FirstOrDefault(t => t.zoneOffset == model.offset);
+                                    patient.timezone = tz.zoneName;
+                                    patient.timezoneoffset = tz.zoneOffset;
+                                }
                             }
+                            
 
                         }
                         if (iOSToken.Trim()!="")patient.iOSToken = iOSToken;
@@ -351,7 +359,8 @@ namespace RestAPIs.Controllers
                 {
                     throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
                     {
-                        Content = new StringContent("An error occurred while posting in api/account/login, please try again or contact the administrator."),
+                        //Content = new StringContent("An error occurred while posting in api/account/login, please try again or contact the administrator."),
+                        Content = new StringContent(ex.Message),
                         ReasonPhrase = ex.Message
                     });
                 }
