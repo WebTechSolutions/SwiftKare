@@ -407,7 +407,8 @@
         hideLoader();
     }
 
-    function showDoctorTimings(doctorID,appID,appDate) { //is called when modal dialog is opened
+    function showDoctorTimings(doctorID, appID, appDate) { //is called when modal dialog is opened
+        console.log('showDoctorTimings');
         showLoader();
         var cappDate = appDate.split("/");
         var f = new Date(cappDate[2], cappDate[1] - 1, cappDate[0]);

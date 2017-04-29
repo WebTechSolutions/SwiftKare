@@ -220,6 +220,7 @@ namespace RestAPIs.Controllers
 
                 DateTime myDateTime = DateTime.ParseExact(model.appTime,
                                    "hh:mm tt", CultureInfo.InvariantCulture);
+                DateTime utcappdatecheck = myDateTime;
                 app.appointmentStatus = "C";
                 app.active = true;
                 app.doctorID = model.doctorID;
@@ -246,8 +247,7 @@ namespace RestAPIs.Controllers
                     DateTime result = DateTime.ParseExact(dateString, format, provider);
                     Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
                     //app.appDate = result;
-                    DateTime utcappDateTime = result + myDateTime.TimeOfDay;
-
+                    DateTime utcappDateTime = result + utcappdatecheck.TimeOfDay;
                     app.appDate = utcappDateTime.ToUniversalTime().Date;
                 }
                 catch (FormatException)
@@ -474,6 +474,7 @@ namespace RestAPIs.Controllers
 
                         DateTime mydateTime = DateTime.ParseExact(model.appTime,
                                              "hh:mm tt", CultureInfo.InvariantCulture);
+                        DateTime utcappdatecheck = mydateTime;
                         var timezoneid = db.Patients.Where(d => d.userId == model.userID).Select(d => d.timezone).FirstOrDefault();
                         TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
                         result.appTime = TimeZoneInfo.ConvertTimeToUtc(mydateTime, zoneInfo).TimeOfDay;
@@ -492,7 +493,7 @@ namespace RestAPIs.Controllers
                             DateTime resultedDate = DateTime.ParseExact(dateString, dateformat, culture);
                             Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
                             //app.appDate = result;
-                            DateTime utcappDateTime = resultedDate + mydateTime.TimeOfDay;
+                            DateTime utcappDateTime = resultedDate + utcappdatecheck.TimeOfDay;
 
                             result.appDate = utcappDateTime.ToUniversalTime().Date;
                         }
@@ -554,6 +555,7 @@ namespace RestAPIs.Controllers
                   
                     DateTime mydateTime = DateTime.ParseExact(model.appTime,
                                              "hh:mm tt", CultureInfo.InvariantCulture);
+                    DateTime utcappdatecheck = mydateTime;
                     var timezoneid = db.Patients.Where(d => d.userId == model.userID).Select(d => d.timezone).FirstOrDefault();
                     TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
                     result.appTime = TimeZoneInfo.ConvertTimeToUtc(mydateTime, zoneInfo).TimeOfDay;
@@ -567,7 +569,7 @@ namespace RestAPIs.Controllers
                         DateTime resultedDate = DateTime.ParseExact(dateString, format, provider);
                         Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
                         //app.appDate = result;
-                       DateTime utcappDateTime = resultedDate + mydateTime.TimeOfDay;
+                       DateTime utcappDateTime = resultedDate + utcappdatecheck.TimeOfDay;
                        result.appDate = utcappDateTime.ToUniversalTime().Date;
                     }
                     catch (FormatException)
@@ -624,7 +626,7 @@ namespace RestAPIs.Controllers
                     var formattedTime = DateTime.Now.Date.Add(tempapptime.Value).ToString(@"hh\:mm\:tt");
                     DateTime mydateTime = DateTime.ParseExact(model.appTime,
                                              "hh:mm tt", CultureInfo.InvariantCulture);
-
+                    DateTime utcappdatecheck = mydateTime;
                     var timezoneid = db.Patients.Where(d => d.userId == model.userID).Select(d => d.timezone).FirstOrDefault();
                     TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
                     result.appTime = TimeZoneInfo.ConvertTimeToUtc(mydateTime, zoneInfo).TimeOfDay;
@@ -638,7 +640,7 @@ namespace RestAPIs.Controllers
                         DateTime resultedDate = DateTime.ParseExact(dateString, format, provider);
                         Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
                         //app.appDate = result;
-                        DateTime utcappDateTime = resultedDate + mydateTime.TimeOfDay;
+                        DateTime utcappDateTime = resultedDate + utcappdatecheck.TimeOfDay;
                         result.appDate = utcappDateTime.ToUniversalTime().Date;
                     }
                     catch (FormatException)
