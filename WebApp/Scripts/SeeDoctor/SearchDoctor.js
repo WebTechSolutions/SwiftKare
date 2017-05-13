@@ -359,11 +359,12 @@ function SearchDoctor(patientID) {
                                     "&nbsp;" + response.DoctorModel.doctor[item].lastName + "\"}'  onclick='showDoctorTimings(" + response.DoctorModel.doctor[item].doctorID + ")' id='" + response.DoctorModel.doctor[item].doctorID + "'>" +
                                       "  <i class='fa fa-calendar' aria-hidden='true'></i>" +
                                       "</a>" +
-                                      "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
-                                      "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
-                                      "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
-                                      "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
-                                      "&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
+                                      //"&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
+                                      //"&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
+                                      //"&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
+                                      //"&nbsp;<a href='#'><i class='fa fa-star'></i></a>" +
+                                      //"&nbsp;<a href='#'><i class='fa fa-star'></i></a>" 
+                                      reviewStars(response.DoctorModel.doctor[item].reviewStar) +
                                       "&nbsp;<i class='fa fa-phone clsNotMakePhone' aria-hidden='true'></i><a  class='clsMakeCall' title='Call doctor " + response.DoctorModel.doctor[item].firstName + "&nbsp;" + response.DoctorModel.doctor[item].lastName + "' onclick='makeCallToDoctor(this)' data-doctorid='" + response.DoctorModel.doctor[item].doctorID + "' style='display:none;' href='javascript:'>" +
                                       " <i class='fa fa-phone' aria-hidden='true'></i>" +
                             "</a>" +
@@ -412,6 +413,31 @@ function SearchDoctor(patientID) {
     
     
 
+}
+function reviewStars(stars)
+{
+    var rshtml = "";
+    if (stars == null)
+    {
+       
+        rshtml += "&nbsp;<a href='#'><i class='fa fa-star-o'></i></a>" +
+        "&nbsp;<a href='#'><i class='fa fa-star-o'></i></a>" +
+        "&nbsp;<a href='#'><i class='fa fa-star-o'></i></a>" +
+        "&nbsp;<a href='#'><i class='fa fa-star-o'></i></a>" +
+        "&nbsp;<a href='#'><i class='fa fa-star-o'></i></a>";
+        return rshtml;
+    }
+    for(i=0;i<stars;i++)
+    {
+        rshtml += "&nbsp;<a href='#'><i class='fa fa-star'></i></a>";
+    }
+    if(stars<5)
+    {
+        for (i = 0; i < 5-stars; i++) {
+            rshtml += "&nbsp;<a href='#'><i class='fa fa-star-o'></i></a>";
+        }
+    }
+    return rshtml;
 }
 function fetchTimings(fetchdate) {
     showLoader();

@@ -154,7 +154,8 @@ namespace RestAPIs.Controllers
                                       ProfilePhotoBase64=l.ProfilePhotoBase64,
                                       state=l.state,
                                       languageName=l.languageName,
-                                      specialityName=l.specialityName
+                                      specialityName=l.specialityName,
+                                      reviewStar=l.reviewStar
                                   }
                     ).ToList();
                     var favdoc = (from l in db.FavouriteDoctors
@@ -190,7 +191,8 @@ namespace RestAPIs.Controllers
                                           ProfilePhotoBase64 = l.ProfilePhotoBase64,
                                           state = l.state,
                                           languageName = l.languageName,
-                                          specialityName = l.specialityName
+                                          specialityName = l.specialityName,
+                                          reviewStar = l.reviewStar
                                       }
                     ).ToList();
                         var favdoc = (from l in db.FavouriteDoctors

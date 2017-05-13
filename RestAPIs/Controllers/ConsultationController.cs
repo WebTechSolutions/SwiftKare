@@ -184,6 +184,8 @@ namespace RestAPIs.Controllers
                                   objective = cn.objective,
                                   assessment = cn.assessment,
                                   plans = cn.plans,
+                                  reviewStar=cn.reviewStar,
+                                  review=cn.review,
                                   rosItems = (from ros in db.ConsultationROS
                                               where ros.consultationID == cn.consultID && ros.active == true
                                               select new { systemItemName = ros.systemItemName }).ToList(),

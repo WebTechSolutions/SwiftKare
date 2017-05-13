@@ -18,13 +18,13 @@
             {
                 <ul class="messages">
                     <li>
-                        @if (itmNews.hasThumbnail)
-                        {
+                        @*@if (itmNews.hasThumbnail)
+                        {*@
                         <a href="@Url.Action("NewsDetails","News", new { @id = itmNews.newsID })">
-                            <img src="data:image/png;base64,@itmNews.newsThumbnailBase64"
+                            <img src="@itmNews.newsThumbnailBase64"
                                  class="avatar" alt="Avatar">
                         </a>
-                        }
+                        @*}*@
 
                         <div class="message_date">
                             <h4 class="date text-info">@itmNews.createdDate.Value.ToString("dd MMM yyyy")</h4>

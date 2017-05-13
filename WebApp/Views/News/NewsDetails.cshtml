@@ -13,21 +13,21 @@
                 <h3>@Model.newsTitle</h3>
             </div>
         </div>
-        @if (Model.hasImage)
-        {
+        @*@if (Model.hasImage)
+        {*@
             <div class="row">
                 <div class="col-sm-12">
-                    <img class="img-responsive" src="data:image/png;base64,@Model.newsImageBase64" />
+                    <img class="img-responsive" src="@Model.newsImageBase64" />
                 </div>
             </div>
-        }
+        @*}*@
         <div class="row p-t-20 p-lr-30 gray-bdr-1 w-bg">
             <ul class="messages">
                 <li style="border-bottom: none;">
 
                     @*@if (Model.hasThumbnail)
                     {*@
-                        <img src="data:image/png;base64,@Model.newsThumbnailBase64" class="avatar" alt="Avatar">
+                        <img src="@Model.newsThumbnailBase64" class="avatar" alt="Avatar">
                     @*}*@
 
                     <div class="">
