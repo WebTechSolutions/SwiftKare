@@ -27,7 +27,7 @@ namespace RestAPIs.Controllers
                                 select new
                                 {
                                     l.newsID,
-                                    l.newsThumbnail,
+                                    l.newsThumbnailBase64,
                                     l.newsTitle,
                                     l.newsDetail,
                                     l.cd
@@ -51,7 +51,7 @@ namespace RestAPIs.Controllers
                         }
                         NewsVM objNews = new NewsVM();
                         objNews.newsID = item.newsID;
-                        objNews.newsThumbnail = item.newsThumbnail;
+                        objNews.newsThumbnailBase64 = item.newsThumbnailBase64;
                         objNews.newsTitle = item.newsTitle;
                         objNews.newsDetail = detail;
                         objNews.createdDate = item.cd;
@@ -80,8 +80,8 @@ namespace RestAPIs.Controllers
                                   select new NewsVM
                                   {
                                       newsID = l.newsID,
-                                      newsThumbnail = l.newsThumbnail,
-                                      newsImage = l.newsImage,
+                                      newsThumbnailBase64 = l.newsThumbnailBase64,
+                                      newsImageBase64 = l.newsImageBase64,
                                       newsTitle = l.newsTitle,
                                       newsDetail = l.newsDetail,
                                       createdDate = l.cd

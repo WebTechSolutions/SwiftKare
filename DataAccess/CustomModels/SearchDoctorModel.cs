@@ -30,6 +30,7 @@ namespace DataAccess.CommonModels
         public string state { get; set; }
         public string languageName { get; set; }
         public string specialityName { get; set; }
+        public int? reviewStar { get; set; }
     }
     public class SearchDoctorResult
     {

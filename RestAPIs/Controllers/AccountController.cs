@@ -246,6 +246,7 @@ namespace RestAPIs.Controllers
                                 {
                                     if (doctor.timezoneoffset != model.offset)
                                     {
+                                        model.offset = model.offset.Replace("+","");
                                         DataAccess.TimeZone tz = db.TimeZones.FirstOrDefault(t => t.zoneOffset == model.offset);
                                         doctor.timezone = tz.zoneName;
                                         doctor.timezoneoffset = tz.zoneOffset;
@@ -302,6 +303,7 @@ namespace RestAPIs.Controllers
                             {
                                 if (patient.timezoneoffset != model.offset)
                                 {
+                                    model.offset = model.offset.Replace("+", "");
                                     DataAccess.TimeZone tz = db.TimeZones.FirstOrDefault(t => t.zoneOffset == model.offset);
                                     patient.timezone = tz.zoneName;
                                     patient.timezoneoffset = tz.zoneOffset;

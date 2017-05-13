@@ -986,10 +986,8 @@ namespace RestAPIs.Controllers
                 {
                     //Save Patient Profile
                     patient.active = true;
-
                     //patient.picture = model.ProfilePhoto;
-                    if (model.ProfilePhoto!=null)
-                    patient.ProfilePhotoBase64 = Encoding.ASCII.GetString(model.ProfilePhoto);
+                    patient.ProfilePhotoBase64 = model.ProfilePhotoBase64;//Encoding.ASCII.GetString(model.ProfilePhoto);
                     patient.title = model.TitleName;
                     patient.firstName = model.FirstName;
                     patient.lastName = model.LastName;
@@ -1023,7 +1021,7 @@ namespace RestAPIs.Controllers
                     await db.SaveChangesAsync();
 
 
-                    //Save Doctor Language
+                    //Save Patient Languages
                     var allPrevLanguages = db.PatientLanguages.Where(x => x.patientID == patientID).ToList();
                     if (model.Languages != null)
                     {

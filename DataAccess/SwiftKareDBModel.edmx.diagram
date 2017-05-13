@@ -27,7 +27,6 @@
         <EntityTypeShape EntityType="SwiftKareDBModel.Medication" Width="1.5" PointX="3" PointY="34.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.Medicine" Width="1.5" PointX="15.75" PointY="8.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.Module" Width="1.5" PointX="8.75" PointY="14.375" />
-        <EntityTypeShape EntityType="SwiftKareDBModel.News" Width="1.5" PointX="15.75" PointY="12.75" />
         <EntityTypeShape EntityType="SwiftKareDBModel.PatientAllergy" Width="1.5" PointX="3" PointY="19.875" />
         <EntityTypeShape EntityType="SwiftKareDBModel.PatientFamilyHX" Width="1.5" PointX="3" PointY="38.875" />
         <EntityTypeShape EntityType="SwiftKareDBModel.PatientLifeStyle" Width="1.5" PointX="16.75" PointY="0.75" />
@@ -91,6 +90,7 @@
         <AssociationConnector Association="SwiftKareDBModel.FK_FamilyHX_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_Surgeries_Patient" />
         <AssociationConnector Association="SwiftKareDBModel.FK_UserFiles_Patient" />
+        <EntityTypeShape EntityType="SwiftKareDBModel.News" Width="1.5" PointX="22.375" PointY="20.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

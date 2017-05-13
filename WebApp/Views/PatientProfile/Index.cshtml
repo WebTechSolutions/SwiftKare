@@ -681,6 +681,7 @@
 
         $('.export').click(function (e) {
             var imageData = $('.image-editor').cropit('export');
+            //console.log(imageData);
             $("#imgProfilePic").attr("src", imageData);
             $("#ProfilePhotoBase64").val(imageData);
             resetImageCropping();

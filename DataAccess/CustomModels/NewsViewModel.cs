@@ -10,7 +10,9 @@ namespace DataAccess.CustomModels
     {
         public long newsID { get; set; }
 
+        public string newsThumbnailBase64 { get; set; }
         public byte[] newsThumbnail { get; set; }
+        public string newsImageBase64 { get; set; }
         public byte[] newsImage { get; set; }
 
         public string newsTitle { get; set; }
@@ -33,34 +35,34 @@ namespace DataAccess.CustomModels
                 return newsImage != null && newsImage.Count() > 0;
             }
         }
-        public string newsThumbnailBase64
-        {
-            get
-            {
-                try
-                {
-                    return Convert.ToBase64String(newsThumbnail);
-                }
-                catch (Exception)
-                {
-                    return "";
-                }
-            }
-        }
-        public string newsImageBase64
-        {
-            get
-            {
-                try
-                {
-                    return Convert.ToBase64String(newsImage);
-                }
-                catch (Exception)
-                {
-                    return "";
-                }
-            }
-        }
+        //public string newsThumbnailBase64
+        //{
+        //    get
+        //    {
+        //        try
+        //        {
+        //            return Convert.ToBase64String(newsThumbnail);
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return "";
+        //        }
+        //    }
+        //}
+        //public string newsImageBase64
+        //{
+        //    get
+        //    {
+        //        try
+        //        {
+        //            return Convert.ToBase64String(newsImage);
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return "";
+        //        }
+        //    }
+        //}
 
     }
 }

@@ -203,10 +203,9 @@
                         <tr>
                             <th>ID</th>
                             <th></th> @*thumbnail*@
-                            <th></th> @*detailimage*@
                             <th></th>  @*title*@
                             <th></th>  @*detail*@
-                              <th></th> @*title and detail*@
+                            <th></th> @*title and detail*@
                             <th></th>  @*cd*@
                             <th></th>  @*action*@
                             
@@ -225,10 +224,8 @@
                             <tr data-id=@j>
                                 <td id="id" class="newsid">@item.newsID</td>
                                 <td>
-                                    <img src="/News_Admin/RetrieveImage/@item.newsID?type=thumbnail" alt="" height=130 width=130 /></td>
-                                <td>
-                                    <img src="/News_Admin/RetrieveImage/@item.newsID?type=detailimage" alt="" height=500 width=500 /></td>
-                                <td style="word-break: break-all; width: 700px">@item.newsTitle</td>
+                                    <img src="@item.newsThumbnailBase64" alt="" height=130 width=130 /></td>
+                                 <td style="word-break: break-all; width: 700px">@item.newsTitle</td>
                                  <td style="word-break: break-all; width: 700px">@item.newsDetail</td>
                                 <td data-toggle="modal" data-target="#newsmodal" class="readmore" style="word-break: break-all; width: 700px"><b>@item.newsTitle</b><br />
                                     @{ 
@@ -342,24 +339,56 @@
             show: false,
 
         }).on('show', function () {
-            //var getIdFromRow = $(this).data('orderid');
-            ////make your ajax call populate items or what even you need
-            //$(this).find('#orderDetails').html($('<b> Order Id selected: ' + getIdFromRow + '</b>'))
+
         });
 
         $("#datatable-responsive").find('tr').on('click', function () {
             //debugger;
-       
+
             //do all your operation populate the modal and open the modal now. DOnt need to use show event of modal again
             var table = $('#datatable-responsive').DataTable();
-            var id = $("#id").val(table.row(this).data()[0]);
-            $('#myModalLabel').html($('<center>' + table.row(this).data()[2] + '<br/><br/>' + table.row(this).data()[3] + '</center>'));
-            $('#modal-body').html($(' <textarea disabled="disabled" style="width: 100%; height: 100%" class="resizable_textarea form-control" name="newddetail">'+table.row(this).data()[4]+'</textarea>' ));
-            $('#orderModal').modal('show');
-           
+            //var id = $("#id").val(table.row(this).data()[0]);
+            //$('#myModalLabel').html($('<center>' + table.row(this).data()[2] + '<br/><br/>' + table.row(this).data()[3] + '</center>'));
+            //$('#modal-body').html($(' <textarea disabled="disabled" style="width: 100%; height: 100%" class="resizable_textarea form-control" name="newddetail">'+table.row(this).data()[4]+'</textarea>' ));
+            $.ajax({
+                type: 'POST',
+                url: '/News_Admin/GetNewsDetail',
+                data: { 'newsid': table.row(this).data()[0] },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.Message != null)
+                    {
+                        new PNotify({
+                            title: 'Error',
+                            text: response.Message,
+                            type: 'error',
+                            styling: 'bootstrap3'
+                        });
+                    }
+                    if (response.Success == true) {
+                        //alert(response.Object.rov);
+                        if (response.Object != null) {
+                            $('#myModalLabel').html($('<center><img src='+response.Object.newsImageBase64+' height=500 width=500 /><br/><br/>' + response.Object.newsTitle + '</center>'));
+                            $('#modal-body').html($(' <textarea disabled="disabled" style="width: 100%; height: 100%" class="resizable_textarea form-control" name="newddetail">' + response.Object.newsDetail + '</textarea>'));
+
+
+                        }
+                    }
+                    //else {response.Message;}
+
+
+                },
+                error: errorRes
+
+            });
+
         });
 
     });
+    function errorRes(httpObj)
+    {
+        alert(httpObj.statusText);
+    }
 </script>
 <!--News Modal Dialog-->
 
@@ -381,8 +410,8 @@
             var table = $('#datatable-responsive').DataTable();
             $('#datatable-responsive tbody').on('click', 'tr', function () {
                 $("#enewsid").val(table.row(this).data()[0]);
-                $("#enewstitle").val(table.row(this).data()[3]);
-                $("#enewsdetail").val(table.row(this).data()[4]);
+                $("#enewstitle").val(table.row(this).data()[2]);
+                $("#enewsdetail").val(table.row(this).data()[3]);
 
             });
         });
@@ -456,7 +485,7 @@
            { visible: false, targets: [0] },
            { visible: false, targets: [2] },
             { visible: false, targets: [3] },
-             { visible: false, targets: [4] }
+        //     { visible: false, targets: [4] }
         ]
     });
 

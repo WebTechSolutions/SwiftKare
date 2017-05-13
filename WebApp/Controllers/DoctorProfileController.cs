@@ -9,6 +9,7 @@ using WebApp.Helper;
 using System;
 using System.Globalization;
 using WebApp.Repositories.ProfileRepositories;
+using System.Text;
 
 namespace WebApp.Controllers
 {

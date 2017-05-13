@@ -516,6 +516,8 @@
           <Property Name="mb" Type="varchar" MaxLength="500" />
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
+          <Property Name="newsThumbnailBase64" Type="varchar(max)" />
+          <Property Name="newsImageBase64" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="Patient">
           <Key>
@@ -2412,7 +2414,6 @@
           <EntitySet Name="Medications" EntityType="SwiftKareDBModel.Medication" />
           <EntitySet Name="Medicines" EntityType="SwiftKareDBModel.Medicine" />
           <EntitySet Name="Modules" EntityType="SwiftKareDBModel.Module" />
-          <EntitySet Name="News" EntityType="SwiftKareDBModel.News" />
           <EntitySet Name="PatientAllergies" EntityType="SwiftKareDBModel.PatientAllergy" />
           <EntitySet Name="PatientFamilyHXes" EntityType="SwiftKareDBModel.PatientFamilyHX" />
           <EntitySet Name="PatientLifeStyles" EntityType="SwiftKareDBModel.PatientLifeStyle" />
@@ -2519,15 +2520,6 @@
             <Parameter Name="gender" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="TimeZones" EntityType="SwiftKareDBModel.TimeZone" />
-          <FunctionImport Name="SearchDoctorWithShift" ReturnType="Collection(SwiftKareDBModel.SearchDoctorWithShift_Result)">
-            <Parameter Name="language" Mode="In" Type="String" />
-            <Parameter Name="spec" Mode="In" Type="String" />
-            <Parameter Name="name" Mode="In" Type="String" />
-            <Parameter Name="appDay" Mode="In" Type="String" />
-            <Parameter Name="fromTime" Mode="In" Type="Time" />
-            <Parameter Name="toTime" Mode="In" Type="Time" />
-            <Parameter Name="gender" Mode="In" Type="String" />
-          </FunctionImport>
           <EntitySet Name="VCLogs" EntityType="SwiftKareDBModel.VCLog" />
           <EntitySet Name="DoctorSpecialities" EntityType="SwiftKareDBModel.DoctorSpeciality" />
           <EntitySet Name="Doctors" EntityType="SwiftKareDBModel.Doctor" />
@@ -2649,6 +2641,16 @@
             <Parameter Name="patientID" Mode="In" Type="Int64" />
             <Parameter Name="docID" Mode="In" Type="Int64" />
             <Parameter Name="criteria" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="News" EntityType="SwiftKareDBModel.News" />
+          <FunctionImport Name="SearchDoctorWithShift" ReturnType="Collection(SwiftKareDBModel.SearchDoctorWithShift_Result)">
+            <Parameter Name="language" Mode="In" Type="String" />
+            <Parameter Name="spec" Mode="In" Type="String" />
+            <Parameter Name="name" Mode="In" Type="String" />
+            <Parameter Name="appDay" Mode="In" Type="String" />
+            <Parameter Name="fromTime" Mode="In" Type="Time" />
+            <Parameter Name="toTime" Mode="In" Type="Time" />
+            <Parameter Name="gender" Mode="In" Type="String" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="SP_CheckForDuplicatePatient_Result">
@@ -3266,21 +3268,6 @@
           <Property Name="md" Type="DateTime" Precision="3" />
           <Property Name="active" Type="Boolean" />
           <NavigationProperty Name="RoleModules" Relationship="SwiftKareDBModel.FK_RoleModules_Modules" FromRole="Module" ToRole="RoleModule" />
-        </EntityType>
-        <EntityType Name="News">
-          <Key>
-            <PropertyRef Name="newsID" />
-          </Key>
-          <Property Name="newsID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="newsTitle" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="newsDetail" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="newsThumbnail" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="newsImage" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="cb" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="cd" Type="DateTime" Precision="3" />
-          <Property Name="mb" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="md" Type="DateTime" Precision="3" />
-          <Property Name="active" Type="Boolean" />
         </EntityType>
         <EntityType Name="PatientAllergy">
           <Key>
@@ -3966,17 +3953,6 @@
           <Property Name="zoneName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="zoneOffset" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
-        <ComplexType Name="SearchDoctorWithShift_Result">
-          <Property Type="Int64" Name="doctorID" Nullable="false" />
-          <Property Type="String" Name="title" Nullable="true" MaxLength="10" />
-          <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="lastName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="city" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="ProfilePhotoBase64" Nullable="true" />
-          <Property Type="String" Name="state" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="languageName" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="specialityName" Nullable="true" MaxLength="50" />
-        </ComplexType>
         <EntityType Name="VCLog">
           <Key>
             <PropertyRef Name="VCLogID" />
@@ -4500,6 +4476,35 @@
           <Property Type="Time" Name="appTime" Nullable="true" />
           <Property Type="String" Name="consultationStatus" Nullable="true" MaxLength="10" />
           <Property Type="String" Name="cd" Nullable="true" MaxLength="8" />
+        </ComplexType>
+        <EntityType Name="News">
+          <Key>
+            <PropertyRef Name="newsID" />
+          </Key>
+          <Property Name="newsID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="newsTitle" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="newsDetail" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="newsThumbnail" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="newsImage" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="cb" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="cd" Type="DateTime" Precision="3" />
+          <Property Name="mb" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="md" Type="DateTime" Precision="3" />
+          <Property Name="active" Type="Boolean" />
+          <Property Name="newsThumbnailBase64" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="newsImageBase64" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <ComplexType Name="SearchDoctorWithShift_Result">
+          <Property Type="Int64" Name="doctorID" Nullable="false" />
+          <Property Type="String" Name="title" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="lastName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="city" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ProfilePhotoBase64" Nullable="true" />
+          <Property Type="String" Name="state" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="languageName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="specialityName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="reviewStar" Nullable="true" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -5087,22 +5092,6 @@
                 <ScalarProperty Name="cb" ColumnName="cb" />
                 <ScalarProperty Name="moduleName" ColumnName="moduleName" />
                 <ScalarProperty Name="moduleID" ColumnName="moduleID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="News">
-            <EntityTypeMapping TypeName="SwiftKareDBModel.News">
-              <MappingFragment StoreEntitySet="News">
-                <ScalarProperty Name="active" ColumnName="active" />
-                <ScalarProperty Name="md" ColumnName="md" />
-                <ScalarProperty Name="mb" ColumnName="mb" />
-                <ScalarProperty Name="cd" ColumnName="cd" />
-                <ScalarProperty Name="cb" ColumnName="cb" />
-                <ScalarProperty Name="newsImage" ColumnName="newsImage" />
-                <ScalarProperty Name="newsThumbnail" ColumnName="newsThumbnail" />
-                <ScalarProperty Name="newsDetail" ColumnName="newsDetail" />
-                <ScalarProperty Name="newsTitle" ColumnName="newsTitle" />
-                <ScalarProperty Name="newsID" ColumnName="newsID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -5705,21 +5694,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SearchDoctorWithShift" FunctionName="SwiftKareDBModel.Store.SearchDoctorWithShift">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SearchDoctorWithShift_Result">
-                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
-                <ScalarProperty Name="title" ColumnName="title" />
-                <ScalarProperty Name="firstName" ColumnName="firstName" />
-                <ScalarProperty Name="lastName" ColumnName="lastName" />
-                <ScalarProperty Name="city" ColumnName="city" />
-                <ScalarProperty Name="ProfilePhotoBase64" ColumnName="ProfilePhotoBase64" />
-                <ScalarProperty Name="state" ColumnName="state" />
-                <ScalarProperty Name="languageName" ColumnName="languageName" />
-                <ScalarProperty Name="specialityName" ColumnName="specialityName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="VCLogs">
             <EntityTypeMapping TypeName="SwiftKareDBModel.VCLog">
               <MappingFragment StoreEntitySet="VCLog">
@@ -6093,6 +6067,40 @@
                 <ScalarProperty Name="appTime" ColumnName="appTime" />
                 <ScalarProperty Name="consultationStatus" ColumnName="consultationStatus" />
                 <ScalarProperty Name="cd" ColumnName="cd" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="News">
+            <EntityTypeMapping TypeName="SwiftKareDBModel.News">
+              <MappingFragment StoreEntitySet="News">
+                <ScalarProperty Name="newsImageBase64" ColumnName="newsImageBase64" />
+                <ScalarProperty Name="newsThumbnailBase64" ColumnName="newsThumbnailBase64" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="md" ColumnName="md" />
+                <ScalarProperty Name="mb" ColumnName="mb" />
+                <ScalarProperty Name="cd" ColumnName="cd" />
+                <ScalarProperty Name="cb" ColumnName="cb" />
+                <ScalarProperty Name="newsImage" ColumnName="newsImage" />
+                <ScalarProperty Name="newsThumbnail" ColumnName="newsThumbnail" />
+                <ScalarProperty Name="newsDetail" ColumnName="newsDetail" />
+                <ScalarProperty Name="newsTitle" ColumnName="newsTitle" />
+                <ScalarProperty Name="newsID" ColumnName="newsID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SearchDoctorWithShift" FunctionName="SwiftKareDBModel.Store.SearchDoctorWithShift">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SearchDoctorWithShift_Result">
+                <ScalarProperty Name="doctorID" ColumnName="doctorID" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="ProfilePhotoBase64" ColumnName="ProfilePhotoBase64" />
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="languageName" ColumnName="languageName" />
+                <ScalarProperty Name="specialityName" ColumnName="specialityName" />
+                <ScalarProperty Name="reviewStar" ColumnName="reviewStar" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

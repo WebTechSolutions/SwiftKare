@@ -22,5 +22,6 @@ namespace DataAccess
         public string state { get; set; }
         public string languageName { get; set; }
         public string specialityName { get; set; }
+        public Nullable<int> reviewStar { get; set; }
     }
 }
