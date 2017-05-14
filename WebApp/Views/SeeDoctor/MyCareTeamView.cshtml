@@ -43,11 +43,30 @@ else
                     <i class="fa fa-calendar" aria-hidden="true"></i>
 
                 </a>
-               <a href="#"><i class="fa fa-star"></i></a>
+                @if (item.reviewStar!=null && item.reviewStar > 0)
+                {
+                    for (var i = 0; i < item.reviewStar; i++)
+                    {
+                        <a href="#"><i class="fa fa-star"></i></a>
+                    }
+                    for (var i = 0; i < 5 - item.reviewStar; i++)
+                    {
+                        <a href="#"><i class="fa fa-star-o"></i></a>
+
+                    }
+                }
+                else if(item.reviewStar == null)
+                {
+                    for (var i = 0; i < 5; i++)
+                    {
+                        <a href='#'><span class='fa fa-star-o'></span></a>
+                    }
+                }
+               @*<a href="#"><i class="fa fa-star"></i></a>
                 <a href="#"><i class="fa fa-star"></i></a>
                 <a href="#"><i class="fa fa-star"></i></a>
                <a href="#"><i class="fa fa-star"></i></a>
-                <a href="#"><i class="fa fa-star"></i></a>
+                <a href="#"><i class="fa fa-star"></i></a>*@
                <i class="fa fa-phone clsNotMakePhone" aria-hidden="true"></i><a class="clsMakeCall" title="Call doctor @item.firstName @item.lastName" onclick=makeCallToDoctor(this) data-doctorid="@item.doctorID" style="display:none;" href="javascript:">
                     <i class="fa fa-phone" aria-hidden="true"></i>
                 </a>

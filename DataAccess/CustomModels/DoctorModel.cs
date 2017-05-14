@@ -39,6 +39,7 @@ namespace DataAccess.CustomModels
         public byte[] picture { get; set; }
         public string languageName { get; set; }
         public string specialityName { get; set; }
+        public int? reviewStar { get; set; }
 
     }
 
