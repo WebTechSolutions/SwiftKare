@@ -43,11 +43,21 @@ namespace RestAPIs.Controllers
             return Ok(model);
         }
 
+        [Route("api/getDoctorTimeZoneID")]
+        public HttpResponseMessage getDoctorTimeZoneID(long doctorId)
+        {
+            
+                var timezoneid = db.Doctors.Where(d => d.doctorID == doctorId).Select(d => d.timezone).FirstOrDefault();
+                response = Request.CreateResponse(HttpStatusCode.OK, timezoneid);
+                return response;
+            
+        }
         //api/DoctorTimings? doctorId = { doctorId }
         public List<DoctorTimingsModel> GetDoctorTimingByDoctorId(long doctorId)
         {
             var timings = new List<DoctorTimingsModel>();
             var doctorTimingList = db.DoctorTimings.Where(o => o.doctorID == doctorId && o.active == true).ToList();
+            
             foreach (var doctorTiming in doctorTimingList)
             {
                 var model = new DoctorTimingsModel();
@@ -154,45 +164,116 @@ namespace RestAPIs.Controllers
         [ResponseType(typeof(DoctorTimingsModel))]
         public async Task<IHttpActionResult> PostDoctorTiming(DoctorTimingsModel doctorTimingModel)
         {
-            
+
+            if (doctorTimingModel.from.Contains("PM"))
+            {
+                if (doctorTimingModel.to.Contains("AM"))
+                {
+                    return BadRequest("Timings should be within single day.");
+                }
+            }
+            if (doctorTimingModel.from == doctorTimingModel.to)
+            {
+                return BadRequest("From Time and To Time can not be same.");
+
+            }
+            if (DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <
+                DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay)
+            {
+                return BadRequest("From Time can not be greater than To Time.");
+            }
+            TimeSpan diff = DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay -
+               DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+            if (diff.TotalMinutes < 15)
+            {
+                return BadRequest("Timespan less than 15 minutes is not allowed.");
+            }
             var doctorTiming = new DoctorTiming();
             var timingsList = GetDoctorTimingByDoctorId(doctorTimingModel.doctorID);
+            var timezoneid = db.Doctors.Where(d => d.doctorID == doctorTimingModel.doctorID).Select(d => d.timezone).FirstOrDefault();
+            TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());
+            DateTime fromtimeUTC = DateTime.ParseExact(doctorTimingModel.from,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
+            fromtimeUTC = TimeZoneInfo.ConvertTimeToUtc(fromtimeUTC,zoneInfo);
+            DateTime totimeUTC = DateTime.ParseExact(doctorTimingModel.to,
+                                  "hh:mm tt", CultureInfo.InvariantCulture);
+            totimeUTC = TimeZoneInfo.ConvertTimeToUtc(totimeUTC, zoneInfo);
             var alreadItems = timingsList
-                .Where(o => o.day == doctorTimingModel.day &&
-                (o.from == doctorTimingModel.from || o.to == doctorTimingModel.to
-                ||
-                (
-                DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
-                DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
-                &&
-                DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
-                DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                    .Where(o => o.day == doctorTimingModel.day &&
+                    (o.from == fromtimeUTC.ToString("hh:mm tt") || o.to == totimeUTC.ToString("hh:mm tt")
+                    ||
+                    (
+                    fromtimeUTC.TimeOfDay >=
+                    DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                    &&
+                    fromtimeUTC.TimeOfDay <=
+                    DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
 
-                )
-                ||
-                (
-                DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
-                DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
-                &&
-                DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
-                DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
-                )
+                    )
+                    ||
+                    (
+                    totimeUTC.TimeOfDay >=
+                    DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                    &&
+                    totimeUTC.TimeOfDay <=
+                    DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                    )
 
-                ||
-                (
-                DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
-                DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
-                &&
-                DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
-                DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
-                )
+                    ||
+                    (
+                    fromtimeUTC.TimeOfDay <=
+                    DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                    &&
+                    totimeUTC.TimeOfDay >=
+                    DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                    )
+                    ||
+                    (
+                    fromtimeUTC <=
+                    DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture)
+                    &&
+                    totimeUTC >=
+                    DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture)
+                    )
+                    )).ToList();
+            //var alreadItems = timingsList
+            //    .Where(o => o.day == doctorTimingModel.day &&
+            //    (o.from == doctorTimingModel.from || o.to == doctorTimingModel.to
+            //    ||
+            //    (
+            //    DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
+            //    DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+            //    &&
+            //    DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
+            //    DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
 
-                )).ToList();
+            //    )
+            //    ||
+            //    (
+            //    DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
+            //    DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+            //    &&
+            //    DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
+            //    DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+            //    )
+
+            //    ||
+            //    (
+            //    DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
+            //    DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+            //    &&
+            //    DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
+            //    DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+            //    )
+
+            //    )).ToList();
+
             if (alreadItems.Count > 0)
             {
                 return BadRequest("Timings can not be overlapped across each other.");
                 //return CreatedAtRoute("DefaultApi", new { message = "Timings can not be overlapped across each other" }, doctorTiming);
             }
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -210,8 +291,8 @@ namespace RestAPIs.Controllers
 
                 //TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");//need to get zone info from db
                 //get zoneid from db for current doctor
-                var timezoneid = db.Doctors.Where(d => d.doctorID == doctorTimingModel.doctorID).Select(d => d.timezone).FirstOrDefault();
-                TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
+                //var timezoneid = db.Doctors.Where(d => d.doctorID == doctorTimingModel.doctorID).Select(d => d.timezone).FirstOrDefault();
+                //TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
                 doctorTiming.from = TimeZoneInfo.ConvertTimeToUtc(dateTimeFrom, zoneInfo).TimeOfDay;
                 doctorTiming.to = TimeZoneInfo.ConvertTimeToUtc(dateTimeTo, zoneInfo).TimeOfDay;
                 doctorTiming.active = true;

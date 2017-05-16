@@ -158,39 +158,86 @@ namespace WebApp.Controllers
             {
                 return Json("time range", JsonRequestBehavior.AllowGet);
             }
-            var timingsList = objTimingRepo.GetListByDoctorId(model.doctorID);
-            var alreadItems = timingsList
-                .Where(o => o.day == model.day &&
-                (o.from == model.from || o.to == model.to
-                ||
-                (
-                DateTime.ParseExact(model.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
-                DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
-                &&
-                DateTime.ParseExact(model.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
-                DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                var timingsList = objTimingRepo.GetListByDoctorId(model.doctorID);
+                string timezoneid = objTimingRepo.GetDoctorTimeZoneID(model.doctorID);
+                TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());
+                DateTime fromtimeUTC = DateTime.ParseExact(model.from,
+                                       "hh:mm tt", CultureInfo.InvariantCulture);
+                fromtimeUTC = TimeZoneInfo.ConvertTimeToUtc(fromtimeUTC, zoneInfo);
+                DateTime totimeUTC = DateTime.ParseExact(model.to,
+                                      "hh:mm tt", CultureInfo.InvariantCulture);
+                totimeUTC = TimeZoneInfo.ConvertTimeToUtc(totimeUTC, zoneInfo);
+               
+                var alreadItems = timingsList
+                    .Where(o => o.day == model.day &&
+                    (o.from == fromtimeUTC.ToString("hh:mm tt") || o.to == totimeUTC.ToString("hh:mm tt")
+                    ||
+                    (
+                    fromtimeUTC.TimeOfDay >=
+                    DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                    &&
+                    fromtimeUTC.TimeOfDay <=
+                    DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
 
-                )
-                ||
-                (
-                DateTime.ParseExact(model.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
-                DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
-                &&
-                DateTime.ParseExact(model.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
-                DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
-                )
+                    )
+                    ||
+                    (
+                    totimeUTC.TimeOfDay >=
+                    DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                    &&
+                    totimeUTC.TimeOfDay <=
+                    DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                    )
 
-                ||
-                (
-                DateTime.ParseExact(model.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
-                DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
-                &&
-                DateTime.ParseExact(model.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
-                DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
-                )
+                    ||
+                    (
+                    fromtimeUTC.TimeOfDay <=
+                    DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                    &&
+                    totimeUTC.TimeOfDay >=
+                    DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                    )
+                    ||
+                    (
+                    fromtimeUTC <=
+                    DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture)
+                    &&
+                    totimeUTC >=
+                    DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture)
+                    )
+                    )).ToList();
+                //var alreadItems = timingsList
+                //    .Where(o => o.day == model.day &&
+                //    (o.from == model.from || o.to == model.to
+                //    ||
+                //    (
+                //    DateTime.ParseExact(model.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
+                //    DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                //    &&
+                //    DateTime.ParseExact(model.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
+                //    DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
 
-                )).ToList();
-            if (alreadItems.Count <= 0)
+                //    )
+                //    ||
+                //    (
+                //    DateTime.ParseExact(model.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
+                //    DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                //    &&
+                //    DateTime.ParseExact(model.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
+                //    DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                //    )
+
+                //    ||
+                //    (
+                //    DateTime.ParseExact(model.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <=
+                //    DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                //    &&
+                //    DateTime.ParseExact(model.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay >=
+                //    DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
+                //    )
+
+                //    )).ToList();
+                if (alreadItems.Count <= 0)
             {
                 var userName = SessionHandler.UserName;
 
