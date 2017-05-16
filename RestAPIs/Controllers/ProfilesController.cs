@@ -88,7 +88,7 @@ namespace RestAPIs.Controllers
 
             try
             {
-                if (model.offset == "0" ||model.offset=="")
+                if (model.offset=="")
                 {
 
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Timezone is not provided." });
