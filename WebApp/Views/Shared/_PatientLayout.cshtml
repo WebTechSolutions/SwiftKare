@@ -622,10 +622,11 @@
                 busyDoctors.doctor = [];
 
 
+                console.log('Object recieved by ShowConnected function:');
                 console.log(message);
 
                 for (var i = 0; i < message.length; i++) {
-                    console.log(message[i].Value.UserType);
+                  //  console.log(message[i].Value.UserType);
                     if (message[i].Value.UserID != -1) //-1 means doctor is bussy with other call
                     {
                         availableDoctors.doctor.push({
@@ -645,9 +646,9 @@
                             docId: message[i].Value.Id
                         });
                     }
-                    hideLoader();
+                    
                 }
-
+                hideLoader();
                 //$.each(message, function (index, value) {
                 //    $.each(message, function (index, value1) {
                 //        availableDoctors.doctor.push({

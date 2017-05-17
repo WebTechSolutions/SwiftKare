@@ -446,6 +446,8 @@
 
             // Declare a function on the chat hub so the server can invoke it
             chat.client.showConnected = function (message) {
+                console.log('Object recieved by ShowConnected function:');
+                console.log(message);
                 debugger;
                 availablePatients.patient = [];
 
@@ -666,7 +668,7 @@
     </script>
     <script>
         $(document).ajaxSuccess(function (evt, request, settings) {
-            console.log(request.response);
+           // console.log(request.response);
             if (request.response != null) {
                 if (request.response.redirectUrl != null)
                     window.location.href = request.response.redirectUrl;
