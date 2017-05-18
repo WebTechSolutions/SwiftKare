@@ -54,6 +54,12 @@ namespace WebApp.Repositories.DoctorRepositories
             var result = JsonConvert.DeserializeObject<List<DoctorTimingsModel>>(response);
             return result;
         }
+        public string GetDoctorTimeZoneID(long doctorId)
+        {
+            var response = ApiConsumerHelper.GetResponseString("api/getDoctorTimeZoneID?doctorId=" + doctorId);
+            var result = JsonConvert.DeserializeObject<string>(response);
+            return result;
+        }
 
         public DoctorTimingsModel Put(long id, DoctorTimingsModel t)
         {

@@ -47,7 +47,7 @@ namespace RestAPIs.Controllers
                                           state=doc.state,
                                           languageName = db.DoctorLanguages.Where(d => d.doctorID == doc.doctorID).Select(d => d.languageName).FirstOrDefault(),
                                           specialityName = db.DoctorSpecialities.Where(d => d.doctorID == doc.doctorID).Select(d => d.specialityName).FirstOrDefault(),
-                                          reviewStar = doc.reviewStar
+                                          reviewStar=doc.reviewStar
 
                                       }).FirstOrDefault()).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, favdoc);
