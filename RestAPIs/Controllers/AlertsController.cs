@@ -12,6 +12,8 @@ using System.Data.Entity;
 using System.Text;
 using System.Globalization;
 using System.Data.Entity.Core.Objects;
+using Newtonsoft.Json;
+using System.Web.Script.Serialization;
 
 namespace RestAPIs.Controllers
 {
@@ -39,14 +41,21 @@ namespace RestAPIs.Controllers
         }
 
         [Route("api/getPatientAlertsCount")]
-        public HttpResponseMessage getPatientAlertsCount(long patientID)
+        public Object getPatientAlertsCount(long patientID)
         {
             try
             {
                 
                 var count = db.Alerts.Where(al=>al.active == true && al.alertFor == patientID && al.read==null).Count();
-                response = Request.CreateResponse(HttpStatusCode.OK, count);
-                return response;
+                //response = Request.CreateResponse(HttpStatusCode.OK, count);
+                var data = new
+                {
+                   alertcount = count
+                };
+                var serializer = new JavaScriptSerializer();
+                var json = serializer.Serialize(data);
+                var result = JsonConvert.DeserializeObject<Object>(json);
+                return result;
             }
             catch (Exception ex)
             {
@@ -117,14 +126,21 @@ namespace RestAPIs.Controllers
 
 
         [Route("api/getDoctorAlertsCount")]
-        public HttpResponseMessage getDoctorAlertsCount(long doctorID)
+        public Object getDoctorAlertsCount(long doctorID)
         {
             try
             {
 
                 var count = db.Alerts.Where(al => al.active == true && al.alertFor == doctorID && al.read == null).Count();
-                response = Request.CreateResponse(HttpStatusCode.OK, count);
-                return response;
+                //response = Request.CreateResponse(HttpStatusCode.OK, count);
+                var data = new
+                {
+                    alertcount = count
+                };
+                var serializer = new JavaScriptSerializer();
+                var json = serializer.Serialize(data);
+                var result = JsonConvert.DeserializeObject<Object>(json);
+                return result;
             }
             catch (Exception ex)
             {
