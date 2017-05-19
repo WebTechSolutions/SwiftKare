@@ -60,7 +60,7 @@
                                         </div>
                                     </div>
                                     <div id="divImageDisplay">
-                                        <img id="imgProfilePic" src="@(string.IsNullOrEmpty(Model.ProfilePhotoBase64) ? WebApp.Helper.SessionHandler.ProfilePhoto : Model.ProfilePhotoBase64)" alt="..." class="profile_img m-b-10">
+                                        <img style="width:126px;height:126px" id="imgProfilePic" src="@(string.IsNullOrEmpty(Model.ProfilePhotoBase64) ? WebApp.Helper.SessionHandler.ProfilePhoto : Model.ProfilePhotoBase64)" alt="..." class="profile_img m-b-10">
                                         @Html.HiddenFor(x => x.ProfilePhotoBase64)
                                         <br>
                                         <button type="button" class="btn btn-primary" onclick="document.getElementById('fileID').click(); return false;">
