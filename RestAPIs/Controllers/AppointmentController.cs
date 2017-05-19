@@ -218,6 +218,9 @@ namespace RestAPIs.Controllers
                     model.appTime = "0" + model.appTime.Trim();
                 }
 
+                string model_appdatetime_string = model.appDate.Trim() +" "+ model.appTime.Trim();
+                DateTime model_appdatetime_DateTime = DateTime.ParseExact(model_appdatetime_string,
+                                  "dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture);
                 DateTime myDateTime = DateTime.ParseExact(model.appTime,
                                    "hh:mm tt", CultureInfo.InvariantCulture);
                 DateTime utcappdatecheck = myDateTime;
@@ -235,7 +238,12 @@ namespace RestAPIs.Controllers
                     return response;
                 }
                 TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
-                app.appTime = TimeZoneInfo.ConvertTimeToUtc(myDateTime, zoneInfo).TimeOfDay;
+                model_appdatetime_DateTime = TimeZoneInfo.ConvertTimeToUtc(model_appdatetime_DateTime, zoneInfo);
+
+                app.appTime = model_appdatetime_DateTime.TimeOfDay;
+                //app.appTime = TimeZoneInfo.ConvertTimeToUtc(myDateTime, zoneInfo).TimeOfDay;
+                
+                
                 //app.appTime= myDateTime.ToUniversalTime().TimeOfDay;
                 // app.appDate = DateTime.ParseExact(model.appDate.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 //  app.appDate = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", model.appDate.Trim()));
@@ -248,7 +256,8 @@ namespace RestAPIs.Controllers
                     Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
                     //app.appDate = result;
                     DateTime utcappDateTime = result + utcappdatecheck.TimeOfDay;
-                    app.appDate = utcappDateTime.ToUniversalTime().Date;
+                    //app.appDate = utcappDateTime.ToUniversalTime().Date;
+                    app.appDate = model_appdatetime_DateTime.Date;
                 }
                 catch (FormatException)
                 {
@@ -280,16 +289,16 @@ namespace RestAPIs.Controllers
                    
                     DateTime ad = DateTime.ParseExact(dateString, format, provider);
                     DateTime newappDateTime = ad + myDateTime.TimeOfDay;
-                    EmailHelper oHelper = new EmailHelper(docemail, "New appointment.", "You have new appointment on " + tzh.convertTimeZone(newappDateTime, 0, model.doctorID, 0) + ".");
+                    EmailHelper oHelper = new EmailHelper(docemail, "New appointment.", "You have new appointment on " + tzh.convertTimeZone(model_appdatetime_DateTime, 0, model.doctorID, 1) + ".");
                     oHelper.SendMessage();
-                    oHelper = new EmailHelper(patemail, "New appointment.", "Your appointment has been scheduled successfully on " + tzh.convertTimeZone(newappDateTime, model.patientID, 0, 0) + ".");
+                    oHelper = new EmailHelper(patemail, "New appointment.", "Your appointment has been scheduled successfully on " + tzh.convertTimeZone(model_appdatetime_DateTime, model.patientID, 0, 1) + ".");
                     oHelper.SendMessage();
 
                     pushModel pm = new pushModel();
                     pm.PPushTitle = "New Appointment";
-                    pm.PPushMessage = "Patient has scheduled appointment with you on " + tzh.convertTimeZone(newappDateTime, model.patientID, 0, 0);
+                    pm.PPushMessage = "Patient has scheduled appointment with you on " + tzh.convertTimeZone(model_appdatetime_DateTime, model.patientID, 0, 1);
                     pm.DPushTitle = "New Appointment";
-                    pm.DPushMessage = "Patient has scheduled appointment with you on " + tzh.convertTimeZone(newappDateTime, 0, model.doctorID, 0);
+                    pm.DPushMessage = "Patient has scheduled appointment with you on " + tzh.convertTimeZone(newappDateTime, 0, model.doctorID, 1);
                     pm.sendtoDoctor = true;
                     pm.sendtoPatient = false;
                     pm.doctorID = model.doctorID;
@@ -457,6 +466,10 @@ namespace RestAPIs.Controllers
                                             "hh:mm tt", CultureInfo.InvariantCulture);
                 DateTime newappDateTime = newaappDate + newappTime.TimeOfDay;
                 //Used for timezone conversion
+
+                string model_appdatetime_string = model.appDate.Trim() + " " + model.appTime.Trim();
+                DateTime model_appdatetime_DateTime = DateTime.ParseExact(model_appdatetime_string,
+                                  "dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture);
                 if (model.appType=="U")
                 {
                     if (timediff.TotalHours < Convert.ToInt32(RescheduleLimit))
@@ -470,14 +483,15 @@ namespace RestAPIs.Controllers
                         var formattedDate = string.Format("{0:dd/MM/yyyy}", tempappdate);
                         tempapptime = result.appTime;
                         var formattedTime = DateTime.Now.Date.Add(tempapptime.Value).ToString(@"hh\:mm\:tt");
-                        
 
+                       
                         DateTime mydateTime = DateTime.ParseExact(model.appTime,
                                              "hh:mm tt", CultureInfo.InvariantCulture);
                         DateTime utcappdatecheck = mydateTime;
                         var timezoneid = db.Patients.Where(d => d.userId == model.userID).Select(d => d.timezone).FirstOrDefault();
                         TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
-                        result.appTime = TimeZoneInfo.ConvertTimeToUtc(mydateTime, zoneInfo).TimeOfDay;
+                        model_appdatetime_DateTime = TimeZoneInfo.ConvertTimeToUtc(model_appdatetime_DateTime, zoneInfo);
+                        result.appTime = model_appdatetime_DateTime.TimeOfDay;
                         //DateTime localdateTime = DateTime.ParseExact(result.appTime.ToString(),
                         //                     "hh:mm tt", CultureInfo.InvariantCulture);
                         //var plocalapptime= TimeZoneInfo.ConvertTimeToUtc(localdateTime, zoneInfo).TimeOfDay;
@@ -495,7 +509,8 @@ namespace RestAPIs.Controllers
                             //app.appDate = result;
                             DateTime utcappDateTime = resultedDate + utcappdatecheck.TimeOfDay;
 
-                            result.appDate = utcappDateTime.ToUniversalTime().Date;
+                            //result.appDate = utcappDateTime.ToUniversalTime().Date;
+                            result.appDate= model_appdatetime_DateTime.Date;
                         }
                         catch (FormatException)
                         {
@@ -510,7 +525,7 @@ namespace RestAPIs.Controllers
                         await db.SaveChangesAsync();
                         Alert alert = new Alert();
                         alert.alertFor = result.doctorID;
-                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + tzh.convertTimeZone(oldAppDateTime,0, result.doctorID,1) + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + tzh.convertTimeZone(newappDateTime, 0, result.doctorID,0);
+                        alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + tzh.convertTimeZone(oldAppDateTime,0, result.doctorID,1) + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + tzh.convertTimeZone(model_appdatetime_DateTime, 0, result.doctorID,1);
                         alert.cd = System.DateTime.Now;
                         alert.cb = model.userID;
                         alert.active = true;
@@ -522,18 +537,18 @@ namespace RestAPIs.Controllers
                         if (doctor.docemail != null)
                         {
                            
-                            EmailHelper oHelper = new EmailHelper(doctor.docemail, "Reschedule appointment.", "Your appointment on " + tzh.convertTimeZone(oldAppDateTime, 0, result.doctorID,1) + " has been rescheduled by patient to "+ tzh.convertTimeZone(newappDateTime, 0, result.doctorID,0)+".");
+                            EmailHelper oHelper = new EmailHelper(doctor.docemail, "Reschedule appointment.", "Your appointment on " + tzh.convertTimeZone(oldAppDateTime, 0, result.doctorID,1) + " has been rescheduled by patient to "+ tzh.convertTimeZone(model_appdatetime_DateTime, 0, result.doctorID,1)+".");
                             oHelper.SendMessage();
                         }
                         if (patient.patemail != null)
                         {
-                            EmailHelper oHelper = new EmailHelper(patient.patemail, "Reschedule appointment.", "Your appointment on " + tzh.convertTimeZone(oldAppDateTime, result.patientID, 0,1) + " is rescheduled successfully to " + tzh.convertTimeZone(newappDateTime, result.patientID, 0,0) + ".");
+                            EmailHelper oHelper = new EmailHelper(patient.patemail, "Reschedule appointment.", "Your appointment on " + tzh.convertTimeZone(oldAppDateTime, result.patientID, 0,1) + " is rescheduled successfully to " + tzh.convertTimeZone(model_appdatetime_DateTime, result.patientID, 0,1) + ".");
                             oHelper.SendMessage();
                         }
 
                         pushModel pm = new pushModel();
                         pm.DPushTitle = "Reschedule Appointment";
-                        pm.DPushMessage = "Your appointment on " + tzh.convertTimeZone(oldAppDateTime, 0, result.doctorID,1) + " has been rescheduled by patient to " + tzh.convertTimeZone(newappDateTime, 0, result.doctorID,0) + ".";
+                        pm.DPushMessage = "Your appointment on " + tzh.convertTimeZone(oldAppDateTime, 0, result.doctorID,1) + " has been rescheduled by patient to " + tzh.convertTimeZone(model_appdatetime_DateTime, 0, result.doctorID,1) + ".";
                         pm.sendtoDoctor = true;
                         pm.sendtoPatient = false;
                         pm.doctorID = doctor.doctorID;
@@ -552,13 +567,16 @@ namespace RestAPIs.Controllers
                     var formattedDate = string.Format("{0:dd/MM/yyyy}", tempappdate);
                     tempapptime = result.appTime;
                     var formattedTime = DateTime.Now.Date.Add(tempapptime.Value).ToString(@"hh\:mm\:tt");
-                  
+
+                   
                     DateTime mydateTime = DateTime.ParseExact(model.appTime,
                                              "hh:mm tt", CultureInfo.InvariantCulture);
                     DateTime utcappdatecheck = mydateTime;
                     var timezoneid = db.Patients.Where(d => d.userId == model.userID).Select(d => d.timezone).FirstOrDefault();
                     TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
-                    result.appTime = TimeZoneInfo.ConvertTimeToUtc(mydateTime, zoneInfo).TimeOfDay;
+                    model_appdatetime_DateTime = TimeZoneInfo.ConvertTimeToUtc(model_appdatetime_DateTime, zoneInfo);
+
+                    result.appTime = model_appdatetime_DateTime.TimeOfDay;
                     //result.appTime = mydateTime.ToUniversalTime().TimeOfDay;
                     //date format start
                     string dateString = model.appDate.Trim();
@@ -570,7 +588,8 @@ namespace RestAPIs.Controllers
                         Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
                         //app.appDate = result;
                        DateTime utcappDateTime = resultedDate + utcappdatecheck.TimeOfDay;
-                       result.appDate = utcappDateTime.ToUniversalTime().Date;
+                        result.appDate = model_appdatetime_DateTime.Date;
+                        // result.appDate = utcappDateTime.ToUniversalTime().Date;
                     }
                     catch (FormatException)
                     {
@@ -584,7 +603,7 @@ namespace RestAPIs.Controllers
                         await db.SaveChangesAsync();
                         Alert alert = new Alert();
                         alert.alertFor = result.doctorID;
-                    alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + tzh.convertTimeZone(oldAppDateTime, 0, result.doctorID, 1) + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + tzh.convertTimeZone(newappDateTime, 0, result.doctorID, 0);
+                    alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + tzh.convertTimeZone(oldAppDateTime, 0, result.doctorID, 1) + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + tzh.convertTimeZone(model_appdatetime_DateTime, 0, result.doctorID,1);
                     alert.cd = System.DateTime.Now;
                         alert.cb = model.userID;
                         alert.active = true;
@@ -629,7 +648,9 @@ namespace RestAPIs.Controllers
                     DateTime utcappdatecheck = mydateTime;
                     var timezoneid = db.Patients.Where(d => d.userId == model.userID).Select(d => d.timezone).FirstOrDefault();
                     TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
-                    result.appTime = TimeZoneInfo.ConvertTimeToUtc(mydateTime, zoneInfo).TimeOfDay;
+                    model_appdatetime_DateTime = TimeZoneInfo.ConvertTimeToUtc(model_appdatetime_DateTime, zoneInfo);
+
+                    result.appTime = model_appdatetime_DateTime.TimeOfDay;
                     //result.appTime = mydateTime.ToUniversalTime().TimeOfDay;
                     //date format start
                     string dateString = model.appDate.Trim();
@@ -641,7 +662,8 @@ namespace RestAPIs.Controllers
                         Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
                         //app.appDate = result;
                         DateTime utcappDateTime = resultedDate + utcappdatecheck.TimeOfDay;
-                        result.appDate = utcappDateTime.ToUniversalTime().Date;
+                        result.appDate = model_appdatetime_DateTime.Date;
+                        //result.appDate = utcappDateTime.ToUniversalTime().Date;
                     }
                     catch (FormatException)
                     {
@@ -655,7 +677,7 @@ namespace RestAPIs.Controllers
                     await db.SaveChangesAsync();
                     Alert alert = new Alert();
                     alert.alertFor = result.doctorID;
-                    alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + tzh.convertTimeZone(oldAppDateTime, 0, result.doctorID, 1) + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + tzh.convertTimeZone(newappDateTime, 0, result.doctorID, 0);
+                    alert.alertText = alert.alertText = ConfigurationManager.AppSettings["AlertPartBeforeDateTime"].ToString() + " " + tzh.convertTimeZone(oldAppDateTime, 0, result.doctorID, 1) + " " + ConfigurationManager.AppSettings["AlertPartBeforeNewDateTime"].ToString() + " " + tzh.convertTimeZone(model_appdatetime_DateTime, 0, result.doctorID, 1);
                     alert.cd = System.DateTime.Now;
                     alert.cb = model.userID;
                     alert.active = true;
