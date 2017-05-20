@@ -57,7 +57,6 @@ namespace RestAPIs.Controllers
         {
             var timings = new List<DoctorTimingsModel>();
             var doctorTimingList = db.DoctorTimings.Where(o => o.doctorID == doctorId && o.active == true).ToList();
-            
             foreach (var doctorTiming in doctorTimingList)
             {
                 var model = new DoctorTimingsModel();
@@ -206,13 +205,13 @@ namespace RestAPIs.Controllers
                     fromtimeUTC.TimeOfDay >=
                     DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
                     &&
-                    fromtimeUTC.TimeOfDay <=
+                    fromtimeUTC.TimeOfDay <
                     DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
 
                     )
                     ||
                     (
-                    totimeUTC.TimeOfDay >=
+                    totimeUTC.TimeOfDay >
                     DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
                     &&
                     totimeUTC.TimeOfDay <=
@@ -229,7 +228,7 @@ namespace RestAPIs.Controllers
                     )
                     ||
                     (
-                    fromtimeUTC <=
+                    fromtimeUTC <
                     DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture)
                     &&
                     totimeUTC >=

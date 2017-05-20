@@ -176,13 +176,13 @@ namespace WebApp.Controllers
                     fromtimeUTC.TimeOfDay >=
                     DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
                     &&
-                    fromtimeUTC.TimeOfDay <=
+                    fromtimeUTC.TimeOfDay <
                     DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
 
                     )
                     ||
                     (
-                    totimeUTC.TimeOfDay >=
+                    totimeUTC.TimeOfDay >
                     DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
                     &&
                     totimeUTC.TimeOfDay <=
@@ -199,7 +199,7 @@ namespace WebApp.Controllers
                     )
                     ||
                     (
-                    fromtimeUTC <=
+                    fromtimeUTC <
                     DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture)
                     &&
                     totimeUTC >=
