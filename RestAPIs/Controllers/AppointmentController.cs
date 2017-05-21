@@ -424,7 +424,7 @@ namespace RestAPIs.Controllers
                     return response;
                 }
                 Appointment result = db.Appointments.Where(rapp => rapp.appID == model.appID && rapp.active == true).FirstOrDefault();
-                string currDateTime = DateTime.UtcNow.ToString("dd-MM-yyyy HH:mm:ss");
+                string currDateTime = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
                 string format = "dd/MM/yyyy";
                 CultureInfo provider = CultureInfo.InvariantCulture;
                 string dtformat = "dd-MM-yyyy HH:mm:ss";
