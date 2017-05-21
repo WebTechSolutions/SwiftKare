@@ -424,15 +424,15 @@ namespace RestAPIs.Controllers
                     return response;
                 }
                 Appointment result = db.Appointments.Where(rapp => rapp.appID == model.appID && rapp.active == true).FirstOrDefault();
-                string currDateTime = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
+                string currDateTime = DateTime.UtcNow.ToString("dd-MM-yyyy HH:mm:ss");
                 string format = "dd/MM/yyyy";
                 CultureInfo provider = CultureInfo.InvariantCulture;
                 string dtformat = "dd-MM-yyyy HH:mm:ss";
                 DateTime cdt = DateTime.ParseExact(currDateTime, dtformat, provider);
-                // DateTime cdt = Convert.ToDateTime(currDateTime);
+               
                DateTime ad;
                 ad = Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", result.appDate.Value.ToShortDateString()));
-                //Convert.ToDateTime(String.Format("{0:dd/MM/yyyy}", result.appDate));
+               
                 TimeSpan at = TimeSpan.Parse(result.appTime.ToString());
                 DateTime appDateTime = ad + at;
 

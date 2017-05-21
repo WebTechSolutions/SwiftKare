@@ -57,16 +57,23 @@ namespace RestAPIs.Controllers
         {
             var timings = new List<DoctorTimingsModel>();
             var doctorTimingList = db.DoctorTimings.Where(o => o.doctorID == doctorId && o.active == true).ToList();
+            var doctz = db.Doctors.Where(p => p.doctorID == doctorId).Select(p => p.timezone).FirstOrDefault();
+            TimeZoneInfo dzoneInfo = TimeZoneInfo.FindSystemTimeZoneById(doctz.ToString());
+            
             foreach (var doctorTiming in doctorTimingList)
             {
                 var model = new DoctorTimingsModel();
                 model.doctorID = (long)doctorTiming.doctorID;
                 model.doctorTimingsID = doctorTiming.doctorTimingsID;
                 model.day = doctorTiming.day;
-                var from = DateTime.Today.Add((TimeSpan)doctorTiming.from);
-                var to = DateTime.Today.Add((TimeSpan)doctorTiming.to);
-                model.from = from.ToString("hh:mm tt");
-                model.to = to.ToString("hh:mm tt");
+                DateTime? from = DateTime.UtcNow.Date;//.Add((TimeSpan)doctorTiming.from);
+                from = from + (TimeSpan)doctorTiming.from;
+                from = TimeZoneInfo.ConvertTimeFromUtc(from.Value, dzoneInfo);
+                model.from = from.Value.ToString("hh:mm tt",CultureInfo.InvariantCulture);
+                DateTime? to = DateTime.UtcNow.Date;//.Add((TimeSpan)doctorTiming.to);
+                to = to + (TimeSpan)doctorTiming.to;
+                to = TimeZoneInfo.ConvertTimeFromUtc(to.Value, dzoneInfo);
+                model.to = to.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
                 timings.Add(model);
             }
             
@@ -193,10 +200,10 @@ namespace RestAPIs.Controllers
             TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());
             DateTime fromtimeUTC = DateTime.ParseExact(doctorTimingModel.from,
                                    "hh:mm tt", CultureInfo.InvariantCulture);
-            fromtimeUTC = TimeZoneInfo.ConvertTimeToUtc(fromtimeUTC,zoneInfo);
+            //fromtimeUTC = TimeZoneInfo.ConvertTimeToUtc(fromtimeUTC,zoneInfo);
             DateTime totimeUTC = DateTime.ParseExact(doctorTimingModel.to,
                                   "hh:mm tt", CultureInfo.InvariantCulture);
-            totimeUTC = TimeZoneInfo.ConvertTimeToUtc(totimeUTC, zoneInfo);
+            //totimeUTC = TimeZoneInfo.ConvertTimeToUtc(totimeUTC, zoneInfo);
             var alreadItems = timingsList
                     .Where(o => o.day == doctorTimingModel.day &&
                     (o.from == fromtimeUTC.ToString("hh:mm tt") || o.to == totimeUTC.ToString("hh:mm tt")
