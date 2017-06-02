@@ -120,44 +120,44 @@ namespace WebApp.Controllers
             try
             {
 
-            
-            if (model.from.Length < 8)
-                model.from = "0" + model.from;
 
-            if (model.to.Length < 8)
-                model.to = "0" + model.to;
+                if (model.from.Length < 8)
+                    model.from = "0" + model.from;
 
-            if (SessionHandler.IsExpired)
-            {
-                return Json(new
+                if (model.to.Length < 8)
+                    model.to = "0" + model.to;
+
+                if (SessionHandler.IsExpired)
                 {
-                    redirectUrl = Url.Action("DoctorLogin", "Account"),
-                    isRedirect = true
-                });
-            }
-            if (model.from.Contains("PM"))
-            {
-                if (model.to.Contains("AM"))
-                {
-                    return Json("single day", JsonRequestBehavior.AllowGet);
+                    return Json(new
+                    {
+                        redirectUrl = Url.Action("DoctorLogin", "Account"),
+                        isRedirect = true
+                    });
                 }
-            }
-            if (model.from == model.to)
-            {
-                return Json("same time", JsonRequestBehavior.AllowGet);
+                if (model.from.Contains("PM"))
+                {
+                    if (model.to.Contains("AM"))
+                    {
+                        return Json("single day", JsonRequestBehavior.AllowGet);
+                    }
+                }
+                if (model.from == model.to)
+                {
+                    return Json("same time", JsonRequestBehavior.AllowGet);
 
-            }
-            if (DateTime.ParseExact(model.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <
-                DateTime.ParseExact(model.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay)
-            {
-                return Json("from time greater than to time", JsonRequestBehavior.AllowGet);
-            }
-            TimeSpan diff = DateTime.ParseExact(model.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay -
-                DateTime.ParseExact(model.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
-            if (diff.TotalMinutes < 15)
-            {
-                return Json("time range", JsonRequestBehavior.AllowGet);
-            }
+                }
+                if (DateTime.ParseExact(model.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <
+                    DateTime.ParseExact(model.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay)
+                {
+                    return Json("from time greater than to time", JsonRequestBehavior.AllowGet);
+                }
+                TimeSpan diff = DateTime.ParseExact(model.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay -
+                    DateTime.ParseExact(model.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                if (diff.TotalMinutes < 15)
+                {
+                    return Json("time range", JsonRequestBehavior.AllowGet);
+                }
                 var timingsList = objTimingRepo.GetListByDoctorId(model.doctorID);
                 string timezoneid = objTimingRepo.GetDoctorTimeZoneID(model.doctorID);
                 TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());
@@ -167,7 +167,7 @@ namespace WebApp.Controllers
                 DateTime totimeUTC = DateTime.ParseExact(model.to,
                                       "hh:mm tt", CultureInfo.InvariantCulture);
                 totimeUTC = TimeZoneInfo.ConvertTimeToUtc(totimeUTC, zoneInfo);
-               
+
                 var alreadItems = timingsList
                     .Where(o => o.day == model.day &&
                     (o.from == fromtimeUTC.ToString("hh:mm tt") || o.to == totimeUTC.ToString("hh:mm tt")
@@ -176,13 +176,13 @@ namespace WebApp.Controllers
                     fromtimeUTC.TimeOfDay >=
                     DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
                     &&
-                    fromtimeUTC.TimeOfDay <=
+                    fromtimeUTC.TimeOfDay <
                     DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
 
                     )
                     ||
                     (
-                    totimeUTC.TimeOfDay >=
+                    totimeUTC.TimeOfDay >
                     DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
                     &&
                     totimeUTC.TimeOfDay <=
@@ -199,7 +199,7 @@ namespace WebApp.Controllers
                     )
                     ||
                     (
-                    fromtimeUTC <=
+                    fromtimeUTC <
                     DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture)
                     &&
                     totimeUTC >=
@@ -238,25 +238,25 @@ namespace WebApp.Controllers
 
                 //    )).ToList();
                 if (alreadItems.Count <= 0)
-            {
-                var userName = SessionHandler.UserName;
-
-                if (model.doctorTimingsID <= 0)
                 {
-                    model.username = userName;
-                    objTimingRepo.Add(model);
+                    var userName = SessionHandler.UserName;
+
+                    if (model.doctorTimingsID <= 0)
+                    {
+                        model.username = userName;
+                        objTimingRepo.Add(model);
+                    }
+                    else
+                    {
+                        model.username = userName;
+                        objTimingRepo.Put(model.doctorTimingsID, model);
+                    }
+                    return Json(model, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    model.username = userName;
-                    objTimingRepo.Put(model.doctorTimingsID, model);
+                    return Json("overlapped", JsonRequestBehavior.AllowGet);
                 }
-                return Json(model, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return Json("overlapped", JsonRequestBehavior.AllowGet);
-            }
 
             }
             catch (System.Web.Http.HttpResponseException ex)
@@ -281,7 +281,7 @@ namespace WebApp.Controllers
                 objTimingRepo.Delete(id);
                 return Json(id, JsonRequestBehavior.AllowGet);
             }
-            
+
             catch (System.Web.Http.HttpResponseException ex)
             {
                 return Json(new { Message = ex.Response.ReasonPhrase.ToString() });
@@ -294,7 +294,7 @@ namespace WebApp.Controllers
             try
             {
                 ConsultationRepository objConsultationRepo = new ConsultationRepository();
-               
+
                 ApiResultModel apiresult = new ApiResultModel();
                 apiresult = objConsultationRepo.CreateConsult(model);
                 return Json(new { Success = true, ApiResultModel = apiresult });

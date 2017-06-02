@@ -218,38 +218,51 @@ namespace RestAPIs.Controllers
             //if (model.Role.ToLower() == "patient" || model.Role.ToLower() == "doctor")
             //{
 
-                try
+            try
+            {
+                //    var id = headerValues.FirstOrDefault();
+                // This doen't count login failures towards lockout only two factor authentication
+                // To enable password failures to trigger lockout, change to shouldLockout: true
+                var result = await SignInManager.PasswordSignInAsync(model.Email.Trim(), model.Password.Trim(), false, shouldLockout: false);
+                if (result == SignInStatus.Success)
                 {
-                    //    var id = headerValues.FirstOrDefault();
-                    // This doen't count login failures towards lockout only two factor authentication
-                    // To enable password failures to trigger lockout, change to shouldLockout: true
-                    var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, false, shouldLockout: false);
-                    var userId = UserManager.FindByName(model.Email)?.Id;
+
+                    if (model.offset != null)
+                    {
+                         if (model.offset.Equals("330")) model.offset = "-330";
+                         if (model.offset.Trim().Equals("")) model.offset = "-300";
+                    }
+                    else model.offset = "-300";
+                    
+
+                    var userId = UserManager.FindByName(model.Email.Trim())?.Id;
                     var roleFromDb = UserManager.GetRoles(userId).FirstOrDefault();
-                    if (result == SignInStatus.Success)
-                {
+
                     SwiftKareDBEntities db = new SwiftKareDBEntities();
                     if (roleFromDb.ToString().ToLower() == "doctor")
                     {
                         string iOSToken = model.iOSToken;
                         string androidToken = model.andriodToken;
-                       
+
                         //update doctor table with  Tokens 
-                        Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId );
+                        Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
                         if (doctor != null)
                         {
-                            if(model.offset!=null )
-                                
+                            if (model.offset != null)
+
                             {
 
                                 if (model.offset.Trim() != "")
                                 {
                                     if (doctor.timezoneoffset != model.offset)
                                     {
-                                        model.offset = model.offset.Replace("+","");
+                                        model.offset = model.offset.Replace("+", "");
                                         DataAccess.TimeZone tz = db.TimeZones.FirstOrDefault(t => t.zoneOffset == model.offset);
-                                        doctor.timezone = tz.zoneName;
-                                        doctor.timezoneoffset = tz.zoneOffset;
+                                        if (tz != null)
+                                        {
+                                            doctor.timezone = tz.zoneName;
+                                            doctor.timezoneoffset = tz.zoneOffset;
+                                        }
                                     }
                                 }
                             }
@@ -258,11 +271,11 @@ namespace RestAPIs.Controllers
                             db.Entry(doctor).State = EntityState.Modified;
                             await db.SaveChangesAsync();
                         }
-                       // var doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
+                        // var doctor = db.Doctors.SingleOrDefault(o => o.userId == userId);
 
                         if (doctor != null)
                         {
-                            if(doctor.status == null || doctor.status == false)
+                            if (doctor.status == null || doctor.status == false)
                             {
                                 userModel.Errors = new List<string>();
                                 userModel.Errors.Add("Account review is in progress. You can login after approval.");
@@ -273,16 +286,15 @@ namespace RestAPIs.Controllers
                                 userModel.FirstName = doctor.firstName;
                                 userModel.LastName = doctor.lastName;
                                 userModel.Email = doctor.email;
-                                userModel.userId = doctor.userId;
                                 userModel.title = doctor.title;
                                 userModel.timeZone = doctor.timezoneoffset;// timezoneoffset
                                 userModel.userId = doctor.userId;
                                 userModel.role = roleFromDb.ToString();
                                 userModel.iOSToken = doctor.iOSToken;
                                 userModel.AndroidToken = doctor.AndroidToken;
-                                
+
                             }
-                            
+
                         }
                         else
                         {
@@ -299,20 +311,23 @@ namespace RestAPIs.Controllers
                         Patient patient = db.Patients.SingleOrDefault(o => o.userId == userId);
                         if (model.offset != null)
                         {
-                            if(model.offset.Trim() != "")
+                            if (model.offset.Trim() != "")
                             {
                                 if (patient.timezoneoffset != model.offset)
                                 {
                                     model.offset = model.offset.Replace("+", "");
                                     DataAccess.TimeZone tz = db.TimeZones.FirstOrDefault(t => t.zoneOffset == model.offset);
-                                    patient.timezone = tz.zoneName;
-                                    patient.timezoneoffset = tz.zoneOffset;
+                                    if (tz != null)
+                                    {
+                                        patient.timezone = tz.zoneName;
+                                        patient.timezoneoffset = tz.zoneOffset;
+                                    }
                                 }
                             }
-                            
+
 
                         }
-                        if (iOSToken.Trim()!="")patient.iOSToken = iOSToken;
+                        if (iOSToken.Trim() != "") patient.iOSToken = iOSToken;
                         if (androidToken.Trim() != "") patient.AndroidToken = androidToken;
                         db.Entry(patient).State = EntityState.Modified;
                         await db.SaveChangesAsync();
@@ -323,7 +338,7 @@ namespace RestAPIs.Controllers
                             userModel.Id = patient.patientID;
                             userModel.FirstName = patient.firstName;
                             userModel.LastName = patient.lastName;
-                            userModel.userId = patient.userId;
+                            //  userModel.userId = patient.userId;
                             userModel.title = patient.title;
                             userModel.timeZone = patient.timezoneoffset;
                             userModel.userId = patient.userId;
@@ -343,7 +358,7 @@ namespace RestAPIs.Controllers
                 else if (result == SignInStatus.Failure)
                 {
                     userModel.Errors = new List<string>();
-                    userModel.Errors.Add("Login fail, please try later");
+                    userModel.Errors.Add("Login fail,Incorrect User name or Password.");
                 }
                 else if (result == SignInStatus.LockedOut)
                 {
@@ -357,15 +372,21 @@ namespace RestAPIs.Controllers
                 }
             }
 
-                catch (Exception ex)
-                {
-                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
-                    {
-                        //Content = new StringContent("An error occurred while posting in api/account/login, please try again or contact the administrator."),
-                        Content = new StringContent(ex.Message),
-                        ReasonPhrase = ex.Message
-                    });
-                }
+            catch (Exception ex)
+            {
+                userModel.Errors = new List<string>();
+                //userModel.Errors.Add("Exception Occur:"+ex.Message);
+                userModel.Errors.Add(model.Email + "," + model.Password + "," + model.offset + "," + model.iOSToken);
+                return userModel;
+                /* throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                     {
+                         //Content = new StringContent("An error occurred while posting in api/account/login, please try again or contact the administrator."),
+                         Content = new StringContent(ex.Message),
+                         ReasonPhrase = ex.Message
+
+                     });
+                 }*/
+            }
             //}
             //else
             //{

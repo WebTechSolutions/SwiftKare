@@ -46,18 +46,17 @@ namespace RestAPIs.Controllers
         [Route("api/getDoctorTimeZoneID")]
         public HttpResponseMessage getDoctorTimeZoneID(long doctorId)
         {
-            
-                var timezoneid = db.Doctors.Where(d => d.doctorID == doctorId).Select(d => d.timezone).FirstOrDefault();
-                response = Request.CreateResponse(HttpStatusCode.OK, timezoneid);
-                return response;
-            
+
+            var timezoneid = db.Doctors.Where(d => d.doctorID == doctorId).Select(d => d.timezone).FirstOrDefault();
+            response = Request.CreateResponse(HttpStatusCode.OK, timezoneid);
+            return response;
+
         }
         //api/DoctorTimings? doctorId = { doctorId }
         public List<DoctorTimingsModel> GetDoctorTimingByDoctorId(long doctorId)
         {
             var timings = new List<DoctorTimingsModel>();
             var doctorTimingList = db.DoctorTimings.Where(o => o.doctorID == doctorId && o.active == true).ToList();
-            
             foreach (var doctorTiming in doctorTimingList)
             {
                 var model = new DoctorTimingsModel();
@@ -70,7 +69,7 @@ namespace RestAPIs.Controllers
                 model.to = to.ToString("hh:mm tt");
                 timings.Add(model);
             }
-            
+
             return timings;
         }
 
@@ -115,7 +114,7 @@ namespace RestAPIs.Controllers
             {
             }
 
-                if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -194,7 +193,7 @@ namespace RestAPIs.Controllers
             TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());
             DateTime fromtimeUTC = DateTime.ParseExact(doctorTimingModel.from,
                                    "hh:mm tt", CultureInfo.InvariantCulture);
-            fromtimeUTC = TimeZoneInfo.ConvertTimeToUtc(fromtimeUTC,zoneInfo);
+            fromtimeUTC = TimeZoneInfo.ConvertTimeToUtc(fromtimeUTC, zoneInfo);
             DateTime totimeUTC = DateTime.ParseExact(doctorTimingModel.to,
                                   "hh:mm tt", CultureInfo.InvariantCulture);
             totimeUTC = TimeZoneInfo.ConvertTimeToUtc(totimeUTC, zoneInfo);
@@ -206,13 +205,13 @@ namespace RestAPIs.Controllers
                     fromtimeUTC.TimeOfDay >=
                     DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
                     &&
-                    fromtimeUTC.TimeOfDay <=
+                    fromtimeUTC.TimeOfDay <
                     DateTime.ParseExact(o.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
 
                     )
                     ||
                     (
-                    totimeUTC.TimeOfDay >=
+                    totimeUTC.TimeOfDay >
                     DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay
                     &&
                     totimeUTC.TimeOfDay <=
@@ -229,7 +228,7 @@ namespace RestAPIs.Controllers
                     )
                     ||
                     (
-                    fromtimeUTC <=
+                    fromtimeUTC <
                     DateTime.ParseExact(o.from, "hh:mm tt", CultureInfo.InvariantCulture)
                     &&
                     totimeUTC >=
@@ -273,7 +272,7 @@ namespace RestAPIs.Controllers
                 return BadRequest("Timings can not be overlapped across each other.");
                 //return CreatedAtRoute("DefaultApi", new { message = "Timings can not be overlapped across each other" }, doctorTiming);
             }
-            
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -303,11 +302,11 @@ namespace RestAPIs.Controllers
                 db.DoctorTimings.Add(doctorTiming);
                 await db.SaveChangesAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            
+
 
             return CreatedAtRoute("DefaultApi", new { id = doctorTiming.doctorTimingsID }, doctorTiming);
         }

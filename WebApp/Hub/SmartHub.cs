@@ -32,17 +32,19 @@ namespace WebApp.Hub
             MessageList.Clear();
            // List<string> grp = new List<string>();
             IList<string> grp = new List<string>();
-            grp.Add("patients");
-            grp.Add("doctors");
-            return Clients.Groups(grp).showConnected(AllUserList);
+           // grp.Add("patients");
+           // grp.Add("doctors");
+            GetUsersPatient();
+            GetUsersDoctor();
+            return Clients.Group("NoGroup").showConnected(AllUserList);
         }
 
         public override Task OnConnected()
         {
             string clientId = Context.ConnectionId;
             string data = clientId;
-            Clients.Caller.receiveMessage("ChatHub", data, 0);
-            Clients.Client(clientId).receiveMessage("ChatHub", clientId, 0);
+           // Clients.Caller.receiveMessage("ChatHub", data, 0);
+           // Clients.Client(clientId).receiveMessage("ChatHub", clientId, 0);
             return base.OnConnected();
         }
 
