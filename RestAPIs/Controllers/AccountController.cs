@@ -375,8 +375,8 @@ namespace RestAPIs.Controllers
             catch (Exception ex)
             {
                 userModel.Errors = new List<string>();
-                //userModel.Errors.Add("Exception Occur:"+ex.Message);
-                userModel.Errors.Add(model.Email + "," + model.Password + "," + model.offset + "," + model.iOSToken);
+                userModel.Errors.Add("Exception Occur:"+ex.Message);
+                //userModel.Errors.Add(model.Email + "," + model.Password + "," + model.offset + "," + model.iOSToken);
                 return userModel;
                 /* throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
                      {

@@ -1558,7 +1558,7 @@ namespace RestAPIs.Controllers
                                           gender = l.gender.Trim(),
                                           cellPhone = l.cellPhone,
                                           dob = l.dob,
-                                          picture = l.picture,
+                                          profilePhotoBase64= l.ProfilePhotoBase64,
                                           dateofbirth = l.dob,
                                           languages = (from pl in db.PatientLanguages
                                                           where pl.patientID == l.patientID && pl.active == true
