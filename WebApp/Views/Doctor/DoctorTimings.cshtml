@@ -172,36 +172,8 @@
 
         }
         
-        //function bindTimingsDayWise(daywiseList) {
-           
-        //    var divHtml = "";
-
-        //    for (var i = 0; i < daywiseList.length; i++) {
-        //        divHtml = divHtml + "<div class='table-responsive'>";
-        //        divHtml = divHtml + "<h2>" + daywiseList[i].Day + "</h2>";
-        //        divHtml = divHtml + "<table class='table table-striped table-bordered dataTable no-footer'>";
-        //        divHtml = divHtml + "<tbody>";
-
-        //        if (daywiseList[i].Timings.length > 0) {
-        //            for (var j = 0; j < daywiseList[i].Timings.length; j++) {
-        //                divHtml = divHtml + "<tr class='time_btn'>";
-        //                divHtml = divHtml + "<td class='time-remove'><span>" + converttoLocal(daywiseList[i].Timings[j].from) + " To " + converttoLocal(daywiseList[i].Timings[j].to) + "</span><button class='btn btn-primary pull-right' onclick='deleteObj(" + daywiseList[i].Timings[j].doctorTimingsID + ");' type='button'>Delete</button></td>";
-        //                divHtml = divHtml + "</tr>";
-        //            }
-        //        }
-        //        else {
-        //            divHtml = divHtml + "<p>There is no time Slot available</p>";
-        //        }
-        //        divHtml = divHtml + "</tbody></table><div>";
-        //    }
-        //    $("div[id$='divDayWiseTiming']").html(divHtml);
-        //    $.unblockUI();
-        //    //$("div[id$='divLoader']").hide();
-
-        //}
-
         function bindTimingsDayWise(daywiseList) {
-
+           
             var divHtml = "";
 
             for (var i = 0; i < daywiseList.length; i++) {
@@ -213,7 +185,7 @@
                 if (daywiseList[i].Timings.length > 0) {
                     for (var j = 0; j < daywiseList[i].Timings.length; j++) {
                         divHtml = divHtml + "<tr class='time_btn'>";
-                        divHtml = divHtml + "<td class='time-remove'><span>" + daywiseList[i].Timings[j].from + " To " + daywiseList[i].Timings[j].to + "</span><button class='btn btn-primary pull-right' onclick='deleteObj(" + daywiseList[i].Timings[j].doctorTimingsID + ");' type='button'>Delete</button></td>";
+                        divHtml = divHtml + "<td class='time-remove'><span>" + converttoLocal(daywiseList[i].Timings[j].from) + " To " + converttoLocal(daywiseList[i].Timings[j].to) + "</span><button class='btn btn-primary pull-right' onclick='deleteObj(" + daywiseList[i].Timings[j].doctorTimingsID + ");' type='button'>Delete</button></td>";
                         divHtml = divHtml + "</tr>";
                     }
                 }
@@ -227,6 +199,34 @@
             //$("div[id$='divLoader']").hide();
 
         }
+
+        //function bindTimingsDayWise(daywiseList) {
+
+        //    var divHtml = "";
+
+        //    for (var i = 0; i < daywiseList.length; i++) {
+        //        divHtml = divHtml + "<div class='table-responsive'>";
+        //        divHtml = divHtml + "<h2>" + daywiseList[i].Day + "</h2>";
+        //        divHtml = divHtml + "<table class='table table-striped table-bordered dataTable no-footer'>";
+        //        divHtml = divHtml + "<tbody>";
+
+        //        if (daywiseList[i].Timings.length > 0) {
+        //            for (var j = 0; j < daywiseList[i].Timings.length; j++) {
+        //                divHtml = divHtml + "<tr class='time_btn'>";
+        //                divHtml = divHtml + "<td class='time-remove'><span>" + daywiseList[i].Timings[j].from + " To " + daywiseList[i].Timings[j].to + "</span><button class='btn btn-primary pull-right' onclick='deleteObj(" + daywiseList[i].Timings[j].doctorTimingsID + ");' type='button'>Delete</button></td>";
+        //                divHtml = divHtml + "</tr>";
+        //            }
+        //        }
+        //        else {
+        //            divHtml = divHtml + "<p>There is no time Slot available</p>";
+        //        }
+        //        divHtml = divHtml + "</tbody></table><div>";
+        //    }
+        //    $("div[id$='divDayWiseTiming']").html(divHtml);
+        //    $.unblockUI();
+        //    //$("div[id$='divLoader']").hide();
+
+        //}
 
         function editObj(objTiming) {
             $("#DoctorTiming_day").val(objTiming.day);

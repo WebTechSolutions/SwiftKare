@@ -163,10 +163,10 @@ namespace WebApp.Controllers
                 TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());
                 DateTime fromtimeUTC = DateTime.ParseExact(model.from,
                                        "hh:mm tt", CultureInfo.InvariantCulture);
-                //fromtimeUTC = TimeZoneInfo.ConvertTimeToUtc(fromtimeUTC, zoneInfo);
+                fromtimeUTC = TimeZoneInfo.ConvertTimeToUtc(fromtimeUTC, zoneInfo);
                 DateTime totimeUTC = DateTime.ParseExact(model.to,
                                       "hh:mm tt", CultureInfo.InvariantCulture);
-                //totimeUTC = TimeZoneInfo.ConvertTimeToUtc(totimeUTC, zoneInfo);
+                totimeUTC = TimeZoneInfo.ConvertTimeToUtc(totimeUTC, zoneInfo);
                
                 var alreadItems = timingsList
                     .Where(o => o.day == model.day &&

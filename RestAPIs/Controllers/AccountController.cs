@@ -343,7 +343,7 @@ namespace RestAPIs.Controllers
                 else if (result == SignInStatus.Failure)
                 {
                     userModel.Errors = new List<string>();
-                    userModel.Errors.Add("Login fail, please try later");
+                    userModel.Errors.Add("Incorrect userid or password.");
                 }
                 else if (result == SignInStatus.LockedOut)
                 {
