@@ -88,144 +88,146 @@ namespace RestAPIs.Controllers
                 timings.Add(model);
             }
 
-            foreach (var item in timings)
-            {
-                if (item.day == "Monday")
-                {
-                    var test = sortedtimings.Where(x => x.day == "Monday").FirstOrDefault();
-                    if (test == null)
-                    {
-                        temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Monday").ToList();
-                        foreach (var i in temptimings)
-                        {
-                            var model = new DoctorTimingsModel();
-                            model.doctorID = (long)i.doctorID;
-                            model.doctorTimingsID = i.doctorTimingsID;
-                            model.day = i.day;
-                            model.from = i.from;
-                            model.to = i.to;
-                            sortedtimings.Add(model);
+            //foreach (var item in timings)
+            //{
+            //    if (item.day == "Monday")
+            //    {
+            //        var test = sortedtimings.Where(x => x.day == "Monday").FirstOrDefault();
+            //        if (test == null)
+            //        {
 
-                        }
-                    }
+                        
+            //            temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Monday").ToList();
+            //            foreach (var i in temptimings)
+            //            {
+            //                var model = new DoctorTimingsModel();
+            //                model.doctorID = (long)i.doctorID;
+            //                model.doctorTimingsID = i.doctorTimingsID;
+            //                model.day = i.day;
+            //                model.from = i.from;
+            //                model.to = i.to;
+            //                sortedtimings.Add(model);
 
-                }
-                if (item.day == "Tuesday")
-                {
-                    var test = sortedtimings.Where(x => x.day == "Tuesday").FirstOrDefault();
-                    if (test == null)
-                    {
-                        temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Tuesday").ToList();
-                        foreach (var i in temptimings)
-                        {
-                            var model = new DoctorTimingsModel();
-                            model.doctorID = (long)i.doctorID;
-                            model.doctorTimingsID = i.doctorTimingsID;
-                            model.day = i.day;
-                            model.from = i.from;
-                            model.to = i.to;
-                            sortedtimings.Add(model);
+            //            }
+            //        }
 
-                        }
-                    }
-                }
-                if (item.day == "Wednesday")
-                {
-                    var test = sortedtimings.Where(x => x.day == "Wednesday").FirstOrDefault();
-                    if (test == null)
-                    {
-                        temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Wednesday").ToList();
-                        foreach (var i in temptimings)
-                        {
-                            var model = new DoctorTimingsModel();
-                            model.doctorID = (long)i.doctorID;
-                            model.doctorTimingsID = i.doctorTimingsID;
-                            model.day = i.day;
-                            model.from = i.from;
-                            model.to = i.to;
-                            sortedtimings.Add(model);
+            //    }
+            //    if (item.day == "Tuesday")
+            //    {
+            //        var test = sortedtimings.Where(x => x.day == "Tuesday").FirstOrDefault();
+            //        if (test == null)
+            //        {
+            //            temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Tuesday").ToList();
+            //            foreach (var i in temptimings)
+            //            {
+            //                var model = new DoctorTimingsModel();
+            //                model.doctorID = (long)i.doctorID;
+            //                model.doctorTimingsID = i.doctorTimingsID;
+            //                model.day = i.day;
+            //                model.from = i.from;
+            //                model.to = i.to;
+            //                sortedtimings.Add(model);
 
-                        }
-                    }
-                }
-                if (item.day == "Thursday")
-                {
-                    var test = sortedtimings.Where(x => x.day == "Thursday").FirstOrDefault();
-                    if (test == null)
-                    {
-                        temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Thursday").ToList();
-                        foreach (var i in temptimings)
-                        {
-                            var model = new DoctorTimingsModel();
-                            model.doctorID = (long)i.doctorID;
-                            model.doctorTimingsID = i.doctorTimingsID;
-                            model.day = i.day;
-                            model.from = i.from;
-                            model.to = i.to;
-                            sortedtimings.Add(model);
+            //            }
+            //        }
+            //    }
+            //    if (item.day == "Wednesday")
+            //    {
+            //        var test = sortedtimings.Where(x => x.day == "Wednesday").FirstOrDefault();
+            //        if (test == null)
+            //        {
+            //            temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Wednesday").ToList();
+            //            foreach (var i in temptimings)
+            //            {
+            //                var model = new DoctorTimingsModel();
+            //                model.doctorID = (long)i.doctorID;
+            //                model.doctorTimingsID = i.doctorTimingsID;
+            //                model.day = i.day;
+            //                model.from = i.from;
+            //                model.to = i.to;
+            //                sortedtimings.Add(model);
 
-                        }
-                    }
-                }
-                if (item.day == "Friday")
-                {
-                    var test = sortedtimings.Where(x => x.day == "Friday").FirstOrDefault();
-                    if (test == null)
-                    {
-                        temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Friday").ToList();
-                        foreach (var i in temptimings)
-                        {
-                            var model = new DoctorTimingsModel();
-                            model.doctorID = (long)i.doctorID;
-                            model.doctorTimingsID = i.doctorTimingsID;
-                            model.day = i.day;
-                            model.from = i.from;
-                            model.to = i.to;
-                            sortedtimings.Add(model);
+            //            }
+            //        }
+            //    }
+            //    if (item.day == "Thursday")
+            //    {
+            //        var test = sortedtimings.Where(x => x.day == "Thursday").FirstOrDefault();
+            //        if (test == null)
+            //        {
+            //            temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Thursday").ToList();
+            //            foreach (var i in temptimings)
+            //            {
+            //                var model = new DoctorTimingsModel();
+            //                model.doctorID = (long)i.doctorID;
+            //                model.doctorTimingsID = i.doctorTimingsID;
+            //                model.day = i.day;
+            //                model.from = i.from;
+            //                model.to = i.to;
+            //                sortedtimings.Add(model);
 
-                        }
-                    }
-                }
-                if (item.day == "Saturday")
-                {
-                    var test = sortedtimings.Where(x => x.day == "Saturday").FirstOrDefault();
-                    if (test == null)
-                    {
-                        temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Saturday").ToList();
-                        foreach (var i in temptimings)
-                        {
-                            var model = new DoctorTimingsModel();
-                            model.doctorID = (long)i.doctorID;
-                            model.doctorTimingsID = i.doctorTimingsID;
-                            model.day = i.day;
-                            model.from = i.from;
-                            model.to = i.to;
-                            sortedtimings.Add(model);
+            //            }
+            //        }
+            //    }
+            //    if (item.day == "Friday")
+            //    {
+            //        var test = sortedtimings.Where(x => x.day == "Friday").FirstOrDefault();
+            //        if (test == null)
+            //        {
+            //            temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Friday").ToList();
+            //            foreach (var i in temptimings)
+            //            {
+            //                var model = new DoctorTimingsModel();
+            //                model.doctorID = (long)i.doctorID;
+            //                model.doctorTimingsID = i.doctorTimingsID;
+            //                model.day = i.day;
+            //                model.from = i.from;
+            //                model.to = i.to;
+            //                sortedtimings.Add(model);
 
-                        }
-                    }
-                }
-                if (item.day == "Sunday")
-                {
-                    var test = sortedtimings.Where(x => x.day == "Sunday").FirstOrDefault();
-                    if (test == null)
-                    {
-                        temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Sunday").ToList();
-                        foreach (var i in temptimings)
-                        {
-                            var model = new DoctorTimingsModel();
-                            model.doctorID = (long)i.doctorID;
-                            model.doctorTimingsID = i.doctorTimingsID;
-                            model.day = i.day;
-                            model.from = i.from;
-                            model.to = i.to;
-                            sortedtimings.Add(model);
+            //            }
+            //        }
+            //    }
+            //    if (item.day == "Saturday")
+            //    {
+            //        var test = sortedtimings.Where(x => x.day == "Saturday").FirstOrDefault();
+            //        if (test == null)
+            //        {
+            //            temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Saturday").ToList();
+            //            foreach (var i in temptimings)
+            //            {
+            //                var model = new DoctorTimingsModel();
+            //                model.doctorID = (long)i.doctorID;
+            //                model.doctorTimingsID = i.doctorTimingsID;
+            //                model.day = i.day;
+            //                model.from = i.from;
+            //                model.to = i.to;
+            //                sortedtimings.Add(model);
 
-                        }
-                    }
-                }
+            //            }
+            //        }
+            //    }
+            //    if (item.day == "Sunday")
+            //    {
+            //        var test = sortedtimings.Where(x => x.day == "Sunday").FirstOrDefault();
+            //        if (test == null)
+            //        {
+            //            temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Sunday").ToList();
+            //            foreach (var i in temptimings)
+            //            {
+            //                var model = new DoctorTimingsModel();
+            //                model.doctorID = (long)i.doctorID;
+            //                model.doctorTimingsID = i.doctorTimingsID;
+            //                model.day = i.day;
+            //                model.from = i.from;
+            //                model.to = i.to;
+            //                sortedtimings.Add(model);
 
-            }
+            //            }
+            //        }
+            //    }
+
+            //}
 
 
             return timings;
