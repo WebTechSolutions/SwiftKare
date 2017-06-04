@@ -275,7 +275,7 @@
                             window.location.href = response.redirectUrl;
                         }
                         if (response.Message!=undefined) {
-                            new PNotify({ title: 'Error', text: "Doctor Timings " + " " + response.Message, type: 'error', styling: 'bootstrap3' });
+                            new PNotify({ title: 'Error', text: response.Message, type: 'error', styling: 'bootstrap3' });
                             $.unblockUI();
                         }
                         if (response == "overlapped") {

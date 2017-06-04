@@ -104,7 +104,8 @@ else
 <!-- /Datatables -->
 <script>
     $(document).ready(function () {
-        $(".thumbnail-col-reschedule").click(function () {
+        $('#rescheduledatatable').on('click', '.thumbnail-col-reschedule', function(){
+        //$(".thumbnail-col-reschedule").click(function () {
 
             debugger;
             var $buttonClicked = $(this);

@@ -55,6 +55,7 @@ namespace RestAPIs.Controllers
         //api/DoctorTimings? doctorId = { doctorId }
         public List<DoctorTimingsModel> GetDoctorTimingByDoctorId(long doctorId)
         {
+           
             var timings = new List<DoctorTimingsModel>();
             var temptimings = new List<DoctorTimingsModel>();
             var sortedtimings = new List<DoctorTimingsModel>();
@@ -88,149 +89,301 @@ namespace RestAPIs.Controllers
                 timings.Add(model);
             }
 
-            //foreach (var item in timings)
-            //{
-            //    if (item.day == "Monday")
-            //    {
-            //        var test = sortedtimings.Where(x => x.day == "Monday").FirstOrDefault();
-            //        if (test == null)
-            //        {
+            foreach (var item in timings)
+            {
+                if (item.day == "Monday")
+                {
+                    var test = sortedtimings.Where(x => x.day == "Monday").FirstOrDefault();
+                    if (test == null)
+                    {
+                        temptimings = timings.Where(x => x.day == "Monday").ToList();
+                        foreach(var y in temptimings)
+                        {
+                            DateTime? from = DateTime.UtcNow.Date;
+                            from = from + DateTime.ParseExact(y.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                            from = TimeZoneInfo.ConvertTimeFromUtc(from.Value, dzoneInfo);
+                            y.from = from.Value.ToString("hh:mm tt",CultureInfo.InvariantCulture);
 
+                            DateTime? to = DateTime.UtcNow.Date;
+                            to = to + DateTime.ParseExact(y.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                            to = TimeZoneInfo.ConvertTimeFromUtc(to.Value, dzoneInfo);
+                            y.to = to.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                        }
                         
-            //            temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Monday").ToList();
-            //            foreach (var i in temptimings)
-            //            {
-            //                var model = new DoctorTimingsModel();
-            //                model.doctorID = (long)i.doctorID;
-            //                model.doctorTimingsID = i.doctorTimingsID;
-            //                model.day = i.day;
-            //                model.from = i.from;
-            //                model.to = i.to;
-            //                sortedtimings.Add(model);
+                        temptimings = temptimings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Monday").ToList();
+                        foreach (var i in temptimings)
+                        {
+                            var model = new DoctorTimingsModel();
+                            model.doctorID = (long)i.doctorID;
+                            model.doctorTimingsID = i.doctorTimingsID;
+                            model.day = i.day;
+                            DateTime fromtime = DateTime.ParseExact(i.from,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
+                            fromtime = TimeZoneInfo.ConvertTimeToUtc(fromtime, dzoneInfo);
+                            i.from = fromtime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                            model.from = i.from;
+                            DateTime totime = DateTime.ParseExact(i.to,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
+                            totime = TimeZoneInfo.ConvertTimeToUtc(totime, dzoneInfo);
+                            i.to = totime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                            model.to = i.to;
+                            sortedtimings.Add(model);
 
-            //            }
-            //        }
+                        }
+                    }
 
-            //    }
-            //    if (item.day == "Tuesday")
-            //    {
-            //        var test = sortedtimings.Where(x => x.day == "Tuesday").FirstOrDefault();
-            //        if (test == null)
-            //        {
-            //            temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Tuesday").ToList();
-            //            foreach (var i in temptimings)
-            //            {
-            //                var model = new DoctorTimingsModel();
-            //                model.doctorID = (long)i.doctorID;
-            //                model.doctorTimingsID = i.doctorTimingsID;
-            //                model.day = i.day;
-            //                model.from = i.from;
-            //                model.to = i.to;
-            //                sortedtimings.Add(model);
+                }
+                if (item.day == "Tuesday")
+                {
+                    var test = sortedtimings.Where(x => x.day == "Tuesday").FirstOrDefault();
+                    if (test == null)
+                    {
+                        temptimings = timings.Where(x => x.day == "Tuesday").ToList();
+                        foreach (var y in temptimings)
+                        {
+                            DateTime? from = DateTime.UtcNow.Date;
+                            from = from + DateTime.ParseExact(y.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                            from = TimeZoneInfo.ConvertTimeFromUtc(from.Value, dzoneInfo);
+                            y.from = from.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
 
-            //            }
-            //        }
-            //    }
-            //    if (item.day == "Wednesday")
-            //    {
-            //        var test = sortedtimings.Where(x => x.day == "Wednesday").FirstOrDefault();
-            //        if (test == null)
-            //        {
-            //            temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Wednesday").ToList();
-            //            foreach (var i in temptimings)
-            //            {
-            //                var model = new DoctorTimingsModel();
-            //                model.doctorID = (long)i.doctorID;
-            //                model.doctorTimingsID = i.doctorTimingsID;
-            //                model.day = i.day;
-            //                model.from = i.from;
-            //                model.to = i.to;
-            //                sortedtimings.Add(model);
+                            DateTime? to = DateTime.UtcNow.Date;
+                            to = to + DateTime.ParseExact(y.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                            to = TimeZoneInfo.ConvertTimeFromUtc(to.Value, dzoneInfo);
+                            y.to = to.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                        }
 
-            //            }
-            //        }
-            //    }
-            //    if (item.day == "Thursday")
-            //    {
-            //        var test = sortedtimings.Where(x => x.day == "Thursday").FirstOrDefault();
-            //        if (test == null)
-            //        {
-            //            temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Thursday").ToList();
-            //            foreach (var i in temptimings)
-            //            {
-            //                var model = new DoctorTimingsModel();
-            //                model.doctorID = (long)i.doctorID;
-            //                model.doctorTimingsID = i.doctorTimingsID;
-            //                model.day = i.day;
-            //                model.from = i.from;
-            //                model.to = i.to;
-            //                sortedtimings.Add(model);
+                        temptimings = temptimings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Tuesday").ToList();
+                        foreach (var i in temptimings)
+                        {
+                            var model = new DoctorTimingsModel();
+                            model.doctorID = (long)i.doctorID;
+                            model.doctorTimingsID = i.doctorTimingsID;
+                            model.day = i.day;
+                            DateTime fromtime = DateTime.ParseExact(i.from,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
+                            fromtime = TimeZoneInfo.ConvertTimeToUtc(fromtime, dzoneInfo);
+                            i.from = fromtime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                            model.from = i.from;
+                            DateTime totime = DateTime.ParseExact(i.to,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
+                            totime = TimeZoneInfo.ConvertTimeToUtc(totime, dzoneInfo);
+                            i.to = totime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                            model.to = i.to;
+                            sortedtimings.Add(model);
 
-            //            }
-            //        }
-            //    }
-            //    if (item.day == "Friday")
-            //    {
-            //        var test = sortedtimings.Where(x => x.day == "Friday").FirstOrDefault();
-            //        if (test == null)
-            //        {
-            //            temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Friday").ToList();
-            //            foreach (var i in temptimings)
-            //            {
-            //                var model = new DoctorTimingsModel();
-            //                model.doctorID = (long)i.doctorID;
-            //                model.doctorTimingsID = i.doctorTimingsID;
-            //                model.day = i.day;
-            //                model.from = i.from;
-            //                model.to = i.to;
-            //                sortedtimings.Add(model);
+                        }
+                    }
+                }
+                if (item.day == "Wednesday")
+                {
+                    var test = sortedtimings.Where(x => x.day == "Wednesday").FirstOrDefault();
+                    if (test == null)
+                    {
+                        temptimings = timings.Where(x => x.day == "Wednesday").ToList();
+                        foreach (var y in temptimings)
+                        {
+                            DateTime? from = DateTime.UtcNow.Date;
+                            from = from + DateTime.ParseExact(y.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                            from = TimeZoneInfo.ConvertTimeFromUtc(from.Value, dzoneInfo);
+                            y.from = from.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
 
-            //            }
-            //        }
-            //    }
-            //    if (item.day == "Saturday")
-            //    {
-            //        var test = sortedtimings.Where(x => x.day == "Saturday").FirstOrDefault();
-            //        if (test == null)
-            //        {
-            //            temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Saturday").ToList();
-            //            foreach (var i in temptimings)
-            //            {
-            //                var model = new DoctorTimingsModel();
-            //                model.doctorID = (long)i.doctorID;
-            //                model.doctorTimingsID = i.doctorTimingsID;
-            //                model.day = i.day;
-            //                model.from = i.from;
-            //                model.to = i.to;
-            //                sortedtimings.Add(model);
+                            DateTime? to = DateTime.UtcNow.Date;
+                            to = to + DateTime.ParseExact(y.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                            to = TimeZoneInfo.ConvertTimeFromUtc(to.Value, dzoneInfo);
+                            y.to = to.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                        }
 
-            //            }
-            //        }
-            //    }
-            //    if (item.day == "Sunday")
-            //    {
-            //        var test = sortedtimings.Where(x => x.day == "Sunday").FirstOrDefault();
-            //        if (test == null)
-            //        {
-            //            temptimings = timings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Sunday").ToList();
-            //            foreach (var i in temptimings)
-            //            {
-            //                var model = new DoctorTimingsModel();
-            //                model.doctorID = (long)i.doctorID;
-            //                model.doctorTimingsID = i.doctorTimingsID;
-            //                model.day = i.day;
-            //                model.from = i.from;
-            //                model.to = i.to;
-            //                sortedtimings.Add(model);
+                        temptimings = temptimings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Wednesday").ToList();
+                        foreach (var i in temptimings)
+                        {
+                            var model = new DoctorTimingsModel();
+                            model.doctorID = (long)i.doctorID;
+                            model.doctorTimingsID = i.doctorTimingsID;
+                            model.day = i.day;
+                            DateTime fromtime = DateTime.ParseExact(i.from,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
+                            fromtime = TimeZoneInfo.ConvertTimeToUtc(fromtime, dzoneInfo);
+                            i.from = fromtime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                            model.from = i.from;
+                            DateTime totime = DateTime.ParseExact(i.to,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
+                            totime = TimeZoneInfo.ConvertTimeToUtc(totime, dzoneInfo);
+                            i.to = totime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                            model.to = i.to;
+                            sortedtimings.Add(model);
 
-            //            }
-            //        }
-            //    }
+                        }
+                    }
+                }
+                if (item.day == "Thursday")
+                {
+                    var test = sortedtimings.Where(x => x.day == "Thursday").FirstOrDefault();
+                    if (test == null)
+                    {
+                        temptimings = timings.Where(x => x.day == "Thursday").ToList();
+                        foreach (var y in temptimings)
+                        {
+                            DateTime? from = DateTime.UtcNow.Date;
+                            from = from + DateTime.ParseExact(y.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                            from = TimeZoneInfo.ConvertTimeFromUtc(from.Value, dzoneInfo);
+                            y.from = from.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
 
-            //}
+                            DateTime? to = DateTime.UtcNow.Date;
+                            to = to + DateTime.ParseExact(y.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                            to = TimeZoneInfo.ConvertTimeFromUtc(to.Value, dzoneInfo);
+                            y.to = to.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                        }
+
+                        temptimings = temptimings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Thursday").ToList();
+                        foreach (var i in temptimings)
+                        {
+                            var model = new DoctorTimingsModel();
+                            model.doctorID = (long)i.doctorID;
+                            model.doctorTimingsID = i.doctorTimingsID;
+                            model.day = i.day;
+                            DateTime fromtime = DateTime.ParseExact(i.from,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
+                            fromtime = TimeZoneInfo.ConvertTimeToUtc(fromtime, dzoneInfo);
+                            i.from = fromtime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                            model.from = i.from;
+                            DateTime totime = DateTime.ParseExact(i.to,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
+                            totime = TimeZoneInfo.ConvertTimeToUtc(totime, dzoneInfo);
+                            i.to = totime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                            model.to = i.to;
+                            sortedtimings.Add(model);
+
+                        }
+                    }
+                }
+                if (item.day == "Friday")
+                {
+                    var test = sortedtimings.Where(x => x.day == "Friday").FirstOrDefault();
+                    if (test == null)
+                    {
+                        temptimings = timings.Where(x => x.day == "Friday").ToList();
+                        foreach (var y in temptimings)
+                        {
+                            DateTime? from = DateTime.UtcNow.Date;
+                            from = from + DateTime.ParseExact(y.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                            from = TimeZoneInfo.ConvertTimeFromUtc(from.Value, dzoneInfo);
+                            y.from = from.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+
+                            DateTime? to = DateTime.UtcNow.Date;
+                            to = to + DateTime.ParseExact(y.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                            to = TimeZoneInfo.ConvertTimeFromUtc(to.Value, dzoneInfo);
+                            y.to = to.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                        }
+
+                        temptimings = temptimings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Friday").ToList();
+                        foreach (var i in temptimings)
+                        {
+                            var model = new DoctorTimingsModel();
+                            model.doctorID = (long)i.doctorID;
+                            model.doctorTimingsID = i.doctorTimingsID;
+                            model.day = i.day;
+                            DateTime fromtime = DateTime.ParseExact(i.from,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
+                            fromtime = TimeZoneInfo.ConvertTimeToUtc(fromtime, dzoneInfo);
+                            i.from = fromtime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                            model.from = i.from;
+                            DateTime totime = DateTime.ParseExact(i.to,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
+                            totime = TimeZoneInfo.ConvertTimeToUtc(totime, dzoneInfo);
+                            i.to = totime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                            model.to = i.to;
+                            sortedtimings.Add(model);
+
+                        }
+                    }
+                }
+                if (item.day == "Saturday")
+                {
+                    var test = sortedtimings.Where(x => x.day == "Saturday").FirstOrDefault();
+                    if (test == null)
+                    {
+                        temptimings = timings.Where(x => x.day == "Saturday").ToList();
+                        foreach (var y in temptimings)
+                        {
+                            DateTime? from = DateTime.UtcNow.Date;
+                            from = from + DateTime.ParseExact(y.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                            from = TimeZoneInfo.ConvertTimeFromUtc(from.Value, dzoneInfo);
+                            y.from = from.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+
+                            DateTime? to = DateTime.UtcNow.Date;
+                            to = to + DateTime.ParseExact(y.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                            to = TimeZoneInfo.ConvertTimeFromUtc(to.Value, dzoneInfo);
+                            y.to = to.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                        }
+
+                        temptimings = temptimings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Saturday").ToList();
+                        foreach (var i in temptimings)
+                        {
+                            var model = new DoctorTimingsModel();
+                            model.doctorID = (long)i.doctorID;
+                            model.doctorTimingsID = i.doctorTimingsID;
+                            model.day = i.day;
+                            DateTime fromtime = DateTime.ParseExact(i.from,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
+                            fromtime = TimeZoneInfo.ConvertTimeToUtc(fromtime, dzoneInfo);
+                            i.from = fromtime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                            model.from = i.from;
+                            DateTime totime = DateTime.ParseExact(i.to,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
+                            totime = TimeZoneInfo.ConvertTimeToUtc(totime, dzoneInfo);
+                            i.to = totime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                            model.to = i.to;
+                            sortedtimings.Add(model);
+
+                        }
+                    }
+                }
+                if (item.day == "Sunday")
+                {
+                    var test = sortedtimings.Where(x => x.day == "Sunday").FirstOrDefault();
+                    if (test == null)
+                    {
+                        temptimings = timings.Where(x => x.day == "Sunday").ToList();
+                        foreach (var y in temptimings)
+                        {
+                            DateTime? from = DateTime.UtcNow.Date;
+                            from = from + DateTime.ParseExact(y.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                            from = TimeZoneInfo.ConvertTimeFromUtc(from.Value, dzoneInfo);
+                            y.from = from.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+
+                            DateTime? to = DateTime.UtcNow.Date;
+                            to = to + DateTime.ParseExact(y.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                            to = TimeZoneInfo.ConvertTimeFromUtc(to.Value, dzoneInfo);
+                            y.to = to.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                        }
+
+                        temptimings = temptimings.OrderBy(x => DateTime.ParseExact(x.from, "hh:mm tt", CultureInfo.InvariantCulture)).Where(x => x.day == "Sunday").ToList();
+                        foreach (var i in temptimings)
+                        {
+                            var model = new DoctorTimingsModel();
+                            model.doctorID = (long)i.doctorID;
+                            model.doctorTimingsID = i.doctorTimingsID;
+                            model.day = i.day;
+                            DateTime fromtime = DateTime.ParseExact(i.from,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
+                            fromtime = TimeZoneInfo.ConvertTimeToUtc(fromtime, dzoneInfo);
+                            i.from = fromtime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                            model.from = i.from;
+                            DateTime totime = DateTime.ParseExact(i.to,
+                                   "hh:mm tt", CultureInfo.InvariantCulture);
+                            totime = TimeZoneInfo.ConvertTimeToUtc(totime, dzoneInfo);
+                            i.to = totime.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                            model.to = i.to;
+                            sortedtimings.Add(model);
+
+                        }
+                    }
+                }
+
+            }
 
 
-            return timings;
+            return sortedtimings;
         }
 
         // PUT: api/DoctorTimings/5
@@ -321,42 +474,67 @@ namespace RestAPIs.Controllers
 
         // POST: api/DoctorTimings
         [ResponseType(typeof(DoctorTimingsModel))]
-        public async Task<IHttpActionResult> PostDoctorTiming(DoctorTimingsModel doctorTimingModel)
+        public HttpResponseMessage PostDoctorTiming(DoctorTimingsModel doctorTimingModel)
         {
 
             if (doctorTimingModel.from.Contains("PM"))
             {
                 if (doctorTimingModel.to.Contains("AM"))
                 {
-                    return BadRequest("Timings should be within single day.");
+                    //return BadRequest("Timings should be within single day.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Timings should be within single day." });
+                    response.ReasonPhrase = "Timings should be within single day.";
+                    return response;
                 }
             }
             if (doctorTimingModel.from == doctorTimingModel.to)
             {
-                return BadRequest("From Time and To Time can not be same.");
+                //return BadRequest("From Time and To Time can not be same.");
+                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "From Time and To Time can not be same." });
+                response.ReasonPhrase = "From Time and To Time can not be same.";
+                return response;
 
             }
             if (DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay <
                 DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay)
             {
-                return BadRequest("From Time can not be greater than To Time.");
+                //return BadRequest("From Time can not be greater than To Time.");
+                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "From Time can not be greater than To Time." });
+                response.ReasonPhrase = "From Time can not be greater than To Time.";
+                return response;
             }
             TimeSpan diff = DateTime.ParseExact(doctorTimingModel.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay -
                DateTime.ParseExact(doctorTimingModel.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
             if (diff.TotalMinutes < 15)
             {
-                return BadRequest("Timespan less than 15 minutes is not allowed.");
+                //return BadRequest("Timespan less than 15 minutes is not allowed.");
+                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Timespan less than 15 minutes is not allowed." });
+                response.ReasonPhrase = "Timespan less than 15 minutes is not allowed.";
+                return response;
             }
             var doctorTiming = new DoctorTiming();
             var timingsList = GetDoctorTimingByDoctorId(doctorTimingModel.doctorID);
             var timezoneid = db.Doctors.Where(d => d.doctorID == doctorTimingModel.doctorID).Select(d => d.timezone).FirstOrDefault();
             TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());
+            foreach (var y in timingsList)
+            {
+                DateTime? from = DateTime.UtcNow.Date;
+                from = from + DateTime.ParseExact(y.from, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                from = TimeZoneInfo.ConvertTimeFromUtc(from.Value, zoneInfo);
+                y.from = from.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+
+                DateTime? to = DateTime.UtcNow.Date;
+                to = to + DateTime.ParseExact(y.to, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                to = TimeZoneInfo.ConvertTimeFromUtc(to.Value, zoneInfo);
+                y.to = to.Value.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+            }
             DateTime fromtimeUTC = DateTime.ParseExact(doctorTimingModel.from,
                                    "hh:mm tt", CultureInfo.InvariantCulture);
             //fromtimeUTC = TimeZoneInfo.ConvertTimeToUtc(fromtimeUTC,zoneInfo);
             DateTime totimeUTC = DateTime.ParseExact(doctorTimingModel.to,
                                   "hh:mm tt", CultureInfo.InvariantCulture);
             //totimeUTC = TimeZoneInfo.ConvertTimeToUtc(totimeUTC, zoneInfo);
+
             var alreadItems = timingsList
                     .Where(o => o.day == doctorTimingModel.day &&
                     (o.from == fromtimeUTC.ToString("hh:mm tt") || o.to == totimeUTC.ToString("hh:mm tt")
@@ -426,16 +604,38 @@ namespace RestAPIs.Controllers
             //    )
 
             //    )).ToList();
-
-            if (alreadItems.Count > 0)
+           
+            var chkpmtoam = alreadItems.Where(x => x.from.Contains("PM") && x.to.Contains("AM")).FirstOrDefault();
+            //var otherthanpmtoam = alreadItems.Where(x => !(x.from.Contains("PM")) && !(x.to.Contains("AM"))).FirstOrDefault();
+            var flag = 0;
+            foreach (var t in alreadItems)
             {
-                return BadRequest("Timings can not be overlapped across each other.");
-                //return CreatedAtRoute("DefaultApi", new { message = "Timings can not be overlapped across each other" }, doctorTiming);
+                if(t.from.Contains("AM") && t.to.Contains("AM") || 
+                    t.from.Contains("PM") && t.to.Contains("PM") ||
+                    t.from.Contains("AM") && t.to.Contains("PM"))
+                {
+                    flag = 1;
+                    break;
+                }
+            }
+            if (alreadItems.Count > 0 )
+            {
+                if(flag == 1)
+                {
+                    //return BadRequest("Timings can not be overlapped across each other.");
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Timings can not be overlapped across each other." });
+                    response.ReasonPhrase = "Timings can not be overlapped across each other.";
+                    return response;
+                }
+               //return CreatedAtRoute("DefaultApi", new { message = "Timings can not be overlapped across each other" }, doctorTiming);
             }
             
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                //return BadRequest(ModelState);
+                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Model is not valid." });
+                response.ReasonPhrase = "Model is not valid.";
+                return response;
             }
             try
             {
@@ -460,15 +660,20 @@ namespace RestAPIs.Controllers
                 doctorTiming.cb = doctorTimingModel.username;
 
                 db.DoctorTimings.Add(doctorTiming);
-                await db.SaveChangesAsync();
+                db.SaveChanges();
             }
             catch(Exception ex)
             {
-                return BadRequest(ex.Message);
+                //return BadRequest(ex.Message);
+                response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = ex.Message });
+                response.ReasonPhrase = ex.Message;
+                return response;
             }
             
 
-            return CreatedAtRoute("DefaultApi", new { id = doctorTiming.doctorTimingsID }, doctorTiming);
+            //return CreatedAtRoute("DefaultApi", new { id = doctorTiming.doctorTimingsID }, doctorTiming);
+            response = Request.CreateResponse(HttpStatusCode.OK, new { id = doctorTiming.doctorTimingsID, doctorTiming });
+            return response;
         }
 
         // DELETE: api/DoctorTimings/5

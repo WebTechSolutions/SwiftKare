@@ -314,13 +314,13 @@
     }
     //////////////////
     //Show Timing Slots
-    $(".reschedule").click(function () {
+    //$(".reschedule").click(function () {
 
-        //debugger;
-        var $buttonClicked = $(this);
-        appdate = $buttonClicked.attr('data-id');
-        //alert($('#fetchdate').val());
-    });
+    //    //debugger;
+    //    var $buttonClicked = $(this);
+    //    appdate = $buttonClicked.attr('data-id');
+    //    //alert($('#fetchdate').val());
+    //});
     $("#myModal1").on('show.bs.modal', function (e) {
         var $modal = $(this);
         var todoId="";
@@ -340,7 +340,7 @@
 
         $("#doctorid").val(todoId);
         var caps=docName.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-        $("#timingsmodaltitle").text("Dr. "+caps + " Timings");
+        $("#timingsmodaltitle").text(caps + " Timings");
 
 
 
@@ -408,7 +408,7 @@
     }
 
     function showDoctorTimings(doctorID, appID, appDate) { //is called when modal dialog is opened
-        console.log('showDoctorTimings');
+        console.log('showDoctorTimings '+ appDate);
         showLoader();
         var cappDate = appDate.split("/");
         var f = new Date(cappDate[2], cappDate[1] - 1, cappDate[0]);
@@ -436,9 +436,11 @@
         var addateParts = appDate.split("/");
         var dappDate = new Date(addateParts[2], addateParts[1] - 1, addateParts[0]);
         //alert('today ' + dtoday + ' App Date ' + dappDate);
+        console.log('today ' + dtoday + ' App Date ' + dappDate);
         if (dtoday > dappDate)
         {
             //alert('today ' + dtoday + ' App Date ' + dappDate);
+            //console.log('today ' + dtoday + ' App Date ' + dappDate);
             $('#fetchdate').val(today);
             _objSearch["appDate"] = today;
             _objSearch["doctorID"] = doctorID;
@@ -446,7 +448,7 @@
         else if (dtoday < dappDate)
         {
             //alert('today ' + dtoday + ' App Date ' + dappDate);
-           
+            //console.log('today ' + dtoday + ' App Date ' + dappDate);
             $('#fetchdate').val(today);
             _objSearch["appDate"] = today;
             _objSearch["doctorID"] = doctorID;
@@ -514,13 +516,13 @@
     function reloadModelContainer(callback) {
         debugger;
         var appid=$("#pvappid").val();
-
+        //alert(appid);
         $("#myModalContent").load('@Url.Action("ViewAppDetails", "Appointment")?appID='+appid, function () {
             callback();
         });
 
     }
-    $(".scheduler").addClass("current-page");
+    //$(".scheduler").addClass("current-page");
 </script> 
 
 <script type="text/javascript">

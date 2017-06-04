@@ -210,21 +210,12 @@ else
 
 <script>
     $(document).ready(function () {
-       
-        $(".pendingviewdetail").click(function () {
-            //alert($("#pvcid").val());
-            //debugger;
+        $('#datatablepending').on('click', '.pendingviewdetail', function(){
             var $buttonClicked = $(this);
             var AppDetailPostBackURL = '/Appointment/ViewAppDetails';
             var docid = $buttonClicked.attr('data-id');
             var appID = $buttonClicked.attr('id');
-            //$('#myModalContent').html(data);
-            //$('#myModal4').modal('show');
-            //$("#myModalContent").load('@Url.Action("ViewAppDetails", "Appointment")', function () {
-            //callback();
-            //});
-            //$('#myModal4').modal('show');
-
+            console.log(docid+' '+appID);
             reloadModelContainer(function ()
             {
                 var $modal = $('#myModal4');
@@ -238,14 +229,36 @@ else
                     $cc.show();
                 }
 
-                //Stop displaying loader
-                //stopLoader();
-
             });
-
         });
-
-
     });
+       
+        //$(".pendingviewdetail").click(function () {
+           
+           
+        //    var $buttonClicked = $(this);
+        //    var AppDetailPostBackURL = '/Appointment/ViewAppDetails';
+        //    var docid = $buttonClicked.attr('data-id');
+        //    var appID = $buttonClicked.attr('id');
+        //    console.log(docid+' '+appID);
+        //    reloadModelContainer(function ()
+        //    {
+        //        var $modal = $('#myModal4');
+        //        $editappid = $modal.find('#editappid');
+        //        $doctorid = $modal.find('#doctorid');
+        //        $editappid.val(appID);
+        //        $doctorid.val(docid);
+        //        if($("#pvcid").val()!=0)
+        //        {
+        //            $cc = $modal.find('#cc');
+        //            $cc.show();
+        //        }
+
+        //   });
+
+        //});
+
+
+    //});
 </script>
 
