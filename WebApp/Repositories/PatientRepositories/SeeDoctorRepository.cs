@@ -91,7 +91,7 @@ namespace WebApp.Repositories.DoctorRepositories
             try
             {
                 var strContent = JsonConvert.SerializeObject(searchModel);
-                var response = ApiConsumerHelper.PostData("api/fetchDoctorTimeNeww/?searchModel", strContent);
+                var response = ApiConsumerHelper.PostData("api/fetchDoctorTimeWeb/?searchModel", strContent);
                 var result = JsonConvert.DeserializeObject<DocTimingsAndAppointment>(response);
                 return result;
             }
