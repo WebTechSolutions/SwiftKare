@@ -82,7 +82,7 @@
     if (appDate != "" && appTime != "")
     {
         DateTime utcappdate = DateTime.Parse(appDate);
-       
+
         TimeSpan utcapptimings = TimeSpan.Parse(appTime);
         DateTime result = Convert.ToDateTime(utcappdate.ToString("yyyy-MM-dd")) + utcapptimings;
         utcdate = string.Format("{0:yyyy-MM-dd HH:mm:ss}", result);
@@ -97,7 +97,9 @@
         DateTime date = DateTime.Parse(appDate);
         //DateTime temp=DateTime.ParseExact(date.Date.ToString(), "MM/dd/yyyy", null);
         formattedDate = string.Format("{0:dd MMM, yyyy}", date);
-        showTimings = string.Format(" {0:dd/MM/yyyy}", date);
+        showTimings = string.Format("{0:dd/MM/yyyy}", date);
+        showTimings = showTimings.Replace("-", "/");
+
 
     }
     if (appTime != "")

@@ -26,7 +26,7 @@ namespace RestAPIs.Controllers
             try
             {
                 var allergies = (from l in db.Allergies
-                                 where l.active == true && l.allergyName.Contains(search)
+                                 where l.active == true && l.allergyName.StartsWith(search)
                                  select new AllergiesModel { allergyName = l.allergyName.Trim() }).Take(10).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, allergies);
                 return response;

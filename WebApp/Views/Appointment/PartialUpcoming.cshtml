@@ -91,9 +91,10 @@ else
 </script>
 <!-- /Datatables -->
 <script>
-   
+    
     $(document).ready(function () {
-        $(".thumbnail-col-inner").click(function () {
+        $('#datatableupcoming').on('click', '.thumbnail-col-inner', function(){
+        //$(".thumbnail-col-inner").click(function () {
 
             debugger;
             var $buttonClicked = $(this);

@@ -225,7 +225,7 @@ namespace RestAPIs.Controllers
                                                   dob = doc.dob,
                                                   city = doc.city,
                                                   state = doc.state,
-                                                  reviewStar = doc.reviewStar,
+                                                  reviewStar=doc.reviewStar,
                                                   languages = (from l in db.DoctorLanguages
                                                                where l.doctorID == doc.doctorID && l.active == true
                                                                select new { languageName = l.languageName }).ToList(),

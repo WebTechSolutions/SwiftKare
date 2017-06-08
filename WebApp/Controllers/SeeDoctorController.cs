@@ -357,6 +357,7 @@ namespace WebApp.Controllers
                 {
                     //calculate time slots
                     timings = createTimeSlots(appList);
+                    timings=timings.OrderBy(x => DateTime.ParseExact(x, "hh:mm tt", CultureInfo.InvariantCulture)).ToList();
                 }
 
                 return Json(new { Success = true, Object = timings });

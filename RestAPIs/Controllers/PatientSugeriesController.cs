@@ -27,7 +27,7 @@ namespace RestAPIs.Controllers
             try
             {
                 var surgeries = (from l in db.Surgeries
-                                 where l.active == true && l.surgeryName.Contains(search)
+                                 where l.active == true && l.surgeryName.StartsWith(search)
                                  select new SurgeriesModel { surgeryName = l.surgeryName.Trim() }).Take(10).ToList();
                 response = Request.CreateResponse(HttpStatusCode.OK, surgeries);
                 return response;

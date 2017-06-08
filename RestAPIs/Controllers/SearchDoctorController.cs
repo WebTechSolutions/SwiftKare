@@ -276,8 +276,8 @@ namespace RestAPIs.Controllers
 
         //}
 
-        [Route("api/fetchDoctorTimeNeww")]
-        public HttpResponseMessage FetchDoctorTimeNeww(FetchTimingsModel searchModel)
+        [Route("api/fetchDoctorTimeWeb")]
+        public HttpResponseMessage FetchDoctorTimeWeb(FetchTimingsModel searchModel)
         {
             try
             {
@@ -311,18 +311,11 @@ namespace RestAPIs.Controllers
         }
         private List<string> createTimeSlots(DocTimingsAndAppointment appList)
         {
-            //foreach (var item in appList.timingsVM)
-            //{
-            //    DateTime myDateTime = DateTime.Today.Add((TimeSpan)item.fromtime);
-            //    DateTimeOffset localTime = new DateTimeOffset(myDateTime, TimeSpan.FromMinutes(-300));
-            //    Console.Write(localTime.TimeOfDay);
-            //}
             List<string> timeSlots = new List<string> { };
 
-          
             foreach (var item in appList.timingsVM)
             {
-               
+
                 TimeSpan startTime = (TimeSpan)item.fromtime;
                 TimeSpan endTime = (TimeSpan)item.totime;
                 if (startTime.Minutes % 15 != 0)
@@ -345,7 +338,7 @@ namespace RestAPIs.Controllers
 
                 }
 
-                TimeSpan itemstartTime = startTime;
+                TimeSpan itemstartTime = startTime;//(TimeSpan)item.from;
 
                 if (!(timeSlots.Contains(startTime.ToString(@"hh\:mm"))))
                 {
@@ -388,17 +381,16 @@ namespace RestAPIs.Controllers
                     }
                     if (startTime.Hours == endTime.Hours)
                     {
-                        
                         if (startTime.Minutes > endTime.Minutes)
                         {
-  
                             flag = false;
                         }
                     }
 
-                    
+
                 } //while end 
             }//for loop for database records.
+
 
             foreach (var app in appList.appointmentVM)
             {
@@ -408,11 +400,9 @@ namespace RestAPIs.Controllers
                     TimeSpan apptime = TimeSpan.Parse(app.appTime.Value.ToString());
                     if (timeSlots.Contains(apptime.ToString(@"hh\:mm")))
                     {
-
                         timeSlots.Remove(apptime.ToString(@"hh\:mm"));
-                       
                     }
-                   
+
                 }
 
             }
@@ -574,27 +564,32 @@ namespace RestAPIs.Controllers
                  string[] formats = { "dd/MM/yyyy" };
                 var dateTime = DateTime.ParseExact(searchModel.appDate.Trim(), formats, new CultureInfo("en-US"), DateTimeStyles.None);
                 string appday = dateTime.ToString("dddd");
-                List<SP_FetchDoctorTimings_Result> appList = new List<SP_FetchDoctorTimings_Result>();
-                appList = db.SP_FetchDoctorTimings(searchModel.doctorID, dateTime).ToList();
-                //var doctimings = (from t in db.DoctorTimings
-                //               where t.doctorID == searchModel.doctorID
-                //               && t.day == appday && t.active == true
-                //               select new TimingsVM { doctorID = t.doctorID, fromtime = t.@from,
-                //                   totime = t.to }).ToList();
-                //var appointments = (from app in db.Appointments
-                //                    where app.doctorID == searchModel.doctorID &&
-                //                    app.appDate == dateTime
-                //                    select new AppointmentsVM { appTime = app.appTime }).ToList();
-                //DocTimingsAndAppointment appList = new DocTimingsAndAppointment();
-                //appList.timingsVM = doctimings;
-                //appList.appointmentVM = appointments;
+                //List<SP_FetchDoctorTimings_Result> appList = new List<SP_FetchDoctorTimings_Result>();
+                //appList = db.SP_FetchDoctorTimings(searchModel.doctorID, dateTime).ToList();
+                var doctimings = (from t in db.DoctorTimings
+                                  where t.doctorID == searchModel.doctorID
+                                  && t.day == appday && t.active == true
+                                  select new TimingsVM
+                                  {
+                                      doctorID = t.doctorID,
+                                      fromtime = t.@from,
+                                      totime = t.to
+                                  }).ToList();
+                var appointments = (from app in db.Appointments
+                                    where app.doctorID == searchModel.doctorID &&
+                                    app.appDate == dateTime
+                                    select new AppointmentsVM { appTime = app.appTime }).ToList();
+                DocTimingsAndAppointment appList = new DocTimingsAndAppointment();
+                appList.timingsVM = doctimings;
+                appList.appointmentVM = appointments;
                 List<string> timings = new List<string>();
                 
                 if (appList != null)
                 {
                     //calculate time slots
-                    //timings = createTimeSlots(appList);//displayTimeSlots(appList);
-                    timings = displayTimeSlots(appList);//displayTimeSlots(appList);
+                    timings = createTimeSlots(appList);//displayTimeSlots(appList);
+                    timings = timings.OrderBy(x => DateTime.ParseExact(x, "hh:mm tt", CultureInfo.InvariantCulture)).ToList();
+                    //timings = displayTimeSlots(appList);//displayTimeSlots(appList);
                 }
                 response = Request.CreateResponse(HttpStatusCode.OK, timings);
                 return response;
