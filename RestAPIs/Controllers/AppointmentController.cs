@@ -101,7 +101,7 @@ namespace RestAPIs.Controllers
                                              {
                                                  fileID = l.fileID,
                                                  FileName = l.FileName.Trim(),
-                                                 fileContent = l.fileContent,
+                                                 fileContent = l.fileContentBase64,
                                                  documentType = l.documentType
                                              }).ToList()
                               }).FirstOrDefault();
@@ -276,6 +276,53 @@ namespace RestAPIs.Controllers
                 db.Appointments.Add(app);
                 await db.SaveChangesAsync();
 
+                //Save Appointment files in database - Starts
+                List<KeyValuePair<string, string>> lstFiles = new List<KeyValuePair<string, string>>();
+                try
+                {
+                    if (!string.IsNullOrEmpty(model.rovFile1Base64))
+                    {
+                        var retBase64 = model.rovFile1Base64;
+                        lstFiles.Add(new KeyValuePair<string, string>(retBase64, model.rovFile1Name));
+                    }
+
+                    if (!string.IsNullOrEmpty(model.rovFile2Base64))
+                    {
+                        var retBase64 = model.rovFile2Base64;
+                        lstFiles.Add(new KeyValuePair<string, string>(retBase64, model.rovFile1Name));
+                    }
+
+                    if (!string.IsNullOrEmpty(model.rovFile3Base64))
+                    {
+                        var retBase64 = model.rovFile3Base64;
+                        lstFiles.Add(new KeyValuePair<string, string>(retBase64, model.rovFile1Name));
+                    }
+
+                    foreach (var itmFile in lstFiles)
+                    {
+                        var patfile = new UserFile();
+                        patfile.active = true;
+                        patfile.FileName = itmFile.Value;
+                        patfile.patientID = model.patientID;
+                        patfile.cd = System.DateTime.Now;
+                        patfile.md = System.DateTime.Now;
+                        patfile.doctorID = model.doctorID == -1 ? null : model.doctorID;
+                        patfile.fileContentBase64 = itmFile.Key;
+                        patfile.documentType = "Appointment";
+                        patfile.AppID = app.appID;
+                        patfile.cb = model.patientID.ToString();
+
+                        db.UserFiles.Add(patfile);
+                        await db.SaveChangesAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return ThrowError(ex, "Unable to upload File. Appointment created successfully");
+                }
+
+                //Save Appointment files in database - Ends
+
                 //Send Email on new appointment
                 //Get Email and iOSToken and Android Token of doctor and patient
                 //pushNotificationHelper.SendPushNotification(diOSToken,dAndroidToken,piOSToken,pAndroidToken,"Push Title","Push Message",doctorID,patientID);
@@ -320,51 +367,7 @@ namespace RestAPIs.Controllers
                 
 
 
-                //Save Appointment files in database - Starts
-                List<KeyValuePair<byte[], string>> lstFiles = new List<KeyValuePair<byte[], string>>();
-
-                if (!string.IsNullOrEmpty(model.rovFile1Base64))
-                {
-                    var retBase64 = model.rovFile1Base64.Substring(model.rovFile1Base64.IndexOf("base64,") + 7);
-                    retBase64 = MakeBase64Valid(retBase64);
-                    var retByteArray = System.Convert.FromBase64String(retBase64);
-                    lstFiles.Add(new KeyValuePair<byte[], string>(retByteArray, model.rovFile1Name));
-                }
-
-                if (!string.IsNullOrEmpty(model.rovFile2Base64))
-                {
-                    var retBase64 = model.rovFile2Base64.Substring(model.rovFile2Base64.IndexOf("base64,") + 7);
-                    retBase64 = MakeBase64Valid(retBase64);
-                    var retByteArray = System.Convert.FromBase64String(retBase64);
-                    lstFiles.Add(new KeyValuePair<byte[], string>(retByteArray, model.rovFile2Name));
-                }
-
-                if (!string.IsNullOrEmpty(model.rovFile3Base64))
-                {
-                    var retBase64 = model.rovFile3Base64.Substring(model.rovFile3Base64.IndexOf("base64,") + 7);
-                    retBase64 = MakeBase64Valid(retBase64);
-                    var retByteArray = System.Convert.FromBase64String(retBase64);
-                    lstFiles.Add(new KeyValuePair<byte[], string>(retByteArray, model.rovFile3Name));
-                }
-
-                foreach (var itmFile in lstFiles)
-                {
-                    var patfile = new UserFile();
-                    patfile.active = true;
-                    patfile.FileName = itmFile.Value;
-                    patfile.patientID = model.patientID;
-                    patfile.cd = System.DateTime.Now;
-                    patfile.md = System.DateTime.Now;
-                    patfile.doctorID = model.doctorID == -1 ? null : model.doctorID;
-                    patfile.fileContent = itmFile.Key;
-                    patfile.documentType = "Appointment";
-                    patfile.AppID = app.appID;
-                    patfile.cb = model.patientID.ToString();
-
-                    db.UserFiles.Add(patfile);
-                    await db.SaveChangesAsync();
-                }
-                //Save Appointment files in database - Ends
+                
 
                 
             }

@@ -842,6 +842,7 @@
           <Property Name="patientID" Type="bigint" />
           <Property Name="doctorID" Type="bigint" />
           <Property Name="AppID" Type="bigint" />
+          <Property Name="fileContentBase64" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="VCLog">
           <Key>
@@ -3681,6 +3682,7 @@
           <Property Name="AppID" Type="Int64" />
           <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_UserFiles_Doctor" FromRole="UserFile" ToRole="Doctor" />
           <NavigationProperty Name="Patient" Relationship="SwiftKareDBModel.FK_UserFiles_Patient" FromRole="UserFile" ToRole="Patient" />
+          <Property Name="fileContentBase64" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <ComplexType Name="SP_ViewPatientProfile_Result">
           <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
@@ -5421,6 +5423,7 @@
           <EntitySetMapping Name="UserFiles">
             <EntityTypeMapping TypeName="SwiftKareDBModel.UserFile">
               <MappingFragment StoreEntitySet="UserFiles">
+                <ScalarProperty Name="fileContentBase64" ColumnName="fileContentBase64" />
                 <ScalarProperty Name="AppID" ColumnName="AppID" />
                 <ScalarProperty Name="doctorID" ColumnName="doctorID" />
                 <ScalarProperty Name="patientID" ColumnName="patientID" />

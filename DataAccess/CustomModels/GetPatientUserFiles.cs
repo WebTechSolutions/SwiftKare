@@ -11,7 +11,7 @@ namespace DataAccess.CustomModels
         public long fileID { get; set; }
         public string documentType { get; set; }
         public string FileName { get; set; }
-        public byte[] fileContent { get; set; }
+        public string fileContent { get; set; }
         public Nullable<long> patientID { get; set; }
         public Nullable<long> doctorID { get; set; }
         public Nullable<DateTime> cd { get; set; }
@@ -52,6 +52,6 @@ namespace DataAccess.CustomModels
         public long fileID { get; set; }
         public string documentType { get; set; }
         public string FileName { get; set; }
-        public byte[] fileContent { get; set; }
+        public string fileContent { get; set; }
     }
     }

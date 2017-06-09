@@ -121,13 +121,13 @@ namespace WebApp.Hub
 
         public void GetUsersDoctor()
         {
-            var oRet = AllUserList.Where(x => x.Value.UserType == "Doctor");
+            var oRet = AllUserList.Where(x => x.Value.UserType.ToLower() == "doctor");
             Clients.Group("patients").showConnected(oRet);
         }
 
         public void GetUsersPatient()
         {
-            var oRet = AllUserList.Where(x => x.Value.UserType == "Patient");
+            var oRet = AllUserList.Where(x => x.Value.UserType.ToLower() == "patient");
             Clients.Group("doctors").showConnected(oRet);
         }
 
@@ -140,23 +140,21 @@ namespace WebApp.Hub
             data.UserGroup = "doctors";
             
 
-
-            //data.Sid = SessionHandler.UserInfo.Id;
-            //data.UserName = SessionHandler.UserInfo.Email;
-            //data.FirstName = SessionHandler.UserInfo.FirstName;
-            //data.LastName = SessionHandler.UserInfo.LastName;
-
             data.Ip = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
             AllUserList.TryAdd(conn, data);
            
-            if (data.UserType.ToString().Trim().Equals("Doctor"))
+            if (data.UserType.ToString().Trim().ToLower().Equals("doctor"))
                 Groups.Add(conn, "doctors");
             else
                 Groups.Add(conn, "patients");
-            /* GetUsersDoctor();
-             GetUsersPatient();   
-            */
-
+            
+        }
+        public void Disconnect(string connectionId)
+        {
+            UserInfo Value;
+            AllUserList.TryRemove(connectionId,out Value);
+            GetUsersPatient();
+            GetUsersDoctor();
         }
 
         public UserInfo TestJoin()

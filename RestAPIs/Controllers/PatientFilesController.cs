@@ -81,7 +81,7 @@ namespace RestAPIs.Controllers
                                  patientID = l.patientID,
                                  doctorID = l.doctorID,
                                  FileName = l.FileName.Trim(),
-                                 fileContent = l.fileContent,
+                                 fileContent = l.fileContentBase64,
                                  documentType = l.documentType,
                                  cd = l.md
                              }).FirstOrDefault();

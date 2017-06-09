@@ -516,6 +516,16 @@
                             //Show pnotify alert "Patient is ready for consultation.We are taking you to conference page."
                             window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + _tokboxinfo;
                     }
+                    
+                    //for iOS
+                    if (fromJson.status == 'tokbox') {
+                        //   alert('consultID recieved:' + fromJson.name);
+                        localStorage.setItem('tokbox', fromJson.name);
+                        if (tokboxInfo != '0')
+                            window.location = '@Url.Action("Index","UserChat")?tokboxInfo=' + fromJson.name;  //Redirected doctor to call
+                        else alert('Err in tokbox connection');
+                    }
+                    //end for iOS
                     var confirmCall;
                     if (fromJson.status == 'call') {
                         var options = {

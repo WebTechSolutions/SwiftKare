@@ -565,6 +565,18 @@
                             var tokboxInfo = oResp;
                             localStorage.setItem('tokbox', tokboxInfo);
 
+                            //for iOS
+                            chat.server.sendMessageToDoctor(
+                                       {
+                                           SenderId: '@SessionHandler.UserInfo.Id',
+                                           UserName: '@SessionHandler.UserInfo.Email',
+                                           ReceiverConnectionId: senderConnId,
+                                           ReceiverId: 20,
+                                           PatientName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
+                                           SenderType: 'Patient',
+                                           Message: JSON.stringify({ status: 'tokbox', name: tokboxInfo })
+                                       });
+                            //end for iOS
                             chat.server.patientRedirectedToCall
                                 (senderConnId, tokboxInfo, '@SessionHandler.UserInfo.Id', '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)');
 
