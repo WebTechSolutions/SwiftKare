@@ -468,13 +468,14 @@ function fetchTimings(fetchdate) {
                 var tablehtml = "";
                 $.each(response.Object, function (item) {
                    
-                    var tolocalTime = converttoLocal(response.Object[item]);
+                    //var tolocalTime = converttoLocal(response.Object[item]);
                    
-                    var flag = compareDateTime(fetchdate.trim(), tolocalTime);
+                    var flag = compareDateTime(fetchdate.trim(), response.Object[item]);
                     if (flag)
                     {
                         
-                        tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + fetchdate + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
+                        //tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + fetchdate + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
+                        tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + fetchdate + "\")' style='width:85px'>" + response.Object[item] + "</button></li>";
                     }
                         
 
@@ -526,13 +527,13 @@ function showDoctorTimings(doctorID) {
 
             var tablehtml = "";
             $.each(response.Object, function (item) {
-                var tolocalTime = converttoLocal(response.Object[item]);
-                
-                var flag = compareTime(tolocalTime);
+                //var tolocalTime = converttoLocal(response.Object[item]);
+                var flag = compareTime(response.Object[item]);
                 if (flag)
                 {
                     
-                    tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
+                    //tablehtml = tablehtml + " <li><button id ='" + converttoLocal(response.Object[item]) + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + converttoLocal(response.Object[item]) + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + converttoLocal(response.Object[item]) + "</button></li>";
+                    tablehtml = tablehtml + " <li><button id ='" + response.Object[item] + "' type='button' class='btn btn-primary' onclick='setDateTime(\"" + response.Object[item] + "\",\"" + $("#fetchdate").val() + "\")' style='width:85px'>" + response.Object[item] + "</button></li>";
                  }
             });
            

@@ -351,13 +351,22 @@ namespace WebApp.Controllers
             {
                 SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
                 DocTimingsAndAppointment appList = new DocTimingsAndAppointment();
+                ProfileRepository pr = new ProfileRepository();
                 appList = objSeeDoctorRepo.FetchDoctorTimesNew(model);
                 List<string> timings = new List<string>();
                 if (appList != null)
                 {
                     //calculate time slots
                     timings = createTimeSlots(appList);
-                    timings=timings.OrderBy(x => DateTime.ParseExact(x, "hh:mm tt", CultureInfo.InvariantCulture)).ToList();
+                    var ptz = pr.GetPatientTimeZone(SessionHandler.UserId);
+                    TimeZoneInfo pzoneInfo = TimeZoneInfo.FindSystemTimeZoneById(ptz.zonename.ToString());
+                    for(int t=0;t<timings.Count;t++)
+                    {
+                        DateTime loctimeslot = TimeZoneInfo.ConvertTimeFromUtc(DateTime.ParseExact(timings[t], "hh:mm tt", CultureInfo.InvariantCulture), pzoneInfo);
+                        timings[t] = loctimeslot.ToString("hh:mm tt");
+                    }
+                   
+                    timings =timings.OrderBy(x => DateTime.ParseExact(x, "hh:mm tt", CultureInfo.InvariantCulture)).ToList();
                 }
 
                 return Json(new { Success = true, Object = timings });

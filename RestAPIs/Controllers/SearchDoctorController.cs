@@ -295,7 +295,6 @@ namespace RestAPIs.Controllers
                 DocTimingsAndAppointment result = new DocTimingsAndAppointment();
                 result.timingsVM = timings;
                 result.appointmentVM = appointments;
-
                 response = Request.CreateResponse(HttpStatusCode.OK, result);
                
                return response;
@@ -304,7 +303,7 @@ namespace RestAPIs.Controllers
             catch (Exception ex)
             {
 
-                return ThrowError(ex, "FetchDoctorTimeNeww in SearchDoctorController");
+                return ThrowError(ex, "FetchDoctorTimeWeb in SearchDoctorController");
             }
 
 
