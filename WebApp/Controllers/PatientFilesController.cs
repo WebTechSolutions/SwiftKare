@@ -76,12 +76,13 @@ namespace WebApp.Controllers
 
                         MemoryStream oByteStream = new MemoryStream();
                         oFileInput.InputStream.CopyTo(oByteStream);
-
+                        byte[] filebytearr = oByteStream.ToArray();
+                        string contentType = MimeMapping.GetMimeMapping(fileName);
                         oPatientFilesRepository.AddPatientFiles(new DataAccess.CustomModels.FilesCustomModel
                         {
                             documentType = Convert.ToString(Request["fileType"]),
                             FileName = Path.GetFileName(fileName),
-                            fileContent = oByteStream.ToArray(),
+                            fileContentBase64 = "data:"+ contentType + ";base64," + Convert.ToBase64String(filebytearr),
                             patientID = SessionHandler.UserInfo.Id,
                             doctorID = -1
                         });
@@ -147,9 +148,12 @@ namespace WebApp.Controllers
                     break;
             }
 
-            return File(oFileToDownload.fileContent, contentType, fileName);
+            byte[] filebytearray=null;
+            var retBase64 = oFileToDownload.fileContent.Substring(oFileToDownload.fileContent.IndexOf("base64,") + 7);
+            filebytearray = System.Convert.FromBase64String(retBase64);
+            return File(filebytearray, contentType, fileName);
         }
-
+       
         private string RemoveSpecialCharacters(string str)
         {
             StringBuilder sb = new StringBuilder();

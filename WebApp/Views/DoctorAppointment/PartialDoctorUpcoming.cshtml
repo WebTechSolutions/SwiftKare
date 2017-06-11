@@ -351,7 +351,8 @@ else
 
 <script>
     $(function () {
-        $(".thumbnail-upcoming").click(function () {
+        $('#datatable').on('click', '.thumbnail-upcoming', function(){
+        //$(".thumbnail-upcoming").click(function () {
             //debugger;
             var $buttonClicked = $(this);
             var AppDetailPostBackURL = '/DoctorAppointment/ViewAppDetails';

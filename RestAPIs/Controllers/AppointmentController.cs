@@ -96,7 +96,7 @@ namespace RestAPIs.Controllers
                                               }).FirstOrDefault(),
                                   AppFiles= (from l in db.UserFiles
                                              where l.active == true && l.AppID == cn.appID
-                                             orderby l.fileID descending
+                                             orderby l.fileID ascending
                                              select new 
                                              {
                                                  fileID = l.fileID,
@@ -280,22 +280,29 @@ namespace RestAPIs.Controllers
                 List<KeyValuePair<string, string>> lstFiles = new List<KeyValuePair<string, string>>();
                 try
                 {
+
                     if (!string.IsNullOrEmpty(model.rovFile1Base64))
                     {
-                        var retBase64 = model.rovFile1Base64;
+                        //var retBase64 = model.rovFile1Base64.Substring(model.rovFile1Base64.IndexOf("base64,") + 7);
+                        //retBase64 = MakeBase64Valid(retBase64);
+                        var retBase64 = model.rovFile1Base64.Replace(System.Environment.NewLine, string.Empty);
                         lstFiles.Add(new KeyValuePair<string, string>(retBase64, model.rovFile1Name));
                     }
 
                     if (!string.IsNullOrEmpty(model.rovFile2Base64))
                     {
-                        var retBase64 = model.rovFile2Base64;
-                        lstFiles.Add(new KeyValuePair<string, string>(retBase64, model.rovFile1Name));
+                        //var retBase64 = model.rovFile2Base64.Substring(model.rovFile2Base64.IndexOf("base64,") + 7); ;
+                        //retBase64 = MakeBase64Valid(retBase64);
+                        var retBase64 = model.rovFile2Base64.Replace(System.Environment.NewLine, string.Empty);
+                        lstFiles.Add(new KeyValuePair<string, string>(retBase64, model.rovFile2Name));
                     }
 
                     if (!string.IsNullOrEmpty(model.rovFile3Base64))
                     {
-                        var retBase64 = model.rovFile3Base64;
-                        lstFiles.Add(new KeyValuePair<string, string>(retBase64, model.rovFile1Name));
+                        //var retBase64 = model.rovFile3Base64.Substring(model.rovFile3Base64.IndexOf("base64,") + 7); ;
+                        //retBase64 = MakeBase64Valid(retBase64);
+                        var retBase64 = model.rovFile3Base64.Replace(System.Environment.NewLine, string.Empty);
+                        lstFiles.Add(new KeyValuePair<string, string>(retBase64, model.rovFile3Name));
                     }
 
                     foreach (var itmFile in lstFiles)

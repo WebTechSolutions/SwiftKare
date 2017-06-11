@@ -349,7 +349,8 @@ else
 </script>
 <script>
     $(function () {
-        $(".thumbnail-pending").click(function () {
+        $('#pendingdatatable').on('click', '.thumbnail-pending', function(){
+      
             //debugger;
             var $buttonClicked = $(this);
             var AppDetailPostBackURL = '/DoctorAppointment/ViewAppDetails';

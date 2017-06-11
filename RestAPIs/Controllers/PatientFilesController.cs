@@ -98,7 +98,19 @@ namespace RestAPIs.Controllers
             }
         }
 
+        private static string MakeBase64Valid(string data)
+        {
+            data = data.Replace(" ", "+");
 
+            int mod4 = data.Length % 4;
+            if (mod4 > 0)
+            {
+                data += new string('=', 4 - mod4);
+            }
+
+
+            return data;
+        }
         [Route("api/addPatientFile")]
         [ResponseType(typeof(HttpResponseMessage))]
         public async Task<HttpResponseMessage> AddPatientFiles(FilesCustomModel model)
@@ -122,9 +134,10 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
                     return response;
                 }*/
-                if (model.fileContent == null)
+                if (model.fileContentBase64 == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "File is empty. " });
+                    response.ReasonPhrase = "Blank file is not allowed.";
                     return response;
                 }
                 if (model.documentType == null || model.documentType == "")
@@ -132,8 +145,13 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Please provide document type. " });
                     return response;
                 }
-               
+
+                //var retBase64 = model.fileContentBase64.Substring(model.fileContentBase64.IndexOf("base64,") + 7); ;
+                //retBase64 = MakeBase64Valid(retBase64);
+                var retBase64 = model.fileContentBase64.Replace(System.Environment.NewLine, string.Empty);
+
                 patfile = db.UserFiles.Where(m => m.FileName == model.FileName.Trim() && m.active == true).FirstOrDefault();
+                
                 if (patfile == null)
                 {
                     patfile = new UserFile();
@@ -142,8 +160,8 @@ namespace RestAPIs.Controllers
                     patfile.patientID = model.patientID;
                     patfile.cd = System.DateTime.Now;
                     patfile.md= System.DateTime.Now;
-                  //  patfile.doctorID = model.doctorID == -1 ? null : model.doctorID;
-                    patfile.fileContent = model.fileContent;
+                   //patfile.doctorID = model.doctorID == -1 ? null : model.doctorID;
+                    patfile.fileContentBase64 = retBase64;
                     patfile.documentType = model.documentType;
                     patfile.cb = model.patientID.ToString();
 
@@ -154,7 +172,8 @@ namespace RestAPIs.Controllers
                 }
                 else
                 {
-                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "File name already taken." });
+                    response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "File already exists." });
+                    response.ReasonPhrase = "File already exists.";
                     return response;
                 }
 

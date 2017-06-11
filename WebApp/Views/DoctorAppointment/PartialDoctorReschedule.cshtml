@@ -202,7 +202,8 @@ else
 </script>
 <script>
     $(function () {
-        $(".thumbnail-col-innerr").click(function () {
+        $('#rescheduledatatable').on('click', '.thumbnail-col-innerr', function(){
+        //$(".thumbnail-col-innerr").click(function () {
             //debugger;
             var $buttonClicked = $(this);
             var AppDetailPostBackURL = '/DoctorAppointment/ViewAppDetails';
