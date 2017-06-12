@@ -14,6 +14,7 @@ using System.Net.Http;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -213,6 +214,7 @@ namespace RestAPIs.Controllers
                     response.ReasonPhrase = "Invalid patientID.";
                     return response;
                 }
+                
                 if (model.appTime.Trim().Length < 8)
                 {
                     model.appTime = "0" + model.appTime.Trim();
@@ -283,25 +285,28 @@ namespace RestAPIs.Controllers
 
                     if (!string.IsNullOrEmpty(model.rovFile1Base64))
                     {
-                        //var retBase64 = model.rovFile1Base64.Substring(model.rovFile1Base64.IndexOf("base64,") + 7);
-                        //retBase64 = MakeBase64Valid(retBase64);
-                        var retBase64 = model.rovFile1Base64.Replace(System.Environment.NewLine, string.Empty);
+                        var retBase64 = model.rovFile1Base64.Substring(model.rovFile1Base64.IndexOf("base64,") + 7);
+                        retBase64 = MakeBase64Valid(retBase64);
+                        string contentType = MimeMapping.GetMimeMapping(model.rovFile1Name);
+                        retBase64 = "data:" + contentType + ";base64," + retBase64;
                         lstFiles.Add(new KeyValuePair<string, string>(retBase64, model.rovFile1Name));
                     }
 
                     if (!string.IsNullOrEmpty(model.rovFile2Base64))
                     {
-                        //var retBase64 = model.rovFile2Base64.Substring(model.rovFile2Base64.IndexOf("base64,") + 7); ;
-                        //retBase64 = MakeBase64Valid(retBase64);
-                        var retBase64 = model.rovFile2Base64.Replace(System.Environment.NewLine, string.Empty);
+                        var retBase64 = model.rovFile2Base64.Substring(model.rovFile2Base64.IndexOf("base64,") + 7); ;
+                        retBase64 = MakeBase64Valid(retBase64);
+                        string contentType = MimeMapping.GetMimeMapping(model.rovFile2Name);
+                        retBase64 = "data:" + contentType + ";base64," + retBase64;
                         lstFiles.Add(new KeyValuePair<string, string>(retBase64, model.rovFile2Name));
                     }
 
                     if (!string.IsNullOrEmpty(model.rovFile3Base64))
                     {
-                        //var retBase64 = model.rovFile3Base64.Substring(model.rovFile3Base64.IndexOf("base64,") + 7); ;
-                        //retBase64 = MakeBase64Valid(retBase64);
-                        var retBase64 = model.rovFile3Base64.Replace(System.Environment.NewLine, string.Empty);
+                        var retBase64 = model.rovFile3Base64.Substring(model.rovFile3Base64.IndexOf("base64,") + 7); ;
+                        retBase64 = MakeBase64Valid(retBase64);
+                        string contentType = MimeMapping.GetMimeMapping(model.rovFile3Name);
+                        retBase64 = "data:" + contentType + ";base64," + retBase64;
                         lstFiles.Add(new KeyValuePair<string, string>(retBase64, model.rovFile3Name));
                     }
 
@@ -318,14 +323,13 @@ namespace RestAPIs.Controllers
                         patfile.documentType = "Appointment";
                         patfile.AppID = app.appID;
                         patfile.cb = model.patientID.ToString();
-
                         db.UserFiles.Add(patfile);
                         await db.SaveChangesAsync();
                     }
                 }
                 catch (Exception ex)
                 {
-                    return ThrowError(ex, "Unable to upload File. Appointment created successfully");
+                    return ThrowError(ex, "Unable to upload File. Appointment created successfully.");
                 }
 
                 //Save Appointment files in database - Ends
@@ -370,13 +374,7 @@ namespace RestAPIs.Controllers
                 //DateTime mydateTime = DateTime.ParseExact(model.appTime.Trim(),
                 //                            "hh:mm tt", CultureInfo.InvariantCulture);
                 //DateTime newappDateTime = ad + mydateTime.TimeOfDay;
-                
-                
-
-
-                
-
-                
+                              
             }
             catch (Exception ex)
             {

@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -146,10 +147,10 @@ namespace RestAPIs.Controllers
                     return response;
                 }
 
-                //var retBase64 = model.fileContentBase64.Substring(model.fileContentBase64.IndexOf("base64,") + 7); ;
-                //retBase64 = MakeBase64Valid(retBase64);
-                var retBase64 = model.fileContent.Replace(System.Environment.NewLine, string.Empty);
-
+                var retBase64 = model.fileContent.Substring(model.fileContent.IndexOf("base64,") + 7);
+                retBase64 = MakeBase64Valid(retBase64);
+                string contentType = MimeMapping.GetMimeMapping(model.FileName);
+                retBase64 = "data:" + contentType + ";base64," + retBase64;
                 patfile = db.UserFiles.Where(m => m.FileName == model.FileName.Trim() && m.active == true).FirstOrDefault();
                 
                 if (patfile == null)
@@ -181,7 +182,7 @@ namespace RestAPIs.Controllers
             }
             catch (Exception ex)
             {
-                return ThrowError(ex, "AddPatientCondition in PatientFileController.");
+                return ThrowError(ex, "Unable to upload file.");
             }
            
 

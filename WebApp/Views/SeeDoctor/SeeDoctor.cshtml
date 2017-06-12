@@ -1652,7 +1652,7 @@
         $("#fileID1").change(function () {
             var filepath = $("#fileID1").val();
             var filename = filepath.substring(filepath.lastIndexOf('\\') + 1);
-
+            
             //Validate file
             var fileExt = filepath.substring(filepath.lastIndexOf('.') + 1).toLowerCase();
 
@@ -1664,6 +1664,11 @@
 
             var fileID1 = document.querySelector('#fileID1').files[0];
 
+            if(fileID1.size == 0){
+                new PNotify({ title: 'Error', text: 'Blank file is not allowed.', type: 'error', styling: 'bootstrap3' });
+                deSelectFile1();
+                return;
+            }
             if(fileID1.size >= (1048576*2)){
                 new PNotify({ title: 'Error', text: 'File 1 size must be less than 2 MB.', type: 'error', styling: 'bootstrap3' });
                 deSelectFile1();
@@ -1703,6 +1708,11 @@
 
             var fileID2 = document.querySelector('#fileID2').files[0];
 
+            if(fileID2.size == 0){
+                new PNotify({ title: 'Error', text: 'Blank file is not allowed.', type: 'error', styling: 'bootstrap3' });
+                deSelectFile1();
+                return;
+            }
             if(fileID2.size >= (1048576*2)){
                 new PNotify({ title: 'Error', text: 'File 2 size must be less than 2 MB.', type: 'error', styling: 'bootstrap3' });
                 deSelectFile2();
@@ -1741,7 +1751,11 @@
             }
 
             var fileID3 = document.querySelector('#fileID3').files[0];
-
+            if(fileID3.size == 0){
+                new PNotify({ title: 'Error', text: 'Blank file is not allowed.', type: 'error', styling: 'bootstrap3' });
+                deSelectFile1();
+                return;
+            }
             if(fileID3.size >= (1048576*2)){
                 new PNotify({ title: 'Error', text: 'File 3 size must be less than 2 MB.', type: 'error', styling: 'bootstrap3' });
                 deSelectFile3();

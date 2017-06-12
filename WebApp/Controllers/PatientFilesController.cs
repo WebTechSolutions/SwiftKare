@@ -147,11 +147,11 @@ namespace WebApp.Controllers
                     contentType = "application/binary";
                     break;
             }
-
-            byte[] filebytearray=null;
+            byte[] filebytearray = null;
             var retBase64 = oFileToDownload.fileContent.Substring(oFileToDownload.fileContent.IndexOf("base64,") + 7);
             filebytearray = System.Convert.FromBase64String(retBase64);
             return File(filebytearray, contentType, fileName);
+                   
         }
        
         private string RemoveSpecialCharacters(string str)
