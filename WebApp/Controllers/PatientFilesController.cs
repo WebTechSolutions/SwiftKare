@@ -82,7 +82,7 @@ namespace WebApp.Controllers
                         {
                             documentType = Convert.ToString(Request["fileType"]),
                             FileName = Path.GetFileName(fileName),
-                            fileContentBase64 = "data:"+ contentType + ";base64," + Convert.ToBase64String(filebytearr),
+                            fileContent = "data:"+ contentType + ";base64," + Convert.ToBase64String(filebytearr),
                             patientID = SessionHandler.UserInfo.Id,
                             doctorID = -1
                         });

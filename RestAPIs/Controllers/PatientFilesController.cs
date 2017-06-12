@@ -134,7 +134,7 @@ namespace RestAPIs.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "Invalid doctor ID." });
                     return response;
                 }*/
-                if (model.fileContentBase64 == null)
+                if (model.fileContent == null)
                 {
                     response = Request.CreateResponse(HttpStatusCode.BadRequest, new ApiResultModel { ID = 0, message = "File is empty. " });
                     response.ReasonPhrase = "Blank file is not allowed.";
@@ -148,7 +148,7 @@ namespace RestAPIs.Controllers
 
                 //var retBase64 = model.fileContentBase64.Substring(model.fileContentBase64.IndexOf("base64,") + 7); ;
                 //retBase64 = MakeBase64Valid(retBase64);
-                var retBase64 = model.fileContentBase64.Replace(System.Environment.NewLine, string.Empty);
+                var retBase64 = model.fileContent.Replace(System.Environment.NewLine, string.Empty);
 
                 patfile = db.UserFiles.Where(m => m.FileName == model.FileName.Trim() && m.active == true).FirstOrDefault();
                 

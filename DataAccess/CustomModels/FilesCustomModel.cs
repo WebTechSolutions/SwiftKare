@@ -10,7 +10,7 @@ namespace DataAccess.CustomModels
     {
         public string documentType { get; set; }
         public string FileName { get; set; }
-        public byte[] fileContent { get; set; }
+        public string fileContent { get; set; }
         public string fileContentBase64 { get; set; }
         public Nullable<long> patientID { get; set; }
         public Nullable<long> doctorID { get; set; }
