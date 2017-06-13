@@ -73,7 +73,12 @@
 
                 var filepath = $("#fileID").val();
                 var fileExt = filepath.substring(filepath.lastIndexOf('.') + 1).toLowerCase();
+                var fileID = document.querySelector('#fileID').files[0];
 
+                if (fileID.size == 0) {
+                    new PNotify({ title: 'Error', text: 'Blank file is not allowed.', type: 'error', styling: 'bootstrap3' });
+                    return;
+                }
                 if (fileExt != "txt" && fileExt != "pdf" && fileExt != "docx" && fileExt != "csv" && fileExt != "jpg" && fileExt != "png") {
                     new PNotify({ title: 'Error', text: 'File format is not supported. Please choose appropriate file format.', type: 'error', styling: 'bootstrap3' });
                     return;
