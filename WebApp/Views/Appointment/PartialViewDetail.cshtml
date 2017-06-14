@@ -66,7 +66,7 @@
     }
     if (Model.paymentAmt != null)
     {
-        amount = Model.paymentAmt.ToString();
+        amount = (Model.paymentAmt/100).ToString();
     }
     if (Model.PatientVM != null)
     { pharmacy = Model.PatientVM.pharmacy; }

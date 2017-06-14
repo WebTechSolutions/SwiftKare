@@ -98,17 +98,21 @@ namespace RestAPIs.Controllers
                                   AppFiles= (from l in db.UserFiles
                                              where l.active == true && l.AppID == cn.appID
                                              orderby l.fileID ascending
-                                             select new 
+                                             select new AppFilesCustom
                                              {
                                                  fileID = l.fileID,
                                                  FileName = l.FileName.Trim(),
-                                                 fileContent = l.fileContentBase64,
+                                                 fileContentbytearray = l.fileContent,
                                                  documentType = l.documentType
                                              }).ToList()
-                              }).FirstOrDefault();
-                
-                //result.appDate = result.appDate.GetValueOrDefault().ToString("dd/MM/yyy tt");
-                //aappTime = cn.appTime.GetValueOrDefault().ToString("hh:mm tt"),
+
+                                 }).FirstOrDefault();
+
+                foreach(var f in result.AppFiles)
+                {
+                    f.fileContent = "data:image/png;base64,"+Convert.ToBase64String(f.fileContentbytearray);
+                    f.fileContentbytearray = null;
+                }
                 response = Request.CreateResponse(HttpStatusCode.OK, result);
                 return response;
 
@@ -279,35 +283,32 @@ namespace RestAPIs.Controllers
                 await db.SaveChangesAsync();
 
                 //Save Appointment files in database - Starts
-                List<KeyValuePair<string, string>> lstFiles = new List<KeyValuePair<string, string>>();
+                List<KeyValuePair<byte[], string>> lstFiles = new List<KeyValuePair<byte[], string>>();
                 try
                 {
 
                     if (!string.IsNullOrEmpty(model.rovFile1Base64))
                     {
                         var retBase64 = model.rovFile1Base64.Substring(model.rovFile1Base64.IndexOf("base64,") + 7);
-                        retBase64 = MakeBase64Valid(retBase64);
-                        string contentType = MimeMapping.GetMimeMapping(model.rovFile1Name);
-                        retBase64 = "data:" + contentType + ";base64," + retBase64;
-                        lstFiles.Add(new KeyValuePair<string, string>(retBase64, model.rovFile1Name));
+                        byte[] filecontent;
+                        filecontent = Convert.FromBase64String(retBase64);
+                        lstFiles.Add(new KeyValuePair<byte[], string>(filecontent, model.rovFile1Name));
                     }
 
                     if (!string.IsNullOrEmpty(model.rovFile2Base64))
                     {
-                        var retBase64 = model.rovFile2Base64.Substring(model.rovFile2Base64.IndexOf("base64,") + 7); ;
-                        retBase64 = MakeBase64Valid(retBase64);
-                        string contentType = MimeMapping.GetMimeMapping(model.rovFile2Name);
-                        retBase64 = "data:" + contentType + ";base64," + retBase64;
-                        lstFiles.Add(new KeyValuePair<string, string>(retBase64, model.rovFile2Name));
+                        var retBase64 = model.rovFile2Base64.Substring(model.rovFile2Base64.IndexOf("base64,") + 7);
+                        byte[] filecontent;
+                        filecontent = Convert.FromBase64String(retBase64);
+                        lstFiles.Add(new KeyValuePair<byte[], string>(filecontent, model.rovFile2Name));
                     }
 
                     if (!string.IsNullOrEmpty(model.rovFile3Base64))
                     {
-                        var retBase64 = model.rovFile3Base64.Substring(model.rovFile3Base64.IndexOf("base64,") + 7); ;
-                        retBase64 = MakeBase64Valid(retBase64);
-                        string contentType = MimeMapping.GetMimeMapping(model.rovFile3Name);
-                        retBase64 = "data:" + contentType + ";base64," + retBase64;
-                        lstFiles.Add(new KeyValuePair<string, string>(retBase64, model.rovFile3Name));
+                        var retBase64 = model.rovFile3Base64.Substring(model.rovFile3Base64.IndexOf("base64,") + 7);
+                        byte[] filecontent;
+                        filecontent = Convert.FromBase64String(retBase64);
+                        lstFiles.Add(new KeyValuePair<byte[], string>(filecontent, model.rovFile3Name));
                     }
 
                     foreach (var itmFile in lstFiles)
@@ -319,7 +320,7 @@ namespace RestAPIs.Controllers
                         patfile.cd = System.DateTime.Now;
                         patfile.md = System.DateTime.Now;
                         patfile.doctorID = model.doctorID == -1 ? null : model.doctorID;
-                        patfile.fileContentBase64 = itmFile.Key;
+                        patfile.fileContent = itmFile.Key;
                         patfile.documentType = "Appointment";
                         patfile.AppID = app.appID;
                         patfile.cb = model.patientID.ToString();
