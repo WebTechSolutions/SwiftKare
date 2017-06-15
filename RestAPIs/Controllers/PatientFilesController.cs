@@ -82,14 +82,18 @@ namespace RestAPIs.Controllers
                                  patientID = l.patientID,
                                  doctorID = l.doctorID,
                                  FileName = l.FileName.Trim(),
-                                 fileContent = l.fileContentBase64,
+                                 bafileContent = l.fileContent,
                                  documentType = l.documentType,
                                  cd = l.md
                              }).FirstOrDefault();
                 
                     if (files.cd != null)
                     files.createdDate = files.cd.GetValueOrDefault().ToString("dd/MM/yyyy hh:mm tt");
-                
+                if(files!=null)
+                {
+                    files.fileContent = "data:image/png;base64,"+Convert.ToBase64String(files.bafileContent);
+                    files.bafileContent = null;
+                }
                 response = Request.CreateResponse(HttpStatusCode.OK, files);
                 return response;
             }
@@ -148,9 +152,8 @@ namespace RestAPIs.Controllers
                 }
 
                 var retBase64 = model.fileContent.Substring(model.fileContent.IndexOf("base64,") + 7);
-                retBase64 = MakeBase64Valid(retBase64);
-                string contentType = MimeMapping.GetMimeMapping(model.FileName);
-                retBase64 = "data:" + contentType + ";base64," + retBase64;
+                byte[] bytefilecontent;
+                bytefilecontent = Convert.FromBase64String(retBase64);
                 patfile = db.UserFiles.Where(m => m.FileName == model.FileName.Trim() && m.active == true).FirstOrDefault();
                 
                 if (patfile == null)
@@ -162,7 +165,7 @@ namespace RestAPIs.Controllers
                     patfile.cd = System.DateTime.Now;
                     patfile.md= System.DateTime.Now;
                    //patfile.doctorID = model.doctorID == -1 ? null : model.doctorID;
-                    patfile.fileContentBase64 = retBase64;
+                    patfile.fileContent = bytefilecontent;
                     patfile.documentType = model.documentType;
                     patfile.cb = model.patientID.ToString();
 

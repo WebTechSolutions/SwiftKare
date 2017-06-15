@@ -498,7 +498,27 @@ namespace WebApp.Controllers
             try
             {
                 AppointmentModel _objAppointment =  JsonConvert.DeserializeObject<AppointmentModel>(inputModel);
+                if (!string.IsNullOrEmpty(_objAppointment.rovFile1Base64))
+                {
+                    var retBase64 = _objAppointment.rovFile1Base64.Substring(_objAppointment.rovFile1Base64.IndexOf("base64,") + 7);
+                    retBase64 = MakeBase64Valid(retBase64);
+                    _objAppointment.rovFile1Base64 = "data:image/png;base64," + retBase64;
+                    
+                }
+                if (!string.IsNullOrEmpty(_objAppointment.rovFile2Base64))
+                {
+                    var retBase64 = _objAppointment.rovFile2Base64.Substring(_objAppointment.rovFile2Base64.IndexOf("base64,") + 7);
+                    retBase64 = MakeBase64Valid(retBase64);
+                    _objAppointment.rovFile2Base64 = "data:image/png;base64," + retBase64;
+                }
 
+                if (!string.IsNullOrEmpty(_objAppointment.rovFile3Base64))
+                {
+                    var retBase64 = _objAppointment.rovFile3Base64.Substring(_objAppointment.rovFile3Base64.IndexOf("base64,") + 7);
+                    retBase64 = MakeBase64Valid(retBase64);
+                    _objAppointment.rovFile3Base64 = "data:image/png;base64," + retBase64;
+                }
+               
                 ApiResultModel apiresult = new ApiResultModel();
                 SeeDoctorRepository objSeeDoctorRepo = new SeeDoctorRepository();
                 apiresult = objSeeDoctorRepo.AddAppointment(_objAppointment);
@@ -510,8 +530,20 @@ namespace WebApp.Controllers
             }
         }
 
-        
 
+        private static string MakeBase64Valid(string data)
+        {
+            data = data.Replace(" ", "+");
+
+            int mod4 = data.Length % 4;
+            if (mod4 > 0)
+            {
+                data += new string('=', 4 - mod4);
+            }
+
+
+            return data;
+        }
         [HttpPost]
         public JsonResult GetPatientROV(long patientid)
         {

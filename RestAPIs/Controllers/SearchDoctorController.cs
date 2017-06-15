@@ -619,6 +619,7 @@ namespace RestAPIs.Controllers
                                   doctorGender = doc.gender,
                                   doctordob = doc.dob,
                                   dcellPhone = doc.cellPhone,
+                                  dhomePhone = doc.homePhone,
                                   city = doc.city,
                                   state = doc.state,
                                   email=doc.email,
