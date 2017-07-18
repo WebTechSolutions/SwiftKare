@@ -76,8 +76,9 @@
                                         <div class="col-lg-4 col-md-4 col-sm-12">
                                             <div class="form-group">
                                                 <label class="control-label">
-                                                    Title
+                                                    Title<span class="required">*</span>
                                                 </label>
+                                                <span id="spnErrorTitleName" style="display:none; color:red; float:right;">Title is required</span>
                                                 <div class="">
                                                     @Html.DropDownListFor(x => x.TitleName, (List<SelectListItem>)ViewBag.drpdnTitle, "Select", new { @class = "form-control" })
                                                 </div>
@@ -86,8 +87,9 @@
                                         <div class="col-lg-4 col-md-4 col-sm-12">
                                             <div class="form-group">
                                                 <label class="control-label">
-                                                    Suffix
+                                                    Suffix<span class="required">*</span>
                                                 </label>
+                                                <span id="spnErrorPrefix" style="display:none; color:red; float:right;">Suffix is required</span>
                                                 <div class="">
                                                     @Html.DropDownListFor(x => x.Prefix, (List<SelectListItem>)ViewBag.drpdnSuffix, "Select", new { @class = "form-control" })
                                                 </div>
@@ -463,7 +465,18 @@
     <script>
         $(document).ready(function () {
             //Bind unobstructive validations - Starts
-
+            $("#TitleName").change(function () {
+                if ($("#spnErrorTitleName").is(":visible") && $("#TitleName").val() != "") {
+                    $("#TitleName").removeClass("redBorder");
+                    $("#spnErrorTitleName").hide();
+                }
+            });
+            $("#Prefix").change(function () {
+                if ($("#spnErrorPrefix").is(":visible") && $("#Prefix").val() != "") {
+                    $("#Prefix").removeClass("redBorder");
+                    $("#spnErrorPrefix").hide();
+                }
+            });
             $("#FirstName").change(function () {
                 if ($("#spnErrorFirstName").is(":visible") && $("#FirstName").val() != "") {
                     $("#FirstName").removeClass("redBorder");
@@ -526,7 +539,21 @@
         function validateProfileForm() {
 
             var isValid = true;
+            if ($("#TitleName option:selected").text() == "Select") {
+                isValid = false;
+                $("#spnErrorTitleName").show();
+            }
+            else {
+                $("#spnErrorTitleName").hide();
+            }
 
+            if ($("#Prefix option:selected").text() == "Select") {
+                isValid = false;
+                $("#spnErrorPrefix").show();
+            }
+            else {
+                $("#spnErrorProfilePhoto").hide();
+            }
             if ($("#ProfilePhotoBase64").val() == "") {
                 isValid = false;
                 $("#spnErrorProfilePhoto").show();
