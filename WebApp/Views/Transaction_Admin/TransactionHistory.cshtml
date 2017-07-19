@@ -148,7 +148,21 @@
                                       <td class="apptime" style="word-break: break-all; width: 200px">@item.appDate @item.appTime</td>
                                       <td class="pname" style="word-break: break-all; width: 300px">@item.PFirstName  @item.PLastName</td>
                                     <td class="docName" style="word-break: break-all; width: 300px">@item.DFirstName @item.DLastName</td>
-                                   <td class="duration" style="word-break: break-all; width: 100px">@item.duration</td>
+                                   
+                                       @if (item.duration == "00:00")
+                                       {
+                                        <td class="duration" style="word-break: break-all; width: 100px">
+                                            Interrupted
+                                        </td>
+                                       }
+                                       else
+                                       {
+                                           var res = Convert.ToInt64(item.duration) / 60;
+                                        <td class="duration" style="word-break: break-all; width: 100px">
+                                             @res mins
+                                        </td>
+                                       }
+
                                      <td class="cost" style="word-break: break-all; width: 300px">$@item.paymentAmt</td>
                                   
                                    
