@@ -30,8 +30,8 @@
                             <th>E-mail</th>
                             <th>Gender</th>
                             <th>Address</th>
-                            <th>License Number</th>
-                            <th>NPI Number</th>
+                            @*<th>License Number</th>
+                            <th>NPI Number</th>*@
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -51,8 +51,8 @@
                                     <td class="email" style="word-break: break-all; width: 300px">@item.email</td>
                                     <td class="gender">@item.gender</td>
                                     <td class="address" style="word-break: break-all;">@item.address1<br />@item.address2</td>
-                                    <td class="licenseNumber" style="word-break: break-all; width: 300px">@item.licenseNumber</td>
-                                    <td class="npiNumber" style="word-break: break-all;width: 300px">@item.npiNumber</td>
+                                    @*<td class="licenseNumber" style="word-break: break-all; width: 300px;">@item.licenseNumber</td>
+                                    <td class="npiNumber" style="word-break: break-all;width: 300px;">@item.npiNumber</td>*@
                                     <td style="width: 130px">
                                         @using (Html.BeginForm("ApproveDoctor", "Doctor_Admin",
                                         FormMethod.Post, new { @class = "form-horizontal form-label-left" }))

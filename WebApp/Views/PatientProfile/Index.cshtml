@@ -72,8 +72,9 @@
                                         <div class="col-lg-4 col-md-4 col-sm-12">
                                             <div class="form-group">
                                                 <label class="control-label">
-                                                    Title
+                                                    Title<span class="required">*</span>
                                                 </label>
+                                                <span id="spnErrorTitleName" style="display:none; color:red; float:right;">Title is required</span>
                                                 <div class="">
                                                     @Html.DropDownListFor(x => x.TitleName, (List<SelectListItem>)ViewBag.drpdnTitle, "Select", new { @class = "form-control" })
                                                 </div>
@@ -82,8 +83,9 @@
                                         <div class="col-lg-4 col-md-4 col-sm-12">
                                             <div class="form-group">
                                                 <label class="control-label">
-                                                    Suffix
+                                                    Suffix<span class="required">*</span>
                                                 </label>
+                                                <span id="spnErrorPrefix" style="display:none; color:red; float:right;">Suffix is required</span>
                                                 <div class="">
                                                     @Html.DropDownListFor(x => x.Prefix, (List<SelectListItem>)ViewBag.drpdnSuffix, "Select", new { @class = "form-control" })
                                                 </div>
@@ -117,8 +119,9 @@
                                         <div class="col-lg-4 col-md-4 col-sm-12">
                                             <div class="form-group">
                                                 <label class="control-label">
-                                                    Gender
+                                                    Gender<span class="required">*</span>
                                                 </label>
+                                                <span id="spnErrorGender" style="display:none; color:red; float:right;">Gender is required</span>
                                                 <div class="">
                                                     @Html.DropDownListFor(x => x.Gender,
                                                        new List<SelectListItem> { new SelectListItem { Text = "Male", Value = "Male" }, new SelectListItem { Text = "Female", Value = "Female" } },
@@ -135,7 +138,7 @@
                                                 <span id="spnErrorDOB" style="display:none; color:red; float:right;">Date Of Birth is required</span>
                                                 <div class="">
                                                     <div class="xdisplay_inputx form-group has-feedback m-b-0">
-                                                        @Html.TextBox("DOB", (Model.DOB.HasValue ? Model.DOB.Value.ToString("MM/dd/yyyy") : ""), new { @class = "form-control has-feedback-left active datepicker" })
+                                                        @Html.TextBox("DOB", (Model.DOB.HasValue ? Model.DOB.Value.ToString("yyyy-MM-dd") : ""), new { @class = "form-control has-feedback-left active datepicker" })
                                                         <span class="fa fa-calendar-o form-control-feedback left date" aria-hidden="true"></span>
                                                         <span id="inputSuccess1Status" class="sr-only">(success)</span>
                                                     </div>
@@ -233,8 +236,9 @@
                                         <div class="col-lg-4 col-md-4 col-sm-12">
                                             <div class="form-group">
                                                 <label class="control-label">
-                                                    State
+                                                    State<span class="required">*</span>
                                                 </label>
+                                                <span id="spnErrorState" style="display:none; color:red; float:right;">State is required</span>
                                                 <div class="">
                                                     @Html.DropDownListFor(x => x.State, (List<SelectListItem>)ViewBag.drpdnState, new { @class = "form-control" })
                                                 </div>
@@ -382,7 +386,19 @@
 
         $(document).ready(function () {
             //Bind unobstructive validations - Starts
-
+                       
+            $("#TitleName").change(function () {
+                if ($("#spnErrorTitleName").is(":visible") && $("#TitleName").val() != "") {
+                    $("#TitleName").removeClass("redBorder");
+                    $("#spnErrorTitleName").hide();
+                }
+            });
+            $("#Prefix").change(function () {
+                if ($("#spnErrorPrefix").is(":visible") && $("#Prefix").val() != "") {
+                    $("#Prefix").removeClass("redBorder");
+                    $("#spnErrorPrefix").hide();
+                }
+            });
             $("#FirstName").change(function () {
                 if ($("#spnErrorFirstName").is(":visible") && $("#FirstName").val() != "") {
                     $("#FirstName").removeClass("redBorder");
@@ -431,10 +447,19 @@
         function validateProfileForm() {
 
             var isValid = true;
-
-            if ($("#ProfilePhotoBase64").val() == "") {
+            //$('#Crd option:selected').text();
+          
+            if ($("#TitleName option:selected").text() == "Select") {
                 isValid = false;
-                $("#spnErrorProfilePhoto").show();
+                $("#spnErrorTitleName").show();
+            }
+            else {
+                $("#spnErrorTitleName").hide();
+            }
+
+            if ($("#Prefix option:selected").text() == "Select") {
+                isValid = false;
+                $("#spnErrorPrefix").show();
             }
             else {
                 $("#spnErrorProfilePhoto").hide();
@@ -495,7 +520,7 @@
         }
 
         $("#btnSaveProfile").click(function () {
-
+           
             try {
                 if (validateProfileForm()) {
                     showLoader();

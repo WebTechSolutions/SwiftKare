@@ -61,7 +61,17 @@
                                    </td>
                                     <td class="address">@item.startTime
                                     <td class="licenseNumber">@item.endTime</td>
-                                    <td class="npiNumber">@item.duration</td>
+                                    @if (item.duration != "00:00")
+                                    {
+                                        var res = Convert.ToInt64(item.duration) / 60;
+                                        <td class="npiNumber">@res mins</td>
+                                    }
+                                   else
+                                    {
+                                        
+                                        <td class="npiNumber">Interrupted</td>
+                                    }
+                                  
                                     <td>
                                         @using (Html.BeginForm("ApproveReview", "Consultation_Admin",
                                         FormMethod.Post, new { @class = "form-horizontal form-label-left" }))

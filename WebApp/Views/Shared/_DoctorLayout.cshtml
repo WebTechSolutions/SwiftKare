@@ -707,12 +707,12 @@
                 }
             });
 
-            if ('@SessionHandler.ProfilePhoto' == '') {
+            if ('@SessionHandler.UserInfo.title' == '') {
                 if (!parent.location.href.toLowerCase().includes('profile')) {
                     window.location.href = '@Url.Action("Index", "DoctorProfile")';
                 }
             }
-            if ('@SessionHandler.ProfilePhoto' != '') {
+            if ('@SessionHandler.UserInfo.title' != '') {
                 var rightNow = new Date();
                 var jan1 = new Date(rightNow.getFullYear(), 0, 1, 0, 0, 0, 0);
                 var temp = jan1.toGMTString();
@@ -721,8 +721,7 @@
                 std_time_offset = std_time_offset * (-60);
                 //alert(std_time_offset + ' ' + '@SessionHandler.UserInfo.timeZoneOffset');
                 if ('@SessionHandler.UserInfo.timeZoneOffset' == '' ||
-                    '@SessionHandler.UserInfo.timeZoneOffset' != std_time_offset.toString())
-                {
+                    '@SessionHandler.UserInfo.timeZoneOffset' != std_time_offset.toString()) {
                     @*$.ajax({
                         url: '@Url.Action("UpdateDoctorTimezone", "DoctorAppointment")',
                         type: "POST",
@@ -808,8 +807,7 @@
 
 
         }
-        function updateTimeZone()
-        {
+        function updateTimeZone() {
             if ($('#myModal2').find('#Timezone').val() == "") {
 
                 $('#myModal2').find('#Timezone').addClass("redBorder").focus();

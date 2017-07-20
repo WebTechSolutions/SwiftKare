@@ -755,16 +755,13 @@
         });
         $(document).ready(function () {
 
-            if ('@SessionHandler.ProfilePhoto' == '')
-            {
-                if(!parent.location.href.toLowerCase().includes('profile'))
-                {
+            if ('@SessionHandler.UserInfo.title' == '') {
+                if (!parent.location.href.toLowerCase().includes('profile')) {
                     window.location.href = '@Url.Action("Index", "PatientProfile")';
                 }
             }
 
-            if ('@SessionHandler.ProfilePhoto' != '')
-            {
+            if ('@SessionHandler.UserInfo.title' != '') {
                 var rightNow = new Date();
                 var jan1 = new Date(rightNow.getFullYear(), 0, 1, 0, 0, 0, 0);
                 var temp = jan1.toGMTString();
@@ -772,8 +769,7 @@
                 var std_time_offset = (jan1 - jan2) / (1000 * 60 * 60);
                 std_time_offset = std_time_offset * (-60);
                 if ('@SessionHandler.UserInfo.timeZoneOffset' == '' ||
-                    '@SessionHandler.UserInfo.timeZoneOffset' != std_time_offset.toString())
-                {
+                    '@SessionHandler.UserInfo.timeZoneOffset' != std_time_offset.toString()) {
                     @*$.ajax({
                         url: '@Url.Action("UpdatePatientTimezone", "Appointment")',
                         type: "POST",
@@ -861,8 +857,7 @@
 
 
         }
-        function updateTimeZone()
-        {
+        function updateTimeZone() {
             if ($('#myModal2').find('#Timezone').val() == "") {
 
                 $("#Timezone").addClass("redBorder").focus();

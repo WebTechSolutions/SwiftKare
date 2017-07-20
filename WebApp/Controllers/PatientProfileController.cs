@@ -55,7 +55,8 @@ namespace WebApp.Controllers
                 var oRetMsg = oProfileRepository.UpdatePatientProfileWithAllValues(oModel);
 
                 SessionHandler.ProfilePhoto = oModel.ProfilePhotoBase64;
-                var timezone = oProfileRepository.GetPatientTimeZone(SessionHandler.UserId);
+                SessionHandler.UserInfo.title = oModel.TitleName;
+               var timezone = oProfileRepository.GetPatientTimeZone(SessionHandler.UserId);
                 SessionHandler.UserInfo.timeZone = timezone.zonename;
                 SessionHandler.UserInfo.timeZoneOffset = timezone.zoneoffset;
                 return oRetMsg.message;
