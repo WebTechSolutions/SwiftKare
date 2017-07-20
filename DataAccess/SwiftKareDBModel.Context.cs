@@ -1942,15 +1942,6 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetDcotorAllConsultations_Result>("SP_GetDcotorAllConsultations", doctorIDParameter);
         }
     
-        public virtual ObjectResult<SP_GetPatientAllConsultations_Result> SP_GetPatientAllConsultations(Nullable<long> patientID)
-        {
-            var patientIDParameter = patientID.HasValue ?
-                new ObjectParameter("patientID", patientID) :
-                new ObjectParameter("patientID", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientAllConsultations_Result>("SP_GetPatientAllConsultations", patientIDParameter);
-        }
-    
         public virtual ObjectResult<SP_ConsultationReport_Result> SP_ConsultationReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto, Nullable<long> patientID, Nullable<long> docID)
         {
             var datefromParameter = datefrom.HasValue ?
@@ -2051,6 +2042,20 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_selectTransactionHistory_Result>("SP_selectTransactionHistory", datefromParameter, datetoParameter, patientIDParameter, docIDParameter);
         }
     
+        public virtual ObjectResult<SP_SelectConsultation_Result> SP_SelectConsultation()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectConsultation_Result>("SP_SelectConsultation");
+        }
+    
+        public virtual ObjectResult<SP_GetPatientAllConsultations_Result> SP_GetPatientAllConsultations(Nullable<long> patientID)
+        {
+            var patientIDParameter = patientID.HasValue ?
+                new ObjectParameter("patientID", patientID) :
+                new ObjectParameter("patientID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientAllConsultations_Result>("SP_GetPatientAllConsultations", patientIDParameter);
+        }
+    
         public virtual ObjectResult<SP_GetPatientConsultations_Result> SP_GetPatientConsultations(Nullable<long> patientID)
         {
             var patientIDParameter = patientID.HasValue ?
@@ -2058,11 +2063,6 @@ namespace DataAccess
                 new ObjectParameter("patientID", typeof(long));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPatientConsultations_Result>("SP_GetPatientConsultations", patientIDParameter);
-        }
-    
-        public virtual ObjectResult<SP_SelectConsultation_Result> SP_SelectConsultation()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SelectConsultation_Result>("SP_SelectConsultation");
         }
     }
 }

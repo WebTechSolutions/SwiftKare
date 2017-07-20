@@ -85,7 +85,10 @@ else
     $(document).ready(function() {
 
        
-        $('#rescheduledatatable').DataTable();
+        $('#rescheduledatatable').DataTable(
+            {
+                "ordering": false
+            });
         //{
         //    "bAutoWidth": false, // Disable the auto width calculation 
         //    "aoColumns": [

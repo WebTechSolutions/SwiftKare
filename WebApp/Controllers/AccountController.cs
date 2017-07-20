@@ -727,9 +727,28 @@ namespace WebApp.Controllers
                         objModel.SecretAnswerHidden = resultAdd.secretAnswer2;
                         break;
                     default:
+                     
                         objModel.SecretQuestion = resultAdd.secretQuestion3;
                         objModel.SecretAnswerHidden = resultAdd.secretAnswer3;
                         break;
+                }
+                if(objModel.SecretQuestion==null)
+                {
+                    if(resultAdd.secretQuestion1!=null)
+                    {
+                        objModel.SecretQuestion = resultAdd.secretQuestion1;
+                        objModel.SecretAnswerHidden = resultAdd.secretAnswer1;
+                    }
+                    if (resultAdd.secretQuestion2 != null)
+                    {
+                        objModel.SecretQuestion = resultAdd.secretQuestion2;
+                        objModel.SecretAnswerHidden = resultAdd.secretAnswer2;
+                    }
+                    if (resultAdd.secretQuestion3 != null)
+                    {
+                        objModel.SecretQuestion = resultAdd.secretQuestion3;
+                        objModel.SecretAnswerHidden = resultAdd.secretAnswer3;
+                    }
                 }
             }
             else if (roles.Contains("Doctor"))
@@ -751,9 +770,32 @@ namespace WebApp.Controllers
                         objModel.SecretAnswerHidden = resultAdd.secretAnswer3;
                         break;
                 }
+                if (objModel.SecretQuestion == null)
+                {
+                    if (resultAdd.secretQuestion1 != null)
+                    {
+                        objModel.SecretQuestion = resultAdd.secretQuestion1;
+                        objModel.SecretAnswerHidden = resultAdd.secretAnswer1;
+                    }
+                    if (resultAdd.secretQuestion2 != null)
+                    {
+                        objModel.SecretQuestion = resultAdd.secretQuestion2;
+                        objModel.SecretAnswerHidden = resultAdd.secretAnswer2;
+                    }
+                    if (resultAdd.secretQuestion3 != null)
+                    {
+                        objModel.SecretQuestion = resultAdd.secretQuestion3;
+                        objModel.SecretAnswerHidden = resultAdd.secretAnswer3;
+                    }
+                }
             }
 
-
+            if (objModel.SecretQuestion == null)
+            {
+               
+                ViewBag.ErrorMessage = "Sorry! User does not setup his recovery secret questions.";
+                
+            }
             return View("ForgotPasswordConfirmation", objModel);
         }
 
@@ -777,6 +819,7 @@ namespace WebApp.Controllers
         public async Task<ActionResult> ForgotPasswordConfirmation(SecretQuestionModel model)
         {
             var token = ForgotPasswordCodeModel.Token;
+           
             if (model.SecretAnswerHidden.Trim().ToLower() == model.SecretAnswer.Trim().ToLower())
             {
                 var newPassword = "New@Pa9_" + System.Web.Security.Membership.GeneratePassword(10, 4);
@@ -792,7 +835,7 @@ namespace WebApp.Controllers
                 if (result.Succeeded)
                 {
                     //send email there...
-                    EmailHelper oHelper = new EmailHelper(user.Email, "Your password has been reset successfully.", "Your new temporary password is " + newPassword + ". Please change your password after login.");
+                    EmailHelper oHelper = new EmailHelper(user.Email, "Your password has been reset successfully.", "Your new temporary password is " + newPassword + " Please change your password after login.");
                     oHelper.SendMessage();
 
                     return RedirectToAction("ResetPasswordConfirmation", "Account");

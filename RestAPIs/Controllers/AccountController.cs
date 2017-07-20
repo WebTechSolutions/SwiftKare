@@ -15,6 +15,7 @@ using RestAPIs.Extensions;
 using RestAPIs.Models;
 using DataAccess;
 using System.Data.Entity;
+using RestAPIs.Helper;
 
 namespace RestAPIs.Controllers
 {
@@ -759,82 +760,45 @@ namespace RestAPIs.Controllers
 
                try
                 {
-                    if (ModelState.IsValid)
+                if (ModelState.IsValid)
+                {
+                    var user = await UserManager.FindByNameAsync(model.Email);
+                    if (user != null)
+                        user.EmailConfirmed = true;
+                    if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                     {
-                        var user = await UserManager.FindByNameAsync(model.Email);
-                        if (user == null)
+                        // Don't reveal that the user does not exist or is not confirmed
+                        //ViewBag.ErrorMessage = "Your Account does't exist, please try again.";
+                        //return View("ForgotPassword");
+                        var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
                         {
-                            // Don't reveal that the user does not exist or is not confirmed
-                            var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
-                            {
-                                Content = new StringContent("user is not exist with this email address or email is not confirmed"),
-                                ReasonPhrase = "Not Confirmed"
-                            };
-                            throw new HttpResponseException(resp);
-                        }
-                        SwiftKareDBEntities db = new SwiftKareDBEntities();
-                        Random rnd = new Random();
-                        int caseSwitch = rnd.Next(1, 4);
-                       
-                            Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == user.Id);
-                    if(doctor!=null)
-                    {
-                        switch (caseSwitch)
-                        {
-                            case 1:
-                                objModel.SecretQuestion = doctor.secretQuestion1;
-                                objModel.SecretAnswer = doctor.secretAnswer1;
-                                break;
-                            case 2:
-                                objModel.SecretQuestion = doctor.secretQuestion2;
-                                objModel.SecretAnswer = doctor.secretAnswer2;
-                                break;
-                            default:
-                                objModel.SecretQuestion = doctor.secretQuestion3;
-                                objModel.SecretAnswer = doctor.secretAnswer3;
-                                break;
-                        }
-                    }
-
-                    
-
-                        Patient patient = db.Patients.SingleOrDefault(o => o.userId == user.Id);
-                    if (patient != null)
-                    {
-                        switch (caseSwitch)
-                        {
-                            case 1:
-                                objModel.SecretQuestion = patient.secretQuestion1;
-                                objModel.SecretAnswer = patient.secretAnswer1;
-                                break;
-                            case 2:
-                                objModel.SecretQuestion = patient.secretQuestion2;
-                                objModel.SecretAnswer = patient.secretAnswer2;
-                                break;
-                            default:
-                                objModel.SecretQuestion = patient.secretQuestion3;
-                                objModel.SecretAnswer = patient.secretAnswer3;
-                                break;
-                        }
-                    }
-                   
+                            Content = new StringContent("Your Account doesn't exist, please try again."),
+                            ReasonPhrase = "Your Account doesn't exist, please try again."
+                        };
                         
-
-
-
-                        // var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                        // return code;
                     }
 
-                    // If we got this far, something failed, redisplay form
-                    //return "";
+                    var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                    //ForgotPasswordCodeModel.Token = code;
+
+                    //var callbackUrl = Url.Action("Questions", "Account", new { email = model.Email, code = code }, protocol: Request.Url.Scheme);
+                    var callbackUrl = Url.Link("Default", new { Controller = "Account", Action = "Questions", email = model.Email,code = code });
+                    callbackUrl= callbackUrl.Replace("13040", "11262");
+                    EmailHelper oHelper = new EmailHelper(user.Email, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+                    oHelper.SendMessage();
+
+                    //await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+                    return objModel;
                 }
-                catch (Exception)
+
+
+            }
+                catch (Exception ex)
                 {
                     throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
                     {
                         Content = new StringContent("An error occurred while posting in api/account/ForgotPassword, please try again or contact the administrator."),
-                        ReasonPhrase = "Critical Exception"
+                        ReasonPhrase = ex.Message
                     });
                 }
             

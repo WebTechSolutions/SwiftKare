@@ -203,7 +203,8 @@
 
        
         $('#datatableconsultation').dataTable({
-            'order': [[1, 'desc']],
+            //'order': [[1, 'desc']],
+            "ordering": false,
             columnDefs: [
               { type: 'date-dd-mmm-yyyy', targets: 1 }
             ]
