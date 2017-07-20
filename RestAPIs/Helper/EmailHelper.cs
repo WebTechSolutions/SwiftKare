@@ -132,7 +132,7 @@ namespace RestAPIs.Helper
 
             if (pm.sendtoPatient)
             {
-                if (PandroidToken != "" || PandroidToken != null) SendPushMessage(PiOSToken, pm.PPushTitle, pm.PPushMessage, "i");
+                if (PiOSToken != "" || PiOSToken != null) SendPushMessage(PiOSToken, pm.PPushTitle, pm.PPushMessage, "i");
                 if (PandroidToken != "" || PandroidToken != null) SendPushMessage(PandroidToken, pm.PPushTitle, pm.PPushTitle, "a");
             }
 

@@ -843,6 +843,7 @@ namespace RestAPIs.Controllers
 
         [HttpPost]
         [Route("api/addConsultEndTime")]
+        [Route("api/endConsult")]
         public async Task<HttpResponseMessage> AddConsultEndTime(AddConsultTimeModel model)
         {
             try

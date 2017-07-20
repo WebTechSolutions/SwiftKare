@@ -767,7 +767,7 @@ namespace RestAPIs.Controllers
                             // Don't reveal that the user does not exist or is not confirmed
                             var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                             {
-                                Content = new StringContent("user is not exist with this email address or email is not confirmed"),
+                                Content = new StringContent("user doesnot exist with this email address or email is not confirmed"),
                                 ReasonPhrase = "Not Confirmed"
                             };
                             throw new HttpResponseException(resp);
@@ -776,7 +776,7 @@ namespace RestAPIs.Controllers
                         Random rnd = new Random();
                         int caseSwitch = rnd.Next(1, 4);
                        
-                            Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == user.Id);
+                 /*           Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == user.Id);
                     if(doctor!=null)
                     {
                         switch (caseSwitch)
@@ -818,13 +818,13 @@ namespace RestAPIs.Controllers
                         }
                     }
                    
-                        
+                       */ 
 
 
 
                         // var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                         // return code;
-                    }
+                    } 
 
                     // If we got this far, something failed, redisplay form
                     //return "";

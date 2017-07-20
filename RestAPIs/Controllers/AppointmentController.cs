@@ -1038,7 +1038,7 @@ namespace RestAPIs.Controllers
                     await db.SaveChangesAsync();
                     pushModel pm = new pushModel();
                     pm.PPushTitle = "Reschedule Request";
-                    pm.PPushMessage = "Doctor has requested for appointment reschedule for appointment date " + formattedDate;
+                    pm.PPushMessage = "Doctor has requested for appointment reschedule ";
                     pm.sendtoDoctor = false;
                     pm.sendtoPatient = true;
                     pm.doctorID = doctor.doctorID;
