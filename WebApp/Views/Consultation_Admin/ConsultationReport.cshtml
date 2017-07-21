@@ -127,7 +127,7 @@
                             @*<th>Consultation Time</th>*@
                              <th>Duration</th>
                              <th>Status</th>
-                             <th>CD</th>
+                             @*<th>CD</th>*@
                            
                            
                         </tr>
@@ -146,7 +146,8 @@
                                     <td class="PName" style="word-break: break-all; width: 300px">@item.PName</td>
                                     <td class="appDate" style="word-break: break-all; width: 200px">@item.conDate @item.conTime</td>
                                     @*<td class="appTime" style="word-break: break-all; width: 300px">@item.conTime</td>*@
-                                    <td class="appTime" style="word-break: break-all; width: 100px">@item.duration</td>
+                                    
+                                    <td class="appTime" style="word-break: break-all; width: 100px">@(Convert.ToInt64(item.duration)/60)</td>
                                     
                                         
                                             @if(item.consultationStatus==null){<td class="consultationStatus">Not Completed</td>}
@@ -156,7 +157,7 @@
                                         
 
                                    
-                                      <td class="cd" style="width: 100px">@item.cd</td>
+                                      @*<td class="cd" style="width: 100px">@item.cd</td>*@
                                </tr>
                                 
                         }

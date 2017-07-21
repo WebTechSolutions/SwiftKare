@@ -2167,7 +2167,7 @@
           <FunctionImport Name="SP_SelectLanguages" EntitySet="Languages" ReturnType="Collection(SwiftKareDBModel.Language)" />
           <FunctionImport Name="SP_SelectMedicine" EntitySet="Medicines" ReturnType="Collection(SwiftKareDBModel.Medicine)" />
           <FunctionImport Name="SP_SelectNewss" EntitySet="News" ReturnType="Collection(SwiftKareDBModel.News)" />
-          <FunctionImport Name="SP_SelectPatient" />
+          <FunctionImport Name="SP_SelectPatient" EntitySet="Patients" ReturnType="Collection(SwiftKareDBModel.Patient)" />
           <FunctionImport Name="SP_SelectRole" EntitySet="AspNetRoles" ReturnType="Collection(SwiftKareDBModel.AspNetRole)" />
           <FunctionImport Name="SP_SelectSpeciality" EntitySet="Speciallities" ReturnType="Collection(SwiftKareDBModel.Speciallity)" />
           <FunctionImport Name="SP_SelectStates" EntitySet="States" ReturnType="Collection(SwiftKareDBModel.State)" />

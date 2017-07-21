@@ -941,9 +941,14 @@ namespace DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<News>("SP_SelectNewss", mergeOption);
         }
     
-        public virtual int SP_SelectPatient()
+        public virtual ObjectResult<Patient> SP_SelectPatient()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SelectPatient");
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Patient>("SP_SelectPatient");
+        }
+    
+        public virtual ObjectResult<Patient> SP_SelectPatient(MergeOption mergeOption)
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Patient>("SP_SelectPatient", mergeOption);
         }
     
         public virtual ObjectResult<AspNetRole> SP_SelectRole()

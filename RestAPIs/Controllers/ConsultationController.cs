@@ -817,11 +817,12 @@ namespace RestAPIs.Controllers
                     return response;
                 }
 
-                Consultation cons = db.Consultations.Where(c => c.consultID == model.consultID && c.active == true).FirstOrDefault();
+                Consultation cons = db.Consultations.Where(c => c.consultID == model.consultID && c.active == true ).FirstOrDefault();
                 if (cons != null)
                 {
                     cons.mb = model.userEmail;
                     cons.md = System.DateTime.Now;
+                    if(cons.startTime== null)
                     cons.startTime = TimeSpan.Parse(System.DateTime.Now.ToString("HH:mm"));
                     db.Entry(cons).State = EntityState.Modified;
                     await db.SaveChangesAsync();
