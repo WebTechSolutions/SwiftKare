@@ -221,7 +221,10 @@ else
         //      { type: 'date-dd-mmm-yyyy', targets: 1 }
         //    ]
         //});
-          $('#datatable').DataTable();
+          $('#datatable').DataTable(
+            {
+                "ordering": false
+            });
         //  {
         //    "bAutoWidth": false, // Disable the auto width calculation 
         //    "aoColumns": [
