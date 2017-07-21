@@ -685,8 +685,8 @@ namespace WebApp.Controllers
                     ViewBag.ErrorMessage = "Your Account does't exist, please try again.";
                     return View("ForgotPassword");
                 }
-
-                var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var code = "";
+                code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 ForgotPasswordCodeModel.Token = code;
 
                 var callbackUrl = Url.Action("Questions", "Account", new { email = model.Email, code = code }, protocol: Request.Url.Scheme);
@@ -694,7 +694,7 @@ namespace WebApp.Controllers
                 EmailHelper oHelper = new EmailHelper(user.Email, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
                 oHelper.SendMessage();
 
-                //await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
                 return View("ForgotPasswordConfirmationLink");
             }
             return View(model);

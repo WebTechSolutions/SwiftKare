@@ -275,7 +275,7 @@
           <Property Name="suffix" Type="varchar" MaxLength="10" />
           <Property Name="education" Type="varchar(max)" />
           <Property Name="workexperience" Type="varchar(max)" />
-          <Property Name="specialization" Type="varchar" MaxLength="500" />
+          <Property Name="specialization" Type="varchar(max)" />
           <Property Name="timezone" Type="varchar" MaxLength="100" />
           <Property Name="iOSToken" Type="varchar" MaxLength="1000" />
           <Property Name="AndroidToken" Type="varchar" MaxLength="1000" />
@@ -431,7 +431,7 @@
           <Property Name="patientID" Type="bigint" />
           <Property Name="doctorID" Type="bigint" />
           <Property Name="message" Type="varchar" MaxLength="500" />
-          <Property Name="From" Type="varchar" MaxLength="50" />
+          <Property Name="From" Type="varchar" MaxLength="500" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
         </EntityType>
@@ -548,6 +548,8 @@
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
           <Property Name="userId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="pharmacy" Type="varchar" MaxLength="1000" />
+          <Property Name="pharmacyid" Type="bigint" />
           <Property Name="title" Type="varchar" MaxLength="10" />
           <Property Name="height" Type="int" />
           <Property Name="weight" Type="int" />
@@ -560,8 +562,6 @@
           <Property Name="iOSToken" Type="varchar" MaxLength="1000" />
           <Property Name="AndroidToken" Type="varchar" MaxLength="1000" />
           <Property Name="DoseSpotPatientId" Type="varchar" MaxLength="10" />
-          <Property Name="pharmacyid" Type="bigint" />
-          <Property Name="pharmacy" Type="varchar" MaxLength="1000" />
           <Property Name="pharmacyaddress" Type="varchar" MaxLength="100" />
           <Property Name="pharmacycitystatezip" Type="varchar" MaxLength="100" />
           <Property Name="ProfilePhotoBase64" Type="varchar(max)" />
@@ -706,7 +706,7 @@
             <PropertyRef Name="rovID" />
           </Key>
           <Property Name="rovID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="name" Type="varchar" MaxLength="100" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
           <Property Name="cb" Type="varchar" MaxLength="50" />
           <Property Name="cd" Type="datetime" />
           <Property Name="mb" Type="varchar" MaxLength="50" />
@@ -2643,16 +2643,16 @@
             <Parameter Name="toTime" Mode="In" Type="Time" />
             <Parameter Name="gender" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="SP_GetPatientConsultations" ReturnType="Collection(SwiftKareDBModel.SP_GetPatientConsultations_Result)">
+            <Parameter Name="patientID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="SP_SelectConsultation" ReturnType="Collection(SwiftKareDBModel.SP_SelectConsultation_Result)" />
           <FunctionImport Name="SP_selectTransactionHistory" ReturnType="Collection(SwiftKareDBModel.SP_selectTransactionHistory_Result)">
             <Parameter Name="datefrom" Mode="In" Type="DateTime" />
             <Parameter Name="dateto" Mode="In" Type="DateTime" />
             <Parameter Name="patientID" Mode="In" Type="Int64" />
             <Parameter Name="docID" Mode="In" Type="Int64" />
           </FunctionImport>
-          <FunctionImport Name="SP_GetPatientConsultations" ReturnType="Collection(SwiftKareDBModel.SP_GetPatientConsultations_Result)">
-          <Parameter Name="patientID" Mode="In" Type="Int64" />
-          </FunctionImport>
-          <FunctionImport Name="SP_SelectConsultation" ReturnType="Collection(SwiftKareDBModel.SP_SelectConsultation_Result)" />
           </EntityContainer>
         <ComplexType Name="SP_CheckForDuplicatePatient_Result">
           <Property Type="String" Name="firstName" Nullable="true" MaxLength="100" />
@@ -3404,7 +3404,7 @@
             <PropertyRef Name="rovID" />
           </Key>
           <Property Name="rovID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="cd" Type="DateTime" Precision="3" />
           <Property Name="mb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -3731,7 +3731,7 @@
           <Property Name="patientID" Type="Int64" />
           <Property Name="doctorID" Type="Int64" />
           <Property Name="message" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="From" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="From" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="cb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="cd" Type="DateTime" Precision="3" />
         </EntityType>
@@ -4024,7 +4024,7 @@
           <Property Name="suffix" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="education" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="workexperience" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="specialization" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="specialization" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="timezone" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="iOSToken" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="AndroidToken" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
@@ -4469,20 +4469,10 @@
           <Property Type="String" Name="specialityName" Nullable="true" MaxLength="50" />
           <Property Type="Int32" Name="reviewStar" Nullable="true" />
         </ComplexType>
-        <ComplexType Name="SP_selectTransactionHistory_Result">
-          <Property Type="Int64" Name="appID" Nullable="false" />
-          <Property Type="String" Name="DLastName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="DFirstName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="PFirstName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="PLastName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="duration" Nullable="false" MaxLength="7" />
-          <Property Type="String" Name="appDate" Nullable="true" MaxLength="30" />
-          <Property Type="String" Name="appTime" Nullable="true" MaxLength="30" />
-          <Property Type="Int32" Name="paymentAmt" Nullable="true" />
-        </ComplexType>
         <ComplexType Name="SP_GetPatientConsultations_Result">
           <Property Type="Int64" Name="consultID" Nullable="false" />
           <Property Type="String" Name="DoctorName" Nullable="true" MaxLength="212" />
+          <Property Type="String" Name="gender" Nullable="true" MaxLength="10" />
           <Property Type="Int32" Name="duration" Nullable="false" />
           <Property Type="String" Name="review" Nullable="false" MaxLength="1000" />
           <Property Type="Int32" Name="reviewStar" Nullable="false" />
@@ -4506,6 +4496,17 @@
           <Property Type="Time" Name="startTime" Nullable="true" />
           <Property Type="Time" Name="endTime" Nullable="true" />
           <Property Type="String" Name="duration" Nullable="false" MaxLength="7" />
+        </ComplexType>
+        <ComplexType Name="SP_selectTransactionHistory_Result">
+          <Property Type="Int64" Name="appID" Nullable="false" />
+          <Property Type="String" Name="DLastName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="DFirstName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="PFirstName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="PLastName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="duration" Nullable="false" MaxLength="7" />
+          <Property Type="String" Name="appDate" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="appTime" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="paymentAmt" Nullable="true" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -6055,26 +6056,12 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_selectTransactionHistory" FunctionName="SwiftKareDBModel.Store.SP_selectTransactionHistory">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_selectTransactionHistory_Result">
-                <ScalarProperty Name="appID" ColumnName="appID" />
-                <ScalarProperty Name="DLastName" ColumnName="DLastName" />
-                <ScalarProperty Name="DFirstName" ColumnName="DFirstName" />
-                <ScalarProperty Name="PFirstName" ColumnName="PFirstName" />
-                <ScalarProperty Name="PLastName" ColumnName="PLastName" />
-                <ScalarProperty Name="duration" ColumnName="duration" />
-                <ScalarProperty Name="appDate" ColumnName="appDate" />
-                <ScalarProperty Name="appTime" ColumnName="appTime" />
-                <ScalarProperty Name="paymentAmt" ColumnName="paymentAmt" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_GetPatientConsultations" FunctionName="SwiftKareDBModel.Store.SP_GetPatientConsultations">
             <ResultMapping>
               <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_GetPatientConsultations_Result">
                 <ScalarProperty Name="consultID" ColumnName="consultID" />
                 <ScalarProperty Name="DoctorName" ColumnName="DoctorName" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
                 <ScalarProperty Name="duration" ColumnName="duration" />
                 <ScalarProperty Name="review" ColumnName="review" />
                 <ScalarProperty Name="reviewStar" ColumnName="reviewStar" />
@@ -6102,6 +6089,21 @@
                 <ScalarProperty Name="startTime" ColumnName="startTime" />
                 <ScalarProperty Name="endTime" ColumnName="endTime" />
                 <ScalarProperty Name="duration" ColumnName="duration" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_selectTransactionHistory" FunctionName="SwiftKareDBModel.Store.SP_selectTransactionHistory">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwiftKareDBModel.SP_selectTransactionHistory_Result">
+                <ScalarProperty Name="appID" ColumnName="appID" />
+                <ScalarProperty Name="DLastName" ColumnName="DLastName" />
+                <ScalarProperty Name="DFirstName" ColumnName="DFirstName" />
+                <ScalarProperty Name="PFirstName" ColumnName="PFirstName" />
+                <ScalarProperty Name="PLastName" ColumnName="PLastName" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="appDate" ColumnName="appDate" />
+                <ScalarProperty Name="appTime" ColumnName="appTime" />
+                <ScalarProperty Name="paymentAmt" ColumnName="paymentAmt" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

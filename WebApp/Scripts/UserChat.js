@@ -399,10 +399,10 @@ var UserChat = function (apiKey, sessionId, token) {
                 $("#h1Name").html($("#h1Name").data("name"));
                 SaveSessionStart(sessionId, 1, 1);
                 subscriber.on("disconnected", function (event) {
-                  //  alert("It seems another user has network issue, please wait till resolution.");
-                    networkDisconntected();
+                    debugger;
+                    //  alert("It seems another user has network issue, please wait till resolution.");
+                    if (isConsultComplete == false) networkDisconntected();
                 });
-                debugger;
                 //For callerId use publisher's id; for calle id use subscriber's id
                 
 

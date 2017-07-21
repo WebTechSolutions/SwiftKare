@@ -29,20 +29,23 @@ namespace RestAPIs.Controllers
             PharmacySearchMessageResult oResult = DoseSpotHelper.SearchPharmacy(oModel);
 
             var oRetRes = new List<PharmacyEntry>();
-            foreach (var item in oResult.Pharmacies)
+            if (oResult.Pharmacies != null)
             {
-                oRetRes.Add(new PharmacyEntry
+                foreach (var item in oResult.Pharmacies)
                 {
-                    PharmacyId = item.PharmacyId,
-                    StoreName = item.StoreName,
-                    Address1 = item.Address1,
-                    Address2 = item.Address2,
-                    City = item.City,
-                    State = item.State,
-                    ZipCode = item.ZipCode,
-                    PrimaryPhone = item.PrimaryPhone,
-                    PrimaryPhoneType = item.PrimaryPhoneType
-                });
+                    oRetRes.Add(new PharmacyEntry
+                    {
+                        PharmacyId = item.PharmacyId,
+                        StoreName = item.StoreName,
+                        Address1 = item.Address1,
+                        Address2 = item.Address2,
+                        City = item.City,
+                        State = item.State,
+                        ZipCode = item.ZipCode,
+                        PrimaryPhone = item.PrimaryPhone,
+                        PrimaryPhoneType = item.PrimaryPhoneType
+                    });
+                }
             }
 
             HttpResponseMessage oResp = Request.CreateResponse(HttpStatusCode.OK, oRetRes);

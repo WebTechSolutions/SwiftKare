@@ -15,6 +15,7 @@ using RestAPIs.Extensions;
 using RestAPIs.Models;
 using DataAccess;
 using System.Data.Entity;
+using RestAPIs.Helper;
 
 namespace RestAPIs.Controllers
 {
@@ -746,7 +747,7 @@ namespace RestAPIs.Controllers
         [Route("ForgotPasswordUniversal")]
         public async Task<DataAccess.CustomModels.ForgotModel> ForgotPasswordUniversal(ForgotApiModelUniversal model, HttpRequestMessage request)
         {
-            var objModel = new DataAccess.CustomModels.ForgotModel { Email = model.Email };
+            var objModel = new DataAccess.CustomModels.ForgotModel { url = "https://13.64.233.80/Account/ForgotPassword" };
             if (!request.IsValidClient())
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
@@ -757,86 +758,38 @@ namespace RestAPIs.Controllers
                 throw new HttpResponseException(resp);
             }
 
-               try
-                {
-                    if (ModelState.IsValid)
-                    {
-                        var user = await UserManager.FindByNameAsync(model.Email);
-                        if (user == null)
-                        {
-                            // Don't reveal that the user does not exist or is not confirmed
-                            var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
-                            {
-                                Content = new StringContent("user doesnot exist with this email address or email is not confirmed"),
-                                ReasonPhrase = "Not Confirmed"
-                            };
-                            throw new HttpResponseException(resp);
-                        }
-                        SwiftKareDBEntities db = new SwiftKareDBEntities();
-                        Random rnd = new Random();
-                        int caseSwitch = rnd.Next(1, 4);
-                       
-                 /*           Doctor doctor = db.Doctors.SingleOrDefault(o => o.userId == user.Id);
-                    if(doctor!=null)
-                    {
-                        switch (caseSwitch)
-                        {
-                            case 1:
-                                objModel.SecretQuestion = doctor.secretQuestion1;
-                                objModel.SecretAnswer = doctor.secretAnswer1;
-                                break;
-                            case 2:
-                                objModel.SecretQuestion = doctor.secretQuestion2;
-                                objModel.SecretAnswer = doctor.secretAnswer2;
-                                break;
-                            default:
-                                objModel.SecretQuestion = doctor.secretQuestion3;
-                                objModel.SecretAnswer = doctor.secretAnswer3;
-                                break;
-                        }
-                    }
+              // try
+              //  {
+              //      if (ModelState.IsValid)
+              //      {
+              //          var user = await UserManager.FindByNameAsync(model.Email);
+              //          if (user == null)
+              //          {
+              //              // Don't reveal that the user does not exist or is not confirmed
+              //              var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+              //              {
+              //                  Content = new StringContent("user doesnot exist with this email address or email is not confirmed"),
+              //                  ReasonPhrase = "Not Confirmed"
+              //              };
+              //              throw new HttpResponseException(resp);
+              //          }
+              //     var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+              //var   callbackUrl = "https://13.64.233.80/"+ Url.Route("Default", new { Controller = "Account", Action = "Questions", email = model.Email, code = code });
 
+              //      EmailHelper oHelper = new EmailHelper(user.Email, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+              //      oHelper.SendMessage();
                     
+              //      } 
 
-                        Patient patient = db.Patients.SingleOrDefault(o => o.userId == user.Id);
-                    if (patient != null)
-                    {
-                        switch (caseSwitch)
-                        {
-                            case 1:
-                                objModel.SecretQuestion = patient.secretQuestion1;
-                                objModel.SecretAnswer = patient.secretAnswer1;
-                                break;
-                            case 2:
-                                objModel.SecretQuestion = patient.secretQuestion2;
-                                objModel.SecretAnswer = patient.secretAnswer2;
-                                break;
-                            default:
-                                objModel.SecretQuestion = patient.secretQuestion3;
-                                objModel.SecretAnswer = patient.secretAnswer3;
-                                break;
-                        }
-                    }
-                   
-                       */ 
-
-
-
-                        // var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                        // return code;
-                    } 
-
-                    // If we got this far, something failed, redisplay form
-                    //return "";
-                }
-                catch (Exception)
-                {
-                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
-                    {
-                        Content = new StringContent("An error occurred while posting in api/account/ForgotPassword, please try again or contact the administrator."),
-                        ReasonPhrase = "Critical Exception"
-                    });
-                }
+              //  }
+              //  catch (Exception ex)
+              //  {
+              //      throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+              //      {
+              //          Content = new StringContent("An error occurred while posting in api/account/ForgotPassword, please try again or contact the administrator."),
+              //          ReasonPhrase = ex.ToString()
+              //      });
+              //  }
             
 
             return objModel;
