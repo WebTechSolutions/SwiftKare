@@ -6,6 +6,8 @@ using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -374,8 +376,8 @@ namespace RestAPIs.Controllers
                     doctor.timezone = model.TimeZone;
                     doctor.dob = model.DOB;
                     doctor.timezoneoffset = (from d in db.TimeZones
-                                       where d.zoneName == model.TimeZone
-                                       select d.zoneOffset).FirstOrDefault();//model.TimeZone;
+                                             where d.zoneName == model.TimeZone
+                                             select d.zoneOffset).FirstOrDefault();//model.TimeZone;
                     doctor.aboutMe = model.AboutMe;
                     doctor.specialization = model.Specialization;
                     doctor.publication = model.Publication;
@@ -476,6 +478,19 @@ namespace RestAPIs.Controllers
                         }
                     }
                     await db.SaveChangesAsync();
+
+                    // Convert Base64 String to byte[]
+                    var retBase64 = model.ProfilePhotoBase64.Substring(model.ProfilePhotoBase64.IndexOf("base64,") + 7);
+                    byte[] imageBytes = Convert.FromBase64String(retBase64);
+                    MemoryStream ms = new MemoryStream(imageBytes, 0, imageBytes.Length);
+
+                    // Convert byte[] to Image
+                    ms.Write(imageBytes, 0, imageBytes.Length);
+                    System.Drawing.Image image = System.Drawing.Image.FromStream(ms, true);
+                    string newFile = "D_" + doctorID+".png";
+                    string pathonserver = System.Configuration.ConfigurationManager.AppSettings["profilePictureLocation"]+ newFile;
+                    //string filePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath(pathonserver), newFile);
+                    image.Save(pathonserver, ImageFormat.Png);
 
                     //Return
                     response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = doctorID, message = "" });
@@ -1047,6 +1062,18 @@ namespace RestAPIs.Controllers
                     }
                     await db.SaveChangesAsync();
 
+                    // Convert Base64 String to byte[]
+                    var retBase64 = model.ProfilePhotoBase64.Substring(model.ProfilePhotoBase64.IndexOf("base64,") + 7);
+                    byte[] imageBytes = Convert.FromBase64String(retBase64);
+                    MemoryStream ms = new MemoryStream(imageBytes, 0, imageBytes.Length);
+
+                    // Convert byte[] to Image
+                    ms.Write(imageBytes, 0, imageBytes.Length);
+                    System.Drawing.Image image = System.Drawing.Image.FromStream(ms, true);
+                    string newFile = "P_" + patientID + ".png";
+                    string pathonserver = System.Configuration.ConfigurationManager.AppSettings["profilePictureLocation"] + newFile;
+                    //string filePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath(pathonserver), newFile);
+                    image.Save(pathonserver, ImageFormat.Png);
                     //Return
                     response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = patientID, message = "" });
                     return response;
