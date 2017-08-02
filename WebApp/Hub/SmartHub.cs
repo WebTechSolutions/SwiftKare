@@ -12,6 +12,7 @@ using System.Linq;
 using WebApp.Models.SignalR;
 using System.Collections.Generic;
 
+
 namespace WebApp.Hub
 {
     public class SmartHub
@@ -58,6 +59,19 @@ namespace WebApp.Hub
             //MessageList.Add(message);
             //Clients.Caller.receiveMessage(message.UserName, message.Message, ConnectionId);
             Clients.Client(message.ReceiverConnectionId).receiveMessage(message.UserName, message.Message, message.SenderConnectionId, message.SenderId);
+            //SendPush
+            /*pushModel pm = new pushModel();
+            pm.PPushTitle = "Consultation Request";
+            pm.PPushMessage = "";
+            pm.DPushTitle = "Consultation Request";
+            pm.DPushMessage = "Patient Call for the Consult.";
+            pm.sendtoDoctor = true;
+            pm.sendtoPatient = false;
+            pm.doctorID = message.ReceiverId;
+            pm.patientID = 0;
+
+            PushHelper ph = new PushHelper();
+            ph.sendPush(pm);*/
         }
 
         public void SendMessageToPatient(MessageInfo message)

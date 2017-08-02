@@ -346,8 +346,8 @@ namespace RestAPIs.Controllers
                 try
                 {
                    
-                    DateTime ad = DateTime.ParseExact(dateString, format, provider);
-                    DateTime newappDateTime = ad + myDateTime.TimeOfDay;
+                    //DateTime ad = DateTime.ParseExact(dateString, format, provider);
+                    //DateTime newappDateTime = ad + myDateTime.TimeOfDay;
                     EmailHelper oHelper = new EmailHelper(docemail, "New appointment.", "You have new appointment on " + tzh.convertTimeZone(model_appdatetime_DateTime, 0, model.doctorID, 1) + ".");
                     oHelper.SendMessage();
                     oHelper = new EmailHelper(patemail, "New appointment.", "Your appointment has been scheduled successfully on " + tzh.convertTimeZone(model_appdatetime_DateTime, model.patientID, 0, 1) + ".");
@@ -357,7 +357,7 @@ namespace RestAPIs.Controllers
                     pm.PPushTitle = "New Appointment";
                     pm.PPushMessage = "Patient has scheduled appointment with you on " + tzh.convertTimeZone(model_appdatetime_DateTime, model.patientID, 0, 1);
                     pm.DPushTitle = "New Appointment";
-                    pm.DPushMessage = "Patient has scheduled appointment with you on " + tzh.convertTimeZone(newappDateTime, 0, model.doctorID, 1);
+                    pm.DPushMessage = "Patient has scheduled appointment with you on " + tzh.convertTimeZone(model_appdatetime_DateTime, 0, model.doctorID, 1);
                     pm.sendtoDoctor = true;
                     pm.sendtoPatient = false;
                     pm.doctorID = model.doctorID;
@@ -545,8 +545,8 @@ namespace RestAPIs.Controllers
                        
                         if (doctor.docemail != null)
                         {
-                           
-                            EmailHelper oHelper = new EmailHelper(doctor.docemail, "Reschedule appointment.", "Your appointment on " + tzh.convertTimeZone(oldAppDateTime, 0, result.doctorID,1) + " has been rescheduled by patient to "+ tzh.convertTimeZone(model_appdatetime_DateTime, 0, result.doctorID,1)+".");
+                            
+                            EmailHelper oHelper = new EmailHelper(doctor.docemail, "Reschedule appointment.", "Your appointment on " + tzh.convertTimeZone(oldAppDateTime, 0, result.doctorID, 1) + " has been rescheduled by patient to " + tzh.convertTimeZone(model_appdatetime_DateTime, 0, result.doctorID, 1) + ".");
                             oHelper.SendMessage();
                         }
                         if (patient.patemail != null)
