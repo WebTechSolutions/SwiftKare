@@ -15,6 +15,7 @@ namespace DataAccess.CustomModels
         public string role { get; set; } = "";
         public string iOSToken { get; set; } = "";
         public string AndroidToken { get; set; } = "";
+        public string pictureUrl { get; set; } = "";
 
     }
 

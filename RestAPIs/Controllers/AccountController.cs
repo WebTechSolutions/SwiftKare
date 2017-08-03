@@ -293,6 +293,7 @@ namespace RestAPIs.Controllers
                                 userModel.role = roleFromDb.ToString();
                                 userModel.iOSToken = doctor.iOSToken;
                                 userModel.AndroidToken = doctor.AndroidToken;
+                               
 
                             }
 
@@ -346,6 +347,7 @@ namespace RestAPIs.Controllers
                             userModel.role = roleFromDb.ToString();
                             userModel.iOSToken = patient.iOSToken;
                             userModel.AndroidToken = patient.AndroidToken;
+                            userModel.pictureUrl = System.Configuration.ConfigurationManager.AppSettings["profilePictureURL"].ToString();
                         }
                         else
                         {
@@ -403,7 +405,6 @@ namespace RestAPIs.Controllers
                 userModel.Errors = new List<string>();
                 userModel.Errors.Add("Unexpected error from api/login");
             }
-
             return userModel;
         }
 

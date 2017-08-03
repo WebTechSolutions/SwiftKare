@@ -325,7 +325,7 @@ function SearchDoctor(patientID) {
         data: _objSearch,
         dataType: 'json',
         success: function (response) {
-
+            debugger;
             var tableHtml = "";// "<div class='row'>";
             if (response.Success == true) {
                 if (response.Message != null) {
@@ -347,7 +347,7 @@ function SearchDoctor(patientID) {
                                    " <a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel.doctor[item].doctorID + "nofav' class='fa fa-heart-o'  onclick='toggle(" + response.DoctorModel.doctor[item].doctorID + "," + patientID + ");return false;' style='display:block'></span></a>" +
                                    "<a class='hrt' href='' style='color: #5A738E;'><span id='" + response.DoctorModel.doctor[item].doctorID + "fav' class='fa fa-heart'  onclick='untoggle(" + response.DoctorModel.doctor[item].doctorID + "," + patientID + ");return false;' style='display:none'></span></a>" +
                                     "<i class='crl fa fa-circle clsAvailableSpot' aria-hidden='true' style='color: red; cursor: pointer;font-size: 12px; position:absolute; right:2%;'></i>" +
-                                    "<img style='width:126px;height:126px;margin: 0 auto;display: inline-block;' src='../Pictures/D_" + response.DoctorModel.doctor[item].doctorID + ".png' alt='' class='img-circle img-responsive m-b-10 m-t-0' style='margin: 0 auto;display: inline-block;'>" +
+                                    "<img style='width:126px;height:126px;margin: 0 auto;display: inline-block;' src='/Content/ProfilePicture/D_" + response.DoctorModel.doctor[item].doctorID + ".png' alt='Picture Not Found' onerror='this.onerror=null;LoadDefaultImage(this);' class='img-circle img-responsive m-b-10 m-t-0' style='margin: 0 auto;display: inline-block;'>" +
                                     "<h2 class='m-0'>" +
                                      " <a href='' onclick='showProfile("+response.DoctorModel.doctor[item].doctorID+")' id='viewprofile' data-toggle='modal' data-target='#myModal8' style='word-wrap: break-word;font-size: 12px'>Dr." +
                                       response.DoctorModel.doctor[item].firstName + " " + response.DoctorModel.doctor[item].lastName + "</a>" +
@@ -406,12 +406,22 @@ function SearchDoctor(patientID) {
             }
 
         },
-        error: errorRes
+        error: errorResSearchDoctor
 
     });
     
     
     
+
+}
+function LoadDefaultImage(obj) {
+    var noimg = '/Content/ProfilePicture/default.png';
+    obj.src = noimg;
+}
+function errorResSearchDoctor(httpObj) {
+
+    debugger;
+    alert(httpObj);
 
 }
 function reviewStars(stars)
@@ -549,6 +559,7 @@ function showDoctorTimings(doctorID) {
 
 function errorRes(httpObj) {
     //function (httpObj, textStatus) {
+    debugger;
     var messages = $.parseJSON(httpObj.getResponseHeader('X-Responded-JSON'));
     if (messages != undefined && messages != null)
     {
