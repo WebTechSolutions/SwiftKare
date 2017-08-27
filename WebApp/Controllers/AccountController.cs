@@ -559,7 +559,7 @@ namespace WebApp.Controllers
                     if (addedResult != null)
                     {
                         //ViewBag.SuccessMessage = "Your Account has been created, please login";
-                        ViewBag.error = "Your Account has been created, please login";
+                        ViewBag.SuccessMessage = "Your Account has been created, please login";
                         return View("PatientLogin", model);
                     }
                 }
@@ -621,7 +621,7 @@ namespace WebApp.Controllers
                    
                     if (addedResult != null)
                     {
-                        ViewBag.error = "Your Account has been created, You can login after approval of your account.";
+                        ViewBag.success = "Your Account has been created, You can login after approval of your account.";
                         //Send Simple Email
 
                         var sampleEmailBody = @"

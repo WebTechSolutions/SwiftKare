@@ -399,9 +399,18 @@ var UserChat = function (apiKey, sessionId, token) {
                 $("#h1Name").html($("#h1Name").data("name"));
                 SaveSessionStart(sessionId, 1, 1);
                 subscriber.on("disconnected", function (event) {
+                   // alert('disconnect');
                     debugger;
                     //  alert("It seems another user has network issue, please wait till resolution.");
-                    if (isConsultComplete == false) networkDisconntected();
+                  //  if (isConsultComplete == false)
+                    { networkDisconntected(); }
+                 //   else
+                    {
+                        var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Consult compelted by other user ';
+                        $.post(cUrl);
+                        new PNotify({ title: 'Success', text: "Other user completed the consult.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
+                        window.location = cEndCallUrl;
+                    }
                 });
                 //For callerId use publisher's id; for calle id use subscriber's id
                 
@@ -410,7 +419,7 @@ var UserChat = function (apiKey, sessionId, token) {
         })
         .on("streamDestroyed", function (event) {
             try {
-                
+               // alert('destroyed')
                 debugger;
                // alert(isConsultComplete);
                 if (isConsultComplete == false) {

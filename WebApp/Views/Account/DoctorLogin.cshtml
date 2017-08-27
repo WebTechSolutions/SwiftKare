@@ -95,7 +95,11 @@
                       @if (ViewBag.error != null)
                       {
                         @: new PNotify({ title: 'Error', text: "@ViewBag.error", type: 'error', styling: 'bootstrap3' });
-                     }
+                                         }
+                    @if (ViewBag.success != null)
+                       {
+                           @: new PNotify({ title: 'Success', text: "@ViewBag.success", type: 'success', styling: 'bootstrap3' });
+                                           }
                 </script>
                 <div>
                     @Html.ValidationMessageFor(m => m.RegisterViewModel.FirstName, "", new { @class = "text-danger" })

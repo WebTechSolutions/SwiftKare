@@ -86,6 +86,10 @@
                       {
                         @: new PNotify({ title: 'Error', text: "@ViewBag.error", type: 'error', styling: 'bootstrap3' });
                      }
+                       @if (ViewBag.SuccessMessage != null)
+                       {
+                           @: new PNotify({ title: 'Success', text: "@ViewBag.SuccessMessage", type: 'success', styling: 'bootstrap3' });
+                       }
                 </script>
                 @*<div>
                        <span class = "text-danger">@ViewBag.error</span>
