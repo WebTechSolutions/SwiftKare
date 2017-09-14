@@ -214,7 +214,7 @@ namespace RestAPIs.Helper
         {
             try
             {
-                string Androidmsg = "{\"Title\": \"" + pushTitle + "\",\"SubTitle\": \"" + subTitle + "\",\"Message\": \"" + pushMessage + "\", \"vibrate\": \"1\", \"sound\": \"1\" , \"largeIcon\": \"large_icon\" , \"smallIcon\": \"small_icon\"}";
+              //  string Androidmsg = "{\"Title\": \"" + pushTitle + "\",\"SubTitle\": \"" + subTitle + "\",\"Message\": \"" + pushMessage + "\", \"vibrate\": \"1\", \"sound\": \"1\" , \"largeIcon\": \"large_icon\" , \"smallIcon\": \"small_icon\"}";
                 //config base
                 //string applicationID = "AAAAAoTS7yU:APA91bHCK8HtGKTsTafr-1aGkeFhWSQjrBfPtu4UXV8QyvtJa9HqebfRsDT7F4l94KMIuYk-daScTOL-2TnB8oLdBlEWYNxzyXsmBcFtxv9BnMWirKFlsXUByNtMWIjbxyY1orXgFwtu";
                 //config base
@@ -231,7 +231,7 @@ namespace RestAPIs.Helper
                     to = deviceId,
                     notification = new
                     {
-                        body = Androidmsg,
+                        body = pushMessage,
                         title = pushTitle,
                         sound = "Enabled"
                     }
