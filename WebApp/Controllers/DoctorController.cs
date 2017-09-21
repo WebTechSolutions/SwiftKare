@@ -239,6 +239,50 @@ namespace WebApp.Controllers
             Object cRetUrl = objDoctorRepo.GetRefillUrl();
             return cRetUrl;
         }
+
+        public FileResult Download(long fileId)
+        {
+            var oFileToDownload = objDoctorRepo.GetDoctorAppointmentFile(fileId);
+
+            string fileName = oFileToDownload.FileName + ".png";
+            string contentType = "image/png";
+
+            //switch (Path.GetExtension(oFileToDownload.FileName).Trim('.').ToLower())
+            //{
+            //    case "txt":
+            //        contentType = "text/plain";
+            //        break;
+
+            //    case "pdf":
+            //        contentType = "application/pdf";
+            //        break;
+
+            //    case "docx":
+            //        contentType = "application/docx";
+            //        break;
+
+            //    case "csv":
+            //        contentType = "text/csv";
+            //        break;
+
+            //    case "jpg":
+            //        contentType = "image/jpeg";
+            //        break;
+
+            //    case "png":
+            //        contentType = "image/png";
+            //        break;
+
+            //    default:
+            //        contentType = "application/binary";
+            //        break;
+            //}
+            byte[] filebytearray = null;
+            var retBase64 = oFileToDownload.fileContent.Substring(oFileToDownload.fileContent.IndexOf("base64,") + 7);
+            filebytearray = System.Convert.FromBase64String(retBase64);
+            return File(filebytearray, contentType, fileName);
+
+        }
     }
 
 }

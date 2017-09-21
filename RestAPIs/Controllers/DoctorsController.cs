@@ -46,6 +46,48 @@ namespace RestAPIs.Controllers
             }
 
         }
+        HttpResponseMessage response;
+        [Route("api/getDoctorAppointmentFile")]
+        public HttpResponseMessage GetPatientFile(long fileId)
+        {
+            try
+            {
+                var files = (from l in db.UserFiles
+                             where l.active == true && l.fileID == fileId
+                             orderby l.fileID descending
+                             select new GetPatientUserFiles
+                             {
+                                 fileID = l.fileID,
+                                 patientID = l.patientID,
+                                 doctorID = l.doctorID,
+                                 FileName = l.FileName.Trim(),
+                                 bafileContent = l.fileContent,
+                                 documentType = l.documentType,
+                                 cd = l.md
+                             }).FirstOrDefault();
+
+                if (files.cd != null)
+                    files.createdDate = files.cd.GetValueOrDefault().ToString("dd/MM/yyyy hh:mm tt");
+                if (files != null)
+                {
+                    files.fileContent = "data:image/png;base64," + Convert.ToBase64String(files.bafileContent);
+                    files.bafileContent = null;
+                }
+                response = Request.CreateResponse(HttpStatusCode.OK, files);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ThrowError(ex, "GetPatientFiles in PatientFilesController");
+            }
+        }
+        private HttpResponseMessage ThrowError(Exception ex, string Action)
+        {
+
+            response = Request.CreateResponse(HttpStatusCode.InternalServerError, new ApiResultModel { ID = 0, message = "Internal server error at" + Action });
+            response.ReasonPhrase = ex.Message;
+            return response;
+        }
 
         // GET: api/Doctors/5
         [ResponseType(typeof(Doctor))]

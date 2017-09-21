@@ -399,12 +399,10 @@ var UserChat = function (apiKey, sessionId, token) {
                 $("#h1Name").html($("#h1Name").data("name"));
                 SaveSessionStart(sessionId, 1, 1);
                 subscriber.on("disconnected", function (event) {
-                   // alert('disconnect');
-                    debugger;
                     //  alert("It seems another user has network issue, please wait till resolution.");
-                  //  if (isConsultComplete == false)
+                    if (isConsultComplete == false)
                     { networkDisconntected(); }
-                 //   else
+                    else
                     {
                         var cUrl = '/UserChat/AddVCLog?consultId=' + localStorage.getItem('consultationKey') + '&endReason=Consult compelted by other user ';
                         $.post(cUrl);
@@ -425,7 +423,7 @@ var UserChat = function (apiKey, sessionId, token) {
                 if (isConsultComplete == false) {
                     //alert(event.reason);
                     
-                    networkDisconntected();
+                 //   networkDisconntected();
                     /*
                                         if (event.reason == "networkDisconnected") {
                                             

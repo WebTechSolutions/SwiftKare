@@ -34,7 +34,12 @@ namespace WebApp.Repositories.DoctorRepositories
             var resultAssignRole = JsonConvert.DeserializeObject(response);
             return result;
         }
-
+        public GetPatientUserFiles GetDoctorAppointmentFile(long fileId)
+        {
+            var response = ApiConsumerHelper.GetResponseString("api/getDoctorAppointmentFile?fileId=" + fileId);
+            var result = JsonConvert.DeserializeObject<GetPatientUserFiles>(response);
+            return result;
+        }
         public void Delete(long id)
         {
             throw new NotImplementedException();

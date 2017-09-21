@@ -123,41 +123,45 @@ namespace WebApp.Controllers
             PatientFilesRepository oPatientFilesRepository = new PatientFilesRepository();
             var oFileToDownload = oPatientFilesRepository.GetPatientFile(patID, fileId);
 
-            string fileName = oFileToDownload.FileName;
-            string contentType = string.Empty;
+            string fileName = oFileToDownload.FileName+".png";
+            string contentType = "image/png";
 
-            switch (Path.GetExtension(oFileToDownload.FileName).Trim('.').ToLower())
-            {
-                case "txt":
-                    contentType = "text/plain";
-                    break;
+            //switch (Path.GetExtension(oFileToDownload.FileName).Trim('.').ToLower())
+            //{
+            //    case "txt":
+            //        contentType = "text/plain";
+            //        break;
 
-                case "pdf":
-                    contentType = "application/pdf";
-                    break;
+            //    case "pdf":
+            //        contentType = "application/pdf";
+            //        break;
 
-                case "docx":
-                    contentType = "application/docx";
-                    break;
+            //    case "docx":
+            //        contentType = "application/docx";
+            //        break;
 
-                case "csv":
-                    contentType = "text/csv";
-                    break;
+            //    case "csv":
+            //        contentType = "text/csv";
+            //        break;
 
-                case "jpg":
-                    contentType = "image/jpeg";
-                    break;
+            //    case "jpg":
+            //        contentType = "image/jpeg";
+            //        break;
 
-                case "png":
-                    contentType = "image/png";
-                    break;
+            //    case "png":
+            //        contentType = "image/png";
+            //        break;
 
-                default:
-                    contentType = "application/binary";
-                    break;
-            }
+            //    default:
+            //        contentType = "application/binary";
+            //        break;
+            //}
 
-            return File(oFileToDownload.fileContent, contentType, fileName);
+            byte[] filebytearray = null;
+            var retBase64 = oFileToDownload.fileContent.Substring(oFileToDownload.fileContent.IndexOf("base64,") + 7);
+            filebytearray = System.Convert.FromBase64String(retBase64);
+            return File(filebytearray, contentType, fileName);
+
         }
 
         public PartialViewResult PatientProfile(long patientID)

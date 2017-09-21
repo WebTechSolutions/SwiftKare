@@ -289,7 +289,7 @@
         };
         eModal.confirm(options)
         .then(function () {
-            var cUrl = "@Url.Action("Download", "DoctorConsultation")?fileId=" + fileId+"&patID="+patID;
+            var cUrl = "@Url.Action("Download", "Doctor")?fileId=" + fileId;
 
             $('#iframeDownload').attr('src', cUrl);
             $('#iframeDownload').load();

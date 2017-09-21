@@ -28,7 +28,7 @@ namespace WebApp.Repositories.DoctorRepositories
             }
 
         }
-
+       
         public List<RescheduleAppModel> GetUpcomingApp(long doctorID)
         {
 

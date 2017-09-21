@@ -109,10 +109,8 @@ namespace WebApp.Controllers
         private void setInitialViewData()
         {
             var oInitialData = oProfileRepository.GetPatientProfileInitialValues();
-
             ViewBag.drpdnTitle = oInitialData.lstTitleVM.Select(x => new SelectListItem { Text = x.titleName, Value = x.titleName }).ToList();
             ViewBag.drpdnSuffix = oInitialData.lstSuffixVM.Select(x => new SelectListItem { Text = x.suffixName, Value = x.suffixName }).ToList();
-
             ViewBag.drpdnLanguage = oInitialData.lstLanguageVM.Select(x => new SelectListItem { Text = x.languageName, Value = x.languageName }).ToList();
             ViewBag.drpdnTimeZone = oInitialData.lstTimeZoneVM.Select(x => new SelectListItem { Text = x.timeZone, Value = x.zoneName }).ToList();
             ViewBag.drpdnCity = oInitialData.lstCityVM.Select(x => new SelectListItem { Text = x.cityName, Value = x.cityName }).ToList();

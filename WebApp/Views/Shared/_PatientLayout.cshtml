@@ -606,9 +606,10 @@
                         //   $.post(cCallLogUrl);
                         chat.server.patientRejectedCall({
                             SenderId: '@SessionHandler.UserInfo.Id',
-                            UserName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
+                            PatientName: '@(SessionHandler.UserInfo.FirstName + " " + SessionHandler.UserInfo.LastName)',
                             ReceiverConnectionId: senderConnId,
-                            consultID: consultID
+                            consultID: consultID,
+                            UserName: '@SessionHandler.UserInfo.Email'
                         });
                         return;
                     });

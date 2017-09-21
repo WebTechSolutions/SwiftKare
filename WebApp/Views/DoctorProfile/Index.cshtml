@@ -127,7 +127,7 @@
                                                 </label>
                                                 <div class="">
                                                     @Html.DropDownListFor(x => x.Gender,
-                                                       new List<SelectListItem> { new SelectListItem { Text = "Male", Value = "Male" }, new SelectListItem { Text = "Female", Value = "Female" } },
+                                                       new List<SelectListItem> { new SelectListItem { Text = "Select", Value = "" }, new SelectListItem { Text = "Male", Value = "Male" }, new SelectListItem { Text = "Female", Value = "Female" } },
                                                        new { @class = "form-control" }
                                                        )
                                                 </div>
@@ -292,7 +292,7 @@
                                                     City<span class="required">*</span>
                                                 </label>
                                                 <div class="">
-                                                    @Html.DropDownListFor(x => x.City, (List<SelectListItem>)ViewBag.drpdnCity, new { @class = "form-control" })
+                                                    @Html.DropDownListFor(x => x.City, (List<SelectListItem>)ViewBag.drpdnCity,"Select", new { @class = "form-control" })
                                                 </div>
                                             </div>
                                         </div>
@@ -304,7 +304,7 @@
                                                     State
                                                 </label>
                                                 <div class="">
-                                                    @Html.DropDownListFor(x => x.State, (List<SelectListItem>)ViewBag.drpdnState, new { @class = "form-control" })
+                                                    @Html.DropDownListFor(x => x.State, (List<SelectListItem>)ViewBag.drpdnState,"Select", new { @class = "form-control" })
                                                 </div>
                                             </div>
                                         </div>

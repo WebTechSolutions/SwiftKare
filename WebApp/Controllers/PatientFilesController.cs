@@ -114,7 +114,7 @@ namespace WebApp.Controllers
         {
             var oFileToDownload = oPatientFilesRepository.GetPatientFile(SessionHandler.UserInfo.Id, fileId);
 
-            string fileName = oFileToDownload.FileName;
+            string fileName = oFileToDownload.FileName+".png";
             string contentType = "image/png";
 
             //switch (Path.GetExtension(oFileToDownload.FileName).Trim('.').ToLower())

@@ -182,12 +182,14 @@
     
 
     function downloadFile(fileId) {
-
-        if (confirm("Are you sure you want to downlod file?")) {
-            var cUrl = "@Url.Action("Download", "PatientFiles")?fileId=" + fileId;
+        debugger;
+        if (confirm("Are you sure you want to download file?")) {
+            var cUrl = "@Url.Action("Download", "Doctor")?fileId=" + fileId;
 
             $('#iframeDownload').attr('src', cUrl);
             $('#iframeDownload').load();
+
+
         }
     }
     var currentTab = "";
