@@ -127,8 +127,8 @@ namespace RestAPIs.Helper
             string DandroidToken = "";
             if (Ptokens.PiOSToken != null) {  PiOSToken = Ptokens.PiOSToken; }
             if (Ptokens.PandroidToken != null) {  PandroidToken = Ptokens.PandroidToken; }
-            if (Ptokens.PiOSToken != null)  DiOSToken = Dtokens.DiOSToken;
-            if (Ptokens.PiOSToken != null)  DandroidToken = Dtokens.DandroidToken;
+            if (Dtokens.DiOSToken != null)  DiOSToken = Dtokens.DiOSToken;
+            if (Dtokens.DandroidToken != null)  DandroidToken = Dtokens.DandroidToken;
 
             if (pm.sendtoPatient)
             {

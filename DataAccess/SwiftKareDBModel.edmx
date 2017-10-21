@@ -337,6 +337,7 @@
           <Property Name="md" Type="datetime" />
           <Property Name="active" Type="bit" />
           <Property Name="repeatTimings" Type="bit" />
+          <Property Name="utcDay" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="DocumentType">
           <Key>
@@ -3166,6 +3167,7 @@
           <Property Name="active" Type="Boolean" />
           <Property Name="repeatTimings" Type="Boolean" />
           <NavigationProperty Name="Doctor" Relationship="SwiftKareDBModel.FK_DoctorTimings_Doctor" FromRole="DoctorTiming" ToRole="Doctor" />
+          <Property Name="utcDay" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="DocumentType">
           <Key>
@@ -4974,6 +4976,7 @@
           <EntitySetMapping Name="DoctorTimings">
             <EntityTypeMapping TypeName="SwiftKareDBModel.DoctorTiming">
               <MappingFragment StoreEntitySet="DoctorTimings">
+                <ScalarProperty Name="utcDay" ColumnName="utcDay" />
                 <ScalarProperty Name="repeatTimings" ColumnName="repeatTimings" />
                 <ScalarProperty Name="active" ColumnName="active" />
                 <ScalarProperty Name="md" ColumnName="md" />

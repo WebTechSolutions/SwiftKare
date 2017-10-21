@@ -175,10 +175,16 @@
     </div>
 </div>
 <!-- /page content -->
-
+@using WebApp.Helper;
 
 @section scripts{
     <script>
+       
+        if ('@SessionHandler.UserInfo.title' == '') {
+            if (!parent.location.href.toLowerCase().includes('patientprofile/index')) {
+                window.location.href = '@Url.Action("Index", "PatientProfile")';
+            }
+        }
         function myMap() {
 
             var lat = '@Model.Latitude';

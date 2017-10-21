@@ -42,7 +42,7 @@ namespace RestAPIs.Controllers
                                           title=doc.title,
                                           firstName = doc.firstName,
                                           lastName = doc.lastName,
-                                          ProfilePhotoBase64 = doc.ProfilePhotoBase64,
+                                          ProfilePhotoBase64 = "",
                                           city=doc.city,
                                           state=doc.state,
                                           languageName = db.DoctorLanguages.Where(d => d.doctorID == doc.doctorID).Select(d => d.languageName).FirstOrDefault(),
@@ -189,7 +189,7 @@ namespace RestAPIs.Controllers
                                           firstName = l.firstName,
                                           lastName = l.lastName,
                                           city = l.city,
-                                          ProfilePhotoBase64 = l.ProfilePhotoBase64,
+                                          ProfilePhotoBase64 = "",
                                           state = l.state,
                                           languageName = l.languageName,
                                           specialityName = l.specialityName,
@@ -287,7 +287,7 @@ namespace RestAPIs.Controllers
                 string appday = dateTime.ToString("dddd");
                 //var result = db.SP_FetchDoctorTimings(searchModel.doctorID, dateTime).ToList();
                 var timings = (from t in db.DoctorTimings where t.doctorID == searchModel.doctorID
-                              && t.day == appday && t.active==true
+                              && t.utcDay == appday && t.active==true
                                select new TimingsVM { doctorID = t.doctorID, fromtime = t.@from, totime = t.to }).ToList();
                 var appointments = (from app in db.Appointments where app.doctorID == searchModel.doctorID &&
                                     app.appDate == dateTime
@@ -567,7 +567,7 @@ namespace RestAPIs.Controllers
                 //appList = db.SP_FetchDoctorTimings(searchModel.doctorID, dateTime).ToList();
                 var doctimings = (from t in db.DoctorTimings
                                   where t.doctorID == searchModel.doctorID
-                                  && t.day == appday && t.active == true
+                                  && t.utcDay == appday && t.active == true
                                   select new TimingsVM
                                   {
                                       doctorID = t.doctorID,

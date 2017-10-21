@@ -196,7 +196,7 @@ namespace RestAPIs.Controllers
                                                        appID = app.appID,
                                                        rov = app.rov,
                                                        chiefComplaints = app.chiefComplaints,
-                                                       payment = app.paymentAmt,
+                                                       paymentAmt = app.paymentAmt,
                                                        appDate = app.appDate,
                                                        appTime = app.appTime
                                                    }).FirstOrDefault(),

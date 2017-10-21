@@ -813,7 +813,7 @@
         $('#divshowAll').on('ifChecked', 'input', function (event) {
             $('#divsearchtitle').css('display', 'block');
             $('#divsearchdoctor').css('display', 'block');
-            
+
         });
 
         $('#divshowAll').on('ifUnchecked', 'input', function (event) {
@@ -938,7 +938,7 @@
                             var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + $("#doctorid").val() + '&message=Patient-paid-successfully';
                             $.post(cCallLogUrl);
                             showLoader();
-                            CreateAppointment(@ViewBag.PatienID,@amount);
+                            CreateAppointment(@ViewBag.PatienID,response.Object.consultCharges);
                         },
                         handleFailure: function () {
                             var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + $("#doctorid").val() + '&message=Patient-payment-failed';
@@ -1011,6 +1011,7 @@
    function CreateAppointment(patientID,amount)
    {
        debugger;
+       alert(amount);
          _objAppointment["appDate"] = $("#fetchdate").val();
         _objAppointment["doctorID"] = $("#doctorid").val();
         _objAppointment["patientID"] = patientID;

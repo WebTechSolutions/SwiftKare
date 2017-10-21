@@ -643,17 +643,64 @@ namespace RestAPIs.Controllers
                 doctorTiming.doctorTimingsID = 0;
                 doctorTiming.day = doctorTimingModel.day;
 
+                string nextDay="";
+                if (doctorTimingModel.day.ToString().ToLower().Equals("monday"))
+                    nextDay = "Tuesday";
+                else if (doctorTimingModel.day.ToString().ToLower().Equals("tuesday"))
+                    nextDay = "Wednesday";
+                else if (doctorTimingModel.day.ToString().ToLower().Equals("wednesday"))
+                    nextDay = "Thursday";
+                else if (doctorTimingModel.day.ToString().ToLower().Equals("thursday"))
+                    nextDay = "Friday";
+                else if (doctorTimingModel.day.ToString().ToLower().Equals("friday"))
+                    nextDay = "Saturday";
+                else if (doctorTimingModel.day.ToString().ToLower().Equals("saturday"))
+                    nextDay = "Sunday";
+                else if (doctorTimingModel.day.ToString().ToLower().Equals("Sunday"))
+                    nextDay = "Monday";
+
+                string prevDay = "";
+                if (doctorTimingModel.day.ToString().ToLower().Equals("monday"))
+                    prevDay = "Sunday";
+                else if (doctorTimingModel.day.ToString().ToLower().Equals("tuesday"))
+                    prevDay = "Monday";
+                else if (doctorTimingModel.day.ToString().ToLower().Equals("wednesday"))
+                    prevDay = "tuesday";
+                else if (doctorTimingModel.day.ToString().ToLower().Equals("thursday"))
+                    prevDay = "Wednesday";
+                else if (doctorTimingModel.day.ToString().ToLower().Equals("friday"))
+                    prevDay = "Thursday";
+                else if (doctorTimingModel.day.ToString().ToLower().Equals("saturday"))
+                    prevDay = "Friday";
+                else if (doctorTimingModel.day.ToString().ToLower().Equals("Sunday"))
+                    prevDay = "Saturday";
+
                 DateTime dateTimeFrom = DateTime.ParseExact(doctorTimingModel.from,
                                         "hh:mm tt", CultureInfo.InvariantCulture);
                 DateTime dateTimeTo = DateTime.ParseExact(doctorTimingModel.to,
                                     "hh:mm tt", CultureInfo.InvariantCulture);
 
-                //TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");//need to get zone info from db
-                //get zoneid from db for current doctor
-                //var timezoneid = db.Doctors.Where(d => d.doctorID == doctorTimingModel.doctorID).Select(d => d.timezone).FirstOrDefault();
-                //TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
-                doctorTiming.from = TimeZoneInfo.ConvertTimeToUtc(dateTimeFrom, zoneInfo).TimeOfDay;
-                doctorTiming.to = TimeZoneInfo.ConvertTimeToUtc(dateTimeTo, zoneInfo).TimeOfDay;
+                //For DayLightTimeSaving Issue at mobile devices
+                TimeSpan ts = new TimeSpan(0,0, 60, 0);
+                bool isDaylight = zoneInfo.IsDaylightSavingTime(dateTimeFrom);
+
+                /*   if (isDaylight)
+                   {
+                       doctorTiming.from = TimeZoneInfo.ConvertTimeToUtc(dateTimeFrom, zoneInfo).Add(ts).TimeOfDay;
+                       doctorTiming.to = TimeZoneInfo.ConvertTimeToUtc(dateTimeTo, zoneInfo).Add(ts).TimeOfDay;
+                   }
+                   else
+                   {
+                       doctorTiming.from = TimeZoneInfo.ConvertTimeToUtc(dateTimeFrom, zoneInfo).TimeOfDay;
+                       doctorTiming.to = TimeZoneInfo.ConvertTimeToUtc(dateTimeTo, zoneInfo).TimeOfDay;
+                   }*/
+                DateTime from = TimeZoneInfo.ConvertTimeToUtc(dateTimeFrom, zoneInfo);
+                DateTime to = TimeZoneInfo.ConvertTimeToUtc(dateTimeTo, zoneInfo);
+                doctorTiming.from = from.TimeOfDay;
+                doctorTiming.to = to.TimeOfDay;
+                if (from.Date > dateTimeFrom.Date) doctorTiming.utcDay = nextDay;
+                else if (from.Date < dateTimeFrom.Date) doctorTiming.utcDay = prevDay;
+                else doctorTiming.utcDay= doctorTimingModel.day;
                 doctorTiming.active = true;
                 doctorTiming.cd = DateTime.Now;
                 doctorTiming.md = DateTime.Now;

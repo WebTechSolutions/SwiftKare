@@ -103,7 +103,7 @@
                                     <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Publications</b></h4>
                                     <p style="padding-left: 25px;">@Model.Publication</p>
                                 }
-                                @+if (!string.IsNullOrEmpty(Model.TimeZone))
+                                @if (!string.IsNullOrEmpty(Model.TimeZone))
                                 {
                                     <h4 style="color: #0061b2;"><i class="fa fa-circle" style="width: 15px; font-size: 14px;" aria-hidden="true"></i>&nbsp <b>Time Zone</b></h4>
                                     <p style="padding-left: 25px;">@Model.TimeZone</p>
@@ -117,11 +117,16 @@
     </div>
 </div>
 <!-- /page content -->
-
+@using WebApp.Helper;
 
 @section scripts{
 
     <script>
+        if ('@SessionHandler.UserInfo.title' == '') {
+            if (!parent.location.href.toLowerCase().includes('doctorprofile/index')) {
+                window.location.href = '@Url.Action("Index", "DoctorProfile")';
+            }
+        }
         function myMap() {
 
             var lat = '@Model.Latitude';

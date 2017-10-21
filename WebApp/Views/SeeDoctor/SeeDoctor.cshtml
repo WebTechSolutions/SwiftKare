@@ -901,7 +901,7 @@
                             var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + $("#doctorid").val() + '&message=Patient-paid-successfully';
                             $.post(cCallLogUrl);
                             showLoader();
-                            CreateAppointment(@ViewBag.PatienID,amount);
+                            CreateAppointment(@ViewBag.PatienID,response.Object.consultCharges);
                         },
                         handleFailure: function () {
                             var cCallLogUrl = '@Url.Action("AddCallLogbyPatient", "UserChat")?doctorId=' + $("#doctorid").val() + '&message=Patient-payment-failed';

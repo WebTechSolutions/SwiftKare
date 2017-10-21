@@ -227,14 +227,13 @@ var UserChat = function (apiKey, sessionId, token) {
     function intentetConnectivityLost() {
       //  alert("There is problem with your network connection. Please check your network connection.");
         new PNotify({ title: 'Error', text: "There is problem with your network connection. Please check your network connection.", type: 'error', styling: 'bootstrap3' });
+        window.location = cEndCallUrl;
     }
 
     function intentetConnectivityRegain() {
       //  alert("Network connection has been restored. Conneting your call.");
-        new PNotify({ title: 'Success', text: "Network connection has been restored. Conneting your call.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
-        session.connect(token);
-        session.publish(publisher);
-        publisher.publishVideo(true);
+        new PNotify({ title: 'Success', text: "Network connection has been restored.", type: 'info', addclass: 'dark', styling: 'bootstrap3' });
+       
     }
 
 
@@ -399,6 +398,7 @@ var UserChat = function (apiKey, sessionId, token) {
                 $("#h1Name").html($("#h1Name").data("name"));
                 SaveSessionStart(sessionId, 1, 1);
                 subscriber.on("disconnected", function (event) {
+                  //  alert('disconnected:' + event.reason)
                     //  alert("It seems another user has network issue, please wait till resolution.");
                     if (isConsultComplete == false)
                     { networkDisconntected(); }
@@ -417,20 +417,20 @@ var UserChat = function (apiKey, sessionId, token) {
         })
         .on("streamDestroyed", function (event) {
             try {
-               // alert('destroyed')
+               // alert('destroyed:'+event.reason)
                 debugger;
                // alert(isConsultComplete);
                 if (isConsultComplete == false) {
                     //alert(event.reason);
                     
                  //   networkDisconntected();
-                    /*
+                    
                                         if (event.reason == "networkDisconnected") {
                                             
                                             networkDisconntected();
                     
                                             //Try reconnecting till network available
-                                        } else {
+                                        }/* else {
                                             // stopCall();
                                         }*/
                 }

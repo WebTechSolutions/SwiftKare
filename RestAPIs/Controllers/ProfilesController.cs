@@ -367,7 +367,8 @@ namespace RestAPIs.Controllers
                     doctor.active = true;
 
                     //doctor.picture = model.ProfilePhoto;
-                    doctor.ProfilePhotoBase64 = model.ProfilePhotoBase64;
+                    if (model.ProfilePhotoBase64 != null)
+                        doctor.ProfilePhotoBase64 = model.ProfilePhotoBase64;
                     doctor.title = model.TitleName;
                     doctor.firstName = model.FirstName;
                     doctor.lastName = model.LastName;
@@ -478,20 +479,21 @@ namespace RestAPIs.Controllers
                         }
                     }
                     await db.SaveChangesAsync();
+                    if (model.ProfilePhotoBase64 != null)
+                    {
+                        // Convert Base64 String to byte[]
+                        var retBase64 = model.ProfilePhotoBase64.Substring(model.ProfilePhotoBase64.IndexOf("base64,") + 7);
+                        byte[] imageBytes = Convert.FromBase64String(retBase64);
+                        MemoryStream ms = new MemoryStream(imageBytes, 0, imageBytes.Length);
 
-                    // Convert Base64 String to byte[]
-                    var retBase64 = model.ProfilePhotoBase64.Substring(model.ProfilePhotoBase64.IndexOf("base64,") + 7);
-                    byte[] imageBytes = Convert.FromBase64String(retBase64);
-                    MemoryStream ms = new MemoryStream(imageBytes, 0, imageBytes.Length);
-
-                    // Convert byte[] to Image
-                    ms.Write(imageBytes, 0, imageBytes.Length);
-                    System.Drawing.Image image = System.Drawing.Image.FromStream(ms, true);
-                    string newFile = "D_" + doctorID+".png";
-                    string pathonserver = System.Configuration.ConfigurationManager.AppSettings["profilePictureLocation"]+ newFile;
-                    //string filePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath(pathonserver), newFile);
-                    image.Save(pathonserver, ImageFormat.Png);
-
+                        // Convert byte[] to Image
+                        ms.Write(imageBytes, 0, imageBytes.Length);
+                        System.Drawing.Image image = System.Drawing.Image.FromStream(ms, true);
+                        string newFile = "D_" + doctorID + ".png";
+                        string pathonserver = System.Configuration.ConfigurationManager.AppSettings["profilePictureLocation"] + newFile;
+                        //string filePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath(pathonserver), newFile);
+                        image.Save(pathonserver, ImageFormat.Png);
+                    }
                     //Return
                     response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = doctorID, message = "" });
                     return response;
@@ -1000,7 +1002,8 @@ namespace RestAPIs.Controllers
                     //Save Patient Profile
                     patient.active = true;
                     //patient.picture = model.ProfilePhoto;
-                    patient.ProfilePhotoBase64 = model.ProfilePhotoBase64;//Encoding.ASCII.GetString(model.ProfilePhoto);
+                    if (model.ProfilePhotoBase64 != null)
+                        patient.ProfilePhotoBase64 = model.ProfilePhotoBase64;//Encoding.ASCII.GetString(model.ProfilePhoto);
                     patient.title = model.TitleName;
                     patient.firstName = model.FirstName;
                     patient.lastName = model.LastName;
@@ -1062,18 +1065,21 @@ namespace RestAPIs.Controllers
                     }
                     await db.SaveChangesAsync();
 
-                    // Convert Base64 String to byte[]
-                    var retBase64 = model.ProfilePhotoBase64.Substring(model.ProfilePhotoBase64.IndexOf("base64,") + 7);
-                    byte[] imageBytes = Convert.FromBase64String(retBase64);
-                    MemoryStream ms = new MemoryStream(imageBytes, 0, imageBytes.Length);
+                    if (model.ProfilePhotoBase64 != null)
+                    {
+                        // Convert Base64 String to byte[]
+                        var retBase64 = model.ProfilePhotoBase64.Substring(model.ProfilePhotoBase64.IndexOf("base64,") + 7);
+                        byte[] imageBytes = Convert.FromBase64String(retBase64);
+                        MemoryStream ms = new MemoryStream(imageBytes, 0, imageBytes.Length);
 
-                    // Convert byte[] to Image
-                    ms.Write(imageBytes, 0, imageBytes.Length);
-                    System.Drawing.Image image = System.Drawing.Image.FromStream(ms, true);
-                    string newFile = "P_" + patientID + ".png";
-                    string pathonserver = System.Configuration.ConfigurationManager.AppSettings["profilePictureLocation"] + newFile;
-                    //string filePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath(pathonserver), newFile);
-                    image.Save(pathonserver, ImageFormat.Png);
+                        // Convert byte[] to Image
+                        ms.Write(imageBytes, 0, imageBytes.Length);
+                        System.Drawing.Image image = System.Drawing.Image.FromStream(ms, true);
+                        string newFile = "P_" + patientID + ".png";
+                        string pathonserver = System.Configuration.ConfigurationManager.AppSettings["profilePictureLocation"] + newFile;
+                        //string filePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath(pathonserver), newFile);
+                        image.Save(pathonserver, ImageFormat.Png);
+                    }
                     //Return
                     response = Request.CreateResponse(HttpStatusCode.OK, new ApiResultModel { ID = patientID, message = "" });
                     return response;

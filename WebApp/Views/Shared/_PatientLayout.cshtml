@@ -128,7 +128,7 @@
                     <div class="profile m-b-60">
                         <div class="profile_pic">
                             <a href="@Url.Action("Profile","PatientProfile")">
-                                <img style="width:56px;height:56px" src="@SessionHandler.ProfilePhoto" alt="..." class="img-circle profile_img">
+                                <img style="width:56px;height:56px" src="/Content/ProfilePicture/P_@SessionHandler.ProfilePhoto" class="img-circle profile_img">
                             </a>
                         </div>
                         <div class="profile_info" style="word-break:break-word">
@@ -310,7 +310,7 @@
         </div>
     </div><!-- mymodal2 -->
     <script>
-
+      
         setInterval(function () {
             $.ajax({
                 url: "@Url.Action("SessionExpiry", "Account")",
@@ -755,6 +755,15 @@
             }
         });
         $(document).ready(function () {
+            Date.prototype.stdTimezoneOffset = function () {
+                var jan = new Date(this.getFullYear(), 0, 1);
+                var jul = new Date(this.getFullYear(), 6, 1);
+                return Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+            }
+
+            Date.prototype.dst = function () {
+                return this.getTimezoneOffset() < this.stdTimezoneOffset();
+            }
 
             if ('@SessionHandler.UserInfo.title' == '') {
                 if (!parent.location.href.toLowerCase().includes('profile')) {
@@ -763,11 +772,13 @@
             }
 
             if ('@SessionHandler.UserInfo.title' != '') {
+                debugger;
                 var rightNow = new Date();
                 var jan1 = new Date(rightNow.getFullYear(), 0, 1, 0, 0, 0, 0);
                 var temp = jan1.toGMTString();
                 var jan2 = new Date(temp.substring(0, temp.lastIndexOf(" ") - 1));
                 var std_time_offset = (jan1 - jan2) / (1000 * 60 * 60);
+                if (rightNow.dst()) { std_time_offset = std_time_offset + 1; }
                 std_time_offset = std_time_offset * (-60);
                 if ('@SessionHandler.UserInfo.timeZoneOffset' == '' ||
                     '@SessionHandler.UserInfo.timeZoneOffset' != std_time_offset.toString()) {

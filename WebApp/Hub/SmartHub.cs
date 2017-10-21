@@ -60,18 +60,24 @@ namespace WebApp.Hub
             //Clients.Caller.receiveMessage(message.UserName, message.Message, ConnectionId);
             Clients.Client(message.ReceiverConnectionId).receiveMessage(message.UserName, message.Message, message.SenderConnectionId, message.SenderId);
             //SendPush
-            /*pushModel pm = new pushModel();
-            pm.PPushTitle = "Consultation Request";
-            pm.PPushMessage = "";
-            pm.DPushTitle = "Consultation Request";
-            pm.DPushMessage = "Patient Call for the Consult.";
-            pm.sendtoDoctor = true;
-            pm.sendtoPatient = false;
-            pm.doctorID = message.ReceiverId;
-            pm.patientID = 0;
+            //ApiConsumerHelper.GetResponseString("api/Account/SendPush1?docID="+message.ReceiverId+"&patID="+message.SenderId+"&sendtoPatient="+false+"&sendtoDoctor="+true);
+            // ApiConsumerHelper.GetResponseString("api/Account/SendPush1?docID=" + message.ReceiverId );
+            //   WebApp.Controllers.AppointmentController ac = new Controllers.AppointmentController();
+            // ac.SendPush(message.ReceiverId);
+            // System.Net.WebRequest request = System.Net.WebRequest.Create("http://localhost:13040/api/SendPush?docID=27");
 
-            PushHelper ph = new PushHelper();
-            ph.sendPush(pm);*/
+            if (message.Message.ToString().Contains("call"))
+            {
+                using (var wb = new System.Net.WebClient())
+                {
+                    var data = new System.Collections.Specialized.NameValueCollection();
+                    data["abc"] = "";
+
+                    var response = wb.UploadValues("http://localhost:13040/api/Account/SendPush?docID=" + message.ReceiverId + "&patID=" + message.SenderId + "&sendtoPatient=" + false + "&sendtoDoctor=" + true + "&message=Incoming Consultation Call.", "POST", data);
+                }
+            }
+            //, message.SenderId, false, true
+            // (long docID, long patID, bool senttoPatient, bool sendtoDoctor
         }
 
         public void SendMessageToPatient(MessageInfo message)
@@ -82,6 +88,16 @@ namespace WebApp.Hub
             message.MsgDate = DateTime.Now.ToString();
             //Clients.Caller.receiveMessage(message.UserName, message.Message, ConnectionId);
             Clients.Client(message.ReceiverConnectionId).receiveMessage(message.UserName, message.Message, message.SenderConnectionId, message.SenderId);
+            if (message.Message.ToString().Contains("consultID"))
+            {
+                using (var wb = new System.Net.WebClient())
+                {
+                    var data = new System.Collections.Specialized.NameValueCollection();
+                    data["abc"] = "";
+
+                    var response = wb.UploadValues("http://localhost:13040/api/Account/SendPush?docID=" + message.SenderId + "&patID=" + message.ReceiverId + "&sendtoPatient=" + true + "&sendtoDoctor=" + false + "&message=Incoming Consultation Call.", "POST", data);
+                }
+            }
         }
 
         public void CallPatient(MessageInfo message) {

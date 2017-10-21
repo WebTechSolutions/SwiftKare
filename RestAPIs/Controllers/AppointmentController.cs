@@ -165,6 +165,8 @@ namespace RestAPIs.Controllers
 
         }
 
+       
+
         [Route("api/GetPatientChiefComplaints")]
         public HttpResponseMessage GetPatientChiefComplaints(long id)
         {
@@ -244,6 +246,20 @@ namespace RestAPIs.Controllers
                     return response;
                 }
                 TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
+
+                TimeSpan ts = new TimeSpan(0, 1, 0, 0);
+                bool isDaylight = zoneInfo.IsDaylightSavingTime(DateTime.Now);
+
+                //For DayLightTimeSaving Issue at mobile devices
+              /*  if (isDaylight)
+                {
+                    model_appdatetime_DateTime = TimeZoneInfo.ConvertTimeToUtc(model_appdatetime_DateTime, zoneInfo).Add(ts);
+                }
+                else
+                {
+                    model_appdatetime_DateTime = TimeZoneInfo.ConvertTimeToUtc(model_appdatetime_DateTime, zoneInfo);
+                }*/
+
                 model_appdatetime_DateTime = TimeZoneInfo.ConvertTimeToUtc(model_appdatetime_DateTime, zoneInfo);
 
                 app.appTime = model_appdatetime_DateTime.TimeOfDay;

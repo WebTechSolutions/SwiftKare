@@ -116,7 +116,7 @@
                     <div class="profile m-b-60">
                         <div class="profile_pic">
                             <a href="@Url.Action("Profile","DoctorProfile")">
-                                <img style="width:56px;height:56px" src="@SessionHandler.ProfilePhoto" alt="..." class="img-circle profile_img">
+                                <img style="width:56px;height:56px" src="/Content/ProfilePicture/D_@SessionHandler.ProfilePhoto" alt="..." class="img-circle profile_img">
                             </a>
                         </div>
                         <div class="profile_info" style="word-break:break-word">
@@ -374,7 +374,7 @@
                 SenderId: '@SessionHandler.UserInfo.Id',
                 UserName: '@SessionHandler.UserInfo.Email',
                 ReceiverConnectionId: oPatInfo.connectionId,
-                ReceiverId: '20',
+                ReceiverId: patId,
                 SenderType: 'Doctor',
                 Message: JSON.stringify({ status: 'consultID', name: consultID })
             });
@@ -473,13 +473,13 @@
             chat.client.patientAcceptedCall = function (patientName, patId, appId, patUserName) {
                 localStorage.setItem('otherUser', patUserName);
                 
-                new PNotify({ title: 'Success', text: 'Patient ' + patientName + ' accepted call. ', type: 'info', addclass: 'dark', styling: 'bootstrap3' });
+                new PNotify({ title: 'Success', text: 'Patient  accepted call. ', type: 'info', addclass: 'dark', styling: 'bootstrap3' });
                 //alert('Patient ' + patUserName + ' accepted call. this alert is in _DoctorLayout. NEed to redirect to page');
             }
 
             chat.client.patientRejectedCall = function (patientName, patId, appId, patUserName) {
                 //showAlert('Alert', );
-                new PNotify({ title: 'Success', text: 'Patient ' + patientName + ' rejected call.Please try again.', type: 'info', addclass: 'dark', styling: 'bootstrap3' });
+                new PNotify({ title: 'Success', text: 'Patient  rejected call.Please try again.', type: 'info', addclass: 'dark', styling: 'bootstrap3' });
                 //alert('Patient ' + patUserName + ' rejected call.this alert is in _DoctorLayout');
                 return;
             }
@@ -700,6 +700,18 @@
     </script>
     <script>
         $(document).ready(function () {
+          
+
+            Date.prototype.stdTimezoneOffset = function () {
+                var jan = new Date(this.getFullYear(), 0, 1);
+                var jul = new Date(this.getFullYear(), 6, 1);
+                return Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+            }
+
+            Date.prototype.dst = function () {
+                return this.getTimezoneOffset() < this.stdTimezoneOffset();
+            }
+
             $('#myModal2').find('#Timezone').change(function () {
                 if ($('#myModal2').find("#spnErrorTimeZone").is(":visible") && $('#myModal2').find("#Timezone").val() != "") {
                     $('#myModal2').find("#Timezone").removeClass("redBorder");
@@ -713,11 +725,14 @@
                 }
             }
             if ('@SessionHandler.UserInfo.title' != '') {
+                debugger;
                 var rightNow = new Date();
                 var jan1 = new Date(rightNow.getFullYear(), 0, 1, 0, 0, 0, 0);
                 var temp = jan1.toGMTString();
                 var jan2 = new Date(temp.substring(0, temp.lastIndexOf(" ") - 1));
                 var std_time_offset = (jan1 - jan2) / (1000 * 60 * 60);
+               
+                if (rightNow.dst()) {  std_time_offset = std_time_offset + 1; }
                 std_time_offset = std_time_offset * (-60);
                 //alert(std_time_offset + ' ' + '@SessionHandler.UserInfo.timeZoneOffset');
                 if ('@SessionHandler.UserInfo.timeZoneOffset' == '' ||

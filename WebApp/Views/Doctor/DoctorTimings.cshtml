@@ -137,6 +137,7 @@
                         
                     }
                     else {
+                        debugger;
                         _objUpdate = response.DoctorTiming;
                         _doctorId = response.DoctorId;
                         //bindTimingsTable(response.DoctorTimingsList);
@@ -181,7 +182,7 @@
                 divHtml = divHtml + "<h2>" + daywiseList[i].Day + "</h2>";
                 divHtml = divHtml + "<table class='table table-striped table-bordered dataTable no-footer'>";
                 divHtml = divHtml + "<tbody>";
-
+                //TimeZoneInfo zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneid.ToString());//need to get zone info from db
                 if (daywiseList[i].Timings.length > 0) {
                     for (var j = 0; j < daywiseList[i].Timings.length; j++) {
                         divHtml = divHtml + "<tr class='time_btn'>";

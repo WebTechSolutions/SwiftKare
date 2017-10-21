@@ -463,6 +463,7 @@
     <Content Include="Content\images\whats-new.png" />
     <Content Include="Content\ProfilePicture\default.png" />
     <Content Include="Content\ProfilePicture\D_27.png" />
+    <Content Include="Content\ProfilePicture\P_10022.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />

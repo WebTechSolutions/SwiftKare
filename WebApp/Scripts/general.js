@@ -83,6 +83,7 @@ function formatAMPM(date) {
     return strTime;
 }
 function converttoLocal(timespan) {
+    debugger;
     var d = new Date();
     var s = timespan;
     var hours;
@@ -111,8 +112,6 @@ function converttoLocal(timespan) {
         d.setUTCSeconds(0);
     }
    
-    
-
     //d.setUTCHours(hours);
     //d.setUTCMinutes(minutes);
     //d.setUTCSeconds(0);
@@ -120,6 +119,57 @@ function converttoLocal(timespan) {
     return formatAMPM(d);
 }
 
+function converttoLocal_WithoutDST(timespan) {
+    debugger;
+    var d = new Date();
+    var s = timespan;
+    var hours;
+    var parts = s.match(/(\d+)\:(\d+) (\w+)/);
+    if (parts[1] == '12' && parts[3] == 'PM') {
+        hours = parseInt(parts[1], 10);
+        var minutes = parseInt(parts[2], 10);
+        d.setUTCHours(hours);
+        d.setUTCMinutes(minutes);
+        d.setUTCSeconds(0);
+    }
+    else if (parts[1] == '12' && parts[3] == 'AM') {
+        var minutes = parseInt(parts[2], 10);
+        d.setUTCHours(0);
+        d.setUTCMinutes(minutes);
+        d.setUTCSeconds(0);
+
+    }
+    else {
+        hours = /am/i.test(parts[3]) ? parseInt(parts[1], 10) : parseInt(parts[1], 10) + 12;
+        var minutes = parseInt(parts[2], 10);
+        d.setUTCHours(hours);
+        d.setUTCMinutes(minutes);
+        d.setUTCSeconds(0);
+    }
+    debugger;
+
+    
+
+    var today = new Date();
+    if (today.dst()) {
+        d.setHours(d.getHours() - 1);
+    }
+
+    //d.setUTCHours(hours);
+    //d.setUTCMinutes(minutes);
+    //d.setUTCSeconds(0);
+    console.log(d);
+    return formatAMPM(d);
+}
+Date.prototype.stdTimezoneOffset = function () {
+    var jan = new Date(this.getFullYear(), 0, 1);
+    var jul = new Date(this.getFullYear(), 6, 1);
+    return Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+}
+
+Date.prototype.dst = function () {
+    return this.getTimezoneOffset() < this.stdTimezoneOffset();
+}
 //for patient modules
 //how to call showLocal("2012-11-29 22:30:00")
 function showLocal(utcdate) {
@@ -129,6 +179,31 @@ function showLocal(utcdate) {
     + myDate.getDate() + ' ' + myDate.getHours() + ':' + myDate.getMinutes();
     console.log(timeString);
     var dbDate = new Date(Date.UTC(myDate.getFullYear(), myDate.getMonth(), myDate.getDate(), myDate.getHours(), myDate.getMinutes(), 0));
+    
+    var options = {
+        weekday: "long", year: "numeric", month: "short",
+        day: "numeric", hour: "2-digit", minute: "2-digit"
+    };
+
+    var localDate = (dbDate.toLocaleTimeString("en-us", options));
+
+    var dd = formatDate(new Date(localDate), "dd/MM/yyyy hh:mm a");
+    dd;
+
+    return dd;
+}
+
+function showLocal_withoutDST(utcdate) {
+    debugger;
+    var myDate = new Date(new Date(utcdate));
+    var timeString = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-'
+    + myDate.getDate() + ' ' + myDate.getHours() + ':' + myDate.getMinutes();
+    console.log(timeString);
+    var dbDate = new Date(Date.UTC(myDate.getFullYear(), myDate.getMonth(), myDate.getDate(), myDate.getHours(), myDate.getMinutes(), 0));
+    var today = new Date();
+    if (today.dst()) {
+        dbDate.setHours(dbDate.getHours() - 1);
+    }
     var options = {
         weekday: "long", year: "numeric", month: "short",
         day: "numeric", hour: "2-digit", minute: "2-digit"

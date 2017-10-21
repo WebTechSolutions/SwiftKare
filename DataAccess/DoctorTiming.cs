@@ -25,6 +25,7 @@ namespace DataAccess
         public Nullable<System.DateTime> md { get; set; }
         public Nullable<bool> active { get; set; }
         public Nullable<bool> repeatTimings { get; set; }
+        public string utcDay { get; set; }
     
         public virtual Doctor Doctor { get; set; }
     }

@@ -206,6 +206,8 @@ namespace WebApp.Controllers
 
         }
 
+       
+
         public PartialViewResult DoctorProfile(long doctorID)
         {
             try

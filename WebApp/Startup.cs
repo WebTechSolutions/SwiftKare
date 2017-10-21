@@ -24,7 +24,7 @@ namespace WebApp
             // This value must be no more than 1/3 of the DisconnectTimeout value.
             GlobalHost.Configuration.KeepAlive = System.TimeSpan.FromSeconds(10);
             //Setting up the message buffer size
-            GlobalHost.Configuration.DefaultMessageBufferSize = 500;
+            GlobalHost.Configuration.DefaultMessageBufferSize = 5000;
             app.MapSignalR(hubConfiguration);
             // RouteTable.Routes.MapHubs("/myhubs", new HubConfiguration());
             ConfigureAuth(app);

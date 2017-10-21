@@ -199,7 +199,12 @@ namespace RestAPIs.Controllers
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         public async Task<DataAccess.CustomModels.UserModel> UniversalLogin(PatientLoginApiModel model, HttpRequestMessage request)
         {
-            
+            string[] lines = { "UniversalLogin", new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(model)};
+            string path = System.IO.Path.Combine(@"C:\ApiLogs\", DateTime.Now.ToString("yyMMddHHmmssff"));
+            // string fullSavePath = Path.Combine(("~/Content/ApiLogs/{0}.txt", DateTime.Now.ToString()));
+            //  string fullSavePath = System.Web.HttpContext.Current.Server.MapPath(string.Format("~/Content/{0}.txt", DateTime.Now.ToString()));
+            System.IO.File.WriteAllLines(path, lines);
+
             var userModel = new DataAccess.CustomModels.UserModel
             {
                 Email = model.Email
@@ -228,12 +233,12 @@ namespace RestAPIs.Controllers
                 if (result == SignInStatus.Success)
                 {
 
-                    if (model.offset != null)
+                   /* if (model.offset != null)
                     {
                          if (model.offset.Equals("330")) model.offset = "-330";
                          if (model.offset.Trim().Equals("")) model.offset = "-300";
                     }
-                    else model.offset = "-300";
+                    else model.offset = "-300";*/
                     
 
                     var userId = UserManager.FindByName(model.Email.Trim())?.Id;
@@ -267,8 +272,8 @@ namespace RestAPIs.Controllers
                                     }
                                 }
                             }
-                            if (iOSToken.Trim() != "") doctor.iOSToken = iOSToken;
-                            if (androidToken.Trim() != "") doctor.AndroidToken = androidToken;
+                            if (iOSToken.Trim() != "" && iOSToken.Trim().ToLower() != "iostoken") doctor.iOSToken = iOSToken;
+                            if (androidToken.Trim() != "" && androidToken.Trim().ToLower() != "androidtoken") doctor.AndroidToken = androidToken;
                             db.Entry(doctor).State = EntityState.Modified;
                             await db.SaveChangesAsync();
                         }
@@ -329,8 +334,9 @@ namespace RestAPIs.Controllers
 
 
                         }
-                        if (iOSToken.Trim() != "") patient.iOSToken = iOSToken;
-                        if (androidToken.Trim() != "") patient.AndroidToken = androidToken;
+                       
+                        if (iOSToken.Trim() != "" && iOSToken.Trim().ToLower() != "iostoken") patient.iOSToken = iOSToken;
+                        if (androidToken.Trim() != "" && androidToken.Trim().ToLower() != "androidtoken") patient.AndroidToken = androidToken;
                         db.Entry(patient).State = EntityState.Modified;
                         await db.SaveChangesAsync();
 
@@ -875,6 +881,38 @@ namespace RestAPIs.Controllers
             }
             AuthenticationManager.SignOut();
             return "LogOff";
+        }
+
+        
+        [HttpPost]
+        [Route("SendPush")]
+        public void SendPush(long docID, long patID, bool sendtoPatient, bool sendtoDoctor,string message)
+        {
+            try
+            {
+                //,long patID,bool sendtoPatient, bool sendtoDoctor
+
+                //SendPush
+                pushModel pm = new pushModel();
+                pm.PPushTitle = "Consultation Request";
+                pm.PPushMessage = "";
+                pm.DPushTitle = "Consultation Request";
+                pm.DPushMessage = message;
+                pm.PPushMessage = message;
+                pm.sendtoDoctor = sendtoDoctor;
+                pm.sendtoPatient = sendtoPatient;
+                pm.doctorID = docID;
+                pm.patientID = patID;
+
+                PushHelper ph = new PushHelper();
+                ph.sendPush(pm);
+            }
+            catch (Exception ex)
+            {
+                //ThrowError(ex, "Err in SendPush in Appointment Controller line # 169");
+            }
+
+
         }
 
 
